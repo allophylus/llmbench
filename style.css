@@ -290,3 +290,24 @@ td.c-videos .vlist a:hover { color: var(--accent); border-color: var(--accent-di
   td.c-videos { grid-column: 1 / -1; }
   td.c-videos .vlist { justify-content: flex-start; max-width: none; }
 }
+
+/* ---- top-3 highlight (gold / silver / bronze) ---- */
+tbody tr.rank td { transition: background .15s ease; }
+tbody tr.rank-1 td { background: rgba(245,197,66,.08); }
+tbody tr.rank-2 td { background: rgba(201,209,220,.06); }
+tbody tr.rank-3 td { background: rgba(205,127,50,.08); }
+tbody tr.rank-1 td:first-child { box-shadow: inset 3px 0 0 #f5c542; }
+tbody tr.rank-2 td:first-child { box-shadow: inset 3px 0 0 #c9d1dc; }
+tbody tr.rank-3 td:first-child { box-shadow: inset 3px 0 0 #cd7f32; }
+tbody tr.rank:hover td { background: #152030; }
+tbody tr.rank:hover td:first-child { box-shadow: inset 3px 0 0 currentColor; }
+.rank-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 19px; height: 19px; border-radius: 50%; margin-right: 8px;
+  font: 700 11px/1 var(--mono); background: #3a4453; color: #0f141b;
+  vertical-align: -3px;
+}
+tbody tr.rank-1 .rank-badge { background: #f5c542; }
+tbody tr.rank-2 .rank-badge { background: #c9d1dc; }
+tbody tr.rank-3 .rank-badge { background: #cd7f32; color: #fff; }
+.ranknote { color: var(--fg-dim); font-size: 12px; }

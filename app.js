@@ -169,16 +169,18 @@
       '<div class="vlist">' + links + "</div></details>";
   }
 
-  function rowHTML(r) {
+  function rowHTML(r, rank) {
     var c = r.cells || {};
+    var cls = rank ? "rank rank-" + rank : "";
+    var badge = rank ? '<span class="rank-badge">' + rank + "</span>" : "";
     var pAct = r.params_active && r.params_active !== r.params_total
       ? ' <span class="act">/ ' + esc(r.params_active) + "</span>" : "";
     var meta = [
       r.quant || "", r.params_total || "", r.decode_tps ? r.decode_tps + " t/s" : "",
       r.vram_mib ? Math.round(r.vram_mib / 1024) + " GiB" : "", r.date || ""
     ].filter(Boolean).join(" · ");
-    return '<tr>' +
-      '<td class="c-name">' + esc(r.name) +
+    return '<tr class="' + cls + '">' +
+      '<td class="c-name">' + badge + esc(r.name) +
         '<span class="slug">' + esc(r.slug) + "</span>" +
         '<span class="meta">' + esc(meta) + "</span></td>" +
       '<td class="num c-params" data-label="Params">' + esc(r.params_total || "—") + pAct + "</td>" +
@@ -202,6 +204,25 @@
     "</tr>";
   }
 
+  /* ---- top-3 highlight: follows the active numeric sort, else Decode t/s ---- */
+  var DEFAULT_RANK_KEY = "decode_tps";
+
+  function rankKey() {
+    var k = state.sortKey;
+    if (k && COL[k] && (COL[k].type === "num" || COL[k].type === "params")) return k;
+    return DEFAULT_RANK_KEY;
+  }
+
+  function topRanks(order) {
+    var key = rankKey(), vals = [];
+    order.forEach(function (r) {
+      var v = value(r, key);
+      if (v !== null && isFinite(v)) vals.push({ r: r, v: v });
+    });
+    vals.sort(function (a, b) { return b.v - a.v; });
+    return vals.slice(0, 3).map(function (o, i) { return [o.r, i + 1]; });
+  }
+
   function paint() {
     var q = document.getElementById("q").value.trim();
     var arch = document.getElementById("arch").value;
@@ -209,8 +230,19 @@
     var shown = state.rows.filter(function (r) { return matches(r, q, arch, onlyVid); });
     sortView();
     var order = state.view.filter(function (r) { return shown.indexOf(r) !== -1; });
+    var ranks = topRanks(order);
 
-    document.getElementById("rows").innerHTML = order.map(rowHTML).join("");
+    document.getElementById("rows").innerHTML = order.map(function (r) {
+      var rank = 0;
+      for (var i = 0; i < ranks.length; i++) { if (ranks[i][0] === r) { rank = ranks[i][1]; break; } }
+      return rowHTML(r, rank);
+    }).join("");
+    var rk = rankKey();
+    var note = document.getElementById("ranknote");
+    if (note) {
+      note.textContent = "Top 3 by " + (LABELS[rk] || rk) +
+        (state.sortKey && state.sortKey !== rk ? " (sorted column is not numeric)" : "");
+    }
     document.getElementById("empty").hidden = order.length > 0;
     document.getElementById("count").textContent =
       order.length + " / " + state.rows.length + " models";
