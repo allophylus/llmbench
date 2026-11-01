@@ -1,0 +1,194 @@
+{
+ "schema": 1,
+ "kind": "intel-agentic",
+ "model": {
+  "name": "Underdog-Saluki-27B IQ2",
+  "repo": "ConwayResearch/Underdog-Saluki-27B-1.0",
+  "file": "Underdog-Saluki-27B-1.0-IQ2-mix.gguf",
+  "quant": "IQ2_mix",
+  "params_total": "27B",
+  "params_active": "27B",
+  "arch": "dense 27B",
+  "slug": "underdog-saluki-27b-iq2"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -c 32768 --jinja -np 1",
+  "kv_cache": "f16",
+  "run_started": "2026-10-27T18:45:16+0000",
+  "run_finished": "2026-10-30T14:33:58+0000",
+  "peak_vram_mib": 11089,
+  "load_s": 4.0,
+  "cgroup_oom_kill_before": 0,
+  "cgroup_oom_kill_after": 0,
+  "mem_guard": "24G",
+  "night3_agentic_rescore": true
+ },
+ "status": "done",
+ "tests": [
+  {
+   "id": "pub-aime10x3",
+   "task": "aime2026-15",
+   "acc": 0.4,
+   "metric": "acc",
+   "samples": 15,
+   "duration_s": 3348,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 6,
+    "total": 15,
+    "pass1_acc": 0.4667,
+    "samples": 3,
+    "temp": 0.6
+   }
+  },
+  {
+   "id": "pub-gpqa25",
+   "task": "gpqa-diamond",
+   "acc": 0.64,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 1635,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 16,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "pub-livebench25",
+   "task": "livebench-25",
+   "acc": 0.08,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 1247,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 2,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "agent-tau2-telecom20",
+   "task": "tau2-bench telecom",
+   "acc": 0.55,
+   "metric": "pass_hat_1",
+   "samples": 20,
+   "duration_s": 1080,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "reward": 0.55,
+    "success_rate": 0.55,
+    "pass_hat_1": 0.55,
+    "ctx_peak_used": null,
+    "num_tasks": 20,
+    "num_trials": 1,
+    "task_set": "telecom_small"
+   }
+  },
+  {
+   "id": "agent-termbench8",
+   "task": "terminal-bench",
+   "acc": 0.625,
+   "metric": "pass",
+   "samples": 8,
+   "duration_s": 1550,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "pass": 5,
+    "total": 8,
+    "attempted": 8
+   }
+  },
+  {
+   "id": "ctx-gpqa110k",
+   "task": "gpqa-embedded-110k",
+   "acc": 0.36,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 7992,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 9,
+    "total": 25,
+    "temp": 0.0,
+    "target_ctx_tokens": 110000,
+    "prompt_tokens_mean": 110140,
+    "prompt_tokens_est_mean": 109987,
+    "token_calibration": "server /tokenize",
+    "chars_per_token": 4.061,
+    "prefill_s_total": 7041.4,
+    "needle_depths_pct": [
+     25,
+     50,
+     75
+    ],
+    "filler_sha256": "67ecdc055a6068ab6d86bdee52d0e1ba4ff8a15e39a6a989fe23d54be5a2dd2d",
+    "n_ctx": 131072,
+    "llama_build": "b11517-8a1a9b512",
+    "filler_materialised": false
+   }
+  },
+  {
+   "id": "ctx-gpqa30k",
+   "task": "gpqa-embedded-30k",
+   "acc": 0.4,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 1854,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 10,
+    "total": 25,
+    "temp": 0.0,
+    "target_ctx_tokens": 30000,
+    "prompt_tokens_mean": 30164,
+    "prompt_tokens_est_mean": 29987,
+    "token_calibration": "server /tokenize",
+    "chars_per_token": 4.061,
+    "prefill_s_total": 1144.5,
+    "needle_depths_pct": [
+     25,
+     50,
+     75
+    ],
+    "filler_sha256": "67ecdc055a6068ab6d86bdee52d0e1ba4ff8a15e39a6a989fe23d54be5a2dd2d",
+    "n_ctx": 131072,
+    "llama_build": "b11517-8a1a9b512",
+    "filler_materialised": false
+   }
+  },
+  {
+   "id": "agent-shell10",
+   "task": "shell10",
+   "acc": 0.3,
+   "metric": "acc",
+   "samples": 10,
+   "duration_s": 77,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 3,
+    "total": 10,
+    "max_turns": 6,
+    "temp": 0.0,
+    "ctx_peak_used": 576
+   }
+  }
+ ],
+ "notes": "night3 agentic rescore 2026-10-30 (harness fixes: tau2 telecom_small, shell10 pre-flight, termbench api_base)",
+ "slug": "underdog-saluki-27b-iq2",
+ "_src": "results/underdog-saluki-27b-iq2.json"
+}

@@ -1,0 +1,194 @@
+{
+ "schema": 1,
+ "kind": "intel-agentic",
+ "model": {
+  "name": "Huihui abliterated Q4_K_M",
+  "repo": "",
+  "file": "Huihui-abl-Q4_K_M.gguf",
+  "quant": "Q4_K_M",
+  "params_total": "27B",
+  "params_active": "27B",
+  "arch": "dense 27B",
+  "slug": "huihui-abl-q4-k-m"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -c 32768 --jinja -np 1",
+  "kv_cache": "f16",
+  "run_started": "2026-10-28T10:17:14+0000",
+  "run_finished": "2026-10-30T12:08:37+0000",
+  "peak_vram_mib": 18585,
+  "load_s": 8.0,
+  "cgroup_oom_kill_before": 0,
+  "cgroup_oom_kill_after": 0,
+  "mem_guard": "24G",
+  "night3_agentic_rescore": true
+ },
+ "status": "done",
+ "tests": [
+  {
+   "id": "pub-aime10x3",
+   "task": "aime2026-15",
+   "acc": 0.5333,
+   "metric": "acc",
+   "samples": 15,
+   "duration_s": 4565,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 8,
+    "total": 15,
+    "pass1_acc": 0.5333,
+    "samples": 3,
+    "temp": 0.6
+   }
+  },
+  {
+   "id": "pub-gpqa25",
+   "task": "gpqa-diamond",
+   "acc": 0.76,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 2083,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 19,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "pub-livebench25",
+   "task": "livebench-25",
+   "acc": 0.16,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 1882,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 4,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "agent-tau2-telecom20",
+   "task": "tau2-bench telecom",
+   "acc": 0.5,
+   "metric": "pass_hat_1",
+   "samples": 20,
+   "duration_s": 1318,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "reward": 0.5,
+    "success_rate": 0.5,
+    "pass_hat_1": 0.5,
+    "ctx_peak_used": null,
+    "num_tasks": 20,
+    "num_trials": 1,
+    "task_set": "telecom_small"
+   }
+  },
+  {
+   "id": "agent-termbench8",
+   "task": "terminal-bench",
+   "acc": 0.875,
+   "metric": "pass",
+   "samples": 8,
+   "duration_s": 1495,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "pass": 7,
+    "total": 8,
+    "attempted": 8
+   }
+  },
+  {
+   "id": "ctx-gpqa110k",
+   "task": "gpqa-embedded-110k",
+   "acc": 0.44,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 8214,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 11,
+    "total": 25,
+    "temp": 0.0,
+    "target_ctx_tokens": 110000,
+    "prompt_tokens_mean": 110140,
+    "prompt_tokens_est_mean": 109987,
+    "token_calibration": "server /tokenize",
+    "chars_per_token": 4.061,
+    "prefill_s_total": 6931.0,
+    "needle_depths_pct": [
+     25,
+     50,
+     75
+    ],
+    "filler_sha256": "67ecdc055a6068ab6d86bdee52d0e1ba4ff8a15e39a6a989fe23d54be5a2dd2d",
+    "n_ctx": 131072,
+    "llama_build": "b11517-8a1a9b512",
+    "filler_materialised": false
+   }
+  },
+  {
+   "id": "ctx-gpqa30k",
+   "task": "gpqa-embedded-30k",
+   "acc": 0.52,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 2214,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 13,
+    "total": 25,
+    "temp": 0.0,
+    "target_ctx_tokens": 30000,
+    "prompt_tokens_mean": 30164,
+    "prompt_tokens_est_mean": 29987,
+    "token_calibration": "server /tokenize",
+    "chars_per_token": 4.061,
+    "prefill_s_total": 1113.0,
+    "needle_depths_pct": [
+     25,
+     50,
+     75
+    ],
+    "filler_sha256": "67ecdc055a6068ab6d86bdee52d0e1ba4ff8a15e39a6a989fe23d54be5a2dd2d",
+    "n_ctx": 131072,
+    "llama_build": "b11517-8a1a9b512",
+    "filler_materialised": false
+   }
+  },
+  {
+   "id": "agent-shell10",
+   "task": "shell10",
+   "acc": 0.4,
+   "metric": "acc",
+   "samples": 10,
+   "duration_s": 104,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 4,
+    "total": 10,
+    "max_turns": 6,
+    "temp": 0.0,
+    "ctx_peak_used": 444
+   }
+  }
+ ],
+ "notes": "night3 agentic rescore 2026-10-30 (harness fixes: tau2 telecom_small, shell10 pre-flight, termbench api_base)",
+ "slug": "huihui-abl-q4-k-m",
+ "_src": "results/huihui-abl-q4-k-m.json"
+}

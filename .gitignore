@@ -1,0 +1,11 @@
+# benchmark videos are rendered locally and served from CloudFront, never committed
+videos/
+*.mp4
+*.webm
+
+# tooling / editor noise
+node_modules/
+.DS_Store
+__pycache__/
+*.pyc
+.venv/

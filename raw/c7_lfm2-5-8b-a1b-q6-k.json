@@ -1,0 +1,97 @@
+{
+ "schema": 1,
+ "kind": "power-sweep",
+ "model": {
+  "slug": "lfm2-5-8b-a1b-q6-k",
+  "file": "/home/ubuntu/llmbench/tune/dl/LFM2.5-8B-A1B-Q6_K.gguf",
+  "name": "LFM2.5-8B-A1B Q6_K"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "hwmon": "/sys/class/hwmon/hwmon0 (amdgpu, power1 label=PPT)",
+  "power_attr_note": "sampled power1_average, NOT power1_input: this driver exposes no power1_input attribute (verified 2026-10-26). Both are the same PPT quantity in microwatts.",
+  "cap_default_w": 300,
+  "cap_min_w": 210,
+  "site_cap_w": 250,
+  "order": "300->250->220, 60 s settle between caps",
+  "idle_note": "idle sample waits for gpu_busy<5 (bounded 120 s)",
+  "implementation_note": "rewritten 2026-10-26 (first real run): foreground rec.sh bench + sidecar sampler on the recorder pid; table via cast2md.py"
+ },
+ "tests": [
+  {
+   "id": "c7-power-300",
+   "duration_s": 15,
+   "metrics": {
+    "cap_w": 300,
+    "pp512_tps": 6038.8,
+    "pp32768_tps": 6587.74,
+    "tg128_tps": 280.21,
+    "avg_power_W": 150.3,
+    "peak_power_W": 300.0,
+    "peak_temp_C": 79.0,
+    "peak_edge_C": 54.0,
+    "samples": 3,
+    "pp512_tps_per_W": 40.178,
+    "tg128_tps_per_W": 1.864,
+    "idle_avg_power_W": 2.3,
+    "idle_peak_junction_C": 60.0,
+    "idle_gpu_busy_max_pct": 0
+   },
+   "notes": "llama-bench -p 512,32768 -n 128 -r 1 -fa 1 -ngl 99 at 300 W cap; sidecar lfm2-5-8b-a1b-q6-k_c7-power-300W.csv; idle lfm2-5-8b-a1b-q6-k_c7-idle-300W.csv"
+  },
+  {
+   "id": "c7-power-250",
+   "duration_s": 15,
+   "metrics": {
+    "cap_w": 250,
+    "pp512_tps": 6093.06,
+    "pp32768_tps": 6224.9,
+    "tg128_tps": 280.79,
+    "avg_power_W": 145.0,
+    "peak_power_W": 250.0,
+    "peak_temp_C": 73.0,
+    "peak_edge_C": 51.0,
+    "samples": 3,
+    "pp512_tps_per_W": 42.021,
+    "tg128_tps_per_W": 1.936,
+    "idle_avg_power_W": 2.3,
+    "idle_peak_junction_C": 55.0,
+    "idle_gpu_busy_max_pct": 0
+   },
+   "notes": "llama-bench -p 512,32768 -n 128 -r 1 -fa 1 -ngl 99 at 250 W cap; sidecar lfm2-5-8b-a1b-q6-k_c7-power-250W.csv; idle lfm2-5-8b-a1b-q6-k_c7-idle-250W.csv"
+  },
+  {
+   "id": "c7-power-220",
+   "duration_s": 15,
+   "metrics": {
+    "cap_w": 220,
+    "pp512_tps": 6092.67,
+    "pp32768_tps": 5959.93,
+    "tg128_tps": 276.44,
+    "avg_power_W": 128.3,
+    "peak_power_W": 220.0,
+    "peak_temp_C": 67.0,
+    "peak_edge_C": 48.0,
+    "samples": 3,
+    "pp512_tps_per_W": 47.488,
+    "tg128_tps_per_W": 2.155,
+    "idle_avg_power_W": 2.5,
+    "idle_peak_junction_C": 51.0,
+    "idle_gpu_busy_max_pct": 0
+   },
+   "notes": "llama-bench -p 512,32768 -n 128 -r 1 -fa 1 -ngl 99 at 220 W cap; sidecar lfm2-5-8b-a1b-q6-k_c7-power-220W.csv; idle lfm2-5-8b-a1b-q6-k_c7-idle-220W.csv"
+  },
+  {
+   "id": "c7-power-180",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a: below hardware minimum (210 W)"
+  }
+ ],
+ "status": "done",
+ "slug": "c7_lfm2-5-8b-a1b-q6-k",
+ "_src": "results/c7_lfm2-5-8b-a1b-q6-k.json"
+}

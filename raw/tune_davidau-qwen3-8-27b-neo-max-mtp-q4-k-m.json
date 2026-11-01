@@ -1,0 +1,290 @@
+{
+ "schema": 1,
+ "kind": "tune",
+ "dry_run": false,
+ "model": {
+  "name": "DavidAU Qwen3.8-27B NEO-MAX MTP",
+  "repo": "LOCAL: /home/ubuntu/models/DavidAU-Qwen3.8-27B-NEO-MAX-MTP-Q4_K_M.gguf",
+  "file": "DavidAU-Qwen3.8-27B-NEO-MAX-MTP-Q4_K_M.gguf",
+  "quant": "Q4_K_M",
+  "size_bytes": 18498791680,
+  "arch": "qwen35 hybrid dense + nextn MTP head",
+  "native_ctx": 262144
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "binary": "/home/ubuntu/llama-vulkan/llama-b11517/llama-server",
+  "kv_cache": "q8_0/q4_0 unless noted",
+  "run_started": "2026-10-26 05:11:04",
+  "run_finished": "2026-10-26 06:29:34"
+ },
+ "tune": {
+  "usable_ctx": 262144,
+  "binding_reason": "ladder top reached without failure (attention-scaling not yet binding)",
+  "ladder": [
+   {
+    "ctx": 131072,
+    "load_ok": true,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 173.9,
+    "ttft_s_128tok": 0.4,
+    "vram_used_gib": 19.95
+   },
+   {
+    "ctx": 196608,
+    "load_ok": true,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 324.1,
+    "ttft_s_128tok": 0.3,
+    "vram_used_gib": 21.64
+   },
+   {
+    "ctx": 262144,
+    "load_ok": true,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 517.2,
+    "ttft_s_128tok": 0.3,
+    "vram_used_gib": 23.33
+   }
+  ]
+ },
+ "tests": [
+  {
+   "id": "c0-ppextended",
+   "duration_s": 907,
+   "metrics": {
+    "pp512": 858.05,
+    "pp4096": 851.14,
+    "pp8192": 828.78,
+    "pp16384": 794.04,
+    "pp32768": 731.69,
+    "pp65536": 632.81,
+    "pp131072": 498.6,
+    "tg128": 29.39
+   },
+   "notes": "headline: llama-bench -p 512,4096,8192,16384,32768,65536,131072 -n 128 -r 1 -fa 1 -ngl 99, f16 KV; ctx-fail rows recorded with their error line"
+  },
+  {
+   "id": "c1-fa-on",
+   "duration_s": 20,
+   "metrics": {
+    "pp512": 861.98,
+    "pp4096": 847.28,
+    "tg128": 29.43
+   },
+   "notes": "llama-bench -p 512,4096 -n 128 -r 1 -fa on"
+  },
+  {
+   "id": "c1-fa-off",
+   "duration_s": 19,
+   "metrics": {
+    "pp512": 856.17,
+    "pp4096": 833.02,
+    "tg128": 29.2
+   },
+   "notes": "llama-bench -p 512,4096 -n 128 -r 1 -fa off"
+  },
+  {
+   "id": "c2-slots-np1",
+   "duration_s": 19,
+   "metrics": {
+    "load_s": 6.0,
+    "ttft_ms_128tok": 319.9,
+    "prefill_tps": 359.48,
+    "decode_tps_median": 28.87,
+    "draft_accept_pct": null,
+    "vram_used_gib": 17.37
+   },
+   "notes": "llama-server --np 1 -c 32768; probe = ttft(128tok) + decode 128x2"
+  },
+  {
+   "id": "c2-slots-np4",
+   "duration_s": 18,
+   "metrics": {
+    "load_s": 4.0,
+    "ttft_ms_128tok": 314.9,
+    "prefill_tps": 365.17,
+    "decode_tps_median": 28.96,
+    "draft_accept_pct": null,
+    "vram_used_gib": 20.24
+   },
+   "notes": "llama-server --np 4 -c 131072 (prod-like); probe = ttft(128tok) + decode 128x2"
+  },
+  {
+   "id": "c3-spec-none",
+   "duration_s": 17,
+   "metrics": {
+    "load_ok": true,
+    "spec_active": true,
+    "spec_impl": "none",
+    "decode_tps_median": 29.14,
+    "draft_accept_pct": null,
+    "ttft_ms_128tok": 315.7
+   },
+   "notes": "--spec-type none @32k, np 1"
+  },
+  {
+   "id": "c3-spec-draft-mtp",
+   "duration_s": 15,
+   "metrics": {
+    "load_ok": true,
+    "spec_active": true,
+    "spec_impl": "draft-mtp(in-model)",
+    "decode_tps_median": 58.7,
+    "draft_accept_pct": 69.9,
+    "ttft_ms_128tok": 448.2
+   },
+   "notes": "--spec-type draft-mtp @32k, np 1"
+  },
+  {
+   "id": "c3-spec-draft-dflash + -md DFlash2",
+   "duration_s": 15,
+   "metrics": {
+    "load_ok": true,
+    "spec_active": true,
+    "spec_impl": "draft-dflash",
+    "decode_tps_median": 62.28,
+    "draft_accept_pct": 69.1,
+    "ttft_ms_128tok": 478.1
+   },
+   "notes": "--spec-type draft-dflash + -md DFlash2 @32k, np 1"
+  },
+  {
+   "id": "c4-kv-f16",
+   "duration_s": 105,
+   "metrics": {
+    "pp4096": 846.25,
+    "pp32768": 729.96,
+    "tg32": 29.26
+   },
+   "notes": "llama-bench -p 4096,32768 -n 32 -r 1, f16 KV"
+  },
+  {
+   "id": "c4-kv-q8q4",
+   "duration_s": 119,
+   "metrics": {
+    "pp4096": 824.74,
+    "pp32768": 630.01,
+    "tg32": 29.02
+   },
+   "notes": "llama-bench -p 4096,32768 -n 32 -r 1, -ctk q8_0 -ctv q4_0"
+  },
+  {
+   "id": "pub-math20",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — harness produced no output file (task ?)"
+  },
+  {
+   "id": "pub-math500-20",
+   "duration_s": 5,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — ModuleNotFoundError: `sympy`, `math_verify` and `antlr4-python3-runtime==4.11` are required for generating translation task prompt templates. Please install the required packages via pip install lm-ev (task ?)"
+  },
+  {
+   "id": "pub-logic15",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — harness produced no output file (task ?)"
+  },
+  {
+   "id": "pub-arc25",
+   "duration_s": 10,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — TypeError: 'NoneType' object is not subscriptable (task ?)"
+  },
+  {
+   "id": "pub-mmlupro15",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — harness produced no output file (task ?)"
+  },
+  {
+   "id": "c5-ctx-131072",
+   "duration_s": 532,
+   "metrics": {
+    "load_ok": true,
+    "load_s": 4.0,
+    "probe_ctx": 104857,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 173.9,
+    "ttft_s_128tok": 0.4,
+    "prefill_tps_128tok": 319.89,
+    "vram_used_gib": 19.95
+   },
+   "notes": "serve -c 131072, np 1, q8_0/q4_0 KV; NIAH 3 depths @80% ctx + TTFT"
+  },
+  {
+   "id": "c5-ctx-196608",
+   "duration_s": 987,
+   "metrics": {
+    "load_ok": true,
+    "load_s": 6.0,
+    "probe_ctx": 157286,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 324.1,
+    "ttft_s_128tok": 0.3,
+    "prefill_tps_128tok": 380.81,
+    "vram_used_gib": 21.64
+   },
+   "notes": "serve -c 196608, np 1, q8_0/q4_0 KV; NIAH 3 depths @80% ctx + TTFT"
+  },
+  {
+   "id": "c5-ctx-262144",
+   "duration_s": 1571,
+   "metrics": {
+    "load_ok": true,
+    "load_s": 6.0,
+    "probe_ctx": 209715,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 517.2,
+    "ttft_s_128tok": 0.3,
+    "prefill_tps_128tok": 380.96,
+    "vram_used_gib": 23.33
+   },
+   "notes": "serve -c 262144, np 1, q8_0/q4_0 KV; NIAH 3 depths @80% ctx + TTFT"
+  }
+ ],
+ "recommendation": "",
+ "recordings": [
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c0-ppextended.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c1-fa-off.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c1-fa-on.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c4-kv-f16.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c4-kv-q8q4.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c5-ctx-131072-niah.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c5-ctx-131072-ttft.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c5-ctx-196608-niah.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c5-ctx-196608-ttft.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c5-ctx-262144-niah.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_c5-ctx-262144-ttft.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_np1.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_np4.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_spec-dflash.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_spec-mtp.cast",
+  "/home/ubuntu/llmbench/tune/recordings/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m_spec-none.cast"
+ ],
+ "status": "done",
+ "notes": "",
+ "slug": "tune_davidau-qwen3-8-27b-neo-max-mtp-q4-k-m",
+ "_src": "results/tune_davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json"
+}

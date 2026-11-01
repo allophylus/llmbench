@@ -1,0 +1,289 @@
+{
+ "schema": 1,
+ "kind": "tune",
+ "dry_run": false,
+ "model": {
+  "name": "Underdog-Saluki-27B-1.0 IQ2",
+  "repo": "ConwayResearch/Underdog-Saluki-27B-1.0",
+  "file": "Underdog-Saluki-27B-1.0-IQ2-mix.gguf",
+  "quant": "IQ2_mix",
+  "size_bytes": 7898369152,
+  "arch": "Qwen3.8 27B dense, imatrix 2-bit",
+  "native_ctx": 262144
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "binary": "/home/ubuntu/llama-vulkan/llama-b11517/llama-server",
+  "kv_cache": "q8_0/q4_0 unless noted",
+  "run_started": "2026-10-26 03:31:02",
+  "run_finished": "2026-10-26 05:05:15"
+ },
+ "tune": {
+  "usable_ctx": 262144,
+  "binding_reason": "ladder top reached without failure (attention-scaling not yet binding)",
+  "ladder": [
+   {
+    "ctx": 131072,
+    "load_ok": true,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 170.6,
+    "ttft_s_128tok": 0.4,
+    "vram_used_gib": 10.91
+   },
+   {
+    "ctx": 196608,
+    "load_ok": true,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 319.2,
+    "ttft_s_128tok": 0.3,
+    "vram_used_gib": 12.6
+   },
+   {
+    "ctx": 262144,
+    "load_ok": true,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 510.6,
+    "ttft_s_128tok": 0.3,
+    "vram_used_gib": 14.28
+   }
+  ]
+ },
+ "tests": [
+  {
+   "id": "c0-ppextended",
+   "duration_s": 881,
+   "metrics": {
+    "pp512": 895.84,
+    "pp4096": 876.23,
+    "pp8192": 855.34,
+    "pp16384": 819.89,
+    "pp32768": 753.96,
+    "pp65536": 649.36,
+    "pp131072": 509.22,
+    "tg128": 46.27
+   },
+   "notes": "headline: llama-bench -p 512,4096,8192,16384,32768,65536,131072 -n 128 -r 1 -fa 1 -ngl 99, f16 KV; ctx-fail rows recorded with their error line"
+  },
+  {
+   "id": "c1-fa-on",
+   "duration_s": 15,
+   "metrics": {
+    "pp512": 893.09,
+    "pp4096": 875.89,
+    "tg128": 46.32
+   },
+   "notes": "llama-bench -p 512,4096 -n 128 -r 1 -fa on"
+  },
+  {
+   "id": "c1-fa-off",
+   "duration_s": 16,
+   "metrics": {
+    "pp512": 886.39,
+    "pp4096": 860.5,
+    "tg128": 45.81
+   },
+   "notes": "llama-bench -p 512,4096 -n 128 -r 1 -fa off"
+  },
+  {
+   "id": "c2-slots-np1",
+   "duration_s": 17,
+   "metrics": {
+    "load_s": 4.0,
+    "ttft_ms_128tok": 340.7,
+    "prefill_tps": 337.57,
+    "decode_tps_median": 45.34,
+    "draft_accept_pct": null,
+    "vram_used_gib": 8.33
+   },
+   "notes": "llama-server --np 1 -c 32768; probe = ttft(128tok) + decode 128x2"
+  },
+  {
+   "id": "c2-slots-np4",
+   "duration_s": 14,
+   "metrics": {
+    "load_s": 4.0,
+    "ttft_ms_128tok": 328.8,
+    "prefill_tps": 349.72,
+    "decode_tps_median": 45.49,
+    "draft_accept_pct": null,
+    "vram_used_gib": 11.2
+   },
+   "notes": "llama-server --np 4 -c 131072 (prod-like); probe = ttft(128tok) + decode 128x2"
+  },
+  {
+   "id": "c3-spec-none",
+   "duration_s": 14,
+   "metrics": {
+    "load_ok": true,
+    "spec_active": true,
+    "spec_impl": "none",
+    "decode_tps_median": 46.0,
+    "draft_accept_pct": null,
+    "ttft_ms_128tok": 327.1
+   },
+   "notes": "--spec-type none @32k, np 1"
+  },
+  {
+   "id": "c3-spec-draft-mtp",
+   "duration_s": 900,
+   "metrics": {
+    "load_ok": false,
+    "spec_active": null,
+    "spec_impl": null,
+    "decode_tps_median": null,
+    "draft_accept_pct": null,
+    "ttft_ms_128tok": null
+   },
+   "notes": "--spec-type draft-mtp @32k, np 1"
+  },
+  {
+   "id": "c3-spec-draft-dflash + -md DFlash2",
+   "duration_s": 13,
+   "metrics": {
+    "load_ok": true,
+    "spec_active": true,
+    "spec_impl": "draft-dflash",
+    "decode_tps_median": 65.13,
+    "draft_accept_pct": 57.1,
+    "ttft_ms_128tok": 479.4
+   },
+   "notes": "--spec-type draft-dflash + -md DFlash2 @32k, np 1"
+  },
+  {
+   "id": "c4-kv-f16",
+   "duration_s": 99,
+   "metrics": {
+    "pp4096": 893.83,
+    "pp32768": 754.45,
+    "tg32": 45.7
+   },
+   "notes": "llama-bench -p 4096,32768 -n 32 -r 1, f16 KV"
+  },
+  {
+   "id": "c4-kv-q8q4",
+   "duration_s": 114,
+   "metrics": {
+    "pp4096": 854.63,
+    "pp32768": 647.84,
+    "tg32": 45.45
+   },
+   "notes": "llama-bench -p 4096,32768 -n 32 -r 1, -ctk q8_0 -ctv q4_0"
+  },
+  {
+   "id": "pub-math20",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — harness produced no output file (task ?)"
+  },
+  {
+   "id": "pub-math500-20",
+   "duration_s": 4,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — ModuleNotFoundError: `sympy`, `math_verify` and `antlr4-python3-runtime==4.11` are required for generating translation task prompt templates. Please install the required packages via pip install lm-ev (task ?)"
+  },
+  {
+   "id": "pub-logic15",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — harness produced no output file (task ?)"
+  },
+  {
+   "id": "pub-arc25",
+   "duration_s": 9,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — TypeError: 'NoneType' object is not subscriptable (task ?)"
+  },
+  {
+   "id": "pub-mmlupro15",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — harness produced no output file (task ?)"
+  },
+  {
+   "id": "c5-ctx-131072",
+   "duration_s": 530,
+   "metrics": {
+    "load_ok": true,
+    "load_s": 4.0,
+    "probe_ctx": 104857,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 170.6,
+    "ttft_s_128tok": 0.4,
+    "prefill_tps_128tok": 319.04,
+    "vram_used_gib": 10.91
+   },
+   "notes": "serve -c 131072, np 1, q8_0/q4_0 KV; NIAH 3 depths @80% ctx + TTFT"
+  },
+  {
+   "id": "c5-ctx-196608",
+   "duration_s": 979,
+   "metrics": {
+    "load_ok": true,
+    "load_s": 4.0,
+    "probe_ctx": 157286,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 319.2,
+    "ttft_s_128tok": 0.3,
+    "prefill_tps_128tok": 382.47,
+    "vram_used_gib": 12.6
+   },
+   "notes": "serve -c 196608, np 1, q8_0/q4_0 KV; NIAH 3 depths @80% ctx + TTFT"
+  },
+  {
+   "id": "c5-ctx-262144",
+   "duration_s": 1556,
+   "metrics": {
+    "load_ok": true,
+    "load_s": 4.0,
+    "probe_ctx": 209715,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 510.6,
+    "ttft_s_128tok": 0.3,
+    "prefill_tps_128tok": 374.7,
+    "vram_used_gib": 14.28
+   },
+   "notes": "serve -c 262144, np 1, q8_0/q4_0 KV; NIAH 3 depths @80% ctx + TTFT"
+  }
+ ],
+ "recommendation": "",
+ "recordings": [
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c0-ppextended.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c1-fa-off.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c1-fa-on.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c4-kv-f16.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c4-kv-q8q4.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c5-ctx-131072-niah.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c5-ctx-131072-ttft.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c5-ctx-196608-niah.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c5-ctx-196608-ttft.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c5-ctx-262144-niah.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_c5-ctx-262144-ttft.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_np1.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_np4.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_spec-dflash.cast",
+  "/home/ubuntu/llmbench/tune/recordings/underdog-saluki-27b-iq2/underdog-saluki-27b-iq2_spec-none.cast"
+ ],
+ "status": "done",
+ "notes": "",
+ "slug": "tune_underdog-saluki-27b-iq2",
+ "_src": "results/tune_underdog-saluki-27b-iq2.json"
+}

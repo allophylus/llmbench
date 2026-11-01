@@ -1,0 +1,263 @@
+{
+ "schema": 1,
+ "kind": "intel-agentic",
+ "model": {
+  "name": "NVIDIA Nemotron-3.5-Lightning-30B-A3B",
+  "repo": "ggml-org/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-GGUF",
+  "file": "NVIDIA-Nemotron-3.5-Lightning-30B-A3B-Q4_0.gguf",
+  "quant": "Q4_0",
+  "params_total": "30B",
+  "params_active": "3B",
+  "arch": "MoE lightning, 131k",
+  "slug": "nemotron-3-5-lightning-30b-a3b-q4-0"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11874",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -c 131072 --jinja -np 1 -ctk q8_0 -ctv q4_0",
+  "kv_cache": "q8_0/q4_0",
+  "run_started": "2026-10-31T07:08:42+0000",
+  "suite_run": "night4",
+  "run_finished": "2026-10-31T08:25:30+0000",
+  "cgroup_oom_kill_before": 0,
+  "cgroup_oom_kill_after": 0,
+  "mem_guard": "24G"
+ },
+ "status": "done",
+ "tests": [
+  {
+   "id": "pub-aime10x3",
+   "task": "aime2026-15",
+   "acc": 0.2,
+   "metric": "acc",
+   "samples": 15,
+   "duration_s": 334,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 3,
+    "total": 15,
+    "pass1_acc": 0.1333,
+    "samples": 3,
+    "temp": 0.6
+   }
+  },
+  {
+   "id": "pub-gpqa25",
+   "task": "gpqa-diamond",
+   "acc": 0.64,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 369,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 16,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "pub-livebench25",
+   "task": "livebench-25",
+   "acc": 0.08,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 118,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 2,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "agent-shell10",
+   "task": "shell10",
+   "acc": 0.2,
+   "metric": "acc",
+   "samples": 10,
+   "duration_s": 18,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 2,
+    "total": 10,
+    "max_turns": 6,
+    "temp": 0.0,
+    "ctx_peak_used": 438
+   }
+  },
+  {
+   "id": "agent-tau2-telecom20",
+   "task": "tau2-bench telecom",
+   "acc": 0.0,
+   "metric": "pass_hat_1",
+   "samples": 20,
+   "duration_s": 272,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "reward": 0.0,
+    "success_rate": 0.0,
+    "pass_hat_1": 0.0,
+    "ctx_peak_used": null,
+    "num_tasks": 20,
+    "num_trials": 1,
+    "task_set": "telecom_small"
+   }
+  },
+  {
+   "id": "agent-termbench8",
+   "task": "terminal-bench",
+   "acc": 0.625,
+   "metric": "pass",
+   "samples": 8,
+   "duration_s": 926,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "pass": 5,
+    "total": 8,
+    "attempted": 8
+   }
+  },
+  {
+   "id": "ctx-gpqa110k",
+   "task": "gpqa-embedded-110k",
+   "acc": 0.44,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 1939,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 11,
+    "total": 25,
+    "temp": 0.0,
+    "target_ctx_tokens": 110000,
+    "prompt_tokens_mean": 110185,
+    "prompt_tokens_est_mean": 109987,
+    "token_calibration": "server /tokenize",
+    "chars_per_token": 4.16,
+    "prefill_s_total": 1929.4,
+    "needle_depths_pct": [
+     25,
+     50,
+     75
+    ],
+    "filler_sha256": "67ecdc055a6068ab6d86bdee52d0e1ba4ff8a15e39a6a989fe23d54be5a2dd2d",
+    "n_ctx": 131072,
+    "llama_build": "b1-f5222f2",
+    "filler_materialised": false
+   }
+  },
+  {
+   "id": "ctx-gpqa30k",
+   "task": "gpqa-embedded-30k",
+   "acc": 0.32,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 325,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 8,
+    "total": 25,
+    "temp": 0.0,
+    "target_ctx_tokens": 30000,
+    "prompt_tokens_mean": 30152,
+    "prompt_tokens_est_mean": 29987,
+    "token_calibration": "server /tokenize",
+    "chars_per_token": 4.16,
+    "prefill_s_total": 320.6,
+    "needle_depths_pct": [
+     25,
+     50,
+     75
+    ],
+    "filler_sha256": "67ecdc055a6068ab6d86bdee52d0e1ba4ff8a15e39a6a989fe23d54be5a2dd2d",
+    "n_ctx": 131072,
+    "llama_build": "b1-f5222f2",
+    "filler_materialised": false
+   }
+  },
+  {
+   "id": "bench-ctx-sweep",
+   "task": "llama-bench p=512..131072 n=128 r=1 (b11874)",
+   "acc": null,
+   "metric": "t/s",
+   "samples": 8,
+   "duration_s": 256,
+   "n_a": false,
+   "reason": "",
+   "rows": [
+    {
+     "n_prompt": 512,
+     "n_gen": 0,
+     "avg_ts": 3025.64,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 4096,
+     "n_gen": 0,
+     "avg_ts": 3167.6,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 8192,
+     "n_gen": 0,
+     "avg_ts": 3091.23,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 16384,
+     "n_gen": 0,
+     "avg_ts": 2929.39,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 32768,
+     "n_gen": 0,
+     "avg_ts": 2669.08,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 65536,
+     "n_gen": 0,
+     "avg_ts": 2284.45,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 131072,
+     "n_gen": 0,
+     "avg_ts": 1766.44,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 0,
+     "n_gen": 128,
+     "avg_ts": 141.31,
+     "stddev_ts": 0.0,
+     "test": null
+    }
+   ]
+  }
+ ],
+ "pp512": 3025.64,
+ "pp4096": 3167.6,
+ "tg128": 141.31,
+ "notes": "ctx-sweep backfilled 1 Nov from recordings4 cast (night4 stdout-redirect bug)",
+ "slug": "nemotron-3-5-lightning-30b-a3b-q4-0",
+ "_src": "results/nemotron-3-5-lightning-30b-a3b-q4-0.json"
+}

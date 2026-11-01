@@ -1,0 +1,325 @@
+{
+ "schema": 1,
+ "kind": "tune",
+ "dry_run": false,
+ "model": {
+  "name": "Qwen3.8-27B Q4_K_M",
+  "repo": "LOCAL: /home/ubuntu/models/Qwen3.8-27B-Q4_K_M.gguf",
+  "file": "Qwen3.8-27B-Q4_K_M.gguf",
+  "quant": "Q4_K_M",
+  "size_bytes": 16464440224,
+  "arch": "qwen35 hybrid dense 65L (1 full-attn / 4)",
+  "native_ctx": 262144
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "binary": "/home/ubuntu/llama-vulkan/llama-b11517/llama-server",
+  "kv_cache": "q8_0/q4_0 unless noted",
+  "run_started": "2026-10-26 02:14:09",
+  "run_finished": "2026-10-26 03:31:02"
+ },
+ "tune": {
+  "usable_ctx": 262144,
+  "binding_reason": "ladder top reached without failure (attention-scaling not yet binding)",
+  "ladder": [
+   {
+    "ctx": 131072,
+    "load_ok": true,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 165.1,
+    "ttft_s_128tok": 0.3,
+    "vram_used_gib": 18.15
+   },
+   {
+    "ctx": 196608,
+    "load_ok": true,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 310.8,
+    "ttft_s_128tok": 0.3,
+    "vram_used_gib": 19.84
+   },
+   {
+    "ctx": 262144,
+    "load_ok": true,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 499.5,
+    "ttft_s_128tok": 0.3,
+    "vram_used_gib": 21.53
+   }
+  ]
+ },
+ "tests": [
+  {
+   "id": "c0-ppextended",
+   "duration_s": 846,
+   "metrics": {
+    "pp512": 963.95,
+    "pp4096": 943.59,
+    "pp8192": 912.97,
+    "pp16384": 868.38,
+    "pp32768": 795.88,
+    "pp65536": 679.91,
+    "pp131072": 527.89,
+    "tg128": 31.75
+   },
+   "notes": "headline: llama-bench -p 512,4096,8192,16384,32768,65536,131072 -n 128 -r 1 -fa 1 -ngl 99, f16 KV; ctx-fail rows recorded with their error line"
+  },
+  {
+   "id": "c1-fa-on",
+   "duration_s": 19,
+   "metrics": {
+    "pp512": 955.14,
+    "pp4096": 935.36,
+    "tg128": 31.79
+   },
+   "notes": "llama-bench -p 512,4096 -n 128 -r 1 -fa on"
+  },
+  {
+   "id": "c1-fa-off",
+   "duration_s": 18,
+   "metrics": {
+    "pp512": 947.03,
+    "pp4096": 917.48,
+    "tg128": 31.63
+   },
+   "notes": "llama-bench -p 512,4096 -n 128 -r 1 -fa off"
+  },
+  {
+   "id": "c2-slots-np1",
+   "duration_s": 19,
+   "metrics": {
+    "load_s": 6.3,
+    "ttft_ms_128tok": 349.8,
+    "prefill_tps": 328.8,
+    "decode_tps_median": 31.02,
+    "draft_accept_pct": null,
+    "vram_used_gib": 15.57
+   },
+   "notes": "llama-server --np 1 -c 32768; probe = ttft(128tok) + decode 128x2"
+  },
+  {
+   "id": "c2-slots-np4",
+   "duration_s": 19,
+   "metrics": {
+    "load_s": 6.3,
+    "ttft_ms_128tok": 325.5,
+    "prefill_tps": 353.3,
+    "decode_tps_median": 31.17,
+    "draft_accept_pct": null,
+    "vram_used_gib": 18.44
+   },
+   "notes": "llama-server --np 4 -c 131072 (prod-like); probe = ttft(128tok) + decode 128x2"
+  },
+  {
+   "id": "c3-spec-none",
+   "duration_s": 19,
+   "metrics": {
+    "load_ok": true,
+    "spec_active": true,
+    "spec_impl": "none",
+    "decode_tps_median": 31.45,
+    "draft_accept_pct": null,
+    "ttft_ms_128tok": 304.8
+   },
+   "notes": "--spec-type none @32k, np 1"
+  },
+  {
+   "id": "c3-spec-draft-mtp",
+   "duration_s": 14,
+   "metrics": {
+    "load_ok": true,
+    "spec_active": true,
+    "spec_impl": "draft-mtp(in-model)",
+    "decode_tps_median": 69.22,
+    "draft_accept_pct": 69.9,
+    "ttft_ms_128tok": 401.7
+   },
+   "notes": "--spec-type draft-mtp @32k, np 1"
+  },
+  {
+   "id": "c3-spec-draft-dflash + -md DFlash2",
+   "duration_s": 14,
+   "metrics": {
+    "load_ok": true,
+    "spec_active": true,
+    "spec_impl": "draft-dflash",
+    "decode_tps_median": 66.41,
+    "draft_accept_pct": 66.7,
+    "ttft_ms_128tok": 456.9
+   },
+   "notes": "--spec-type draft-dflash + -md DFlash2 @32k, np 1"
+  },
+  {
+   "id": "c4-kv-f16",
+   "duration_s": 98,
+   "metrics": {
+    "pp4096": 933.49,
+    "pp32768": 793.71,
+    "tg32": 31.63
+   },
+   "notes": "llama-bench -p 4096,32768 -n 32 -r 1, f16 KV"
+  },
+  {
+   "id": "c4-kv-q8q4",
+   "duration_s": 111,
+   "metrics": {
+    "pp4096": 907.67,
+    "pp32768": 677.14,
+    "tg32": 31.22
+   },
+   "notes": "llama-bench -p 4096,32768 -n 32 -r 1, -ctk q8_0 -ctv q4_0"
+  },
+  {
+   "id": "c5-ctx-131072",
+   "duration_s": 508,
+   "metrics": {
+    "load_ok": true,
+    "load_s": 6.4,
+    "probe_ctx": 104857,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 165.1,
+    "ttft_s_128tok": 0.3,
+    "prefill_tps_128tok": 379.42,
+    "vram_used_gib": 18.15
+   },
+   "notes": "serve -c 131072, np 1, q8_0/q4_0 KV; NIAH 3 depths @80% ctx + TTFT"
+  },
+  {
+   "id": "c5-ctx-196608",
+   "duration_s": 947,
+   "metrics": {
+    "load_ok": true,
+    "load_s": 6.0,
+    "probe_ctx": 157286,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 310.8,
+    "ttft_s_128tok": 0.3,
+    "prefill_tps_128tok": 390.5,
+    "vram_used_gib": 19.84
+   },
+   "notes": "serve -c 196608, np 1, q8_0/q4_0 KV; NIAH 3 depths @80% ctx + TTFT"
+  },
+  {
+   "id": "c5-ctx-262144",
+   "duration_s": 1517,
+   "metrics": {
+    "load_ok": true,
+    "load_s": 6.0,
+    "probe_ctx": 209715,
+    "recall_pct": 100.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 499.5,
+    "ttft_s_128tok": 0.3,
+    "prefill_tps_128tok": 390.03,
+    "vram_used_gib": 21.53
+   },
+   "notes": "serve -c 262144, np 1, q8_0/q4_0 KV; NIAH 3 depths @80% ctx + TTFT"
+  },
+  {
+   "id": "pub-math20",
+   "duration_s": 303,
+   "metrics": {
+    "acc": 0.7,
+    "samples": 20,
+    "metric": "exact_match",
+    "task": "gsm8k_cot",
+    "n_requested": 20
+   },
+   "notes": "lm-eval exact_match on gsm8k_cot, local-completions /v1/completions :8081, --apply_chat_template (ChatML), temp 0, n_requested=20, samples=20"
+  },
+  {
+   "id": "pub-math500-20",
+   "duration_s": 1066,
+   "metrics": {
+    "acc": 0.9,
+    "samples": 20,
+    "metric": "math_verify",
+    "task": "minerva_math500",
+    "n_requested": 20
+   },
+   "notes": "lm-eval math_verify on minerva_math500, local-completions /v1/completions :8081, --apply_chat_template (ChatML), temp 0, n_requested=20, samples=20"
+  },
+  {
+   "id": "pub-logic15",
+   "duration_s": 715,
+   "metrics": {
+    "acc": 0.8667,
+    "samples": 15,
+    "metric": "exact_match",
+    "task": "bbh_cot_fewshot_logical_deduction_seven_objects",
+    "n_requested": 15
+   },
+   "notes": "lm-eval exact_match on bbh_cot_fewshot_logical_deduction_seven_objects, local-completions /v1/completions :8081, --apply_chat_template (ChatML), temp 0, n_requested=15, samples=15"
+  },
+  {
+   "id": "pub-arc25",
+   "duration_s": 45,
+   "metrics": {
+    "acc": 0.32,
+    "samples": 25,
+    "metric": "acc",
+    "task": "arc_challenge",
+    "n_requested": 25
+   },
+   "notes": "lm-eval acc on arc_challenge, local-completions /v1/completions :8081, --apply_chat_template (ChatML), temp 0, n_requested=25, samples=25"
+  },
+  {
+   "id": "pub-mmlupro15",
+   "duration_s": 674,
+   "metrics": {
+    "acc": 0.6,
+    "samples": 15,
+    "metric": "exact_match",
+    "task": "mmlu_pro_philosophy",
+    "n_requested": 15
+   },
+   "notes": "lm-eval exact_match on mmlu_pro_philosophy, local-completions /v1/completions :8081, --apply_chat_template (ChatML), temp 0, n_requested=15, samples=15"
+  }
+ ],
+ "recommendation": "",
+ "recordings": [
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/c0-pp131072.bench.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/c0-pp16384.bench.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/c0-pp32768.bench.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/c0-pp4096.bench.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/c0-pp512.bench.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/c0-pp65536.bench.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/c0-pp8192.bench.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/c0-ppextended.bench.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/fa-off.bench.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/fa-on.bench.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/np1.probe.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/np4.probe.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c0-ppextended.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c1-fa-off.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c1-fa-on.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c4-kv-f16.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c4-kv-q8q4.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c5-ctx-131072-niah.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c5-ctx-131072-ttft.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c5-ctx-196608-niah.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c5-ctx-196608-ttft.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c5-ctx-262144-niah.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_c5-ctx-262144-ttft.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_np1.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_np4.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_spec-dflash.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_spec-mtp.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/qwen3-8-27b-q4-k-m_spec-none.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/spec-dflash.probe.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/spec-mtp.probe.cast",
+  "/home/ubuntu/llmbench/tune/recordings/qwen3-8-27b-q4-k-m/spec-none.probe.cast"
+ ],
+ "status": "done",
+ "notes": "",
+ "slug": "tune_qwen3-8-27b-q4-k-m",
+ "_src": "results/tune_qwen3-8-27b-q4-k-m.json"
+}

@@ -1,0 +1,74 @@
+{
+ "schema": 1,
+ "bench": "tetris-coding-session v1 (frozen prompt + frozen 240 s timeline)",
+ "model": {
+  "name": "Qwen3.8-27B (prod :8080)",
+  "repo": "local/prod-active",
+  "file": "Qwen3.8-27B-Q4_K_M.gguf",
+  "quant": "Q4_K_M",
+  "size_bytes": 16464440224,
+  "params_total": "27B",
+  "arch": "dense Qwen3.8-27B, MTP draft + ngram-cache spec decode",
+  "native_ctx": 131072,
+  "license": "local use",
+  "prompt_sha": "001131465371a39d6c5df3e662f55c42085c54b7698ce8adbbbf692004f41f00",
+  "generation_wall_s": 60.42,
+  "generation_tokens": 2844,
+  "decode_tps": 47.89
+ },
+ "env": {
+  "host": "R9700 box (R9700 box, ubuntu24)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "driver": "amdgpu (kernel 7.0.0-38-generic, ROCm 7.2.4)",
+  "cpu": "AMD Ryzen 7 7745HX (8C/16T)",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -b 16384 -ub 2048 --cache-type-k q8_0 --cache-type-v q4_0 --reuse 256 -c 131072 (prod qwen-longctx server)",
+  "kv_cache": "k q8_0 / v q4_0 (prod serve settings)",
+  "ram_gb": 31,
+  "temperature": 0,
+  "max_tokens": 8192,
+  "prompt_sha": "001131465371a39d6c5df3e662f55c42085c54b7698ce8adbbbf692004f41f00",
+  "decode_tps": 47.89,
+  "run_started": "2026-10-26T23:16:41+0000",
+  "run_finished": "2026-10-26T23:47:00+00:00",
+  "peak_vram_mib": 25166
+ },
+ "tests": [
+  {
+   "id": "tetris-gen",
+   "duration_s": 60.42,
+   "metrics": {
+    "tokens_in": 569,
+    "tokens_out": 2844,
+    "decode_tps": 47.89,
+    "finish_reason": "stop",
+    "fenced_block": 1
+   }
+  },
+  {
+   "id": "tetris-play",
+   "duration_s": 29.4,
+   "metrics": {
+    "launch_ok": 1,
+    "lines_cleared": 0,
+    "pieces_placed": 9,
+    "crashes": 0,
+    "spec_violations": 1,
+    "status_frames": 1,
+    "contract_clean": 0
+   }
+  }
+ ],
+ "status": "done",
+ "recordings": [
+  "tetris_qwen3-8-27b-q4-k-m.cast"
+ ],
+ "artifacts": [
+  "llmbench/tetris/runs/qwen3-8-27b-q4-k-m/game.py",
+  "llmbench/tetris/runs/qwen3-8-27b-q4-k-m/metrics.json"
+ ],
+ "notes": "Played by the frozen scripted timeline (830 key events, 240 s, no 'q'). spec_violations detail: ['board_size_mismatch:7x23(scrolled-full)']. STATUS line printed once (single erase frame) at start, then only the pieces counter is updated; no STATUS refresh per frame. Board drawn 7 cells wide x 15-16 rows visible in the pty (10x20 array in code, drawn at the terminal origin with 1 char per cell and the visible rows scrolled off by the app's own scroll emulation), so the visible well is not 10x20. Game over after 9 pieces (stack reached the top), clean exit code 0.",
+ "slug": "tetris_qwen3-8-27b-q4-k-m",
+ "_src": "results/tetris_qwen3-8-27b-q4-k-m.json"
+}

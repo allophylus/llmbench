@@ -1,0 +1,37 @@
+{
+ "schema": 1,
+ "kind": "rebench",
+ "model": {
+  "name": "Qwen3.8-27B Q4_0",
+  "repo": "LOCAL: /home/ubuntu/models/Qwen3.8-27B-Q4_0.gguf",
+  "file": "Qwen3.8-27B-Q4_0.gguf",
+  "quant": "Q4_0"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "run_finished": "2026-10-26 12:17:07"
+ },
+ "tests": [
+  {
+   "id": "llama-bench-ppextended",
+   "duration_s": 741,
+   "metrics": {
+    "pp512": 1167.87,
+    "pp4096": 1163.23,
+    "pp8192": 1125.67,
+    "pp16384": 1062.72,
+    "pp32768": 954.21,
+    "pp65536": 791.66,
+    "pp131072": 592.22,
+    "tg128": 32.6
+   },
+   "notes": "llama-bench -p 512,4096,8192,16384,32768,65536,131072 -n 128 -r 1 -fa 1 -ngl 99 (KV f16); re-bench with 64k+128k rows"
+  }
+ ],
+ "status": "done",
+ "slug": "rebench_qwen3-8-27b-q4-0",
+ "_src": "results/rebench_qwen3-8-27b-q4-0.json"
+}

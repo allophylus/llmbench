@@ -1,0 +1,81 @@
+{
+ "schema": 1,
+ "model": {
+  "name": "Ornith-1.5-9B",
+  "repo": "ornith-ai/Ornith-1.5-9B-GGUF",
+  "file": "Ornith-1.5-9B-Q8_0.gguf",
+  "quant": "Q8_0",
+  "size_bytes": 9786060384,
+  "params_total": "9B",
+  "params_active": "9B",
+  "arch": "dense",
+  "native_ctx": 131072,
+  "license": "mit"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "driver": "RADV Mesa 25.2.8-0ubuntu0.24.04.4 (GFX1201)",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -b 1024 -ub 1024",
+  "kv_cache": "f16 (bench default)",
+  "ram_gb": 31,
+  "run_started": "2026-10-25T15:22:53+00:00",
+  "run_finished": "2026-10-25T15:26:35+00:00",
+  "peak_vram_mib": 9614
+ },
+ "tests": [
+  {
+   "id": "load-time",
+   "duration_s": 3.2,
+   "metrics": {
+    "cold_s": 3.2
+   }
+  },
+  {
+   "id": "llama-bench",
+   "duration_s": 37.9,
+   "metrics": {
+    "pp512": 3492.3,
+    "pp4096": 3727.4,
+    "pp32768": 2963.8,
+    "tg128": 61.8,
+    "tg512": 61.3
+   }
+  },
+  {
+   "id": "synthetic-math20",
+   "duration_s": 70.1,
+   "metrics": {
+    "acc": 0.9,
+    "total": 20,
+    "correct": 18,
+    "decode_tps": 58.3
+   }
+  },
+  {
+   "id": "synthetic-logic15",
+   "duration_s": 66.4,
+   "metrics": {
+    "acc": 0.867,
+    "total": 15,
+    "correct": 13,
+    "decode_tps": 58.5
+   }
+  },
+  {
+   "id": "synthetic-code15",
+   "duration_s": 40.2,
+   "metrics": {
+    "acc": 1.0,
+    "total": 15,
+    "pass": 15
+   }
+  }
+ ],
+ "status": "done",
+ "notes": "",
+ "slug": "ornith-1-5-9b-q8-0",
+ "_src": "results/ornith-1-5-9b-q8-0.json"
+}

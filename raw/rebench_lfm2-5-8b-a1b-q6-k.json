@@ -1,0 +1,37 @@
+{
+ "schema": 1,
+ "kind": "rebench",
+ "model": {
+  "name": "LFM2.5-8B-A1B",
+  "repo": "LiquidAI/LFM2.5-8B-A1B-GGUF",
+  "file": "LFM2.5-8B-A1B-Q6_K.gguf",
+  "quant": "Q6_K"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "run_finished": "2026-10-26 13:03:09"
+ },
+ "tests": [
+  {
+   "id": "llama-bench-ppextended",
+   "duration_s": 116,
+   "metrics": {
+    "pp512": 6003.16,
+    "pp4096": 7451.47,
+    "pp8192": 7253.65,
+    "pp16384": 6850.1,
+    "pp32768": 6146.42,
+    "pp65536": 5120.49,
+    "pp131072": 3819.95,
+    "tg128": 280.06
+   },
+   "notes": "llama-bench -p 512,4096,8192,16384,32768,65536,131072 -n 128 -r 1 -fa 1 -ngl 99 (KV f16); re-bench with 64k+128k rows"
+  }
+ ],
+ "status": "done",
+ "slug": "rebench_lfm2-5-8b-a1b-q6-k",
+ "_src": "results/rebench_lfm2-5-8b-a1b-q6-k.json"
+}

@@ -1,0 +1,253 @@
+{
+ "schema": 1,
+ "kind": "intel-agentic",
+ "model": {
+  "name": "Flint Q4_K_M",
+  "repo": "ggml-org/Flint-GGUF",
+  "file": "Flint-Q4_K_M.gguf",
+  "quant": "Q4_K_M",
+  "params_total": "40B",
+  "params_active": "2.5B",
+  "arch": "RecursiveSI MoE 40B total / 2.5B active",
+  "slug": "flint-q4-k-m"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11874",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -c 131072 --jinja -np 1 -ctk q8_0 -ctv q4_0",
+  "kv_cache": "q8_0/q4_0",
+  "run_started": "2026-10-30T23:46:29+0000",
+  "suite_run": "night2",
+  "run_finished": "2026-10-31T03:55:47+0000",
+  "cgroup_oom_kill_before": 0,
+  "cgroup_oom_kill_after": 0,
+  "mem_guard": "24G",
+  "notes_night": "9 cells: 3 intel + 2 ctx + tau2 + termbench + llama-bench sweep real; shell10 n/a (server 500 on malformed tool-call JSON, model-side)"
+ },
+ "status": "done",
+ "tests": [
+  {
+   "id": "bench-ctx-sweep",
+   "task": "llama-bench p=512..131072 n=128 r=1 (b11874)",
+   "acc": null,
+   "metric": "t/s",
+   "samples": 8,
+   "duration_s": 400,
+   "n_a": false,
+   "rows": [
+    {
+     "n_prompt": 512,
+     "n_gen": 0,
+     "avg_ts": 2294.14,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 4096,
+     "n_gen": 0,
+     "avg_ts": 2381.68,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 8192,
+     "n_gen": 0,
+     "avg_ts": 2295.01,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 16384,
+     "n_gen": 0,
+     "avg_ts": 2136.24,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 32768,
+     "n_gen": 0,
+     "avg_ts": 1897.38,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 65536,
+     "n_gen": 0,
+     "avg_ts": 1545.66,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 131072,
+     "n_gen": 0,
+     "avg_ts": 1122.38,
+     "stddev_ts": 0.0,
+     "test": null
+    },
+    {
+     "n_prompt": 0,
+     "n_gen": 128,
+     "avg_ts": 100.36,
+     "stddev_ts": 0.0,
+     "test": null
+    }
+   ],
+   "notes": "rows recovered from the cast cell log: llambench.json was truncated by the ENOSPC window (disk 13G free); values are the same JSON llama-bench printed"
+  },
+  {
+   "id": "pub-gpqa25",
+   "task": "gpqa-diamond",
+   "acc": 0.64,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 839,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 16,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "pub-aime10x3",
+   "task": "aime2026-15",
+   "acc": 0.4,
+   "metric": "acc",
+   "samples": 15,
+   "duration_s": 1589,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 6,
+    "total": 15,
+    "pass1_acc": 0.4,
+    "samples": 3,
+    "temp": 0.6
+   }
+  },
+  {
+   "id": "pub-livebench25",
+   "task": "livebench-25",
+   "acc": 0.12,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 859,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 3,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "ctx-gpqa30k",
+   "task": "gpqa-embedded-30k",
+   "acc": 0.52,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 847,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 13,
+    "total": 25,
+    "temp": 0.0,
+    "target_ctx_tokens": 30000,
+    "prompt_tokens_mean": 30191,
+    "prompt_tokens_est_mean": 29988,
+    "token_calibration": "server /tokenize",
+    "chars_per_token": 4.443,
+    "prefill_s_total": 502.3,
+    "needle_depths_pct": [
+     25,
+     50,
+     75
+    ],
+    "filler_sha256": "67ecdc055a6068ab6d86bdee52d0e1ba4ff8a15e39a6a989fe23d54be5a2dd2d",
+    "n_ctx": 131072,
+    "llama_build": "b1-f5222f2",
+    "filler_materialised": false
+   }
+  },
+  {
+   "id": "ctx-gpqa110k",
+   "task": "gpqa-embedded-110k",
+   "acc": 0.48,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 3926,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 12,
+    "total": 25,
+    "temp": 0.0,
+    "target_ctx_tokens": 110000,
+    "prompt_tokens_mean": 110148,
+    "prompt_tokens_est_mean": 109988,
+    "token_calibration": "server /tokenize",
+    "chars_per_token": 4.443,
+    "prefill_s_total": 3469.7,
+    "needle_depths_pct": [
+     25,
+     50,
+     75
+    ],
+    "filler_sha256": "67ecdc055a6068ab6d86bdee52d0e1ba4ff8a15e39a6a989fe23d54be5a2dd2d",
+    "n_ctx": 131072,
+    "llama_build": "b1-f5222f2",
+    "filler_materialised": false
+   }
+  },
+  {
+   "id": "agent-tau2-telecom20",
+   "task": "tau2-bench telecom",
+   "acc": 0.55,
+   "metric": "pass_hat_1",
+   "samples": 20,
+   "duration_s": 3854,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "reward": 0.55,
+    "success_rate": 0.55,
+    "pass_hat_1": 0.55,
+    "ctx_peak_used": null,
+    "num_tasks": 20,
+    "num_trials": 1,
+    "task_set": "telecom_small"
+   }
+  },
+  {
+   "id": "agent-termbench8",
+   "task": "terminal-bench",
+   "acc": 0.625,
+   "metric": "pass",
+   "samples": 8,
+   "duration_s": 2387,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "pass": 5,
+    "total": 8,
+    "attempted": 8
+   }
+  },
+  {
+   "id": "agent-shell10",
+   "task": "shell10",
+   "acc": null,
+   "metric": null,
+   "samples": null,
+   "duration_s": 0,
+   "n_a": true,
+   "reason": "llama-server 500: tool-call arguments failed JSON parse (parse_error.101 missing closing quote in generated tool args) - model-side malformed tool call, not a harness fault"
+  }
+ ],
+ "slug": "flint-q4-k-m",
+ "_src": "results/flint-q4-k-m.json"
+}

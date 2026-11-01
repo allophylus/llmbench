@@ -1,0 +1,98 @@
+{
+ "schema": 1,
+ "kind": "power-sweep",
+ "model": {
+  "slug": "qwen3-8-27b-q4-k-m",
+  "file": "/home/ubuntu/models/Qwen3.8-27B-Q4_K_M.gguf",
+  "name": "Qwen3.8-27B Q4_K_M"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "hwmon": "/sys/class/hwmon/hwmon0 (amdgpu, power1 label=PPT)",
+  "power_attr_note": "sampled power1_average, NOT power1_input: this driver exposes no power1_input attribute (verified 2026-10-26). Both are the same PPT quantity in microwatts.",
+  "cap_default_w": 300,
+  "cap_min_w": 210,
+  "site_cap_w": 250,
+  "order": "300->250->220, 60 s settle between caps",
+  "idle_note": "idle sample waits for gpu_busy<5 (bounded 120 s)",
+  "implementation_note": "rewritten 2026-10-26 (first real run): foreground rec.sh bench + sidecar sampler on the recorder pid; table via cast2md.py"
+ },
+ "tests": [
+  {
+   "id": "c7-power-300",
+   "duration_s": 460,
+   "metrics": {
+    "cap_w": 300,
+    "pp512_tps": 171.01,
+    "pp32768_tps": 161.9,
+    "tg128_tps": 3.12,
+    "avg_power_W": 156.2,
+    "peak_power_W": 175.0,
+    "peak_temp_C": 87.0,
+    "peak_edge_C": 66.0,
+    "samples": 92,
+    "pp512_tps_per_W": 1.095,
+    "tg128_tps_per_W": 0.02,
+    "idle_avg_power_W": 5.5,
+    "idle_peak_junction_C": 31.0,
+    "idle_gpu_busy_max_pct": 36,
+    "idle_note": "gpu was not idle (busy>=5%) - idle W not representative"
+   },
+   "notes": "llama-bench -p 512,32768 -n 128 -r 1 -fa 1 -ngl 99 at 300 W cap; sidecar qwen3-8-27b-q4-k-m_c7-power-300W.csv; idle qwen3-8-27b-q4-k-m_c7-idle-300W.csv"
+  },
+  {
+   "id": "c7-power-250",
+   "duration_s": 455,
+   "metrics": {
+    "cap_w": 250,
+    "pp512_tps": 170.94,
+    "pp32768_tps": 162.26,
+    "tg128_tps": 3.12,
+    "avg_power_W": 159.7,
+    "peak_power_W": 175.0,
+    "peak_temp_C": 87.0,
+    "peak_edge_C": 66.0,
+    "samples": 91,
+    "pp512_tps_per_W": 1.07,
+    "tg128_tps_per_W": 0.02,
+    "idle_avg_power_W": 2.3,
+    "idle_peak_junction_C": 60.0,
+    "idle_gpu_busy_max_pct": 0
+   },
+   "notes": "llama-bench -p 512,32768 -n 128 -r 1 -fa 1 -ngl 99 at 250 W cap; sidecar qwen3-8-27b-q4-k-m_c7-power-250W.csv; idle qwen3-8-27b-q4-k-m_c7-idle-250W.csv"
+  },
+  {
+   "id": "c7-power-220",
+   "duration_s": 455,
+   "metrics": {
+    "cap_w": 220,
+    "pp512_tps": 171.4,
+    "pp32768_tps": 162.63,
+    "tg128_tps": 3.12,
+    "avg_power_W": 159.4,
+    "peak_power_W": 174.0,
+    "peak_temp_C": 87.0,
+    "peak_edge_C": 66.0,
+    "samples": 91,
+    "pp512_tps_per_W": 1.075,
+    "tg128_tps_per_W": 0.02,
+    "idle_avg_power_W": 2.7,
+    "idle_peak_junction_C": 60.0,
+    "idle_gpu_busy_max_pct": 0
+   },
+   "notes": "llama-bench -p 512,32768 -n 128 -r 1 -fa 1 -ngl 99 at 220 W cap; sidecar qwen3-8-27b-q4-k-m_c7-power-220W.csv; idle qwen3-8-27b-q4-k-m_c7-idle-220W.csv"
+  },
+  {
+   "id": "c7-power-180",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a: below hardware minimum (210 W)"
+  }
+ ],
+ "status": "done",
+ "slug": "c7_qwen3-8-27b-q4-k-m",
+ "_src": "results/c7_qwen3-8-27b-q4-k-m.json"
+}

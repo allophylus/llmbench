@@ -1,0 +1,65 @@
+{
+ "schema": 1,
+ "kind": "rebench",
+ "model": {
+  "name": "Xing4.0-29B-A4B",
+  "repo": "XingChen-AGI/Xing4.0-29B-A4B-GGUF",
+  "file": "xing4_0-29b-q5_0.gguf",
+  "quant": "Q5_0"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "run_finished": "2026-10-26 15:06:17"
+ },
+ "tests": [
+  {
+   "id": "llama-bench-ppextended",
+   "duration_s": 2,
+   "metrics": {
+    "pp512": {
+     "ctx_fail": true,
+     "rc": "1",
+     "error": "no parsable pp 512 row (rc=1)"
+    },
+    "pp4096": {
+     "ctx_fail": true,
+     "rc": "1",
+     "error": "no parsable pp 4096 row (rc=1)"
+    },
+    "pp8192": {
+     "ctx_fail": true,
+     "rc": "1",
+     "error": "no parsable pp 8192 row (rc=1)"
+    },
+    "pp16384": {
+     "ctx_fail": true,
+     "rc": "1",
+     "error": "no parsable pp 16384 row (rc=1)"
+    },
+    "pp32768": {
+     "ctx_fail": true,
+     "rc": "1",
+     "error": "no parsable pp 32768 row (rc=1)"
+    },
+    "pp65536": {
+     "ctx_fail": true,
+     "rc": "1",
+     "error": "no parsable pp 65536 row (rc=1)"
+    },
+    "pp131072": {
+     "ctx_fail": true,
+     "rc": "1",
+     "error": "no parsable pp 131072 row (rc=1)"
+    }
+   },
+   "notes": "llama-bench -p 512,4096,8192,16384,32768,65536,131072 -n 128 -r 1 -fa 1 -ngl 99 (KV f16); re-bench with 64k+128k rows"
+  }
+ ],
+ "status": "failed",
+ "failure_reason": "llama_model_load: unknown model architecture: 'xing4_0' (llama.cpp b11517, no such arch in libllama.so)",
+ "slug": "rebench_xing4-0-29b-a4b-q5-0",
+ "_src": "results/rebench_xing4-0-29b-a4b-q5-0.json"
+}

@@ -1,0 +1,37 @@
+{
+ "schema": 1,
+ "kind": "rebench",
+ "model": {
+  "name": "Huihui abliterated Q4_K_M",
+  "repo": "LOCAL: /home/ubuntu/models/Huihui-abl-Q4_K_M.gguf",
+  "file": "Huihui-abl-Q4_K_M.gguf",
+  "quant": "Q4_K_M"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "run_finished": "2026-10-26 12:46:33"
+ },
+ "tests": [
+  {
+   "id": "llama-bench-ppextended",
+   "duration_s": 859,
+   "metrics": {
+    "pp512": 938.62,
+    "pp4096": 918.61,
+    "pp8192": 895.33,
+    "pp16384": 854.62,
+    "pp32768": 782.9,
+    "pp65536": 670.49,
+    "pp131072": 521.8,
+    "tg128": 31.65
+   },
+   "notes": "llama-bench -p 512,4096,8192,16384,32768,65536,131072 -n 128 -r 1 -fa 1 -ngl 99 (KV f16); re-bench with 64k+128k rows"
+  }
+ ],
+ "status": "done",
+ "slug": "rebench_huihui-abl-q4-k-m",
+ "_src": "results/rebench_huihui-abl-q4-k-m.json"
+}

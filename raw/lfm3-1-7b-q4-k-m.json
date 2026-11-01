@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "kind": "intel-agentic",
+ "model": {
+  "name": "LFM3-1.7B Q4_K_M",
+  "repo": "LiquidAI/LFM3-1.7B-GGUF",
+  "file": "LFM3-1.7B-Q4_K_M.gguf",
+  "quant": "Q4_K_M",
+  "params_total": "1.7B",
+  "params_active": "1.7B",
+  "arch": "LFM3 hybrid: 12 shortconv + 12 GQA layers, 262k ctx, SWA 256",
+  "slug": "lfm3-1-7b-q4-k-m"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11874",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -c 131072 --jinja -np 1 -ctk q8_0 -ctv q4_0",
+  "kv_cache": "q8_0/q4_0",
+  "run_started": "2026-10-29T12:30:03+0000",
+  "suite_run": "night2",
+  "run_finished": "2026-10-30T15:43:15+0000",
+  "cgroup_oom_kill_before": 0,
+  "cgroup_oom_kill_after": 0,
+  "mem_guard": "24G"
+ },
+ "status": "done",
+ "tests": [
+  {
+   "id": "ctx-gpqa110k",
+   "task": "gpqa-embedded-110k",
+   "acc": null,
+   "metric": null,
+   "samples": null,
+   "duration_s": 0,
+   "n_a": true,
+   "reason": "server did not come up (mem-guard/load-fail) for ctx-110k"
+  },
+  {
+   "id": "ctx-gpqa30k",
+   "task": "gpqa-embedded-30k",
+   "acc": null,
+   "metric": null,
+   "samples": null,
+   "duration_s": 0,
+   "n_a": true,
+   "reason": "server did not come up (mem-guard/load-fail) for ctx-30k"
+  },
+  {
+   "id": "bench-ctx-sweep",
+   "task": "llama-bench p=512..131072 n=128 r=1 (b11874)",
+   "acc": null,
+   "metric": null,
+   "samples": null,
+   "duration_s": 0,
+   "n_a": true,
+   "reason": "llama-bench produced no JSON"
+  },
+  {
+   "id": "pub-gpqa25",
+   "task": "gpqa-diamond",
+   "acc": 0.6,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 322,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 15,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "pub-aime10x3",
+   "task": "aime2026-15",
+   "acc": 0.1333,
+   "metric": "acc",
+   "samples": 15,
+   "duration_s": 652,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 2,
+    "total": 15,
+    "pass1_acc": 0.0667,
+    "samples": 3,
+    "temp": 0.6
+   }
+  },
+  {
+   "id": "pub-livebench25",
+   "task": "livebench-25",
+   "acc": 0.04,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 380,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 1,
+    "total": 25,
+    "temp": 0.0
+   }
+  }
+ ],
+ "notes": "29 Oct night2: cells pub-gpqa25/pub-aime10x3/pub-livebench25 ran on the first server (before the c1 port clash) but night2 did not attach results2/<cell>.pub.json files that run, so the record was published without them; reconciled 30 Oct from those cell files (no re-run).",
+ "slug": "lfm3-1-7b-q4-k-m",
+ "_src": "results/lfm3-1-7b-q4-k-m.json"
+}

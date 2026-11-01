@@ -1,0 +1,42 @@
+{
+ "schema": 1,
+ "model": {
+  "name": "Qwen3.8-27B DFlash2",
+  "repo": "LOCAL: /home/ubuntu/models/Qwen3.8-27B-DFlash2-Q4_K_M.gguf",
+  "file": "Qwen3.8-27B-DFlash2-Q4_K_M.gguf",
+  "quant": "Q4_K_M",
+  "size_bytes": 1143006816,
+  "params_total": "27B",
+  "params_active": "27B",
+  "arch": "hybrid dense (DFlash2 pairing model)",
+  "native_ctx": 262144,
+  "license": ""
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "driver": "RADV Mesa 25.2.8-0ubuntu0.24.04.4 (GFX1201)",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -b 1024 -ub 1024",
+  "kv_cache": "f16 (bench default)",
+  "ram_gb": 31,
+  "run_started": "2026-10-25T15:46:16+00:00",
+  "run_finished": "2026-10-25T15:46:20+00:00",
+  "peak_vram_mib": null
+ },
+ "tests": [
+  {
+   "id": "load-time",
+   "duration_s": 4.0,
+   "metrics": {
+    "cold_s": 4.0,
+    "ok": false
+   }
+  }
+ ],
+ "status": "failed",
+ "notes": "model failed to load (see log); error: RuntimeError: load failed",
+ "slug": "qwen3-8-27b-dflash2-q4-k-m",
+ "_src": "results/qwen3-8-27b-dflash2-q4-k-m.json"
+}

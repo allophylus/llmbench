@@ -1,0 +1,195 @@
+{
+ "schema": 1,
+ "kind": "intel-agentic",
+ "model": {
+  "name": "LFM2.5-8B-A1B",
+  "repo": "LiquidAI/LFM2.5-8B-A1B-GGUF",
+  "file": "LFM2.5-8B-A1B-Q6_K.gguf",
+  "quant": "Q6_K",
+  "params_total": "8B",
+  "params_active": "1B",
+  "arch": "MoE 8B total / 1B active",
+  "slug": "lfm2-5-8b-a1b-q6-k"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -c 32768 --jinja -np 1",
+  "kv_cache": "f16",
+  "run_started": "2026-10-27T01:46:28+0000",
+  "run_finished": "2026-10-30T13:46:00+0000",
+  "peak_vram_mib": 7505,
+  "load_s": 4.0,
+  "cgroup_oom_kill_before": 0,
+  "cgroup_oom_kill_after": 0,
+  "mem_guard": "24G",
+  "night3_agentic_rescore": true
+ },
+ "status": "done",
+ "dry_run": true,
+ "tests": [
+  {
+   "id": "pub-aime10x3",
+   "task": "aime2026-15",
+   "acc": 0.2,
+   "metric": "acc",
+   "samples": 15,
+   "duration_s": 648,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 3,
+    "total": 15,
+    "pass1_acc": 0.2,
+    "samples": 3,
+    "temp": 0.6
+   }
+  },
+  {
+   "id": "pub-gpqa25",
+   "task": "gpqa-diamond",
+   "acc": 0.4,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 305,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 10,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "pub-livebench25",
+   "task": "livebench-25",
+   "acc": 0.12,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 379,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 3,
+    "total": 25,
+    "temp": 0.0
+   }
+  },
+  {
+   "id": "agent-tau2-telecom20",
+   "task": "tau2-bench telecom",
+   "acc": 0.0,
+   "metric": "pass_hat_1",
+   "samples": 5,
+   "duration_s": 1885,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "reward": 0.0,
+    "success_rate": 0.0,
+    "pass_hat_1": 0.0,
+    "ctx_peak_used": null,
+    "num_tasks": 5,
+    "num_trials": 1,
+    "task_set": "telecom_small"
+   }
+  },
+  {
+   "id": "ctx-gpqa30k",
+   "task": "gpqa-embedded-30k",
+   "acc": 0.16,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 274,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 4,
+    "total": 25,
+    "temp": 0.0,
+    "target_ctx_tokens": 30000,
+    "prompt_tokens_mean": 30353,
+    "prompt_tokens_est_mean": 29988,
+    "token_calibration": "server /tokenize",
+    "chars_per_token": 4.338,
+    "prefill_s_total": 142.8,
+    "needle_depths_pct": [
+     25,
+     50,
+     75
+    ],
+    "filler_sha256": "67ecdc055a6068ab6d86bdee52d0e1ba4ff8a15e39a6a989fe23d54be5a2dd2d",
+    "n_ctx": 128000,
+    "llama_build": "b11517-8a1a9b512",
+    "filler_materialised": false
+   }
+  },
+  {
+   "id": "ctx-gpqa110k",
+   "task": "gpqa-embedded-110k",
+   "acc": 0.32,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 1101,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 8,
+    "total": 25,
+    "temp": 0.0,
+    "target_ctx_tokens": 110000,
+    "prompt_tokens_mean": 110272,
+    "prompt_tokens_est_mean": 109987,
+    "token_calibration": "server /tokenize",
+    "chars_per_token": 4.338,
+    "prefill_s_total": 929.5,
+    "needle_depths_pct": [
+     25,
+     50,
+     75
+    ],
+    "filler_sha256": "67ecdc055a6068ab6d86bdee52d0e1ba4ff8a15e39a6a989fe23d54be5a2dd2d",
+    "n_ctx": 128000,
+    "llama_build": "b11517-8a1a9b512",
+    "filler_materialised": false
+   }
+  },
+  {
+   "id": "agent-termbench8",
+   "task": "terminal-bench",
+   "acc": 0.75,
+   "metric": "pass",
+   "samples": 8,
+   "duration_s": 1002,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "pass": 6,
+    "total": 8,
+    "attempted": 8
+   }
+  },
+  {
+   "id": "agent-shell10",
+   "task": "shell10",
+   "acc": 0.2,
+   "metric": "acc",
+   "samples": 10,
+   "duration_s": 42,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 2,
+    "total": 10,
+    "max_turns": 6,
+    "temp": 0.0,
+    "ctx_peak_used": 267
+   }
+  }
+ ],
+ "notes": "DRY RUN (small subsets; not a published score). Context dimension proven 27 Oct on LFM2.5-8B against :8081 alongside prod (prod never stopped, :8081 killed by exact PID): ctx-gpqa30k /tokenize-calibrated 30110 prompt tokens (est 29988, chars/token 4.338), needles at 25/50/75% depth, prefill 5.6 s, 11 s cell wall; ctx-gpqa110k 110025 prompt tokens, prefill 36.9 s, 44 s cell wall, peak VRAM 22.2 GiB of 32 GiB. Both cast-recorded and both scored by the same letter exact-match rule as pub-gpqa25. Full 25-question cells run tonight 20:30 AWST with the rest of the suite. | DRY RUN (small subsets) — not a published score | night3 agentic rescore 2026-10-30 (harness fixes: tau2 telecom_small, shell10 pre-flight, termbench api_base)",
+ "slug": "lfm2-5-8b-a1b-q6-k",
+ "_src": "results/lfm2-5-8b-a1b-q6-k.json"
+}

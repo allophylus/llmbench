@@ -1,0 +1,73 @@
+{
+ "schema": 1,
+ "bench": "tetris-coding-session v1 (frozen prompt + frozen 240 s timeline)",
+ "model": {
+  "name": "Underdog-Saluki-27B-1.0-IQ2",
+  "repo": "local tune dl",
+  "file": "Underdog-Saluki-27B-1.0-IQ2-mix.gguf",
+  "quant": "IQ2_M mix",
+  "size_bytes": 7898369152,
+  "params_total": "27B",
+  "arch": "dense 27B, IQ2 mixed",
+  "native_ctx": 16384,
+  "license": "as published by upstream",
+  "prompt_sha": "001131465371a39d6c5df3e662f55c42085c54b7698ce8adbbbf692004f41f00",
+  "generation_wall_s": 87.71,
+  "generation_tokens": 2364,
+  "decode_tps": 27.3
+ },
+ "env": {
+  "host": "R9700 box (R9700 box, ubuntu24)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "driver": "amdgpu (kernel 7.0.0-38-generic, ROCm 7.2.4)",
+  "cpu": "AMD Ryzen 7 7745HX (8C/16T)",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -b 2048 -ub 512 -c 16384 --jinja --reasoning off -t 8",
+  "kv_cache": "f16 (default)",
+  "ram_gb": 31,
+  "temperature": 0,
+  "max_tokens": 8192,
+  "prompt_sha": "001131465371a39d6c5df3e662f55c42085c54b7698ce8adbbbf692004f41f00",
+  "decode_tps": 27.3,
+  "run_started": "2026-10-26T23:59:00+0000",
+  "run_finished": "2026-10-26T23:59:35+00:00"
+ },
+ "tests": [
+  {
+   "id": "tetris-gen",
+   "duration_s": 87.71,
+   "metrics": {
+    "tokens_in": 569,
+    "tokens_out": 2364,
+    "decode_tps": 27.3,
+    "finish_reason": "stop",
+    "fenced_block": 1
+   }
+  },
+  {
+   "id": "tetris-play",
+   "duration_s": 0.1,
+   "metrics": {
+    "launch_ok": 0,
+    "lines_cleared": 0,
+    "pieces_placed": 0,
+    "crashes": 4,
+    "spec_violations": 4,
+    "status_frames": 0,
+    "contract_clean": 0
+   }
+  }
+ ],
+ "status": "failed",
+ "recordings": [
+  "tetris_underdog-saluki-27b-iq2.cast"
+ ],
+ "artifacts": [
+  "llmbench/tetris/runs/underdog-saluki-27b-iq2/game.py",
+  "llmbench/tetris/runs/underdog-saluki-27b-iq2/metrics.json"
+ ],
+ "notes": "Generated on a private :8081 llama-server; same pipeline; temp 0,max_tokens 8192; crashed on curses.keytimeout (no such curses API) - 2 attempts identical, 4 tracebacks. spec_violations: ['missing_status', 'board_size_mismatch:19x100(static)', 'nonzero_exit:1', 'no_gameover_line']; exit 1",
+ "slug": "tetris_underdog-saluki-27b-iq2",
+ "_src": "results/tetris_underdog-saluki-27b-iq2.json"
+}

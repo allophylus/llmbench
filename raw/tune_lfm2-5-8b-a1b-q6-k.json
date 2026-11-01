@@ -1,0 +1,200 @@
+{
+ "schema": 1,
+ "kind": "tune",
+ "dry_run": false,
+ "model": {
+  "name": "LFM2.5-8B-A1B",
+  "repo": "LiquidAI/LFM2.5-8B-A1B-GGUF",
+  "file": "LFM2.5-8B-A1B-Q6_K.gguf",
+  "quant": "Q6_K",
+  "size_bytes": 6959787232,
+  "arch": "MoE 8B total / 1B active",
+  "native_ctx": 131072
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "binary": "/home/ubuntu/llama-vulkan/llama-b11517/llama-server",
+  "kv_cache": "q8_0/q4_0 unless noted",
+  "run_started": "2026-10-26 05:05:15",
+  "run_finished": "2026-10-26 05:11:04"
+ },
+ "tune": {
+  "usable_ctx": null,
+  "binding_reason": "recall 0.0% at 65536",
+  "ladder": [
+   {
+    "ctx": 65536,
+    "load_ok": true,
+    "recall_pct": 0.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 8.0,
+    "ttft_s_128tok": 0.0,
+    "vram_used_gib": 6.99
+   }
+  ]
+ },
+ "tests": [
+  {
+   "id": "c0-ppextended",
+   "duration_s": 118,
+   "metrics": {
+    "pp512": 5955.0,
+    "pp4096": 7465.6,
+    "pp8192": 7263.65,
+    "pp16384": 6846.1,
+    "pp32768": 6128.88,
+    "pp65536": 5112.31,
+    "pp131072": 3815.88,
+    "tg128": 279.92
+   },
+   "notes": "headline: llama-bench -p 512,4096,8192,16384,32768,65536,131072 -n 128 -r 1 -fa 1 -ngl 99, f16 KV; ctx-fail rows recorded with their error line"
+  },
+  {
+   "id": "c1-fa-on",
+   "duration_s": 3,
+   "metrics": {
+    "pp512": 5993.05,
+    "pp4096": 7454.63,
+    "tg128": 280.31
+   },
+   "notes": "llama-bench -p 512,4096 -n 128 -r 1 -fa on"
+  },
+  {
+   "id": "c1-fa-off",
+   "duration_s": 4,
+   "metrics": {
+    "pp512": 6385.61,
+    "pp4096": 6837.07,
+    "tg128": 277.68
+   },
+   "notes": "llama-bench -p 512,4096 -n 128 -r 1 -fa off"
+  },
+  {
+   "id": "c2-slots-np1",
+   "duration_s": 5,
+   "metrics": {
+    "load_s": 2.0,
+    "ttft_ms_128tok": 65.1,
+    "prefill_tps": 1767.11,
+    "decode_tps_median": 244.63,
+    "draft_accept_pct": null,
+    "vram_used_gib": 6.8
+   },
+   "notes": "llama-server --np 1 -c 32768; probe = ttft(128tok) + decode 128x2"
+  },
+  {
+   "id": "c2-slots-np4",
+   "duration_s": 6,
+   "metrics": {
+    "load_s": 2.0,
+    "ttft_ms_128tok": 63.6,
+    "prefill_tps": 1808.49,
+    "decode_tps_median": 242.4,
+    "draft_accept_pct": null,
+    "vram_used_gib": 7.26
+   },
+   "notes": "llama-server --np 4 -c 131072 (prod-like); probe = ttft(128tok) + decode 128x2"
+  },
+  {
+   "id": "c3-spec-none",
+   "duration_s": 0,
+   "metrics": {},
+   "notes": "n/a — spec-decode cell applies to Qwen-family only or no drafter file present"
+  },
+  {
+   "id": "c4-kv-f16",
+   "duration_s": 13,
+   "metrics": {
+    "pp4096": 7495.38,
+    "pp32768": 6177.12,
+    "tg32": 278.22
+   },
+   "notes": "llama-bench -p 4096,32768 -n 32 -r 1, f16 KV"
+  },
+  {
+   "id": "c4-kv-q8q4",
+   "duration_s": 16,
+   "metrics": {
+    "pp4096": 7237.65,
+    "pp32768": 5216.29,
+    "tg32": 272.18
+   },
+   "notes": "llama-bench -p 4096,32768 -n 32 -r 1, -ctk q8_0 -ctv q4_0"
+  },
+  {
+   "id": "pub-math20",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — harness produced no output file (task ?)"
+  },
+  {
+   "id": "pub-math500-20",
+   "duration_s": 4,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — ModuleNotFoundError: `sympy`, `math_verify` and `antlr4-python3-runtime==4.11` are required for generating translation task prompt templates. Please install the required packages via pip install lm-ev (task ?)"
+  },
+  {
+   "id": "pub-logic15",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — harness produced no output file (task ?)"
+  },
+  {
+   "id": "pub-arc25",
+   "duration_s": 9,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — TypeError: 'NoneType' object is not subscriptable (task ?)"
+  },
+  {
+   "id": "pub-mmlupro15",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a — harness produced no output file (task ?)"
+  },
+  {
+   "id": "c5-ctx-65536",
+   "duration_s": 28,
+   "metrics": {
+    "load_ok": true,
+    "load_s": 2.0,
+    "probe_ctx": 52428,
+    "recall_pct": 0.0,
+    "niah_inconclusive": [],
+    "max_niah_ttft_s": 8.0,
+    "ttft_s_128tok": 0.0,
+    "prefill_tps_128tok": 2747.06,
+    "vram_used_gib": 6.99
+   },
+   "notes": "serve -c 65536, np 1, q8_0/q4_0 KV; NIAH 3 depths @80% ctx + TTFT"
+  }
+ ],
+ "recommendation": "",
+ "recordings": [
+  "/home/ubuntu/llmbench/tune/recordings/lfm2-5-8b-a1b-q6-k/lfm2-5-8b-a1b-q6-k_c0-ppextended.cast",
+  "/home/ubuntu/llmbench/tune/recordings/lfm2-5-8b-a1b-q6-k/lfm2-5-8b-a1b-q6-k_c1-fa-off.cast",
+  "/home/ubuntu/llmbench/tune/recordings/lfm2-5-8b-a1b-q6-k/lfm2-5-8b-a1b-q6-k_c1-fa-on.cast",
+  "/home/ubuntu/llmbench/tune/recordings/lfm2-5-8b-a1b-q6-k/lfm2-5-8b-a1b-q6-k_c4-kv-f16.cast",
+  "/home/ubuntu/llmbench/tune/recordings/lfm2-5-8b-a1b-q6-k/lfm2-5-8b-a1b-q6-k_c4-kv-q8q4.cast",
+  "/home/ubuntu/llmbench/tune/recordings/lfm2-5-8b-a1b-q6-k/lfm2-5-8b-a1b-q6-k_c5-ctx-65536-niah.cast",
+  "/home/ubuntu/llmbench/tune/recordings/lfm2-5-8b-a1b-q6-k/lfm2-5-8b-a1b-q6-k_c5-ctx-65536-ttft.cast",
+  "/home/ubuntu/llmbench/tune/recordings/lfm2-5-8b-a1b-q6-k/lfm2-5-8b-a1b-q6-k_np1.cast",
+  "/home/ubuntu/llmbench/tune/recordings/lfm2-5-8b-a1b-q6-k/lfm2-5-8b-a1b-q6-k_np4.cast"
+ ],
+ "status": "done",
+ "notes": "",
+ "slug": "tune_lfm2-5-8b-a1b-q6-k",
+ "_src": "results/tune_lfm2-5-8b-a1b-q6-k.json"
+}

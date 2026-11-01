@@ -1,0 +1,37 @@
+{
+ "schema": 1,
+ "kind": "rebench",
+ "model": {
+  "name": "MiniCPM5-2B",
+  "repo": "openbmb/MiniCPM5-2B-GGUF",
+  "file": "MiniCPM5-2B-Q8_0.gguf",
+  "quant": "Q8_0"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "run_finished": "2026-10-26 13:26:07"
+ },
+ "tests": [
+  {
+   "id": "llama-bench-ppextended",
+   "duration_s": 320,
+   "metrics": {
+    "pp512": 8451.39,
+    "pp4096": 9082.32,
+    "pp8192": 7447.73,
+    "pp16384": 5462.03,
+    "pp32768": 3549.74,
+    "pp65536": 2083.55,
+    "pp131072": 1149.5,
+    "tg128": 181.41
+   },
+   "notes": "llama-bench -p 512,4096,8192,16384,32768,65536,131072 -n 128 -r 1 -fa 1 -ngl 99 (KV f16); re-bench with 64k+128k rows"
+  }
+ ],
+ "status": "done",
+ "slug": "rebench_minicpm5-2b-q8-0",
+ "_src": "results/rebench_minicpm5-2b-q8-0.json"
+}

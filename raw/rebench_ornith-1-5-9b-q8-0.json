@@ -1,0 +1,37 @@
+{
+ "schema": 1,
+ "kind": "rebench",
+ "model": {
+  "name": "Ornith-1.5-9B",
+  "repo": "ornith-ai/Ornith-1.5-9B-GGUF",
+  "file": "Ornith-1.5-9B-Q8_0.gguf",
+  "quant": "Q8_0"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b11517",
+  "backend": "Vulkan",
+  "run_finished": "2026-10-26 14:49:57"
+ },
+ "tests": [
+  {
+   "id": "llama-bench-ppextended",
+   "duration_s": 252,
+   "metrics": {
+    "pp512": 3484.26,
+    "pp4096": 3689.77,
+    "pp8192": 3569.77,
+    "pp16384": 3331.8,
+    "pp32768": 2920.89,
+    "pp65536": 2363.18,
+    "pp131072": 1726.57,
+    "tg128": 61.39
+   },
+   "notes": "llama-bench -p 512,4096,8192,16384,32768,65536,131072 -n 128 -r 1 -fa 1 -ngl 99 (KV f16); re-bench with 64k+128k rows"
+  }
+ ],
+ "status": "done",
+ "slug": "rebench_ornith-1-5-9b-q8-0",
+ "_src": "results/rebench_ornith-1-5-9b-q8-0.json"
+}

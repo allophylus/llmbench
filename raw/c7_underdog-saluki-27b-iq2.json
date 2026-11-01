@@ -1,0 +1,97 @@
+{
+ "schema": 1,
+ "kind": "power-sweep",
+ "model": {
+  "slug": "underdog-saluki-27b-iq2",
+  "file": "/home/ubuntu/llmbench/tune/dl/Underdog-Saluki-27B-1.0-IQ2-mix.gguf",
+  "name": "Underdog-Saluki-27B IQ2_mix"
+ },
+ "env": {
+  "host": "R9700 box (R9700 box)",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "hwmon": "/sys/class/hwmon/hwmon0 (amdgpu, power1 label=PPT)",
+  "power_attr_note": "sampled power1_average, NOT power1_input: this driver exposes no power1_input attribute (verified 2026-10-26). Both are the same PPT quantity in microwatts.",
+  "cap_default_w": 300,
+  "cap_min_w": 210,
+  "site_cap_w": 250,
+  "order": "300->250->220, 60 s settle between caps",
+  "idle_note": "idle sample waits for gpu_busy<5 (bounded 120 s)",
+  "implementation_note": "rewritten 2026-10-26 (first real run): foreground rec.sh bench + sidecar sampler on the recorder pid; table via cast2md.py"
+ },
+ "tests": [
+  {
+   "id": "c7-power-300",
+   "duration_s": 230,
+   "metrics": {
+    "cap_w": 300,
+    "pp512_tps": 329.21,
+    "pp32768_tps": 298.92,
+    "tg128_tps": 47.74,
+    "avg_power_W": 202.6,
+    "peak_power_W": 216.0,
+    "peak_temp_C": 86.0,
+    "peak_edge_C": 65.0,
+    "samples": 46,
+    "pp512_tps_per_W": 1.625,
+    "tg128_tps_per_W": 0.236,
+    "idle_avg_power_W": 2.3,
+    "idle_peak_junction_C": 48.0,
+    "idle_gpu_busy_max_pct": 0
+   },
+   "notes": "llama-bench -p 512,32768 -n 128 -r 1 -fa 1 -ngl 99 at 300 W cap; sidecar underdog-saluki-27b-iq2_c7-power-300W.csv; idle underdog-saluki-27b-iq2_c7-idle-300W.csv"
+  },
+  {
+   "id": "c7-power-250",
+   "duration_s": 230,
+   "metrics": {
+    "cap_w": 250,
+    "pp512_tps": 327.35,
+    "pp32768_tps": 298.77,
+    "tg128_tps": 46.18,
+    "avg_power_W": 203.8,
+    "peak_power_W": 216.0,
+    "peak_temp_C": 85.0,
+    "peak_edge_C": 65.0,
+    "samples": 46,
+    "pp512_tps_per_W": 1.606,
+    "tg128_tps_per_W": 0.227,
+    "idle_avg_power_W": 3.0,
+    "idle_peak_junction_C": 52.0,
+    "idle_gpu_busy_max_pct": 0
+   },
+   "notes": "llama-bench -p 512,32768 -n 128 -r 1 -fa 1 -ngl 99 at 250 W cap; sidecar underdog-saluki-27b-iq2_c7-power-250W.csv; idle underdog-saluki-27b-iq2_c7-idle-250W.csv"
+  },
+  {
+   "id": "c7-power-220",
+   "duration_s": 230,
+   "metrics": {
+    "cap_w": 220,
+    "pp512_tps": 328.82,
+    "pp32768_tps": 298.84,
+    "tg128_tps": 44.76,
+    "avg_power_W": 203.2,
+    "peak_power_W": 214.0,
+    "peak_temp_C": 83.0,
+    "peak_edge_C": 65.0,
+    "samples": 46,
+    "pp512_tps_per_W": 1.618,
+    "tg128_tps_per_W": 0.22,
+    "idle_avg_power_W": 2.7,
+    "idle_peak_junction_C": 52.0,
+    "idle_gpu_busy_max_pct": 0
+   },
+   "notes": "llama-bench -p 512,32768 -n 128 -r 1 -fa 1 -ngl 99 at 220 W cap; sidecar underdog-saluki-27b-iq2_c7-power-220W.csv; idle underdog-saluki-27b-iq2_c7-idle-220W.csv"
+  },
+  {
+   "id": "c7-power-180",
+   "duration_s": 0,
+   "metrics": {
+    "n_a": true
+   },
+   "notes": "n/a: below hardware minimum (210 W)"
+  }
+ ],
+ "status": "done",
+ "slug": "c7_underdog-saluki-27b-iq2",
+ "_src": "results/c7_underdog-saluki-27b-iq2.json"
+}
