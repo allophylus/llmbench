@@ -1,0 +1,23 @@
+{
+ "slug": "qwen3-8-27b-q4km-b",
+ "generated_at": "2026-11-02T08:44:55+0800",
+ "prompt_file": "WEBGAME_PROMPT.md",
+ "max_attempts": 3,
+ "attempts_used": 1,
+ "retries": 0,
+ "accepted_attempt": 1,
+ "status": "failed_all_attempts",
+ "per_attempt": [
+  {
+   "attempt": 1,
+   "ok": false,
+   "reasons": [
+    "contract"
+   ]
+  }
+ ],
+ "total_wall_s": 64.65,
+ "total_prompt_tokens": 1622,
+ "total_completion_tokens": 3594,
+ "note": "backfilled from the original single-shot run (no retry gate existed yet)"
+}

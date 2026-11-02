@@ -1,0 +1,17 @@
+{
+ "ok": false,
+ "checks": {
+  "load_ok": true,
+  "canvas": true,
+  "webgl": true,
+  "three_js": true,
+  "animation": true,
+  "input": true,
+  "contract": null
+ },
+ "reasons": [
+  "contract"
+ ],
+ "backfilled": true,
+ "source": "metrics.json"
+}
