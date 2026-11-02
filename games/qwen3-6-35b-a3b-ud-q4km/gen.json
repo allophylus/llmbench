@@ -10,5 +10,18 @@
  "completion_tokens": 2324,
  "decode_tps": 109.79,
  "prompt_sha256": "924b140acb58aae26e37513719f2f2ba72b378550009d1eaac190470d3484acf",
- "generated_at": "2026-11-02T16:21:07+0800"
+ "generated_at": "2026-11-02T16:21:07+0800",
+ "attempt": 1,
+ "base_url": "http://192.168.1.148:8081/v1",
+ "finish_reason": "stop",
+ "html_lines": 221,
+ "max_tokens": 8000,
+ "model_requested": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+ "prompt_file": "WEBGAME_PROMPT.md",
+ "response_chars": 8855,
+ "server_model": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+ "server_fingerprint": null,
+ "temperature": 0.0,
+ "timings": {},
+ "total_tokens": 3946
 }

@@ -51,6 +51,46 @@
 <main class="wrap page">
   <section class="cards">
     <article class="card">
+      <a class="shot" href="qwen3-6-35b-a3b-ud-q4km/index.html"><img src="qwen3-6-35b-a3b-ud-q4km/shot.png" alt="screenshot of qwen3-6-35b-a3b-ud-q4km" loading="lazy"></a>
+      <div>
+        <h2>qwen3-6-35b-a3b-ud-q4km <span class="pill bad">FAIL</span></h2>
+        <p class="meta">model <code>/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</code> · None ·
+          temp 0.0 · max_tokens 8000 · prompt sha256 <code>924b140acb58aae2…</code></p>
+        <p class="meta">renders with three.js <code>WebGLRenderer</code> · 0 canvas ·
+          221 lines · 2324 tokens · 109.79 t/s · 22.0s</p>
+        <p class="meta">console errors: <ul class="errs"><li>error: Failed to load resource: the server responded with a status of 404 (File not found)</li><li>error: Failed to load resource: the server responded with a status of 404 (File not found)</li></ul></p>
+        <p class="meta ok">no visible-artefact findings</p>
+        
+        <div class="build">
+          <div class="rlbl">🏗 build</div>
+          <div class="rstats">
+            <span><b>1</b> attempts</span>
+            <span>accepted: <b class="ok">1</b></span>
+            <span><b>3508</b> tokens total</span>
+            <span><b>79.45</b> s total</span>
+          </div>
+          <ul class="findings"><li>attempt 1: <b class="ok">accepted</b> · 3508 tok · 66.26s · <a href='qwen3-6-35b-a3b-ud-q4km/attempts/attempt-1/build.webm'>build recording</a></li></ul>
+        </div>
+        
+        <div class="robot">
+          <div class="rlbl">🤖 robot run</div>
+          <div class="rstats">
+            <span><b>0</b> score</span>
+            <span><b>60.02</b> s survived</span>
+            <span><b>0</b> lives lost</span>
+            <span><b>3599</b> frames</span>
+            <span><b>214</b> key events</span>
+          </div>
+          <p class="meta">policy verdict: <b class="bad">ZERO SCORE</b>
+            · contract ok: True · page threw: False
+            · closest bullet→enemy: 103.7 px vertical
+            <a href='qwen3-6-35b-a3b-ud-q4km/robot_play_repo.mp4' target='_blank' rel='noopener'>▶ watch the robot run</a></p>
+          <p class='findings'><b>diagnosis:</b> game collision broken: bullets never enter the hit volume in normal play (min world distance 6.03 vs radius 1.4) even though the hit test itself scores when forced<br>bullets fired on Space: True · bullet/enemy overlaps observed: 0 of 1186 sampled pairs · forced hit scores: True (0→10, HUD updates: True) · closest real bullet→enemy in normal play: 6.034 world units (hit needs &lt; 1.4)</p>
+        </div>
+        <p><a class="play" href="qwen3-6-35b-a3b-ud-q4km/index.html">▶ PLAY qwen3-6-35b-a3b-ud-q4km</a></p>
+      </div>
+    </article>
+    <article class="card">
       <a class="shot" href="qwen3-8-27b-q4km/index.html"><img src="qwen3-8-27b-q4km/shot.png" alt="screenshot of qwen3-8-27b-q4km" loading="lazy"></a>
       <div>
         <h2>qwen3-8-27b-q4km <span class="pill ok">PASS</span></h2>
@@ -96,6 +136,19 @@
     <thead><tr><th>game</th><th>all</th><th>console errors</th><th>canvas</th><th>webgl</th>
       <th>animation</th><th>input</th><th>http</th><th>file</th><th>lines</th><th>tokens</th><th>t/s</th><th>ship</th><th>robot</th><th></th></tr></thead>
     <tbody>
+    <tr><td><a href="qwen3-6-35b-a3b-ud-q4km/index.html">qwen3-6-35b-a3b-ud-q4km</a></td>
+      <td><b class="bad">FAIL</b></td>
+      <td>0</td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="bad">FAIL</b></td>
+      <td><b class="bad">FAIL</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="bad">FAIL</b></td>
+      <td>221</td>
+      <td>2324</td>
+      <td>109.79</td>
+      <td><a href="qwen3-6-35b-a3b-ud-q4km/metrics.json">metrics.json</a></td></tr>
     <tr><td><a href="qwen3-8-27b-q4km/index.html">qwen3-8-27b-q4km</a></td>
       <td><b class="ok">PASS</b></td>
       <td>0</td>

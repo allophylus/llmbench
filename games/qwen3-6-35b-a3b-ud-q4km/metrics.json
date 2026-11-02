@@ -29,12 +29,23 @@
   "console_error_count": 0,
   "contract_ok": false,
   "pass": false,
-  "accept": false
+  "accept": false,
+  "cdn_reachable": true,
+  "file_load_ok": false,
+  "overlays_cover_geometry": false,
+  "player_visible": null,
+  "player_fully_onscreen": null,
+  "player_bbox_px": null,
+  "player_centre_onscreen": null
  },
  "player_x_before": null,
  "player_x_after": null,
  "file": {
   "load_ok": false,
   "console_errors": []
+ },
+ "viewport": {
+  "width": 1280,
+  "height": 800
  }
 }
