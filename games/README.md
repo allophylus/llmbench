@@ -29,7 +29,7 @@ hidden), and — from the adapter — the player mesh's projected bounding box.
 Pass = load ×2, canvas, WebGL, animation, input. `player_visible` /
 `overlays_cover_geometry` are reported as findings but do not flip `pass`.
 
-## v1 results (2026-11-02, model `/home/ubuntu/models/active.gguf`, Q4_K_M, temp 0)
+## v1 results (2026-11-02, model `Qwen3.8-27B-Q4_K_M.gguf`, Q4_K_M, temp 0)
 
 Both samples used three.js (`WebGLRenderer`, importmap CDN), 0 console errors.
 
