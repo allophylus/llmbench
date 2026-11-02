@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>llmbench — browser game cells</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%223%22 fill=%22%230d1117%22/%3E%3Cpath d=%22M4 3v10M12 3v10M4 8h8%22 stroke=%22%235ee0a3%22 stroke-width=%222%22/%3E%3C/svg%3E">
+<style>
+  .wrap.page { padding-bottom: 3rem; }
+  .back { font: 600 12px var(--mono); letter-spacing: .06em; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 1.25rem; margin: 1.5rem 0 2.5rem; }
+  .card { display: flex; flex-direction: column; gap: .9rem; padding: 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-soft); }
+  .card .shot img { width: 100%; border-radius: 6px; border: 1px solid var(--line); display: block; }
+  .card h2 { margin: 0 0 .4rem; font: 700 15px var(--mono); }
+  .meta { margin: .25rem 0; color: var(--fg-dim); font-size: 13px; }
+  .dim { color: var(--fg-faint); }
+  .findings { margin: .2rem 0 0; padding-left: 1.1rem; color: var(--warn); font-size: 12px; }
+  .meta.ok { color: var(--accent); }
+  .errs { margin: .2rem 0 0; padding-left: 1.1rem; color: var(--warn); font-size: 12px; word-break: break-word; }
+  .ok { color: var(--accent); }
+  .bad { color: #ff7a8a; }
+  .pill { font: 700 10px var(--mono); letter-spacing: .1em; padding: 2px 7px; border-radius: 99px; vertical-align: middle; }
+  .pill.ok { background: #11301f; }
+  .pill.bad { background: #3a1620; }
+  .play { display: inline-block; margin-top: .4rem; padding: .5rem .9rem; border: 1px solid var(--accent-dim); border-radius: 6px; font: 700 13px var(--mono); }
+  .play:hover { background: #11301f; text-decoration: none; }
+  table.v { border-collapse: collapse; width: 100%; font: 12px var(--mono); }
+  table.v th, table.v td { padding: .4rem .55rem; border-bottom: 1px solid var(--line-soft); text-align: left; }
+  table.v th { color: var(--fg-faint); text-transform: uppercase; letter-spacing: .06em; font-size: 10px; }
+  .note { color: var(--fg-dim); font-size: 13px; max-width: 95ch; }
+</style>
+</head>
+<body>
+<header class="site-head">
+  <div class="wrap">
+    <a class="back" href="../">← llmbench</a>
+    <h1>games</h1>
+    <p class="sub">Browser game cell: the same frozen prompt (<code>WEBGAME_PROMPT.md</code>,
+      sha256 <code>b57d8257ad6e79b5…</code>) asks each model for a complete single-file
+      three.js arcade shooter. Each game is opened in headless Google Chrome over both
+      <code>file://</code> and <code>http://</code>; every number below comes from that probe
+      (<code>metrics.json</code>) or the generation log (<code>gen.json</code>).</p>
+  </div>
+</header>
+<main class="wrap page">
+  <section class="cards">
+    <article class="card">
+      <a class="shot" href="qwen3-8-27b-q4km/index.html"><img src="qwen3-8-27b-q4km/shot.png" alt="screenshot of qwen3-8-27b-q4km" loading="lazy"></a>
+      <div>
+        <h2>qwen3-8-27b-q4km <span class="pill ok">PASS</span></h2>
+        <p class="meta">model <code>/home/ubuntu/models/active.gguf</code> · b11517-8a1a9b512 ·
+          temp 0.0 · max_tokens 8000 · prompt sha256 <code>b57d8257ad6e79b5…</code></p>
+        <p class="meta">renders with three.js <code>WebGLRenderer</code> · 1 canvas ·
+          234 lines · 3062 tokens · 58.22 t/s · 54.26s</p>
+        <p class="meta">console errors: <span class="dim">none</span></p>
+        <ul class="findings"><li>player ship never appears on screen (mesh projects to y=1052..1827px in a 800px viewport, below the camera frustum) — it still moves, shoots and collides</li><li>some 3D geometry is painted under the HTML HUD/hint overlay</li></ul>
+        <p><a class="play" href="qwen3-8-27b-q4km/index.html">▶ PLAY qwen3-8-27b-q4km</a></p>
+      </div>
+    </article>
+    <article class="card">
+      <a class="shot" href="qwen3-8-27b-q4km-b/index.html"><img src="qwen3-8-27b-q4km-b/shot.png" alt="screenshot of qwen3-8-27b-q4km-b" loading="lazy"></a>
+      <div>
+        <h2>qwen3-8-27b-q4km-b <span class="pill ok">PASS</span></h2>
+        <p class="meta">model <code>/home/ubuntu/models/active.gguf</code> · b11517-8a1a9b512 ·
+          temp 0.0 · max_tokens 8000 · prompt sha256 <code>b57d8257ad6e79b5…</code></p>
+        <p class="meta">renders with three.js <code>WebGLRenderer</code> · 1 canvas ·
+          252 lines · 3288 tokens · 55.37 t/s · 59.72s</p>
+        <p class="meta">console errors: <span class="dim">none</span></p>
+        <ul class="findings"><li>player ship is only partly on screen (y=454..1270px in a 800px viewport, bottom cut off)</li><li>some 3D geometry is painted under the HTML HUD/hint overlay</li></ul>
+        <p><a class="play" href="qwen3-8-27b-q4km-b/index.html">▶ PLAY qwen3-8-27b-q4km-b</a></p>
+      </div>
+    </article>
+  </section>
+  <h2 class="note" style="font:700 14px var(--mono)">checks</h2>
+  <table class="v">
+    <thead><tr><th>game</th><th>all</th><th>console errors</th><th>canvas</th><th>webgl</th>
+      <th>animation</th><th>input</th><th>http</th><th>file</th><th>lines</th><th>tokens</th><th>t/s</th><th>ship</th><th></th></tr></thead>
+    <tbody>
+    <tr><td><a href="qwen3-8-27b-q4km/index.html">qwen3-8-27b-q4km</a></td>
+      <td><b class="ok">PASS</b></td>
+      <td>0</td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td>234</td>
+      <td>3062</td>
+      <td>58.22</td>
+      <td><a href="qwen3-8-27b-q4km/metrics.json">metrics.json</a></td></tr>
+    <tr><td><a href="qwen3-8-27b-q4km-b/index.html">qwen3-8-27b-q4km-b</a></td>
+      <td><b class="ok">PASS</b></td>
+      <td>0</td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td><b class="ok">PASS</b></td>
+      <td>252</td>
+      <td>3288</td>
+      <td>55.37</td>
+      <td><a href="qwen3-8-27b-q4km-b/metrics.json">metrics.json</a></td></tr></tbody>
+  </table>
+  <p class="note" style="margin-top:1.2rem">
+    <b>animation</b> = two screenshots ~1&nbsp;s apart differ. <b>input</b> = ArrowRight then ArrowLeft
+    each change the frame (pixel-hash compare). Controls: ←/→ or A/D to move, SPACE to fire, R to restart.
+    Games load three.js from a pinned CDN, so they need network access the first time.</p>
+</main>
+</body>
+</html>
