@@ -32,5 +32,9 @@
   "accept": false
  },
  "player_x_before": null,
- "player_x_after": null
+ "player_x_after": null,
+ "file": {
+  "load_ok": false,
+  "console_errors": []
+ }
 }
