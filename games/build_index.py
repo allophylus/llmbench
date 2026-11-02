@@ -24,6 +24,10 @@ for slug in slugs:
     s = m["summary"]
     rows.append((slug, m, g, s))
 
+# Robot videos follow the repo rule (.gitignore: videos via CloudFront, never committed)
+# and are uploaded to the same bucket/prefix as the benchmark clips.
+ROBOT_VIDEO_BASE = "https://www.lowtechplace.com/llmbench/videos/"
+
 VER = lambda ok: f'<b class="ok">PASS</b>' if ok else f'<b class="bad">FAIL</b>'
 
 
@@ -83,7 +87,7 @@ for slug, m, g, s in rows:
           <p class="meta">policy verdict: <b class="{'ok' if v == 'scored' else 'bad'}">{vs}</b>
             · contract ok: {robot.get('contract_ok')} · page threw: {robot.get('page_threw')}
             · closest bullet→enemy: {cd_.get('min_dy')} px vertical
-            {"<a href='" + slug + "/robot_play.mp4'>watch (.mp4)</a> <a href='" + slug + "/robot_play.webm'>webm</a>" if robot.get('video') else ""}</p>
+            {"<a href='" + ROBOT_VIDEO_BASE + "game__" + slug + "__robot.mp4' target='_blank' rel='noopener'>▶ watch the robot run</a> " + ("" if robot.get('video_live') else "<span class='dim'>(local file only — not uploaded)</span>") if robot.get('video') else ""}</p>
           {'<p class="findings">Zero is a game defect, not a policy failure: every shot flew at a fixed y the enemies never occupy (measured closest vertical gap ' + str(cd_.get("min_dy")) + ' px), so nothing could ever collide.</p>' if v == 'zero-score' else ''}
         </div>"""
     cards.append(f"""
