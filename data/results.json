@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-02T10:21:08+08:00",
+ "generated": "2026-11-02T16:19:24+08:00",
  "video_base": "https://www.lowtechplace.com/llmbench/videos/",
  "rows": [
   {
@@ -674,7 +674,15 @@
    ],
    "speed_measured_at": "2026-11-02T10:06:12+0800",
    "speed_method": "cache_prompt=false, ~700-token prompt, max_tokens=256 temp 0 (long-form output for steady-state decode)",
-   "status": "done"
+   "status": "done",
+   "game": {
+    "attempts": 1,
+    "retries": 0,
+    "tokens": 5130,
+    "build_s": 79.45,
+    "url": "games/qwen3-8-27b-q4km/",
+    "robot_score": 0
+   }
   },
   {
    "slug": "qwen3-8-27b-dflash2-q4-k-m",

@@ -374,6 +374,35 @@ def main():
         sys.exit("results dir not found: %s" % a.results_dir)
     recs, skipped = load_records(a.results_dir)
     rows = build(recs, video_index(a.videos_dir), a.video_base, a.raw_dir)
+
+    # merge game-creation stats (attempts, tokens, build time) from the games cells
+    _gdir = os.environ.get("GAMES_DIR", "/home/fen/repos/llmbench/games")
+    for r in rows:
+        _gp = os.path.join(_gdir, r["slug"], "build.json")
+        if not os.path.exists(_gp):
+            continue
+        try:
+            b = json.load(open(_gp))
+        except Exception:
+            continue
+        att = b.get("attempts") or b.get("attempts_used")
+        if att is None and b.get("per_attempt"):
+            att = len(b["per_attempt"])
+        tok = (b.get("total_prompt_tokens") or 0) + (b.get("total_completion_tokens") or 0)
+        r["game"] = {
+            "attempts": att,
+            "retries": b.get("retries", (att - 1) if isinstance(att, int) and att else None),
+            "tokens": tok or None,
+            "build_s": b.get("total_wall_s"),
+            "url": "games/%s/" % r["slug"],
+        }
+        _rp = os.path.join(_gdir, r["slug"], "robot_metrics.json")
+        if os.path.exists(_rp):
+            try:
+                r["game"]["robot_score"] = json.load(open(_rp)).get("final_score")
+            except Exception:
+                pass
+
     if a.raw_out:
         os.makedirs(a.raw_out, exist_ok=True)
         for r in recs:

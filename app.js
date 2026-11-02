@@ -28,7 +28,9 @@
     { key: "context_window", type: "num"    },
     { key: "vram_mib",       type: "num"    },
     { key: "date",           type: "text"   },
-    { key: "videos",         type: "num"    }
+    { key: "game_attempts",  type: "num"    },
+    { key: "game_tokens",    type: "num"    },
+    { key: "game_build",     type: "num"    }
   ];
   var COL = {};
   COLUMNS.forEach(function (c) { COL[c.key] = c; });
@@ -55,7 +57,9 @@
   function value(row, key) {
     if (CELL_KEYS[key]) return num((row.cells || {})[key]);
     if (key === "params") return paramsB(row.params_total);
-    if (key === "videos") return Object.keys(row.videos || {}).length;
+    if (key === "game_attempts") return (row.game && row.game.attempts != null) ? row.game.attempts : null;
+    if (key === "game_tokens")   return (row.game && row.game.tokens) ? row.game.tokens : null;
+    if (key === "game_build")    return (row.game && row.game.build_s) ? row.game.build_s : null;
     if (key === "vram_mib") return num(row.vram_mib);
     if (key === "decode_tps" || key === "prefill_tps" || key === "context_window")
       return num(row[key]);
@@ -169,6 +173,35 @@
       '<div class="vlist">' + links + "</div></details>";
   }
 
+  /* ---- per-cell video links: the video belongs on the score it proves ---- */
+  var CELL_VIDEO = {
+    gpqa: [/pub-gpqa25/, /gpqa25/],
+    aime: [/pub-aime10x3/, /aime/],
+    livebench: [/pub-livebench25/, /livebench/],
+    ctx30k: [/ctx-gpqa30k/, /ctx30k/],
+    ctx110k: [/ctx-gpqa110k/, /ctx110k/],
+    tau2: [/tau2/],
+    shell: [/shell10/, /shell/],
+    termbench: [/termbench/]
+  };
+
+  function videoFor(key, vids) {
+    var pats = CELL_VIDEO[key];
+    if (!pats || !vids) return null;
+    for (var k in vids) {
+      for (var i = 0; i < pats.length; i++) if (pats[i].test(k)) return vids[k];
+    }
+    return null;
+  }
+
+  function scoreCell(r, key, v) {
+    var t = fmtPct(num(v));
+    var u = videoFor(key, r.videos);
+    if (!u || num(v) === null) return t;
+    return '<a class="cellvid" href="' + esc(u) + '" target="_blank" rel="noopener" title="watch this cell">' +
+      t + '<span class="play">&#9654;</span></a>';
+  }
+
   function rowHTML(r, rank) {
     var c = r.cells || {};
     var cls = rank ? "rank rank-" + rank : "";
@@ -186,21 +219,29 @@
       '<td class="num c-params" data-label="Params">' + esc(r.params_total || "—") + pAct + "</td>" +
       '<td class="c-quant" data-label="Quant"><span class="pill">' + esc(r.quant || "—") + "</span></td>" +
       '<td class="c-arch" data-label="Arch">' + esc(r.arch || "—") + "</td>" +
-      '<td class="num" data-label="GPQA">' + fmtPct(num(c.gpqa)) + "</td>" +
-      '<td class="num" data-label="AIME">' + fmtPct(num(c.aime)) + "</td>" +
-      '<td class="num" data-label="LiveBench">' + fmtPct(num(c.livebench)) + "</td>" +
-      '<td class="num" data-label="ctx30k">' + fmtPct(num(c.ctx30k)) + "</td>" +
-      '<td class="num" data-label="ctx110k">' + fmtPct(num(c.ctx110k)) + "</td>" +
-      '<td class="num" data-label="tau2">' + fmtPct(num(c.tau2)) + "</td>" +
-      '<td class="num" data-label="Shell">' + fmtPct(num(c.shell)) + "</td>" +
-      '<td class="num" data-label="TermBench">' + fmtPct(num(c.termbench)) + "</td>" +
+      '<td class="num" data-label="GPQA">' + scoreCell(r, "gpqa", c.gpqa) + "</td>" +
+      '<td class="num" data-label="AIME">' + scoreCell(r, "aime", c.aime) + "</td>" +
+      '<td class="num" data-label="LiveBench">' + scoreCell(r, "livebench", c.livebench) + "</td>" +
+      '<td class="num" data-label="ctx30k">' + scoreCell(r, "ctx30k", c.ctx30k) + "</td>" +
+      '<td class="num" data-label="ctx110k">' + scoreCell(r, "ctx110k", c.ctx110k) + "</td>" +
+      '<td class="num" data-label="tau2">' + scoreCell(r, "tau2", c.tau2) + "</td>" +
+      '<td class="num" data-label="Shell">' + scoreCell(r, "shell", c.shell) + "</td>" +
+      '<td class="num" data-label="TermBench">' + scoreCell(r, "termbench", c.termbench) + "</td>" +
       '<td class="num" data-label="Decode t/s">' + fmtNum(num(r.decode_tps), 1) + "</td>" +
       '<td class="num" data-label="Prefill t/s">' + fmtNum(num(r.prefill_tps), 0) + "</td>" +
       '<td class="num" data-label="Ctx">' + fmtCtx(num(r.context_window)) + "</td>" +
       '<td class="num" data-label="VRAM">' +
         (num(r.vram_mib) !== null ? (r.vram_mib / 1024).toFixed(1) : '<span class="dash">—</span>') + "</td>" +
       '<td class="num c-date" data-label="Date">' + esc(r.date || "—") + "</td>" +
-      '<td class="num c-videos" data-label="Videos">' + videosCell(r) + "</td>" +
+      '<td class="num c-game" data-label="Game">' +
+        (r.game && r.game.url ? '<a href="' + esc(r.game.url) + '" target="_blank" rel="noopener">yes</a>'
+                              : '<span class="dash">—</span>') + "</td>" +
+      '<td class="num" data-label="Attempts">' +
+        (r.game && r.game.attempts != null ? esc(String(r.game.attempts)) : '<span class="dash">—</span>') + "</td>" +
+      '<td class="num" data-label="Tokens">' +
+        (r.game && r.game.tokens ? esc(r.game.tokens.toLocaleString()) : '<span class="dash">—</span>') + "</td>" +
+      '<td class="num" data-label="Build s">' +
+        (r.game && r.game.build_s ? esc(String(Math.round(r.game.build_s))) : '<span class="dash">—</span>') + "</td>" +
     "</tr>";
   }
 
