@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-02T20:37:44+08:00",
+ "generated": "2026-11-02T20:44:16+08:00",
  "video_base": "https://www.lowtechplace.com/llmbench/videos/",
  "rows": [
   {
@@ -465,9 +465,9 @@
    "quant": "Q4_K_M",
    "arch": "MoE qwen36, 131k ctx",
    "engine": "Vulkan",
-   "decode_tps": 106.6,
-   "prefill_tps": 2467.0,
-   "context_window": 131072,
+   "decode_tps": 106.8,
+   "prefill_tps": 2444.0,
+   "context_window": 32768,
    "vram_mib": null,
    "size_gb": null,
    "date": "2026-11-01",
@@ -499,8 +499,8 @@
    "sources": [
     "results/qwen3-6-35b-a3b-ud-q4km.json"
    ],
-   "speed_measured_at": "2026-11-02T20:37:44+0800",
-   "speed_method": "cold cache_prompt=false, 2652-token prompt; optimised flags -fa on -b 16384 -ub 2048 --cache-type-k q8_0 --cache-type-v q4_0 --cache-reuse 256; no spec decode (no MTP head)",
+   "speed_measured_at": "2026-11-02T20:44:16+0800",
+   "speed_method": "cold cache_prompt=false; identical flags both models (-ngl 99 -fa on -c 32768 -np 1 -b 16384 -ub 2048 -ctk q8_0 -ctv q4_0 --cache-reuse 256, no speculative decoding); same 2652-token prompt file",
    "status": "done",
    "game": {
     "attempts": 1,
@@ -579,9 +579,9 @@
    "quant": "Q4_K_M",
    "arch": "dense Qwen3.8-27B, MTP draft + ngram-cache spec decode",
    "engine": "Vulkan",
-   "decode_tps": 32.5,
-   "prefill_tps": 776.0,
-   "context_window": 131072,
+   "decode_tps": 31.2,
+   "prefill_tps": 847.0,
+   "context_window": 32768,
    "vram_mib": 25166,
    "size_gb": 16.5,
    "date": "2026-11-01",
@@ -643,8 +643,8 @@
     "results/tetris_qwen3-8-27b-q4-k-m.json",
     "results/tune_qwen3-8-27b-q4-k-m.json"
    ],
-   "speed_measured_at": "2026-11-02T20:37:44+0800",
-   "speed_method": "cold cache_prompt=false, 2842-token prompt for prefill; decode measured with max_tokens 256; prod flags include draft-mtp+ngram spec",
+   "speed_measured_at": "2026-11-02T20:44:16+0800",
+   "speed_method": "cold cache_prompt=false; identical flags both models (-ngl 99 -fa on -c 32768 -np 1 -b 16384 -ub 2048 -ctk q8_0 -ctv q4_0 --cache-reuse 256, no speculative decoding); same 2652-token prompt file",
    "status": "done",
    "game": {
     "attempts": 1,
