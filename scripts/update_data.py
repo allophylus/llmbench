@@ -294,6 +294,22 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
         if decode is None:
             decode = _first(pp_src, (TUNE_PP_ID,), "tg128")
 
+        # live speed probe (results/speed.<slug>.json) overrides bench-cell values when present
+        sp = None
+        _rd = os.path.dirname(recs[0]["_path"]) if recs and recs[0].get("_path") else None
+        if _rd:
+            _sp = os.path.join(_rd, "speed.%s.json" % slug)
+            if os.path.exists(_sp):
+                try:
+                    sp = json.load(open(_sp))
+                except Exception:
+                    sp = None
+        if sp:
+            if _num(sp.get("prefill_tps")) is not None:
+                prefill = _num(sp["prefill_tps"])
+            if _num(sp.get("decode_tps")) is not None:
+                decode = _num(sp["decode_tps"])
+
         cells = {}
         for cname, cands in CELLS:
             v = None
@@ -323,7 +339,7 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
             "engine": mo.get("engine") or env.get("backend") or None,
             "decode_tps": _round(decode, 1),
             "prefill_tps": _round(prefill, 0),
-            "context_window": mo.get("native_ctx") or None,
+            "context_window": (sp or {}).get("context_window") or mo.get("native_ctx") or None,
             "vram_mib": int(vram) if vram else None,
             "size_gb": round(mo["size_bytes"] / 1e9, 1) if mo.get("size_bytes") else None,
             "date": date,
@@ -333,6 +349,8 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
                 os.path.relpath(r["_path"], raw_dir).replace(os.sep, "/")
                 if _under(r["_path"], raw_dir) else r["_src"]
                 for r in recs}),
+            "speed_measured_at": (sp or {}).get("measured_at"),
+            "speed_method": (sp or {}).get("method"),
             "status": "done" if any(r.get("status") == "done" for r in recs) else
                       ("partial" if any(r.get("status") == "partial" for r in recs) else "failed"),
         }

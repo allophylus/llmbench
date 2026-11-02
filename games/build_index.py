@@ -66,6 +66,31 @@ for slug, m, g, s in rows:
     findings_html = ('<ul class="findings">' + ''.join(f'<li>{x}</li>' for x in find) + '</ul>'
                      if find else '<p class="meta ok">no visible-artefact findings</p>')
 
+    # ---- build record (attempts loop from webgen.py) ----
+    bj = os.path.join(d, "build.json")
+    build = json.load(open(bj)) if os.path.isfile(bj) else None
+    build_html = ""
+    if build:
+        acc = build.get("accepted_attempt")
+        rows_ = "".join(
+            f"<li>attempt {pa.get('n')}: <b class=\"{'ok' if pa.get('outcome') == 'accepted' else 'bad'}\">"
+            f"{pa.get('outcome')}</b> · {pa.get('completion_tokens')} tok · {pa.get('wall_s')}s"
+            + ("".join(f"<br><span class='dim'>{r}</span>" for r in (pa.get('reasons') or [])))
+            + (f" · <a href='{slug}/attempts/attempt-{pa.get('n')}/build.webm'>build recording</a>"
+               if os.path.isfile(os.path.join(d, "attempts", f"attempt-{pa.get('n')}", "build.webm")) else "")
+            + "</li>" for pa in build.get("per_attempt", []))
+        build_html = f"""
+        <div class="build">
+          <div class="rlbl">🏗 build</div>
+          <div class="rstats">
+            <span><b>{build.get('attempts')}</b> attempts</span>
+            <span>accepted: <b class="{'ok' if acc else 'bad'}">{acc if acc else 'none'}</b></span>
+            <span><b>{build.get('total_completion_tokens')}</b> tokens total</span>
+            <span><b>{build.get('total_wall_s')}</b> s total</span>
+          </div>
+          <ul class="findings">{rows_}</ul>
+        </div>"""
+
     # ---- robot result (optional; only if robot_player.py has run) ----
     rj = os.path.join(d, "robot_metrics.json")
     robot = json.load(open(rj)) if os.path.isfile(rj) else None
@@ -74,6 +99,20 @@ for slug, m, g, s in rows:
         cd_ = (robot.get("closest_bullet_to_enemy_px") or {})
         v = robot.get("verdict")
         vs = {"scored": "scored", "zero-score": "ZERO SCORE"}.get(v, "no contract")
+        dj = os.path.join(d, "diag.json")
+        diag = json.load(open(dj)) if os.path.isfile(dj) else None
+        ws = (diag or {}).get("world_separation") or {}
+        diag_html = ""
+        if diag:
+            diag_html = (f"<p class='findings'><b>diagnosis:</b> {diag.get('verdict')}<br>"
+                         f"bullets fired on Space: {diag.get('fire', {}).get('fire_creates_bullets')} · "
+                         f"bullet/enemy overlaps observed: {diag.get('overlap', {}).get('close_pairs_lt12px')} of "
+                         f"{diag.get('overlap', {}).get('pairs_sampled')} sampled pairs · "
+                         f"forced hit scores: {diag.get('forced_hit', {}).get('score_incremented')} "
+                         f"({diag.get('forced_hit', {}).get('score_before')}→{diag.get('forced_hit', {}).get('score_after')}, HUD updates: "
+                         f"{diag.get('forced_hit', {}).get('hud_changed')}) · "
+                         f"closest real bullet→enemy in normal play: {ws.get('min_distance_units')} world units "
+                         f"(hit needs &lt; {ws.get('collision_radius_units')})</p>")
         robot_html = f"""
         <div class="robot">
           <div class="rlbl">🤖 robot run</div>
@@ -87,8 +126,8 @@ for slug, m, g, s in rows:
           <p class="meta">policy verdict: <b class="{'ok' if v == 'scored' else 'bad'}">{vs}</b>
             · contract ok: {robot.get('contract_ok')} · page threw: {robot.get('page_threw')}
             · closest bullet→enemy: {cd_.get('min_dy')} px vertical
-            {"<a href='" + ROBOT_VIDEO_BASE + "game__" + slug + "__robot.mp4' target='_blank' rel='noopener'>▶ watch the robot run</a> " + ("" if robot.get('video_live') else "<span class='dim'>(local file only — not uploaded)</span>") if robot.get('video') else ""}</p>
-          {'<p class="findings">Zero is a game defect, not a policy failure: every shot flew at a fixed y the enemies never occupy (measured closest vertical gap ' + str(cd_.get("min_dy")) + ' px), so nothing could ever collide.</p>' if v == 'zero-score' else ''}
+            {"<a href='" + slug + "/robot_play_repo.mp4' target='_blank' rel='noopener'>▶ watch the robot run</a>" if os.path.isfile(os.path.join(d, "robot_play_repo.mp4")) else ""}</p>
+          {diag_html}
         </div>"""
     cards.append(f"""
     <article class="card">
@@ -101,6 +140,7 @@ for slug, m, g, s in rows:
           {g['html_lines']} lines · {g['completion_tokens']} tokens · {g['decode_tps']} t/s · {g['wall_s']}s</p>
         <p class="meta">console errors: {errs_html}</p>
         {findings_html}
+        {build_html}
         {robot_html}
         <p><a class="play" href="{slug}/index.html">▶ PLAY {slug}</a></p>
       </div>
@@ -131,7 +171,8 @@ html = f"""<!DOCTYPE html>
   .dim {{ color: var(--fg-faint); }}
   .findings {{ margin: .2rem 0 0; padding-left: 1.1rem; color: var(--warn); font-size: 12px; }}
   .meta.ok {{ color: var(--accent); }}
-  .robot {{ border-top: 1px dashed var(--line); padding-top: .7rem; }}
+  .robot, .build {{ border-top: 1px dashed var(--line); padding-top: .7rem; }}
+  .build ul.findings {{ color: var(--fg-dim); }}
   .rlbl {{ font: 700 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: .35rem; }}
   .rstats {{ display: flex; flex-wrap: wrap; gap: .3rem .9rem; font: 12px var(--mono); }}
   .rstats b {{ color: var(--fg); }}

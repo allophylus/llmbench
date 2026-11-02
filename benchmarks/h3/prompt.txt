@@ -1,0 +1,14 @@
+subject_definitions:
+<Subject 1> is the 8-year-old Australian boy on the right, short tousled brown hair, cheerful grin, wearing the exact same dark navy blue Baju Melayu with a light blue button placket and the same plain navy songkok cap as shown in the reference picture, identical in every detail.
+<Audio 1> is the voice-timbre reference for <Subject 1>, a lively, upbeat, energetic young boy's voice — cheerful and clear at a normal conversational pace, never rushed.
+summary:
+The boy stands on his own on a wooden deck in his traditional Baju Melayu outfit in front of Mount Kinabalu, referencing his voice timbre from <Audio 1>. He stays completely still and speaks one line at normal real-life speed.
+detailed_description:
+The target video is in realistic photographic style. The lighting is warm golden early-morning sunrise light, bright and cheerful, with a soft pink and orange glow in the sky behind the mountain and a warm rim light on the boy's face, constant brightness and exposure, identical in every frame.
+The boy stands in the exact same pose, spot, and camera angle as the reference picture throughout. His identity, face, clothes, skin tone, hair, and the entire background stay identical to the reference picture throughout.
+The camera remains completely static — locked-off tripod, no pan, no tilt, no zoom, no reframe, medium half-body shot from the waist up, framed exactly like the reference picture, so the bottom of the frame cuts at his waist and his legs and feet are never visible in the clip.
+The boy moves at completely natural, normal, real-life speed throughout. He does not smile at any moment; his expression stays calm and neutral while he speaks.
+There is no text, no caption, no subtitle, no logo and no watermark anywhere in the frame.
+[Shot 1] <Subject 1> looks straight into the lens, holds his calm neutral expression, and says, <d>[English] Welcome to the benchmark. I am ready to run.</d> He is silent before the line starts and silent after it ends.
+non_diegetic_music:
+No background music.

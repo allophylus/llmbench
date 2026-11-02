@@ -27,6 +27,7 @@ import hashlib
 import http.server
 import json
 import os
+import shutil
 import socket
 import socketserver
 import sys
@@ -37,6 +38,9 @@ from playwright.sync_api import sync_playwright
 
 CHROME = "/usr/bin/google-chrome"
 VIEW = {"width": 1280, "height": 800}
+# Set by webgen.py: when set, the http:// validation context records its screen to
+# <RECORD_DIR>/build.webm so the build run itself is watchable.
+RECORD_DIR = None
 
 
 def free_port():
@@ -191,6 +195,24 @@ def probe(page, url, tag, out_dir):
     rec["console_error_count"] = len(rec["console_errors"])
     rec["failed_resources"] = bad_resources
     rec["ignored_favicon_404s"] = favicon_404s
+    # Machine-readable contract (prompt v2): window.__game with the required keys,
+    # ready once the loop has run, and a callable reset().
+    rec["contract"] = page.evaluate("""() => {
+      const g = window.__game;
+      if (!g) return {present: false, reasons: ['window.__game missing']};
+      const bad = [];
+      if (typeof g.ready !== 'boolean') bad.push('ready not boolean');
+      if (typeof g.score !== 'number') bad.push('score not number');
+      if (typeof g.lives !== 'number') bad.push('lives not number');
+      if (typeof g.over !== 'boolean') bad.push('over not boolean');
+      if (!g.player || typeof g.player.x !== 'number' || typeof g.player.y !== 'number')
+        bad.push('player {x,y} missing');
+      if (!Array.isArray(g.enemies)) bad.push('enemies not array');
+      if (!Array.isArray(g.bullets)) bad.push('bullets not array');
+      if (typeof g.reset !== 'function') bad.push('reset() not callable');
+      return {present: true, ready: g.ready, reasons: bad,
+              ok: bad.length === 0 && g.ready === true};
+    }""")
     return rec
 
 
@@ -207,12 +229,26 @@ def run(slug_dir):
                                         "--enable-unsafe-swiftshader", "--no-sandbox",
                                         "--allow-file-access-from-files"])
             for tag, url in (("http", http_url), ("file", "file://" + html)):
-                ctx = b.new_context(viewport=VIEW)
+                vdir = None
+                if tag == "http" and RECORD_DIR:
+                    vdir = os.path.join(RECORD_DIR, "_rec")
+                    shutil.rmtree(vdir, ignore_errors=True)
+                    os.makedirs(vdir, exist_ok=True)
+                ctx = b.new_context(viewport=VIEW,
+                                    record_video_dir=vdir,
+                                    record_video_size=VIEW if vdir else None)
                 page = ctx.new_page()
                 try:
                     rec = probe(page, url, tag, slug_dir)
                 finally:
-                    ctx.close()
+                    ctx.close()   # flushes the recording
+                if vdir:
+                    vids = [f for f in os.listdir(vdir) if f.endswith(".webm")]
+                    if vids:
+                        shutil.move(os.path.join(vdir, vids[0]),
+                                    os.path.join(RECORD_DIR, "build.webm"))
+                        out["build_video"] = "build.webm"
+                    shutil.rmtree(vdir, ignore_errors=True)
                 out[tag] = rec
             # Optional adapter that exposes scene internals as window.__wv (written
             # by webadapt.py into _scratch/). Used only to record WHY a check failed.
@@ -258,6 +294,9 @@ def run(slug_dir):
         "animation_ok": bool(h.get("animation_advancing") and f.get("animation_advancing")),
         "input_ok": bool(h.get("input_ok") and f.get("input_ok")),
         "console_error_count": h.get("console_error_count", 0) + f.get("console_error_count", 0),
+        "contract_ok": bool((h.get("contract") or {}).get("ok")),
+        "contract_reasons": ((h.get("contract") or {}).get("reasons", [])
+                             + ["(file://) " + r for r in (f.get("contract") or {}).get("reasons", [])]),
         "cdn_reachable": out["cdn_reachable"],
         "overlays_cover_geometry": bool(h.get("hidden_geometry_under_overlays") or
                                         f.get("hidden_geometry_under_overlays")),
@@ -269,6 +308,9 @@ def run(slug_dir):
     s = out["summary"]
     s["pass"] = all([s["http_load_ok"], s["file_load_ok"], s["canvas_ok"], s["webgl_ok"],
                      s["animation_ok"], s["input_ok"]])
+    # Acceptance for generation (webgen.py --check): the full gate including contract.
+    s["accept"] = all([s["pass"], s["uses_three"], s["contract_ok"],
+                       s["console_error_count"] == 0])
     json.dump(out, open(os.path.join(slug_dir, "metrics.json"), "w"), indent=1)
     print(slug, json.dumps(s))
 

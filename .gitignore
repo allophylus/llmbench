@@ -2,6 +2,10 @@
 videos/
 *.mp4
 *.webm
+# ...except the games cell: the recorded build and robot run ARE the evidence, so they
+# are published with the results. Only the compressed copies are tracked:
+!games/*/robot_play_repo.mp4
+!games/*/attempts/*/build.webm
 
 # tooling / editor noise
 node_modules/

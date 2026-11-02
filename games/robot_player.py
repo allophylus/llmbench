@@ -182,12 +182,23 @@ def decide(st, held_ok_key=None):
 
     lane = max(0.05 * w, min(0.95 * w, lane))
     dx = lane - px
-    if abs(dx) > 0.015 * w:
-        keys.add("ArrowRight" if dx > 0 else "ArrowLeft")
+    # Braking controller. The ship moves ~90 px per 100 ms key press, so a plain
+    # "press while not aligned" rule oscillates forever and fires only mid-swing
+    # (measured: 640 -> 733 -> 837 -> 745). Steer in proportion, releasing the key
+    # before the target so the ship settles into the firing lane.
+    SPD = 0.9 * w          # path% per second while a key is held (upper bound)
+    REACT = 1.0 / 10       # one policy tick of latency
+    brake = SPD * REACT / 2.0
+    dead = 0.008 * w
+    if abs(dx) > dead:
+        if abs(dx) > brake:
+            keys.add("ArrowRight" if dx > 0 else "ArrowLeft")
+        # inside the braking window: release and let momentum carry us in
 
-    # Fire whenever the ship is lined up with the enemy lane. Firing is free (no ammo),
-    # and the stream matters more than individual precision.
-    if above and abs(lane - px) < 0.06 * w:
+    # Fire while aligned. Threshold is wider than the deadzone so that a ship that is
+    # settling still puts shots in the lane.
+    fire_ok = above and abs(dx) <= 0.035 * w
+    if fire_ok:
         keys.add(" ")
     return keys, reason
 

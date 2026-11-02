@@ -1,0 +1,43 @@
+{
+ "slug": "qwen3-8-27b-q4km-b",
+ "fire": {
+  "bullets_before": 0,
+  "bullets_after": 1,
+  "fire_creates_bullets": true
+ },
+ "overlap": {
+  "pairs_sampled": 1150,
+  "min_screen_distance_px": 212.82,
+  "close_pairs_lt12px": 0,
+  "observed": false
+ },
+ "forced_hit": {
+  "skip": null,
+  "dist_before_tick": 0,
+  "score_before": 0,
+  "score_after": 10,
+  "hud_before": "NOVA STRIKE ARROWS / A D \u00b7 SPACE FIRE \u00b7 R RESTART SCORE 0 LIVES \u2665 \u2665 \u2665",
+  "hud_after": "NOVA STRIKE ARROWS / A D \u00b7 SPACE FIRE \u00b7 R RESTART SCORE 10 LIVES \u2665 \u2665 \u2665",
+  "score_incremented": true,
+  "hud_changed": true
+ },
+ "world_separation": {
+  "min_distance_units": 7.08,
+  "pair": {
+   "bullet": [
+    0,
+    -2.9,
+    4.5
+   ],
+   "enemy": [
+    3.91,
+    3,
+    4.41
+   ]
+  },
+  "collision_radius_units": 1.4,
+  "reachable": false
+ },
+ "page_errors": [],
+ "verdict": "game collision broken: bullets never enter the hit volume in normal play (min world distance 7.08 vs radius 1.4) even though the hit test itself scores when forced"
+}
