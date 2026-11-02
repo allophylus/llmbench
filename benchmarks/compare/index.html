@@ -28,7 +28,7 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,SFMono-Regular
 <p class="sub">R9700 · llama.cpp Vulkan · same cells, same prompts. Gold = better result. <span class="tag">first comparison</span></p>
 
 <table>
-<caption>Scores are percent correct unless stated. Throughput measured on the live server, cold (cache_prompt=false). Optimised = -fa on -b 16384 -ub 2048 --cache-reuse 256; default = fa on + kv q8_0/q4_0 only.</caption>
+<caption>Scores are percent correct unless stated. Throughput measured on the live server, cold (cache_prompt=false). Both models ran with identical flags: -ngl 99 -fa on -c 32768 -np 1 -b 16384 -ub 2048 -ctk q8_0 -ctv q4_0 --cache-reuse 256, no speculative decoding, same prompt file.</caption>
 <thead><tr><th>Test</th><th>Qwen3.8-27B</th><th>Qwen3.6-35B-A3B</th><th>Winner</th></tr></thead>
 <tbody>
 <tr><td>GPQA (diamond, 25)</td><td class="num win">76.0</td><td class="num">72.0</td><td>27B</td></tr>
@@ -39,10 +39,8 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,SFMono-Regular
 <tr><td>tau2 telecom (20)</td><td class="num">55.0</td><td class="num win">85.0</td><td>A3B</td></tr>
 <tr><td>Shell (10)</td><td class="num win">50.0</td><td class="num">40.0</td><td>27B</td></tr>
 <tr><td>TermBench (8)</td><td class="num win">100.0</td><td class="num">62.5</td><td>27B</td></tr>
-<tr><td>Prefill t/s — optimised (≈2.6k prompt)</td><td class="num">776</td><td class="num win">2,469</td><td>A3B</td></tr>
-<tr><td>Decode t/s — optimised (256 tok)</td><td class="num">32.5</td><td class="num win">102.8</td><td>A3B</td></tr>
-<tr><td>Prefill t/s — default flags</td><td class="num win">842</td><td class="num">2,223</td><td>27B</td></tr>
-<tr><td>Decode t/s — default flags</td><td class="num">30.9</td><td class="num win">102.6</td><td>A3B</td></tr>
+<tr><td>Prefill t/s — identical flags, 2,652-token prompt</td><td class="num">847</td><td class="num win">2,444</td><td>A3B</td></tr>
+<tr><td>Decode t/s — identical flags, 256 tokens</td><td class="num">31.2</td><td class="num win">106.8</td><td>A3B</td></tr>
 <tr><td>Context window</td><td class="num">131,072</td><td class="num">131,072</td><td>tie</td></tr>
 <tr><td>Game generated (three.js)</td><td class="num win">yes</td><td class="num na">no</td><td>27B</td></tr>
 <tr><td>Game attempts / retries</td><td class="num">1 / 0</td><td class="num na">—</td><td></td></tr>
