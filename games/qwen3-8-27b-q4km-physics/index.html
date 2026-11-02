@@ -1,0 +1,293 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>GRAVITY WELL — 3D Physics Sandbox</title>
+<style>
+  :root{
+    --bg0:#05070f; --bg1:#0b1226; --bg2:#141d3a;
+    --ink:#eaf1ff; --dim:#8ea0c8; --faint:#5a6a92;
+    --cyan:#5fe6ff; --amber:#ffb454; --coral:#ff6f91; --mint:#7dffb0;
+    --line:rgba(120,160,255,.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:var(--bg0);color:var(--ink);
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    -webkit-user-select:none;user-select:none;touch-action:none;overscroll-behavior:none}
+  #c{position:fixed;inset:0;display:block}
+  .vignette{position:fixed;inset:0;pointer-events:none;z-index:5;
+    background:radial-gradient(120% 90% at 50% 42%,transparent 40%,rgba(3,5,12,.55) 100%)}
+  .hud{position:fixed;inset:0;pointer-events:none;z-index:10}
+  .panel{position:absolute;background:linear-gradient(180deg,rgba(14,22,44,.72),rgba(9,14,30,.55));
+    border:1px solid var(--line);border-radius:12px;padding:12px 16px;backdrop-filter:blur(6px);
+    box-shadow:0 8px 30px rgba(0,0,0,.35)}
+  .tl{top:16px;left:16px;min-width:190px}
+  .tr{top:16px;right:16px;text-align:right;min-width:150px}
+  .brand{font-size:19px;font-weight:800;letter-spacing:.14em;line-height:1}
+  .brand b{color:var(--cyan)}
+  .sub{font-size:10px;letter-spacing:.34em;color:var(--faint);margin-top:6px}
+  .stat{margin-top:12px}
+  .stat .k{font-size:9px;letter-spacing:.28em;color:var(--dim)}
+  .stat .v{font-size:34px;font-weight:800;line-height:1;margin-top:2px;color:var(--ink)}
+  .stat .v small{font-size:13px;color:var(--faint);font-weight:600}
+  .bar{height:6px;border-radius:4px;background:rgba(255,255,255,.08);margin-top:8px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;border-radius:4px;
+    background:linear-gradient(90deg,var(--cyan),var(--mint));transition:width .18s ease}
+  .legend{margin-top:12px;font-size:10px;letter-spacing:.12em;color:var(--dim);line-height:1.7}
+  .legend span{color:var(--cyan)}
+  .controls{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);
+    display:flex;gap:10px;align-items:center;pointer-events:none;
+    font-size:10px;letter-spacing:.16em;color:var(--faint)}
+  .controls b{color:var(--dim);font-weight:700}
+  .pad{position:absolute;inset:0;pointer-events:none;z-index:12}
+  .btn{position:absolute;pointer-events:auto;touch-action:none;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    border:1px solid var(--line);border-radius:16px;color:var(--ink);
+    background:linear-gradient(180deg,rgba(20,30,58,.6),rgba(10,16,34,.5));
+    backdrop-filter:blur(4px);font-family:inherit;letter-spacing:.14em;
+    box-shadow:0 6px 20px rgba(0,0,0,.35);transition:transform .06s,background .12s,border-color .12s}
+  .btn .ic{font-size:22px;line-height:1}
+  .btn .lb{font-size:9px;color:var(--dim);margin-top:3px}
+  .btn:active,.btn.on{transform:scale(.94);border-color:var(--cyan);
+    background:linear-gradient(180deg,rgba(40,70,120,.7),rgba(16,26,52,.6))}
+  .btn.on .ic{color:var(--cyan)}
+  .dpad{left:16px;bottom:16px;width:150px;height:150px}
+  .dpad .btn{width:48px;height:48px;border-radius:12px}
+  .dpad .up{left:51px;top:0}.dpad .down{left:51px;bottom:0}
+  .dpad .left{left:0;top:51px}.dpad .right{right:0;top:51px}
+  .dpad .mid{left:51px;top:51px;background:transparent;border:none;box-shadow:none;
+    color:var(--faint);font-size:9px;letter-spacing:.2em}
+  .fire{right:16px;bottom:22px;width:96px;height:96px;border-radius:50%;
+    border-color:rgba(255,180,84,.5)}
+  .fire .ic{font-size:30px;color:var(--amber)}
+  .fire.on{border-color:var(--amber);background:linear-gradient(180deg,rgba(120,80,30,.6),rgba(40,26,12,.5))}
+  .fire.on .ic{color:#fff}
+  .reset{right:16px;bottom:132px;width:64px;height:44px;border-radius:12px}
+  .reset .ic{font-size:20px;color:var(--mint)}
+  .overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(120% 100% at 50% 40%,rgba(6,10,22,.55),rgba(3,5,12,.86));
+    backdrop-filter:blur(3px);transition:opacity .4s ease}
+  .overlay.hide{opacity:0;pointer-events:none}
+  .card{max-width:440px;width:88%;text-align:center;padding:34px 30px;border-radius:18px;
+    background:linear-gradient(180deg,rgba(16,24,48,.9),rgba(9,14,30,.85));
+    border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .card h1{font-size:30px;font-weight:800;letter-spacing:.16em}
+  .card h1 b{color:var(--cyan)}
+  .card p{margin-top:14px;font-size:12px;line-height:1.8;color:var(--dim);letter-spacing:.04em}
+  .card .keys{margin-top:18px;font-size:11px;letter-spacing:.14em;color:var(--faint)}
+  .card .keys b{color:var(--ink);background:rgba(255,255,255,.06);padding:3px 8px;border-radius:6px;margin:0 2px}
+  .card .go{margin-top:24px;font-size:13px;letter-spacing:.24em;color:var(--amber);
+    animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+  .final{font-size:44px;font-weight:800;color:var(--mint);margin-top:10px}
+  @media (max-width:520px){
+    .tl{min-width:150px;padding:10px 12px}.tr{min-width:120px;padding:10px 12px}
+    .stat .v{font-size:26px}.brand{font-size:16px}.legend{display:none}
+    .controls{display:none}
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="vignette"></div>
+
+<div class="hud">
+  <div class="panel tl">
+    <div class="brand">GRAVITY<b>WELL</b></div>
+    <div class="sub">3D PHYSICS SANDBOX</div>
+    <div class="stat"><div class="k">BALLS IN PLAY</div><div class="v" id="count">0</div></div>
+    <div class="stat"><div class="k">LAUNCHED</div><div class="v" id="launch">0 <small>/ 25</small></div>
+      <div class="bar"><i id="bar"></i></div></div>
+  </div>
+  <div class="panel tr">
+    <div class="stat"><div class="k">SETTLED</div><div class="v" id="settle" style="color:var(--coral)">0</div></div>
+    <div class="legend">SPACE / FIRE<br>launch a ball<br><span>25</span> launches ends the run</div>
+  </div>
+  <div class="controls">
+    <span><b>W A S D</b> / <b>← ↑ ↓ →</b> aim</span>
+    <span>·</span>
+    <span><b>SPACE</b> launch</span>
+  </div>
+</div>
+
+<div class="pad">
+  <div class="dpad">
+    <div class="btn up" data-k="up"><span class="ic">▲</span></div>
+    <div class="btn left" data-k="left"><span class="ic">◀</span></div>
+    <div class="btn mid">AIM</div>
+    <div class="btn right" data-k="right"><span class="ic">▶</span></div>
+    <div class="btn down" data-k="down"><span class="ic">▼</span></div>
+  </div>
+  <div class="btn reset" id="resetBtn"><span class="ic">↻</span><span class="lb">RESET</span></div>
+  <div class="btn fire" id="fireBtn"><span class="ic">✦</span><span class="lb">FIRE</span></div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="card" id="card">
+    <h1>GRAVITY<b>WELL</b></h1>
+    <p>Launch balls into the translucent chamber. They fall, bounce off the walls and floor, and collide with one another. Every launch counts — the run ends at <b>25</b>.</p>
+    <div class="keys"><b>W A S D</b> / <b>← ↑ ↓ →</b> aim &nbsp;·&nbsp; <b>SPACE</b> launch</div>
+    <div class="go" id="go">PRESS SPACE TO BEGIN</div>
+  </div>
+</div>
+
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+
+/* ---------- deterministic RNG ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+let rng=mulberry32(1337);
+
+/* ---------- constants ---------- */
+const BOX={x:6,y:4.5,z:6}, R=0.42, GRAV=-15, REST=0.72, FRICTION=0.985,
+      AIR=0.999, SETTLE=0.55, MAXB=25, STEP=1/120, LAUNCH=13;
+const PALETTE=[0x5fe6ff,0xffb454,0xff6f91,0x7dffb0,0xb98cff];
+
+/* ---------- renderer / scene ---------- */
+const canvas=document.getElementById('c');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.setClearColor(0x05070f,1);
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x0a1024,0.028);
+const camera=new THREE.PerspectiveCamera(52,innerWidth/innerHeight,0.1,200);
+const camTarget=new THREE.Vector3(0,BOX.y*0.42,0);
+const camPos=new THREE.Vector3(0,BOX.y*0.9,15.5);
+camera.position.copy(camPos);
+
+/* ---------- lights ---------- */
+scene.add(new THREE.AmbientLight(0x2a3a66,0.7));
+const key=new THREE.DirectionalLight(0xbfe0ff,1.1); key.position.set(6,12,8); scene.add(key);
+const rim=new THREE.DirectionalLight(0xff9a5a,0.5); rim.position.set(-8,4,-6); scene.add(rim);
+const fill=new THREE.PointLight(0x5fe6ff,0.6,40); fill.position.set(0,BOX.y,0); scene.add(fill);
+
+/* ---------- nebula background (shader) ---------- */
+const bgMat=new THREE.ShaderMaterial({
+  side:THREE.BackSide, depthWrite:false, depthTest:false,
+  uniforms:{uT:{value:0}},
+  vertexShader:`varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+  fragmentShader:`varying vec3 vP;uniform float uT;
+    float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
+      return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+    float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p*=2.02;a*=.5;}return v;}
+    void main(){vec3 d=normalize(vP);float t=uT*0.02;
+      float neb=fbm(d.xy*2.2+t)+0.6*fbm(d.zy*3.0-t*1.3);
+      vec3 c1=vec3(0.02,0.03,0.09),c2=vec3(0.10,0.05,0.20),c3=vec3(0.02,0.16,0.20);
+      vec3 col=mix(c1,c2,smoothstep(0.2,0.9,neb));
+      col=mix(col,c3,smoothstep(0.55,1.0,fbm(d.yx*1.6-t*0.7))*0.7);
+      col+=vec3(0.35,0.15,0.45)*pow(max(0.0,fbm(d.xy*4.0+t)),3.0)*0.5;
+      col*=smoothstep(1.0,-0.4,d.y)*0.9+0.1;
+      gl_FragColor=vec4(col,1.0);}`
+});
+const bg=new THREE.Mesh(new THREE.SphereGeometry(60,32,24),bgMat);
+bg.renderOrder=-1; scene.add(bg);
+
+/* ---------- chamber ---------- */
+const boxGeo=new THREE.BoxGeometry(BOX.x*2,BOX.y*2,BOX.z*2);
+const glass=new THREE.Mesh(boxGeo,new THREE.MeshPhysicalMaterial({
+  color:0x8fb8ff,transparent:true,opacity:0.06,roughness:0.1,metalness:0,
+  side:THREE.DoubleSide,depthWrite:false}));
+glass.renderOrder=2; scene.add(glass);
+const edges=new THREE.LineSegments(new THREE.EdgesGeometry(boxGeo),
+  new THREE.LineBasicMaterial({color:0x5fe6ff,transparent:true,opacity:0.55}));
+scene.add(edges);
+const grid=new THREE.GridHelper(BOX.x*2,12,0x2a4a8a,0x182a52);
+grid.position.y=-BOX.y; grid.material.transparent=true; grid.material.opacity=0.5; scene.add(grid);
+const floorGlow=new THREE.Mesh(new THREE.PlaneGeometry(BOX.x*2,BOX.z*2),
+  new THREE.MeshBasicMaterial({color:0x1a3a6a,transparent:true,opacity:0.25,blending:THREE.AdditiveBlending,depthWrite:false}));
+floorGlow.rotation.x=-Math.PI/2; floorGlow.position.y=-BOX.y+0.01; scene.add(floorGlow);
+
+/* ---------- ball geometry / materials ---------- */
+const ballGeo=new THREE.SphereGeometry(R,24,18);
+const mats=PALETTE.map(c=>new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:0.35,roughness:0.35,metalness:0.1}));
+const ballMeshes=[]; for(let i=0;i<MAXB;i++){const m=new THREE.Mesh(ballGeo,mats[i%PALETTE.length]);m.visible=false;scene.add(m);ballMeshes.push(m);}
+
+/* ---------- particles ---------- */
+const PMAX=600;
+const pPos=new Float32Array(PMAX*3), pCol=new Float32Array(PMAX*3), pVel=new Float32Array(PMAX*3), pLife=new Float32Array(PMAX);
+let pHead=0;
+const pGeo=new THREE.BufferGeometry();
+pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+pGeo.setAttribute('color',new THREE.BufferAttribute(pCol,3));
+const pMat=new THREE.PointsMaterial({size:0.16,vertexColors:true,transparent:true,opacity:1,
+  blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
+const points=new THREE.Points(pGeo,pMat); points.frustumCulled=false; scene.add(points);
+const _c=new THREE.Color();
+function burst(x,y,z,color,n,spd){
+  _c.set(color);
+  for(let i=0;i<n;i++){
+    const a=rng()*6.283, b=(rng()-0.5)*3.14, s=spd*(0.4+rng()*0.9);
+    const idx=pHead; pHead=(pHead+1)%PMAX;
+    pPos[idx*3]=x; pPos[idx*3+1]=y; pPos[idx*3+2]=z;
+    pVel[idx*3]=Math.cos(a)*Math.cos(b)*s; pVel[idx*3+1]=Math.sin(b)*s+1.5; pVel[idx*3+2]=Math.sin(a)*Math.cos(b)*s;
+    pCol[idx*3]=_c.r; pCol[idx*3+1]=_c.g; pCol[idx*3+2]=_c.b;
+    pLife[idx]=0.5+rng()*0.5;
+  }
+}
+function updateParticles(dt){
+  for(let i=0;i<PMAX;i++){
+    if(pLife[i]<=0)continue;
+    pLife[i]-=dt;
+    if(pLife[i]<=0){pPos[i*3+1]=-999;continue;}
+    pVel[i*3+1]+=GRAV*0.35*dt;
+    pPos[i*3]+=pVel[i*3]*dt; pPos[i*3+1]+=pVel[i*3+1]*dt; pPos[i*3+2]+=pVel[i*3+2]*dt;
+    const f=Math.min(1,pLife[i]*2);
+    pCol[i*3]*=0.98; pCol[i*3+1]*=0.98; pCol[i*3+2]*=0.98;
+  }
+  pGeo.attributes.position.needsUpdate=true; pGeo.attributes.color.needsUpdate=true;
+}
+
+/* ---------- state ---------- */
+let balls=[], launched=0, over=false, started=false, shake=0, flash=0, flashCol=new THREE.Color(0x5fe6ff);
+const aim={x:0,y:0};
+const keys={up:false,down:false,left:false,right:false,fire:false};
+const flashEl=document.createElement('div');
+flashEl.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:8;opacity:0;background:radial-gradient(circle,rgba(255,255,255,.5),transparent 70%)';
+document.body.appendChild(flashEl);
+
+function launch(){
+  if(over||launched>=MAXB)return;
+  const px=(rng()*2-1)*(BOX.x-R-0.3), pz=(rng()*2-1)*(BOX.z-R-0.3);
+  const py=BOX.y-R-0.2;
+  const vx=aim.x*LAUNCH+(rng()*2-1)*1.5, vy=2+rng()*2, vz=aim.y*LAUNCH+(rng()*2-1)*1.5;
+  const b={x:px,y:py,z:pz,vx,vy,vz,r:R,rest:REST,flash:1,settled:false,
+    color:PALETTE[launched%PALETTE.length],mesh:ballMeshes[launched]};
+  b.mesh.visible=true; balls.push(b); launched++;
+  burst(px,py,pz,b.color,26,7); shake=Math.min(1,shake+0.5); flash=0.5; flashCol.set(b.color);
+  updateHUD();
+  if(launched>=MAXB) endGame();
+}
+function endGame(){
+  over=true;
+  const card=document.getElementById('card');
+  const settled=balls.filter(b=>b.settled).length;
+  card.innerHTML=`<h1>RUN <b>COMPLETE</b></h1>
+    <p>All <b>25</b> balls launched into the chamber.</p>
+    <div class="final">${settled}</div>
+    <p style="margin-top:4px">balls settled at rest</p>
+    <div class="keys"><b>R</b> / <b>RESET</b> to run again</div>`;
+  document.getElementById('overlay').classList.remove('hide');
+}
+
+/* ---------- physics (fixed step, deterministic) ---------- */
+function step(dt){
+  for(const b of balls){
+    b.vy+=GRAV*dt;
+    b.vx*=AIR; b.vy*=AIR; b.vz*=AIR;
+    b.x+=b.vx*dt; b.y+=b.vy*dt; b.z+=b.vz*dt;
+    const fx=BOX.x-b.r, fz=BOX.z-b.r, fy=BOX.y-b.r;
+    if(b.x<-fx){b.x=-fx;b.vx=-b.vx*b.rest;b.vz*=FRICTION;}
+    else if(b.x>fx){b.x=fx;b.vx=-b.vx*b.rest;b.vz*=FRICTION;}
+    if(b.z<-fz){b.z=-fz;b.vz=-b.vz*b.rest;b.vx*=FRICTION;}
+    else if(b.z>fz){b.z=fz;b.vz=-b.vz*b.rest;b.vx*=FRICTION;}
+    if(b.y>fy){b.y=fy;b.vy=-b.vy*b.rest;}
+    if(b.y<-fy){
+      b.y=-fy;
+      if(Math.abs(b.vy)>1.2){b.vy=-b.vy*b.rest;b.vx*=FRICTION;b.vz*=FRICTION;
+        burst(b.x,-fy+0.0
+<script src="../touch.js"></script>

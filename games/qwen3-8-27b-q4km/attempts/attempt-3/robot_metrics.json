@@ -1,0 +1,1070 @@
+{
+ "slug": "attempt-3",
+ "hz": 10,
+ "max_seconds": 45,
+ "started_at": "2026-11-02T16:59:13+0800",
+ "ready_wait_s": 0.0,
+ "contract_ok": true,
+ "state_at_ready": {
+  "ready": true,
+  "score": 0,
+  "lives": 3,
+  "over": false,
+  "player": {
+   "x": 640,
+   "y": 629.7017993463525
+  },
+  "enemies": [],
+  "bullets": [],
+  "w": 1280,
+  "h": 800,
+  "has_reset": true
+ },
+ "contract_has_reset": true,
+ "final_score": 0,
+ "final_lives": 3,
+ "lives_lost": 0,
+ "over": false,
+ "survival_s": 45.01,
+ "samples": 435,
+ "frames_advanced": 2700,
+ "approx_fps": 60.0,
+ "action_count": 264,
+ "score_events": [],
+ "policy_reasons": {
+  "no-enemies-fire": 11,
+  "aim": 360,
+  "dodge": 64
+ },
+ "trace_first_ticks": [
+  {
+   "t": 0.0,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": []
+  },
+  {
+   "t": 0.11,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": []
+  },
+  {
+   "t": 0.21,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": [
+    [
+     640,
+     310
+    ]
+   ]
+  },
+  {
+   "t": 0.31,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": [
+    [
+     640,
+     52
+    ],
+    [
+     640,
+     523
+    ]
+   ]
+  },
+  {
+   "t": 0.41,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": [
+    [
+     640,
+     -207
+    ],
+    [
+     640,
+     264
+    ]
+   ]
+  },
+  {
+   "t": 0.52,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": [
+    [
+     640,
+     4
+    ],
+    [
+     640,
+     480
+    ]
+   ]
+  },
+  {
+   "t": 0.62,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": [
+    [
+     640,
+     -299
+    ],
+    [
+     640,
+     177
+    ]
+   ]
+  },
+  {
+   "t": 0.73,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": [
+    [
+     640,
+     -83
+    ],
+    [
+     640,
+     394
+    ]
+   ]
+  },
+  {
+   "t": 0.83,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": [
+    [
+     640,
+     -343
+    ],
+    [
+     640,
+     134
+    ]
+   ]
+  },
+  {
+   "t": 0.93,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": [
+    [
+     640,
+     -125
+    ],
+    [
+     640,
+     354
+    ]
+   ]
+  },
+  {
+   "t": 1.03,
+   "why": "no-enemies-fire",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [],
+   "bullets": [
+    [
+     640,
+     -385
+    ],
+    [
+     640,
+     94
+    ]
+   ]
+  },
+  {
+   "t": 1.14,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     374
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -166
+    ],
+    [
+     640,
+     315
+    ]
+   ]
+  },
+  {
+   "t": 1.24,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     389
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     12
+    ],
+    [
+     640,
+     491
+    ]
+   ]
+  },
+  {
+   "t": 1.34,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     402
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -248
+    ],
+    [
+     640,
+     231
+    ]
+   ]
+  },
+  {
+   "t": 1.44,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     415
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -28
+    ],
+    [
+     640,
+     450
+    ]
+   ]
+  },
+  {
+   "t": 1.55,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     428
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -288
+    ],
+    [
+     640,
+     190
+    ]
+   ]
+  },
+  {
+   "t": 1.65,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     441
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -69
+    ],
+    [
+     640,
+     407
+    ]
+   ]
+  },
+  {
+   "t": 1.75,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     454
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -330
+    ],
+    [
+     640,
+     147
+    ]
+   ]
+  },
+  {
+   "t": 1.86,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     470
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -157
+    ],
+    [
+     640,
+     318
+    ]
+   ]
+  },
+  {
+   "t": 1.96,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     483
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     59
+    ],
+    [
+     640,
+     532
+    ]
+   ]
+  },
+  {
+   "t": 2.06,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     496
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -201
+    ],
+    [
+     640,
+     272
+    ]
+   ]
+  },
+  {
+   "t": 2.16,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     509
+    ],
+    [
+     652,
+     370
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     12
+    ],
+    [
+     640,
+     484
+    ]
+   ]
+  },
+  {
+   "t": 2.27,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     522
+    ],
+    [
+     652,
+     380
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -248
+    ],
+    [
+     640,
+     224
+    ]
+   ]
+  },
+  {
+   "t": 2.37,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     535
+    ],
+    [
+     652,
+     390
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -35
+    ],
+    [
+     640,
+     438
+    ]
+   ]
+  },
+  {
+   "t": 2.47,
+   "why": "dodge",
+   "keys": [
+    "ArrowLeft"
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     615,
+     550
+    ],
+    [
+     652,
+     401
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -338
+    ],
+    [
+     640,
+     135
+    ]
+   ]
+  },
+  {
+   "t": 2.58,
+   "why": "dodge",
+   "keys": [
+    "ArrowRight"
+   ],
+   "player": [
+    548
+   ],
+   "enemies": [
+    [
+     615,
+     563
+    ],
+    [
+     652,
+     411
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -125
+    ]
+   ]
+  },
+  {
+   "t": 2.68,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     421
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -384
+    ]
+   ]
+  },
+  {
+   "t": 2.79,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     432
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     264
+    ]
+   ]
+  },
+  {
+   "t": 2.89,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     442
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     4
+    ],
+    [
+     640,
+     483
+    ]
+   ]
+  },
+  {
+   "t": 3.0,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     451
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -256
+    ],
+    [
+     640,
+     223
+    ]
+   ]
+  },
+  {
+   "t": 3.1,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     461
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -37
+    ],
+    [
+     640,
+     443
+    ]
+   ]
+  },
+  {
+   "t": 3.2,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     471
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -297
+    ],
+    [
+     640,
+     183
+    ]
+   ]
+  },
+  {
+   "t": 3.3,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     482
+    ],
+    [
+     625,
+     375
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -120
+    ],
+    [
+     640,
+     360
+    ]
+   ]
+  },
+  {
+   "t": 3.41,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     492
+    ],
+    [
+     625,
+     384
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -380
+    ],
+    [
+     640,
+     100
+    ]
+   ]
+  },
+  {
+   "t": 3.51,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     502
+    ],
+    [
+     625,
+     393
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -159
+    ],
+    [
+     640,
+     320
+    ]
+   ]
+  },
+  {
+   "t": 3.61,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     511
+    ],
+    [
+     625,
+     402
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     60
+    ],
+    [
+     640,
+     537
+    ]
+   ]
+  },
+  {
+   "t": 3.72,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     521
+    ],
+    [
+     625,
+     411
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -200
+    ],
+    [
+     640,
+     277
+    ]
+   ]
+  },
+  {
+   "t": 3.82,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     531
+    ],
+    [
+     625,
+     419
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     17
+    ],
+    [
+     640,
+     493
+    ]
+   ]
+  },
+  {
+   "t": 3.92,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     542
+    ],
+    [
+     625,
+     430
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -286
+    ],
+    [
+     640,
+     189
+    ]
+   ]
+  },
+  {
+   "t": 4.03,
+   "why": "aim",
+   "keys": [
+    " "
+   ],
+   "player": [
+    640
+   ],
+   "enemies": [
+    [
+     652,
+     552
+    ],
+    [
+     625,
+     439
+    ]
+   ],
+   "bullets": [
+    [
+     640,
+     -71
+    ],
+    [
+     640,
+     403
+    ]
+   ]
+  }
+ ],
+ "enemies_at_end": 4,
+ "max_bullets_on_screen": 2,
+ "max_enemies_on_screen": 6,
+ "closest_bullet_to_enemy_px": {
+  "min_dy": 0.8,
+  "min_dx": 0.8,
+  "at": {
+   "bullet": [
+    563,
+    536
+   ],
+   "enemy": [
+    578,
+    537
+   ],
+   "t": 24.7
+  },
+  "note": "screen space; a hit is impossible if min_dy stays far above the collision size the game uses"
+ },
+ "page_threw": false,
+ "page_errors": [],
+ "console_errors": [
+  "error: Failed to load resource: the server responded with a status of 404 (File not found)"
+ ],
+ "scored": false,
+ "verdict": "zero-score"
+}
