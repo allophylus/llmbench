@@ -1,172 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>llmbench — browser game cells</title>
-<link rel="stylesheet" href="../style.css">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%223%22 fill=%22%230d1117%22/%3E%3Cpath d=%22M4 3v10M12 3v10M4 8h8%22 stroke=%22%235ee0a3%22 stroke-width=%222%22/%3E%3C/svg%3E">
-<style>
-  .wrap.page { padding-bottom: 3rem; }
-  .back { font: 600 12px var(--mono); letter-spacing: .06em; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 1.25rem; margin: 1.5rem 0 2.5rem; }
-  .card { display: flex; flex-direction: column; gap: .9rem; padding: 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-soft); }
-  .card .shot img { width: 100%; border-radius: 6px; border: 1px solid var(--line); display: block; }
-  .card h2 { margin: 0 0 .4rem; font: 700 15px var(--mono); }
-  .meta { margin: .25rem 0; color: var(--fg-dim); font-size: 13px; }
-  .dim { color: var(--fg-faint); }
-  .findings { margin: .2rem 0 0; padding-left: 1.1rem; color: var(--warn); font-size: 12px; }
-  .meta.ok { color: var(--accent); }
-  .robot, .build { border-top: 1px dashed var(--line); padding-top: .7rem; }
-  .build ul.findings { color: var(--fg-dim); }
-  .rlbl { font: 700 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: .35rem; }
-  .rstats { display: flex; flex-wrap: wrap; gap: .3rem .9rem; font: 12px var(--mono); }
-  .rstats b { color: var(--fg); }
-  .errs { margin: .2rem 0 0; padding-left: 1.1rem; color: var(--warn); font-size: 12px; word-break: break-word; }
-  .ok { color: var(--accent); }
-  .bad { color: #ff7a8a; }
-  .pill { font: 700 10px var(--mono); letter-spacing: .1em; padding: 2px 7px; border-radius: 99px; vertical-align: middle; }
-  .pill.ok { background: #11301f; }
-  .pill.bad { background: #3a1620; }
-  .play { display: inline-block; margin-top: .4rem; padding: .5rem .9rem; border: 1px solid var(--accent-dim); border-radius: 6px; font: 700 13px var(--mono); }
-  .play:hover { background: #11301f; text-decoration: none; }
-  table.v { border-collapse: collapse; width: 100%; font: 12px var(--mono); }
-  table.v th, table.v td { padding: .4rem .55rem; border-bottom: 1px solid var(--line-soft); text-align: left; }
-  table.v th { color: var(--fg-faint); text-transform: uppercase; letter-spacing: .06em; font-size: 10px; }
-  .note { color: var(--fg-dim); font-size: 13px; max-width: 95ch; }
-</style>
-</head>
-<body>
-<header class="site-head">
-  <div class="wrap">
-    <a class="back" href="../">← llmbench</a>
-    <h1>games</h1>
-    <p class="sub">Browser game cell: the same frozen prompt (<code>WEBGAME_PROMPT.md</code>,
-      sha256 <code>924b140acb58aae2…</code>) asks each model for a complete single-file
-      three.js arcade shooter. Each game is opened in headless Google Chrome over both
-      <code>file://</code> and <code>http://</code>; every number below comes from that probe
-      (<code>metrics.json</code>) or the generation log (<code>gen.json</code>).</p>
-  </div>
-</header>
-<main class="wrap page">
-  <section class="cards">
-    <article class="card">
-      <a class="shot" href="qwen3-6-35b-a3b-ud-q4km/index.html"><img src="qwen3-6-35b-a3b-ud-q4km/shot.png" alt="screenshot of qwen3-6-35b-a3b-ud-q4km" loading="lazy"></a>
-      <div>
-        <h2>qwen3-6-35b-a3b-ud-q4km <span class="pill bad">FAIL</span></h2>
-        <p class="meta">model <code>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</code> · None ·
-          temp 0.0 · max_tokens 8000 · prompt sha256 <code>924b140acb58aae2…</code></p>
-        <p class="meta">renders with three.js <code>WebGLRenderer</code> · 0 canvas ·
-          221 lines · 2324 tokens · 109.79 t/s · 22.0s</p>
-        <p class="meta">console errors: <ul class="errs"><li>error: Failed to load resource: the server responded with a status of 404 (File not found)</li><li>error: Failed to load resource: the server responded with a status of 404 (File not found)</li></ul></p>
-        <p class="meta ok">no visible-artefact findings</p>
-        
-        <div class="build">
-          <div class="rlbl">🏗 build</div>
-          <div class="rstats">
-            <span><b>1</b> attempts</span>
-            <span>accepted: <b class="ok">1</b></span>
-            <span><b>3508</b> tokens total</span>
-            <span><b>79.45</b> s total</span>
-          </div>
-          <ul class="findings"><li>attempt 1: <b class="ok">accepted</b> · 3508 tok · 66.26s · <a href='qwen3-6-35b-a3b-ud-q4km/attempts/attempt-1/build.webm'>build recording</a></li></ul>
-        </div>
-        
-        <div class="robot">
-          <div class="rlbl">🤖 robot run</div>
-          <div class="rstats">
-            <span><b>0</b> score</span>
-            <span><b>60.02</b> s survived</span>
-            <span><b>0</b> lives lost</span>
-            <span><b>3599</b> frames</span>
-            <span><b>214</b> key events</span>
-          </div>
-          <p class="meta">policy verdict: <b class="bad">ZERO SCORE</b>
-            · contract ok: True · page threw: False
-            · closest bullet→enemy: 103.7 px vertical
-            <a href='qwen3-6-35b-a3b-ud-q4km/robot_play_repo.mp4' target='_blank' rel='noopener'>▶ watch the robot run</a></p>
-          <p class='findings'><b>diagnosis:</b> game collision broken: bullets never enter the hit volume in normal play (min world distance 6.03 vs radius 1.4) even though the hit test itself scores when forced<br>bullets fired on Space: True · bullet/enemy overlaps observed: 0 of 1186 sampled pairs · forced hit scores: True (0→10, HUD updates: True) · closest real bullet→enemy in normal play: 6.034 world units (hit needs &lt; 1.4)</p>
-        </div>
-        <p><a class="play" href="qwen3-6-35b-a3b-ud-q4km/index.html">▶ PLAY qwen3-6-35b-a3b-ud-q4km</a></p>
-      </div>
-    </article>
-    <article class="card">
-      <a class="shot" href="qwen3-8-27b-q4km/index.html"><img src="qwen3-8-27b-q4km/shot.png" alt="screenshot of qwen3-8-27b-q4km" loading="lazy"></a>
-      <div>
-        <h2>qwen3-8-27b-q4km <span class="pill ok">PASS</span></h2>
-        <p class="meta">model <code>Qwen3.8-27B-Q4_K_M.gguf</code> · b11517-8a1a9b512 ·
-          temp 0.0 · max_tokens 8000 · prompt sha256 <code>924b140acb58aae2…</code></p>
-        <p class="meta">renders with three.js <code>WebGLRenderer</code> · 1 canvas ·
-          260 lines · 3508 tokens · 53.24 t/s · 66.26s</p>
-        <p class="meta">console errors: <span class="dim">none</span></p>
-        <ul class="findings"><li>player ship is only partly on screen (y=257..1005px in a 800px viewport, bottom cut off)</li><li>some 3D geometry is painted under the HTML HUD/hint overlay</li></ul>
-        
-        <div class="build">
-          <div class="rlbl">🏗 build</div>
-          <div class="rstats">
-            <span><b>1</b> attempts</span>
-            <span>accepted: <b class="ok">1</b></span>
-            <span><b>3508</b> tokens total</span>
-            <span><b>79.45</b> s total</span>
-          </div>
-          <ul class="findings"><li>attempt 1: <b class="ok">accepted</b> · 3508 tok · 66.26s · <a href='qwen3-8-27b-q4km/attempts/attempt-1/build.webm'>build recording</a></li></ul>
-        </div>
-        
-        <div class="robot">
-          <div class="rlbl">🤖 robot run</div>
-          <div class="rstats">
-            <span><b>0</b> score</span>
-            <span><b>60.02</b> s survived</span>
-            <span><b>0</b> lives lost</span>
-            <span><b>3599</b> frames</span>
-            <span><b>214</b> key events</span>
-          </div>
-          <p class="meta">policy verdict: <b class="bad">ZERO SCORE</b>
-            · contract ok: True · page threw: False
-            · closest bullet→enemy: 103.7 px vertical
-            <a href='qwen3-8-27b-q4km/robot_play_repo.mp4' target='_blank' rel='noopener'>▶ watch the robot run</a></p>
-          <p class='findings'><b>diagnosis:</b> game collision broken: bullets never enter the hit volume in normal play (min world distance 6.03 vs radius 1.4) even though the hit test itself scores when forced<br>bullets fired on Space: True · bullet/enemy overlaps observed: 0 of 1186 sampled pairs · forced hit scores: True (0→10, HUD updates: True) · closest real bullet→enemy in normal play: 6.034 world units (hit needs &lt; 1.4)</p>
-        </div>
-        <p><a class="play" href="qwen3-8-27b-q4km/index.html">▶ PLAY qwen3-8-27b-q4km</a></p>
-      </div>
-    </article>
-  </section>
-  <h2 class="note" style="font:700 14px var(--mono)">checks</h2>
-  <table class="v">
-    <thead><tr><th>game</th><th>all</th><th>console errors</th><th>canvas</th><th>webgl</th>
-      <th>animation</th><th>input</th><th>http</th><th>file</th><th>lines</th><th>tokens</th><th>t/s</th><th>ship</th><th>robot</th><th></th></tr></thead>
-    <tbody>
-    <tr><td><a href="qwen3-6-35b-a3b-ud-q4km/index.html">qwen3-6-35b-a3b-ud-q4km</a></td>
-      <td><b class="bad">FAIL</b></td>
-      <td>0</td>
-      <td><b class="ok">PASS</b></td>
-      <td><b class="ok">PASS</b></td>
-      <td><b class="bad">FAIL</b></td>
-      <td><b class="bad">FAIL</b></td>
-      <td><b class="ok">PASS</b></td>
-      <td><b class="bad">FAIL</b></td>
-      <td>221</td>
-      <td>2324</td>
-      <td>109.79</td>
-      <td><a href="qwen3-6-35b-a3b-ud-q4km/metrics.json">metrics.json</a></td></tr>
-    <tr><td><a href="qwen3-8-27b-q4km/index.html">qwen3-8-27b-q4km</a></td>
-      <td><b class="ok">PASS</b></td>
-      <td>0</td>
-      <td><b class="ok">PASS</b></td>
-      <td><b class="ok">PASS</b></td>
-      <td><b class="ok">PASS</b></td>
-      <td><b class="ok">PASS</b></td>
-      <td><b class="ok">PASS</b></td>
-      <td><b class="ok">PASS</b></td>
-      <td>260</td>
-      <td>3508</td>
-      <td>53.24</td>
-      <td><a href="qwen3-8-27b-q4km/metrics.json">metrics.json</a></td></tr></tbody>
-  </table>
-  <p class="note" style="margin-top:1.2rem">
-    <b>animation</b> = two screenshots ~1&nbsp;s apart differ. <b>input</b> = ArrowRight then ArrowLeft
-    each change the frame (pixel-hash compare). Controls: ←/→ or A/D to move, SPACE to fire, R to restart.
-    Games load three.js from a pinned CDN, so they need network access the first time.</p>
-</main>
-</body>
-</html>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>games — model-written browser games</title><style>
+:root{--bg:#0f141b;--panel:#151c26;--line:#243040;--fg:#e8eef8;--dim:#9fb0c6;--faint:#6f8296;--gold:#f5c542;--blue:#8cc8ff;--bad:#ff7b72;--ok:#7ee787}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:24px;margin:0 0 4px}.sub{color:var(--dim);margin:0 0 16px}
+.tabs{display:flex;gap:8px;margin:0 0 18px}
+.tabs a{padding:6px 12px;border:1px solid var(--line);border-radius:8px;color:var(--dim);text-decoration:none;font-size:13px}
+.tabs a.on{background:#1b2431;color:var(--fg);border-color:#33506b}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+thead th{background:#1b2431;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim)}
+tbody tr:nth-child(even) td{background:#131a24}
+td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text-align:right;white-space:nowrap}
+.thumb{width:150px;border-radius:6px;border:1px solid var(--line);display:block}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--gold)}
+.pill{display:inline-block;padding:1px 7px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--dim)}
+.q{color:var(--fg)}.ans{color:var(--dim);font-size:13px}
+.prompt{color:var(--faint);font-size:12px;max-width:52ch}
+.meta{color:var(--faint);font-size:12px}
+@media(max-width:640px){th,td{padding:7px 6px;font-size:12px}.thumb{width:96px}}
+</style></head><body><div class=wrap><nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a></nav><h1>games — model-written browser games</h1><p class=sub>Each model writes a single-file three.js game from a frozen prompt. The model draws everything with geometry — no images, textures or audio files. Repeats = extra generation turns allowed to fix a failing build (max 10).</p><table><thead><tr><th>Model</th><th>Game</th><th>Attempts</th><th>Repeats</th><th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th><th>Screenshot</th><th>Play</th></tr></thead><tbody><tr><td>Qwen3.6-35B-A3B</td><td>shooter</td><td class=num>1</td><td class=num></td><td class=num>2324</td><td class=num>22.0</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it; animation not advancing</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play</a></td></tr><tr><td>Qwen3.8-27B</td><td>shooter</td><td class=num>1</td><td class=num></td><td class=num>3508</td><td class=num>79.5</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it</td><td><img class=thumb src='qwen3-8-27b-q4km/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km/index.html'>play</a></td></tr><tr><td>Qwen3.8-27B</td><td>arcade shooter</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td><img class=thumb src='qwen3-8-27b-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-galaga/index.html'>play</a></td></tr><tr><td>Qwen3.8-27B</td><td>top-down driving mission</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td><img class=thumb src='qwen3-8-27b-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-gta/index.html'>play</a></td></tr><tr><td>Qwen3.8-27B</td><td>3D physics sandbox</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td><img class=thumb src='qwen3-8-27b-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-physics/index.html'>play</a></td></tr></tbody></table></div></body></html>
