@@ -16,7 +16,7 @@ That writes SCHEMA-1 JSON into `results/` (`pub-gpqa25.pub.json`, `pub-aime10x3.
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `LLMBENCH_BASE` | `http://127.0.0.1:8080` | base URL of the OpenAI-compatible endpoint (`/v1` is appended where needed) |
+| `LLMBENCH_BASE` | `http://127.0.0.1:8080` | URL of your OpenAI-compatible endpoint — point this at your own server (`/v1` is appended where needed) |
 | `LLMBENCH_RESULTS` | `./results` | where cell JSON is written |
 | `LLMBENCH_HOME` | parent of `bin/` | suite root (packs, tau2, terminal-bench data) |
 | `LLMBENCH_API_KEY` | unset | optional bearer token |

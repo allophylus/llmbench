@@ -51,14 +51,14 @@ llama-server -m <model.gguf> \
   --chat-template-kwargs '{"enable_thinking":false}'
 ```
 
-Prod server is `qwen-longctx.service` on **:8080** (same flags, model via
+The always-on serving instance answers on **port 8080** (systemd unit `qwen-longctx.service`; same flags, model via
 `~/.config/systemd/user/qwen-longctx.service.d/z-active-model.conf`).
 `switch-model.sh <preset>` relinks `models/active.gguf` and rewrites that drop-in.
 
 Rules that exist because they were learned the hard way:
 
 - Queue work takes `flock /home/ubuntu/llmbench/queue.lock`; suites stop prod after the lock and
-  **must** restore it in a trap (`restore-prod.sh`) and health-check `:8080`.
+  **must** restore it in a trap (`restore-prod.sh`) and health-check port 8080 before exiting.
 - Never `pkill -f llama-server`. A clean exit (`status=0/SUCCESS`) does not trigger
   `Restart=on-failure` and the unit sits dead. Restart the unit instead.
 - Check `ss -ltnp | grep 8081` before blaming the unit: a hand-started server can hold the port.
