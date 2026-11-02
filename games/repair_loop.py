@@ -48,7 +48,7 @@ def probe(path, workdir, vid_dir=None):
         return json.loads(r.stdout.strip().splitlines()[-1])
     except Exception:
         return {"load": False, "canvas": 0, "ready": False,
-                "errors": ["probe failed: " + (r.stderr or "")[-200:]}]}
+                "errors": ["probe failed: " + (r.stderr or "")[-200:]]}
 
 def ask_model(base, prompt, timeout=900):
     mid = json.load(urllib.request.urlopen(base.rstrip("/") + "/v1/models", timeout=20))["data"][0]["id"]
