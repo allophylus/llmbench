@@ -31,7 +31,7 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 .ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--gold)}
 .pill{display:inline-block;padding:1px 7px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--dim)}
 .q{color:var(--fg)}.ans{color:var(--dim);font-size:13px}
-.prompt{color:var(--faint);font-size:12px;max-width:52ch}
+.prompt{color:var(--faint);font-size:12px;max-width:52ch}\n.detail{border:1px solid var(--line);border-radius:10px;padding:14px;margin:16px 0;background:var(--panel)}\n.detail h2{margin:0 0 6px;font-size:17px}.bigshot{width:min(560px,100%);border-radius:8px;border:1px solid var(--line);margin:10px 0}\n.promptbox{white-space:pre-wrap;font:12px/1.45 ui-monospace,monospace;color:var(--dim);background:#111821;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:260px;overflow:auto}\n.notes{color:var(--dim);margin:4px 0 8px}.sec{margin:26px 0 6px;font-size:15px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
 .meta{color:var(--faint);font-size:12px}
 @media(max-width:640px){th,td{padding:7px 6px;font-size:12px}.thumb{width:96px}}
 """
@@ -71,6 +71,7 @@ def game_rows():
         if not notes and status == "renders": notes.append("playable in browser")
         shot = "shot.png" if os.path.exists(os.path.join(d, "shot.png")) else ""
         rows.append(dict(model=model, game=GAME_LABEL.get(game, game), slug=slug,
+                         thinking=bool(b.get("thinking")),
                          attempts=att, retries=retries, tokens=tok, wall=wall,
                          status=status, notes="; ".join(notes), shot=shot))
     return rows
@@ -81,52 +82,88 @@ def build_games():
     for r in rows:
         shot = (f"<img class=thumb src='{esc(r['slug'])}/{esc(r['shot'])}' alt=''>") if r["shot"] else "—"
         tr.append("<tr>"
-                  f"<td>{esc(r['model'])}</td><td>{esc(r['game'])}</td>"
+                  f"<td><a href='#{esc(r['slug'])}'>{esc(r['model'])}</a></td><td>{esc(r['game'])}</td>"
+                  f"<td>{'on' if r.get('thinking') else 'off'}</td>"
                   f"<td class=num>{esc(r['attempts'])}</td><td class=num>{esc(r['retries'])}</td>"
                   f"<td class=num>{'' if r['tokens'] is None else r['tokens']}</td>"
                   f"<td class=num>{'' if r['wall'] is None else round(float(r['wall']),1)}</td>"
                   f"<td>{esc(r['status'])}</td><td class=meta>{esc(r['notes']) or '—'}</td>"
                   f"<td>{shot}</td>"
                   f"<td><a href='{esc(r['slug'])}/index.html'>play</a></td></tr>")
+
+    details = []
+    for r in rows:
+        d = os.path.join(GAMES, r["slug"])
+        prompt = ""
+        for cand in (os.path.join(d, "attempts", "attempt-1", "prompt.txt"),):
+            if os.path.exists(cand):
+                prompt = open(cand, encoding="utf-8", errors="replace").read().strip()
+                break
+        shot = (f"<img class=bigshot src='{esc(r['slug'])}/{esc(r['shot'])}' alt=''>") if r["shot"] else ""
+        details.append(
+            f"<section class=detail id='{esc(r['slug'])}'>"
+            f"<h2>{esc(r['model'])} — {esc(r['game'])}</h2>"
+            f"<p class=meta>{esc(r['status'])} · thinking {'on' if r.get('thinking') else 'off'} · "
+            f"{esc(r['attempts'])} attempt(s), {esc(r['retries'])} repeat(s) · "
+            f"{'' if r['tokens'] is None else r['tokens']} tokens · "
+            f"{'' if r['wall'] is None else round(float(r['wall']),1)}s</p>"
+            f"<p class=notes>{esc(r['notes']) or '—'}</p>"
+            + (f"<details><summary>prompt used</summary><pre class=promptbox>{esc(prompt)}</pre></details>" if prompt else "")
+            + shot +
+            f"<p><a href='{esc(r['slug'])}/index.html'>play the game →</a> · "
+            f"<a href='{esc(r['slug'])}/metrics.json'>metrics</a></p></section>")
+
     body = ("<p class=sub>Each model writes a single-file three.js game from a frozen prompt. "
             "The model draws everything with geometry — no images, textures or audio files. "
             "Repeats = extra generation turns allowed to fix a failing build (max 10).</p>"
-            "<table><thead><tr><th>Model</th><th>Game</th><th>Attempts</th><th>Repeats</th>"
+            "<table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th>"
             "<th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th>"
             "<th>Screenshot</th><th>Play</th></tr></thead><tbody>"
-            + "".join(tr) + "</tbody></table>")
+            + "".join(tr) + "</tbody></table>"
+            "<h2 class=sec>Details</h2>" + "".join(details))
     open(os.path.join(GAMES, "index.html"), "w").write(page("games — model-written browser games", body))
     print("games rows:", len(rows))
 
 def build_chat():
     files = sorted(glob.glob(os.path.join(CHAT, "*.json")))
-    blocks = []
+    groups = {}
     for f in files:
         d = json.load(open(f))
-        s = d.get("summary", {})
-        label = MODEL_LABEL.get(d.get("model"), d.get("model"))
-        head = (f"<h2>{esc(label)} <span class=pill>{s.get('accuracy','—')}% accurate</span> "
-                f"<span class=meta>{s.get('correct',0)} correct · {s.get('partial',0)} partial · "
-                f"{s.get('wrong',0)} wrong</span></h2>")
-        tr = []
-        for q in d.get("questions", []):
-            v = q.get("verdict", "unscored")
-            cls = {"correct": "ok", "partial": "warn", "wrong": "bad"}.get(v, "")
-            tr.append("<tr>"
-                      f"<td class=num>{esc(q['id'])}</td><td>{esc(q.get('topic'))}</td>"
-                      f"<td class=q>{esc(q.get('q'))}</td>"
-                      f"<td class=ans>{esc(q.get('answer') or q.get('error') or '—')}</td>"
-                      f"<td class={cls}>{esc(v)}</td>"
-                      f"<td class=num>{'' if q.get('tokens') is None else q['tokens']}</td>"
-                      f"<td class=num>{'' if q.get('ms') is None else q['ms']}</td></tr>")
-        blocks.append(head + "<table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th>"
-                             "<th>Verdict</th><th>Tokens</th><th>ms</th></tr></thead><tbody>"
-                             + "".join(tr) + "</tbody></table>")
-    body = ("<p class=sub>Ten fixed knowledge questions, temperature 0, max 220 tokens. "
-            "Accuracy = strictly correct answers.</p>" + "".join(blocks))
+        base = d.get("model", "model")
+        think = bool(d.get("thinking"))
+        groups.setdefault(base, {})[think] = d
+    blocks = []
+    for base, modes in groups.items():
+        label = MODEL_LABEL.get(base, base)
+        for think in (False, True):
+            d = modes.get(think)
+            if not d:
+                continue
+            s2 = d.get("summary", {})
+            mode_tag = ("<span class=pill>thinking on</span>" if think
+                        else "<span class=pill>thinking off</span>")
+            head = (f"<h2>{esc(label)} {mode_tag} <span class=pill>{s2.get('accuracy','—')}% accurate</span> "
+                    f"<span class=meta>{s2.get('correct',0)} correct · {s2.get('partial',0)} partial · "
+                    f"{s2.get('wrong',0)} wrong</span></h2>")
+            tr = []
+            for q in d.get("questions", []):
+                v = q.get("verdict", "unscored")
+                cls = {"correct": "ok", "partial": "warn", "wrong": "bad"}.get(v, "")
+                tr.append("<tr>"
+                          f"<td class=num>{esc(q['id'])}</td><td>{esc(q.get('topic'))}</td>"
+                          f"<td class=q>{esc(q.get('q'))}</td>"
+                          f"<td class=ans>{esc(q.get('answer') or q.get('error') or '—')}</td>"
+                          f"<td class={cls}>{esc(v)}</td>"
+                          f"<td class=num>{'' if q.get('tokens') is None else q['tokens']}</td>"
+                          f"<td class=num>{'' if q.get('ms') is None else q['ms']}</td></tr>")
+            blocks.append(head + "<table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th>"
+                                 "<th>Verdict</th><th>Tokens</th><th>ms</th></tr></thead><tbody>"
+                                 + "".join(tr) + "</tbody></table>")
+    body = ("<p class=sub>Ten fixed knowledge questions, temperature 0. Each model runs the same set "
+            "twice: thinking off, then thinking on.</p>" + "".join(blocks))
     os.makedirs(os.path.join(ROOT, "chat"), exist_ok=True)
     open(os.path.join(ROOT, "chat", "index.html"), "w").write(page("chat — knowledge accuracy", body))
-    print("chat models:", len(files))
+    print("chat groups:", len(groups))
 
 if __name__ == "__main__":
     build_games()

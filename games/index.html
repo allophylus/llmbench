@@ -16,6 +16,303 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 .pill{display:inline-block;padding:1px 7px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--dim)}
 .q{color:var(--fg)}.ans{color:var(--dim);font-size:13px}
 .prompt{color:var(--faint);font-size:12px;max-width:52ch}
+.detail{border:1px solid var(--line);border-radius:10px;padding:14px;margin:16px 0;background:var(--panel)}
+.detail h2{margin:0 0 6px;font-size:17px}.bigshot{width:min(560px,100%);border-radius:8px;border:1px solid var(--line);margin:10px 0}
+.promptbox{white-space:pre-wrap;font:12px/1.45 ui-monospace,monospace;color:var(--dim);background:#111821;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:260px;overflow:auto}
+.notes{color:var(--dim);margin:4px 0 8px}.sec{margin:26px 0 6px;font-size:15px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
 .meta{color:var(--faint);font-size:12px}
 @media(max-width:640px){th,td{padding:7px 6px;font-size:12px}.thumb{width:96px}}
-</style></head><body><div class=wrap><nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a></nav><h1>games — model-written browser games</h1><p class=sub>Each model writes a single-file three.js game from a frozen prompt. The model draws everything with geometry — no images, textures or audio files. Repeats = extra generation turns allowed to fix a failing build (max 10).</p><table><thead><tr><th>Model</th><th>Game</th><th>Attempts</th><th>Repeats</th><th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th><th>Screenshot</th><th>Play</th></tr></thead><tbody><tr><td>Qwen3.6-35B-A3B</td><td>shooter</td><td class=num>1</td><td class=num></td><td class=num>2324</td><td class=num>22.0</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it; animation not advancing</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play</a></td></tr><tr><td>Qwen3.8-27B</td><td>shooter</td><td class=num>1</td><td class=num></td><td class=num>3508</td><td class=num>79.5</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it</td><td><img class=thumb src='qwen3-8-27b-q4km/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km/index.html'>play</a></td></tr><tr><td>Qwen3.8-27B</td><td>arcade shooter</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td><img class=thumb src='qwen3-8-27b-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-galaga/index.html'>play</a></td></tr><tr><td>Qwen3.8-27B</td><td>top-down driving mission</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td><img class=thumb src='qwen3-8-27b-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-gta/index.html'>play</a></td></tr><tr><td>Qwen3.8-27B</td><td>3D physics sandbox</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td><img class=thumb src='qwen3-8-27b-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-physics/index.html'>play</a></td></tr></tbody></table></div></body></html>
+</style></head><body><div class=wrap><nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a></nav><h1>games — model-written browser games</h1><p class=sub>Each model writes a single-file three.js game from a frozen prompt. The model draws everything with geometry — no images, textures or audio files. Repeats = extra generation turns allowed to fix a failing build (max 10).</p><table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th><th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th><th>Screenshot</th><th>Play</th></tr></thead><tbody><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km'>Qwen3.6-35B-A3B</a></td><td>shooter</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>2324</td><td class=num>22.0</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it; animation not advancing</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km'>Qwen3.8-27B</a></td><td>shooter</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>3508</td><td class=num>79.5</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it</td><td><img class=thumb src='qwen3-8-27b-q4km/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-galaga'>Qwen3.8-27B</a></td><td>arcade shooter</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td><img class=thumb src='qwen3-8-27b-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-gta'>Qwen3.8-27B</a></td><td>top-down driving mission</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td><img class=thumb src='qwen3-8-27b-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-physics'>Qwen3.8-27B</a></td><td>3D physics sandbox</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td><img class=thumb src='qwen3-8-27b-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-physics/index.html'>play</a></td></tr></tbody></table><h2 class=sec>Details</h2><section class=detail id='qwen3-6-35b-a3b-ud-q4km'><h2>Qwen3.6-35B-A3B — shooter</h2><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 2324 tokens · 22.0s</p><p class=notes>no window.__game contract → robot cannot score it; animation not advancing</p><details><summary>prompt used</summary><pre class=promptbox>&lt;!--
+WEBGAME_PROMPT — FROZEN (llmbench browser-game cell v1, game cell &quot;webgame-3js&quot;)
+
+Sent verbatim as the single user message to every model. Never edit; the sha256 of
+this exact file is recorded per run as gen.json:prompt_sha256. If the prompt must
+change, that is a new benchmark version (v2) and old results are not comparable.
+
+Graded automatically by games/webvalidate.py (headless Chrome + playwright):
+  file:// load, http:// load, console errors, WebGL/canvas context, requestAnimationFrame
+  advancing (two screenshots ~1s apart), and keyboard input visibly moving the player.
+So every rule below must hold at RUN TIME, not merely be mentioned in the source.
+
+The model&#x27;s reply is the deliverable, not a tutorial. No commentary, no build step.
+--&gt;
+
+Write a complete, playable arcade space shooter as a SINGLE self-contained HTML file
+using three.js. Reply with the full file inside one ```html fenced block and nothing else.
+
+Hard requirements (an automated browser grader checks all of them):
+
+1. ONE FILE, NO BUILD STEP. `index.html` must run correctly when opened directly from
+   disk via `file://`, with no local server, no bundler, no npm.
+   - Load three.js from a pinned CDN via an ES-module import map, exactly like this:
+       &lt;script type=&quot;importmap&quot;&gt;
+       {&quot;imports&quot;: {&quot;three&quot;: &quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}
+       &lt;/script&gt;
+       &lt;script type=&quot;module&quot;&gt; import * as THREE from &#x27;three&#x27;; ... &lt;/script&gt;
+   - The 3D scene MUST be rendered with THREE.WebGLRenderer on a &lt;canvas&gt;. A plain 2D
+     &lt;canvas&gt; game is a failure. THREE must appear in the running code.
+
+2. CANVAS FILLS THE WINDOW. The renderer canvas covers the full viewport, resizes with
+   the window (handle `resize`), and the camera aspect is updated on resize.
+
+3. SCENE. A perspective camera looking at a playfield of deep space. Include a visible
+   starfield: at least several hundred star objects (THREE.Points is fine) distributed in
+   depth that scroll past the camera so the scene looks alive. Use geometry + materials
+   only — NO external images, textures, audio files or fonts. Colours via material
+   `color` / `emissive` are fine. Lights are fine.
+
+4. PLAYER. The player is a visible mesh (cone/box/octahedron cluster — your call) near the
+   bottom of the view, moved on the X axis by the LEFT/RIGHT arrow keys AND A/D.
+   Clamp its position so it stays on screen. Movement must be smooth (dt-scaled) and
+   clearly visible to a grader that presses a key and compares screenshots.
+
+5. SHOOTING. SPACE fires a projectile (small glowing mesh, e.g. a stretched box or
+   sphere) that travels upward (away from camera). Add a short cooldown (~150-250 ms).
+   Remove projectiles that leave the play area.
+
+6. ENEMIES. Enemies spawn on a timer at random X positions near the far end of the
+   playfield, below/around the starfield, and fly toward the player (descend toward the
+   camera / bottom of the screen) at random speeds. They must be visible meshes with
+   distinct colours. Cap the number alive so it never grows without bound.
+
+7. COLLISION. Use simple distance (or bounding-sphere) checks in world space:
+   - player projectile vs enemy  -&gt; enemy destroyed (explosion effect or fade is a plus),
+     score increases.
+   - enemy vs player             -&gt; player loses a life; the enemy is removed.
+   Give the player 3 lives.
+
+8. HUD overlay in plain HTML (absolutely positioned &lt;div&gt;s on top of the canvas, or
+   DOM text): SCORE and LIVES, updated live. When lives reach 0, show &quot;GAME OVER&quot; and
+   &quot;Press R to restart&quot;; pressing R resets score, lives, enemies and projectiles and
+   resumes play. The animation loop must never throw (guard against NaN/holes).
+
+9. PERFORMANCE. Use requestAnimationFrame with a THREE.Clock delta. Use shared
+   geometry/material instances where sensible, and a reasonable object count (hundreds
+   of objects max). No shadows or post-processing required.
+
+9b. MACHINE-READABLE CONTRACT (mandatory — an automated robot plays the game through
+    exactly these hooks; a game without them fails the benchmark, even if it looks fine):
+
+   a) Expose `window.__game` and refresh it EVERY FRAME, before or after render, so a
+      reader at any moment sees the current state. Exact shape (extra keys allowed):
+
+        window.__game = {
+          ready:   false,              // true once the loop has run at least once
+          score:   0,                  // int, same number as the HUD
+          lives:   3,                  // int, 3 -&gt; 0
+          over:    false,              // true when GAME OVER is shown
+          player:  { x: 640, y: 700 }, // canvas pixel coordinates (see below)
+          enemies: [{ x: 300, y: 120 }],
+          bullets: [{ x: 640, y: 600 }],
+          reset:   function () { ... } // same as pressing R
+        };
+
+      All x/y values are CSS pixel coordinates on the canvas: x from 0 (left) to
+      canvas.clientWidth, y from 0 (top) to canvas.clientHeight. Enemies and bullets
+      must be included while they are alive and removed when destroyed or out of play.
+      Keep it as a plain data snapshot plus the `reset` function; do not put THREE
+      objects in it. It must be cheap enough to rebuild every frame.
+
+   b) Listen for input on `window` (`window.addEventListener(&#x27;keydown&#x27;, ...)`, not on a
+      DOM element and not with `tabindex`/focus requirements), and read `event.key`.
+      The robot drives the game with synthetic events:
+
+        window.dispatchEvent(new KeyboardEvent(&#x27;keydown&#x27;, { key: &#x27;ArrowLeft&#x27; }));
+        window.dispatchEvent(new KeyboardEvent(&#x27;keyup&#x27;,   { key: &#x27;ArrowLeft&#x27; }));
+
+      The same must work for &#x27;ArrowRight&#x27;, &#x27;ArrowUp&#x27;, &#x27;ArrowDown&#x27;, &#x27; &#x27;, &#x27;a&#x27;, &#x27;d&#x27;, &#x27;r&#x27; and
+      &#x27;R&#x27;. Do not require `event.code`, do not call preventDefault in a way that breaks
+      synthetic events, and do not gate gameplay on pointer/click state.
+
+   c) `window.__game.reset()` must fully restart the game (score 0, lives 3, enemies and
+      bullets cleared, `over` false) exactly like pressing R.
+
+   d) The game must stay fully playable by a human with the keyboard, unchanged — the
+      contract adds a read-only state object and nothing the player sees.
+
+10. SIZE. Keep the file under about 350 lines. Correctness and completeness matter far
+    more than extra features: a smaller game that runs perfectly beats a big one that
+    throws.
+
+Output: one ```html block containing a complete &lt;!DOCTYPE html&gt; document, then stop.</pre></details><img class=bigshot src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''><p><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play the game →</a> · <a href='qwen3-6-35b-a3b-ud-q4km/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-8-27b-q4km'><h2>Qwen3.8-27B — shooter</h2><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 3508 tokens · 79.5s</p><p class=notes>no window.__game contract → robot cannot score it</p><details><summary>prompt used</summary><pre class=promptbox>&lt;!--
+WEBGAME_PROMPT — FROZEN (llmbench browser-game cell v1, game cell &quot;webgame-3js&quot;)
+
+Sent verbatim as the single user message to every model. Never edit; the sha256 of
+this exact file is recorded per run as gen.json:prompt_sha256. If the prompt must
+change, that is a new benchmark version (v2) and old results are not comparable.
+
+Graded automatically by games/webvalidate.py (headless Chrome + playwright):
+  file:// load, http:// load, console errors, WebGL/canvas context, requestAnimationFrame
+  advancing (two screenshots ~1s apart), and keyboard input visibly moving the player.
+So every rule below must hold at RUN TIME, not merely be mentioned in the source.
+
+The model&#x27;s reply is the deliverable, not a tutorial. No commentary, no build step.
+--&gt;
+
+Write a complete, playable arcade space shooter as a SINGLE self-contained HTML file
+using three.js. Reply with the full file inside one ```html fenced block and nothing else.
+
+Hard requirements (an automated browser grader checks all of them):
+
+1. ONE FILE, NO BUILD STEP. `index.html` must run correctly when opened directly from
+   disk via `file://`, with no local server, no bundler, no npm.
+   - Load three.js from a pinned CDN via an ES-module import map, exactly like this:
+       &lt;script type=&quot;importmap&quot;&gt;
+       {&quot;imports&quot;: {&quot;three&quot;: &quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}
+       &lt;/script&gt;
+       &lt;script type=&quot;module&quot;&gt; import * as THREE from &#x27;three&#x27;; ... &lt;/script&gt;
+   - The 3D scene MUST be rendered with THREE.WebGLRenderer on a &lt;canvas&gt;. A plain 2D
+     &lt;canvas&gt; game is a failure. THREE must appear in the running code.
+
+2. CANVAS FILLS THE WINDOW. The renderer canvas covers the full viewport, resizes with
+   the window (handle `resize`), and the camera aspect is updated on resize.
+
+3. SCENE. A perspective camera looking at a playfield of deep space. Include a visible
+   starfield: at least several hundred star objects (THREE.Points is fine) distributed in
+   depth that scroll past the camera so the scene looks alive. Use geometry + materials
+   only — NO external images, textures, audio files or fonts. Colours via material
+   `color` / `emissive` are fine. Lights are fine.
+
+4. PLAYER. The player is a visible mesh (cone/box/octahedron cluster — your call) near the
+   bottom of the view, moved on the X axis by the LEFT/RIGHT arrow keys AND A/D.
+   Clamp its position so it stays on screen. Movement must be smooth (dt-scaled) and
+   clearly visible to a grader that presses a key and compares screenshots.
+
+5. SHOOTING. SPACE fires a projectile (small glowing mesh, e.g. a stretched box or
+   sphere) that travels upward (away from camera). Add a short cooldown (~150-250 ms).
+   Remove projectiles that leave the play area.
+
+6. ENEMIES. Enemies spawn on a timer at random X positions near the far end of the
+   playfield, below/around the starfield, and fly toward the player (descend toward the
+   camera / bottom of the screen) at random speeds. They must be visible meshes with
+   distinct colours. Cap the number alive so it never grows without bound.
+
+7. COLLISION. Use simple distance (or bounding-sphere) checks in world space:
+   - player projectile vs enemy  -&gt; enemy destroyed (explosion effect or fade is a plus),
+     score increases.
+   - enemy vs player             -&gt; player loses a life; the enemy is removed.
+   Give the player 3 lives.
+
+8. HUD overlay in plain HTML (absolutely positioned &lt;div&gt;s on top of the canvas, or
+   DOM text): SCORE and LIVES, updated live. When lives reach 0, show &quot;GAME OVER&quot; and
+   &quot;Press R to restart&quot;; pressing R resets score, lives, enemies and projectiles and
+   resumes play. The animation loop must never throw (guard against NaN/holes).
+
+9. PERFORMANCE. Use requestAnimationFrame with a THREE.Clock delta. Use shared
+   geometry/material instances where sensible, and a reasonable object count (hundreds
+   of objects max). No shadows or post-processing required.
+
+9b. MACHINE-READABLE CONTRACT (mandatory — an automated robot plays the game through
+    exactly these hooks; a game without them fails the benchmark, even if it looks fine):
+
+   a) Expose `window.__game` and refresh it EVERY FRAME, before or after render, so a
+      reader at any moment sees the current state. Exact shape (extra keys allowed):
+
+        window.__game = {
+          ready:   false,              // true once the loop has run at least once
+          score:   0,                  // int, same number as the HUD
+          lives:   3,                  // int, 3 -&gt; 0
+          over:    false,              // true when GAME OVER is shown
+          player:  { x: 640, y: 700 }, // canvas pixel coordinates (see below)
+          enemies: [{ x: 300, y: 120 }],
+          bullets: [{ x: 640, y: 600 }],
+          reset:   function () { ... } // same as pressing R
+        };
+
+      All x/y values are CSS pixel coordinates on the canvas: x from 0 (left) to
+      canvas.clientWidth, y from 0 (top) to canvas.clientHeight. Enemies and bullets
+      must be included while they are alive and removed when destroyed or out of play.
+      Keep it as a plain data snapshot plus the `reset` function; do not put THREE
+      objects in it. It must be cheap enough to rebuild every frame.
+
+   b) Listen for input on `window` (`window.addEventListener(&#x27;keydown&#x27;, ...)`, not on a
+      DOM element and not with `tabindex`/focus requirements), and read `event.key`.
+      The robot drives the game with synthetic events:
+
+        window.dispatchEvent(new KeyboardEvent(&#x27;keydown&#x27;, { key: &#x27;ArrowLeft&#x27; }));
+        window.dispatchEvent(new KeyboardEvent(&#x27;keyup&#x27;,   { key: &#x27;ArrowLeft&#x27; }));
+
+      The same must work for &#x27;ArrowRight&#x27;, &#x27;ArrowUp&#x27;, &#x27;ArrowDown&#x27;, &#x27; &#x27;, &#x27;a&#x27;, &#x27;d&#x27;, &#x27;r&#x27; and
+      &#x27;R&#x27;. Do not require `event.code`, do not call preventDefault in a way that breaks
+      synthetic events, and do not gate gameplay on pointer/click state.
+
+   c) `window.__game.reset()` must fully restart the game (score 0, lives 3, enemies and
+      bullets cleared, `over` false) exactly like pressing R.
+
+   d) The game must stay fully playable by a human with the keyboard, unchanged — the
+      contract adds a read-only state object and nothing the player sees.
+
+10. SIZE. Keep the file under about 350 lines. Correctness and completeness matter far
+    more than extra features: a smaller game that runs perfectly beats a big one that
+    throws.
+
+Output: one ```html block containing a complete &lt;!DOCTYPE html&gt; document, then stop.</pre></details><img class=bigshot src='qwen3-8-27b-q4km/shot.png' alt=''><p><a href='qwen3-8-27b-q4km/index.html'>play the game →</a> · <a href='qwen3-8-27b-q4km/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-8-27b-q4km-galaga'><h2>Qwen3.8-27B — arcade shooter</h2><p class=meta>unverified · thinking off · 1 attempt(s),  repeat(s) ·  tokens · s</p><p class=notes>—</p><details><summary>prompt used</summary><pre class=promptbox>Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
+Reply with the full file inside one ```html fenced block and nothing else.
+
+Hard requirements (an automated browser grader checks them):
+1. ONE FILE, NO BUILD STEP, runs from file:// — load three.js from a pinned CDN import map:
+   &lt;script type=&quot;importmap&quot;&gt;{&quot;imports&quot;:{&quot;three&quot;:&quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}&lt;/script&gt;
+   &lt;script type=&quot;module&quot;&gt;import * as THREE from &#x27;three&#x27;; ...&lt;/script&gt;
+2. You must DRAW everything yourself with three.js geometry, materials, lights and particles.
+   NO external images, textures, models, fonts or audio files. No base64 art. Code-drawn only.
+3. You must expose a machine-readable state, updated every frame:
+   window.__game = { ready:true, score:0, lives:3, over:false, player:{x,y}, enemies:[{x,y}], bullets:[{x,y}] };
+   window.__game.reset = function(){...};
+4. Input: listen on window for keydown/keyup (Arrows/WASD + Space). Also support touch:
+   on-screen buttons using pointerdown/pointerup with touch-action:none, usable at 390x844.
+5. Visual quality bar (this is graded by a human): deliberate 4-5 colour palette, gradient or
+   nebula background instead of flat black, additive particle bursts on hits, hit-flash and
+   screen shake, eased movement (no linear jumps), readable typographic HUD.
+6. Keep it under ~450 lines. No commentary outside the code block.
+
+GAME BRIEF:
+ARCADE SPACE SHOOTER. Player ship at the bottom, enemy waves descend from the top,
+player shoots upward, enemies that reach the bottom cost a life. Score per kill, waves get faster.
+Player must be visible on screen and shots must be able to hit enemies (shared plane).</pre></details><img class=bigshot src='qwen3-8-27b-q4km-galaga/shot.png' alt=''><p><a href='qwen3-8-27b-q4km-galaga/index.html'>play the game →</a> · <a href='qwen3-8-27b-q4km-galaga/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-8-27b-q4km-gta'><h2>Qwen3.8-27B — top-down driving mission</h2><p class=meta>unverified · thinking off · 1 attempt(s),  repeat(s) ·  tokens · s</p><p class=notes>—</p><details><summary>prompt used</summary><pre class=promptbox>Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
+Reply with the full file inside one ```html fenced block and nothing else.
+
+Hard requirements (an automated browser grader checks them):
+1. ONE FILE, NO BUILD STEP, runs from file:// — load three.js from a pinned CDN import map:
+   &lt;script type=&quot;importmap&quot;&gt;{&quot;imports&quot;:{&quot;three&quot;:&quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}&lt;/script&gt;
+   &lt;script type=&quot;module&quot;&gt;import * as THREE from &#x27;three&#x27;; ...&lt;/script&gt;
+2. You must DRAW everything yourself with three.js geometry, materials, lights and particles.
+   NO external images, textures, models, fonts or audio files. No base64 art. Code-drawn only.
+3. You must expose a machine-readable state, updated every frame:
+   window.__game = { ready:true, score:0, lives:3, over:false, player:{x,y}, enemies:[{x,y}], bullets:[{x,y}] };
+   window.__game.reset = function(){...};
+4. Input: listen on window for keydown/keyup (Arrows/WASD + Space). Also support touch:
+   on-screen buttons using pointerdown/pointerup with touch-action:none, usable at 390x844.
+5. Visual quality bar (this is graded by a human): deliberate 4-5 colour palette, gradient or
+   nebula background instead of flat black, additive particle bursts on hits, hit-flash and
+   screen shake, eased movement (no linear jumps), readable typographic HUD.
+6. Keep it under ~450 lines. No commentary outside the code block.
+
+GAME BRIEF:
+TOP-DOWN DRIVING MISSION. A car the player steers (left/right turn, up/down accelerate/brake)
+on a simple city grid with roads, buildings as obstacles, and 5 pickup waypoints shown on the map.
+Reaching a waypoint scores. Colliding with a building costs time; a 60 second timer. Camera follows the car
+from above. Draw roads, buildings, car and waypoints with geometry only.</pre></details><img class=bigshot src='qwen3-8-27b-q4km-gta/shot.png' alt=''><p><a href='qwen3-8-27b-q4km-gta/index.html'>play the game →</a> · <a href='qwen3-8-27b-q4km-gta/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-8-27b-q4km-physics'><h2>Qwen3.8-27B — 3D physics sandbox</h2><p class=meta>unverified · thinking off · 1 attempt(s),  repeat(s) ·  tokens · s</p><p class=notes>—</p><details><summary>prompt used</summary><pre class=promptbox>Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
+Reply with the full file inside one ```html fenced block and nothing else.
+
+Hard requirements (an automated browser grader checks them):
+1. ONE FILE, NO BUILD STEP, runs from file:// — load three.js from a pinned CDN import map:
+   &lt;script type=&quot;importmap&quot;&gt;{&quot;imports&quot;:{&quot;three&quot;:&quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}&lt;/script&gt;
+   &lt;script type=&quot;module&quot;&gt;import * as THREE from &#x27;three&#x27;; ...&lt;/script&gt;
+2. You must DRAW everything yourself with three.js geometry, materials, lights and particles.
+   NO external images, textures, models, fonts or audio files. No base64 art. Code-drawn only.
+3. You must expose a machine-readable state, updated every frame:
+   window.__game = { ready:true, score:0, lives:3, over:false, player:{x,y}, enemies:[{x,y}], bullets:[{x,y}] };
+   window.__game.reset = function(){...};
+4. Input: listen on window for keydown/keyup (Arrows/WASD + Space). Also support touch:
+   on-screen buttons using pointerdown/pointerup with touch-action:none, usable at 390x844.
+5. Visual quality bar (this is graded by a human): deliberate 4-5 colour palette, gradient or
+   nebula background instead of flat black, additive particle bursts on hits, hit-flash and
+   screen shake, eased movement (no linear jumps), readable typographic HUD.
+6. Keep it under ~450 lines. No commentary outside the code block.
+
+GAME BRIEF:
+3D PHYSICS SANDBOX. A translucent box. Balls spawn and fall under gravity, bounce off the
+floor and walls with restitution, and collide with each other (simple sphere-sphere). The player launches a ball
+with Space from a random position; a HUD shows ball count. Score = number of simultaneous balls still bouncing after
+they settle is a failure; the game ends when 25 balls have been launched. Determinism matters: same seed/timing must
+bounce the same way.</pre></details><img class=bigshot src='qwen3-8-27b-q4km-physics/shot.png' alt=''><p><a href='qwen3-8-27b-q4km-physics/index.html'>play the game →</a> · <a href='qwen3-8-27b-q4km-physics/metrics.json'>metrics</a></p></section></div></body></html>
