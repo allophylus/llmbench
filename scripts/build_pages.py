@@ -87,7 +87,9 @@ def game_rows():
         b = json.load(open(os.path.join(d, "build.json"))) if os.path.exists(os.path.join(d, "build.json")) else {}
         g = json.load(open(os.path.join(d, "gen.json"))) if os.path.exists(os.path.join(d, "gen.json")) else {}
         m = json.load(open(os.path.join(d, "metrics.json"))) if os.path.exists(os.path.join(d, "metrics.json")) else {}
-        att = b.get("attempts") or len(glob.glob(os.path.join(d, "attempts", "attempt-*"))) or 1
+        rj = os.path.join(d, "robot_metrics.json")
+        robot = json.load(open(rj)) if os.path.exists(rj) else {}
+        att = b.get("attempts") or b.get("turns_used") or len(glob.glob(os.path.join(d, "attempts", "attempt-*"))) or 1
         retries = b.get("retries", max(0, att - 1) if isinstance(att, int) else 0)
         tok = b.get("total_completion_tokens") or g.get("completion_tokens")
         wall = b.get("total_wall_s") or g.get("wall_s")
@@ -99,10 +101,45 @@ def game_rows():
         if not notes and status == "renders": notes.append("playable in browser")
         shot = "shot.png" if os.path.exists(os.path.join(d, "shot.png")) else ""
         rows.append(dict(model=model, model_file=model_file, game=GAME_LABEL.get(game, game), slug=slug,
-                         thinking=bool(b.get("thinking")),
+                         thinking=bool(b.get("thinking")), robot=robot, build=b,
                          attempts=att, retries=retries, tokens=tok, wall=wall,
                          status=status, notes="; ".join(notes), shot=shot))
     return rows
+
+
+def attempts_table(r):
+    b = r.get("build") or {}
+    per = b.get("per_attempt") or b.get("per_turn") or []
+    if not per:
+        return ""
+    rows = []
+    for a in per:
+        n = a.get("attempt") or a.get("n") or a.get("turn")
+        ok = a.get("ok")
+        reasons = a.get("reasons") or a.get("errors") or []
+        if isinstance(reasons, str):
+            reasons = [reasons]
+        issue = a.get("error") or "; ".join(str(x) for x in reasons) or ("renders" if ok else "")
+        toks = a.get("tokens") or a.get("completion_tokens")
+        wall = a.get("wall_s")
+        rows.append("<tr>"
+                    f"<td class=num>{esc(n)}</td>"
+                    f"<td class={'ok' if ok else 'bad'}>{'ok' if ok else 'failed'}</td>"
+                    f"<td class=meta>{esc(issue) or '—'}</td>"
+                    f"<td class=num>{'' if toks is None else toks}</td>"
+                    f"<td class=num>{'' if wall is None else round(float(wall),1)}</td></tr>")
+    return ("<table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th>"
+            "<th>Tokens</th><th>s</th></tr></thead><tbody>" + "".join(rows) + "</tbody></table>")
+
+def robot_block(r):
+    m = r.get("robot") or {}
+    if not m:
+        return ""
+    score = m.get("final_score")
+    verdict = m.get("verdict") or ""
+    vid = "https://www.lowtechplace.com/llmbench/videos/game__%s__robot.mp4" % r["slug"]
+    return (f"<p class=meta>robot play: <b>{'' if score is None else score}</b> points · {esc(verdict)} · "
+            f"<a href='{vid}'>watch the robot run →</a></p>")
 
 def build_games():
     rows = game_rows()
@@ -116,6 +153,7 @@ def build_games():
                   f"<td class=num>{'' if r['tokens'] is None else r['tokens']}</td>"
                   f"<td class=num>{'' if r['wall'] is None else round(float(r['wall']),1)}</td>"
                   f"<td>{esc(r['status'])}</td><td class=meta>{esc(r['notes']) or '—'}</td>"
+                  f"<td>{0 if r['robot'] else '—'}</td>"
                   f"<td>{shot}</td>"
                   f"<td><a href='{esc(r['slug'])}/index.html'>play</a></td></tr>")
 
@@ -137,7 +175,7 @@ def build_games():
             f"{'' if r['wall'] is None else round(float(r['wall']),1)}s</p>"
             f"<p class=notes>{esc(r['notes']) or '—'}</p>"
             + (f"<details><summary>prompt used</summary><pre class=promptbox>{esc(prompt)}</pre></details>" if prompt else "")
-            + shot +
+            + attempts_table(r) + robot_block(r) + shot +
             f"<p><a href='{esc(r['slug'])}/index.html'>play the game →</a> · "
             f"<a href='{esc(r['slug'])}/metrics.json'>metrics</a></p></section>")
 
@@ -146,7 +184,7 @@ def build_games():
             "Repeats = extra generation turns allowed to fix a failing build (max 10).</p>"
             "<table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th>"
             "<th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th>"
-            "<th>Screenshot</th><th>Play</th></tr></thead><tbody>"
+            "<th>Robot</th><th>Screenshot</th><th>Play</th></tr></thead><tbody>"
             + "".join(tr) + "</tbody></table>"
             "<h2 class=sec>Details</h2>" + "".join(details))
     open(os.path.join(GAMES, "index.html"), "w").write(page("games — model-written browser games", body))

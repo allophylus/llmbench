@@ -18,10 +18,13 @@ PROBE = r"""
 from playwright.sync_api import sync_playwright
 import json, sys
 path = sys.argv[1]
+vid = sys.argv[2] if len(sys.argv) > 2 else ""
 out = {"load": False, "canvas": 0, "ready": False, "errors": []}
 with sync_playwright() as p:
     b = p.chromium.launch(executable_path=CHROME_PATH, headless=True, args=["--no-sandbox"])
-    pg = b.new_page(viewport={"width": 1280, "height": 800})
+    ctx = b.new_context(viewport={"width": 1280, "height": 800},
+                        **({"record_video_dir": vid, "record_video_size": {"width": 1280, "height": 800}} if vid else {}))
+    pg = ctx.new_page()
     pg.on("pageerror", lambda e: out["errors"].append("pageerror: " + str(e)[:200]))
     pg.on("console", lambda m: out["errors"].append("console: " + m.text[:200]) if m.type == "error" else None)
     try:
@@ -32,14 +35,15 @@ with sync_playwright() as p:
         out["ready"] = pg.evaluate("()=>!!(window.__game && window.__game.ready)")
     except Exception as e:
         out["errors"].append("nav: " + str(e)[:200])
+    ctx.close()
     b.close()
 print(json.dumps(out))
 """
 
-def probe(path, workdir):
+def probe(path, workdir, vid_dir=None):
     script = os.path.join(workdir, "_probe.py")
     open(script, "w").write(PROBE.replace("CHROME_PATH", repr(CHROME)))
-    r = subprocess.run([sys.executable, script, path], capture_output=True, text=True, cwd=workdir)
+    r = subprocess.run([sys.executable, script, path] + ([vid_dir] if vid_dir else []), capture_output=True, text=True, cwd=workdir)
     try:
         return json.loads(r.stdout.strip().splitlines()[-1])
     except Exception:
@@ -82,7 +86,9 @@ def main():
     t_start = time.time()
 
     for n in range(1, a.turns + 1):
-        res = probe(html_path, work)
+        ad = os.path.join(work, "attempt-%d" % n)
+        os.makedirs(ad, exist_ok=True)
+        res = probe(html_path, work, ad)
         ok = bool(res["load"] and res["canvas"] and res["ready"] and not
                   [e for e in res["errors"] if "favicon" not in e and "404" not in e])
         per.append({"attempt": n, "ok": ok, "canvas": res["canvas"], "ready": res["ready"],
