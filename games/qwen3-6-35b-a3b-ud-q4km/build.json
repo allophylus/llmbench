@@ -1,0 +1,27 @@
+{
+ "slug": "qwen3-6-35b-a3b-ud-q4km",
+ "model_requested": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+ "max_attempts": 1,
+ "attempts": 1,
+ "accepted_attempt": 1,
+ "status": "rendered_no_contract",
+ "retries": 0,
+ "per_attempt": [
+  {
+   "n": 1,
+   "outcome": "rendered_no_contract",
+   "reasons": [
+    "window.__game contract missing"
+   ],
+   "wall_s": 22.0,
+   "prompt_tokens": 1622,
+   "completion_tokens": 2324,
+   "decode_tps": 109.79,
+   "html_bytes": 8844
+  }
+ ],
+ "total_wall_s": 22.0,
+ "total_prompt_tokens": 1622,
+ "total_completion_tokens": 2324,
+ "generated_at": "2026-11-02T16:21:07+0800"
+}

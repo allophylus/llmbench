@@ -1,0 +1,221 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Space Shooter</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; font-family: monospace; }
+        canvas { display: block; }
+        #hud { position: absolute; top: 10px; left: 10px; color: #0f0; font-size: 20px; pointer-events: none; }
+        #msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 40px; text-align: center; display: none; text-shadow: 0 0 10px red; }
+    </style>
+    <script type="importmap">
+    {"imports": {"three": "https://unpkg.com/three@0.160.0/build/three.module.js"}}
+    </script>
+</head>
+<body>
+    <div id="hud">SCORE: <span id="score">0</span> | LIVES: <span id="lives">3</span></div>
+    <div id="msg">GAME OVER<br><span style="font-size:20px">Press R to Restart</span></div>
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- Setup ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 20);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // --- State ---
+        let score = 0, lives = 3, gameOver = false, ready = false;
+        let lastShot = 0, lastSpawn = 0;
+        const keys = {};
+        const bullets = [], enemies = [], particles = [];
+        const clock = new THREE.Clock();
+        const player = { mesh: null, x: 0, y: 0 };
+        const bounds = { w: window.innerWidth, h: window.innerHeight };
+
+        // --- Assets (Procedural) ---
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 1000;
+        const starPos = new Float32Array(starCount * 3);
+        for(let i=0; i<starCount*3; i++) starPos[i] = (Math.random() - 0.5) * 200;
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
+        scene.add(new THREE.Points(starGeo, starMat));
+
+        // Player Mesh
+        const pGeo = new THREE.ConeGeometry(0.5, 1.5, 4);
+        pGeo.rotateX(Math.PI / 2);
+        const pMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        player.mesh = new THREE.Mesh(pGeo, pMat);
+        scene.add(player.mesh);
+
+        // Shared Geometries
+        const bGeo = new THREE.BoxGeometry(0.2, 0.8, 0.2);
+        const bMat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const eGeo = new THREE.OctahedronGeometry(0.6);
+        const eMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+
+        // --- Helpers ---
+        function worldToScreen(pos) {
+            const v = pos.clone().project(camera);
+            return {
+                x: (v.x + 1) / 2 * bounds.w,
+                y: -(v.y - 1) / 2 * bounds.h
+            };
+        }
+
+        function spawnEnemy() {
+            const e = new THREE.Mesh(eGeo, eMat);
+            e.position.set((Math.random() - 0.5) * 20, 15, 0);
+            scene.add(e);
+            enemies.push(e);
+        }
+
+        function createExplosion(pos, color) {
+            for(let i=0; i<5; i++) {
+                const m = new THREE.Mesh(new THREE.BoxGeometry(0.2,0.2,0.2), new THREE.MeshBasicMaterial({color}));
+                m.position.copy(pos);
+                m.userData = { vel: new THREE.Vector3((Math.random()-0.5), (Math.random()-0.5), 0).multiplyScalar(0.2) };
+                scene.add(m);
+                particles.push(m);
+            }
+        }
+
+        // --- Input ---
+        window.addEventListener('keydown', e => keys[e.key] = true);
+        window.addEventListener('keyup', e => keys[e.key] = false);
+        window.addEventListener('resize', () => {
+            bounds.w = window.innerWidth; bounds.h = window.innerHeight;
+            camera.aspect = bounds.w / bounds.h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(bounds.w, bounds.h);
+        });
+
+        // --- Game Logic ---
+        function resetGame() {
+            score = 0; lives = 3; gameOver = false;
+            bullets.forEach(b => scene.remove(b)); bullets.length = 0;
+            enemies.forEach(e => scene.remove(e)); enemies.length = 0;
+            particles.forEach(p => scene.remove(p)); particles.length = 0;
+            player.mesh.position.set(0, -8, 0);
+            document.getElementById('msg').style.display = 'none';
+            document.getElementById('score').innerText = '0';
+            document.getElementById('lives').innerText = '3';
+        }
+
+        // --- Main Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+            const dt = Math.min(clock.getDelta(), 0.1);
+            const time = performance.now();
+
+            if (!ready) { ready = true; resetGame(); }
+            if (gameOver) {
+                if (keys['r'] || keys['R']) resetGame();
+                renderer.render(scene, camera);
+                return;
+            }
+
+            // Player Movement
+            const speed = 15 * dt;
+            if (keys['ArrowLeft'] || keys['a']) player.mesh.position.x -= speed;
+            if (keys['ArrowRight'] || keys['d']) player.mesh.position.x += speed;
+            player.mesh.position.x = Math.max(-10, Math.min(10, player.mesh.position.x));
+
+            // Shooting
+            if ((keys[' '] || keys['ArrowUp']) && time - lastShot > 200) {
+                const b = new THREE.Mesh(bGeo, bMat);
+                b.position.copy(player.mesh.position);
+                b.position.y += 1;
+                scene.add(b);
+                bullets.push(b);
+                lastShot = time;
+            }
+
+            // Bullets
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                bullets[i].position.y += 20 * dt;
+                if (bullets[i].position.y > 20) {
+                    scene.remove(bullets[i]); bullets.splice(i, 1);
+                }
+            }
+
+            // Enemies
+            if (time - lastSpawn > 1000) { spawnEnemy(); lastSpawn = time; }
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                const e = enemies[i];
+                e.position.y -= 5 * dt;
+                e.rotation.x += dt; e.rotation.y += dt;
+                
+                // Collision: Bullet vs Enemy
+                for (let j = bullets.length - 1; j >= 0; j--) {
+                    if (e.position.distanceTo(bullets[j].position) < 1.0) {
+                        createExplosion(e.position, 0xff0000);
+                        scene.remove(e); enemies.splice(i, 1);
+                        scene.remove(bullets[j]); bullets.splice(j, 1);
+                        score += 10;
+                        break;
+                    }
+                }
+                if (!enemies.includes(e)) continue;
+
+                // Collision: Enemy vs Player
+                if (e.position.distanceTo(player.mesh.position) < 1.0) {
+                    createExplosion(e.position, 0x00ff00);
+                    scene.remove(e); enemies.splice(i, 1);
+                    lives--;
+                    if (lives <= 0) {
+                        gameOver = true;
+                        document.getElementById('msg').style.display = 'block';
+                    }
+                }
+
+                // Cleanup
+                if (e.position.y < -20) {
+                    scene.remove(e); enemies.splice(i, 1);
+                }
+            }
+
+            // Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.position.add(p.userData.vel);
+                p.scale.multiplyScalar(0.9);
+                if (p.scale.x < 0.01) {
+                    scene.remove(p); particles.splice(i, 1);
+                }
+            }
+
+            // Starfield scroll
+            const pos = starGeo.attributes.position.array;
+            for(let i=1; i<pos.length; i+=3) {
+                pos[i] -= 0.5;
+                if(pos[i] < -50) pos[i] = 50;
+            }
+            starGeo.attributes.position.needsUpdate = true;
+
+            // Update HUD
+            document.getElementById('score').innerText = score;
+            document.getElementById('lives').innerText = lives;
+
+            // Update Contract
+            window.__game = {
+                ready: true, score, lives, over: gameOver,
+                player: worldToScreen(player.mesh.position),
+                enemies: enemies.map(e => worldToScreen(e.position)),
+                bullets: bullets.map(b => worldToScreen(b.position)),
+                reset: resetGame
+            };
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
+```

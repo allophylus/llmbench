@@ -85,12 +85,17 @@ def probe(page, url, tag, out_dir):
             else None)
     page.on("pageerror", lambda e: pageerrors.append(str(e)))
     try:
-        page.goto(url, wait_until="load", timeout=45000)
+        page.goto(url, wait_until="networkidle", timeout=45000)
         rec["load_ok"] = True
     except Exception as e:
         rec["load_ok"] = False
         rec["load_error"] = str(e)[:300]
         return rec
+    # a CDN-loaded three.js module can resolve after "load"; wait for the canvas/ready flag
+    try:
+        page.wait_for_function("() => (window.__game && window.__game.ready) || !!document.querySelector('canvas')", timeout=15000)
+    except Exception:
+        pass
     page.wait_for_timeout(2500)  # let CDN module + first frames settle
 
     rec["canvas_present"] = page.evaluate(
@@ -260,7 +265,7 @@ def run(slug_dir):
                 ctx = b.new_context(viewport=VIEW)
                 page = ctx.new_page()
                 try:
-                    page.goto(aurl, wait_until="load", timeout=45000)
+                    page.goto(aurl, wait_until="networkidle", timeout=45000)
                     page.wait_for_timeout(2500)
                     out["internals"] = page.evaluate("() => (window.__wv ? window.__wv() : null)")
                 except Exception as e:
