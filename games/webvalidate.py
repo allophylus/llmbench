@@ -36,7 +36,9 @@ import time
 
 from playwright.sync_api import sync_playwright
 
-CHROME = "/usr/bin/google-chrome"
+CHROME = (os.environ.get("CHROME_BIN") or shutil.which("google-chrome")
+          or shutil.which("chromium") or shutil.which("chromium-browser")
+          or "/usr/bin/google-chrome")
 VIEW = {"width": 1280, "height": 800}
 # Set by webgen.py: when set, the http:// validation context records its screen to
 # <RECORD_DIR>/build.webm so the build run itself is watchable.
