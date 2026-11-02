@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Qwen3.8-27B vs Qwen3.6-35B-A3B — llmbench</title>
+<style>
+:root{--bg:#0f141b;--panel:#151c26;--line:#243040;--fg:#e8eef8;--dim:#9fb0c6;--faint:#6f8296;--gold:#f5c542;--blue:#8cc8ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:32px 20px 60px}
+h1{font-size:26px;margin:0 0 6px}
+.sub{color:var(--fg);opacity:.75;margin:0 0 24px}
+a{color:var(--blue)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+caption{caption-side:top;text-align:left;color:var(--faint);font-size:13px;padding:0 0 8px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child{text-align:left}
+thead th{background:#1b2431;font-size:13px;letter-spacing:.03em;text-transform:uppercase;color:var(--dim)}
+tbody tr:nth-child(even) td{background:#131a24}
+td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.win{color:var(--gold);font-weight:600}
+.na{color:var(--faint)}
+.notes{margin-top:22px;color:var(--dim);font-size:13.5px}
+.notes li{margin:6px 0}
+.tag{display:inline-block;padding:1px 7px;border-radius:999px;border:1px solid var(--line);font-size:11.5px;color:var(--dim)}
+@media(max-width:560px){th,td{padding:8px 7px;font-size:13px}h1{font-size:21px}}
+</style></head><body><div class="wrap">
+<h1>Qwen3.8-27B vs Qwen3.6-35B-A3B</h1>
+<p class="sub">R9700 · llama.cpp Vulkan · same cells, same prompts. Gold = better result. <span class="tag">first comparison</span></p>
+
+<table>
+<caption>Scores are percent correct unless stated. Throughput measured on the live server.</caption>
+<thead><tr><th>Test</th><th>Qwen3.8-27B</th><th>Qwen3.6-35B-A3B</th><th>Winner</th></tr></thead>
+<tbody>
+<tr><td>GPQA (diamond, 25)</td><td class="num win">76.0</td><td class="num">72.0</td><td>27B</td></tr>
+<tr><td>AIME (15×3)</td><td class="num">46.7</td><td class="num win">60.0</td><td>A3B</td></tr>
+<tr><td>LiveBench (25)</td><td class="num win">24.0</td><td class="num">4.0</td><td>27B</td></tr>
+<tr><td>ctx GPQA @30k</td><td class="num win">64.0</td><td class="num">60.0</td><td>27B</td></tr>
+<tr><td>ctx GPQA @110k</td><td class="num">36.0</td><td class="num win">60.0</td><td>A3B</td></tr>
+<tr><td>tau2 telecom (20)</td><td class="num">55.0</td><td class="num win">85.0</td><td>A3B</td></tr>
+<tr><td>Shell (10)</td><td class="num win">50.0</td><td class="num">40.0</td><td>27B</td></tr>
+<tr><td>TermBench (8)</td><td class="num win">100.0</td><td class="num">62.5</td><td>27B</td></tr>
+<tr><td>Prefill t/s (pp, cold)</td><td class="num win">688</td><td class="num na">—</td><td>27B</td></tr>
+<tr><td>Decode t/s (steady)</td><td class="num win">34.8</td><td class="num na">—</td><td>27B</td></tr>
+<tr><td>Context window</td><td class="num">131,072</td><td class="num">131,072</td><td>tie</td></tr>
+<tr><td>Game generated (three.js)</td><td class="num win">yes</td><td class="num na">no</td><td>27B</td></tr>
+<tr><td>Game attempts / retries</td><td class="num">1 / 0</td><td class="num na">—</td><td></td></tr>
+<tr><td>Game cost (tokens)</td><td class="num">5,130</td><td class="num na">—</td><td></td></tr>
+<tr><td>Game build time</td><td class="num">79 s</td><td class="num na">—</td><td></td></tr>
+<tr><td>Game playable by robot</td><td class="num">0 pts (unwinnable)</td><td class="num na">—</td><td></td></tr>
+<tr><td>Touch controls</td><td class="num">harness-added</td><td class="num na">—</td><td></td></tr>
+</tbody></table>
+
+<div class="notes">
+<strong>What the numbers say</strong>
+<ul>
+<li><strong>27B wins knowledge and precision:</strong> GPQA, LiveBench, shell, TermBench (perfect 8/8).</li>
+<li><strong>A3B wins agentic work and long context:</strong> tau2 85 vs 55, and it holds 60 at 110k where the 27B collapses to 36 — a 24-point cliff.</li>
+<li><strong>Speed:</strong> 27B measured live (688 t/s prefill, 34.8 t/s decode). A3B not measured yet — it needs a model swap, so it is shown as —, not estimated.</li>
+<li><strong>Game:</strong> the 27B produced a working three.js game in one shot (79 s, 5,130 tokens, 0 retries) — but the robot scores 0 because bullets and enemies sit on different vertical planes, making hits geometrically impossible. Renders ≠ playable.</li>
+</ul>
+<p>Sources: <a href="../h3/">benchmark records</a> · <a href="../../games/qwen3-8-27b-q4km/">play the 27B game</a> · <a href="../..">full table</a></p>
+</div>
+</div></body></html>
