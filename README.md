@@ -5,7 +5,6 @@ A static, dependency-free page that renders the benchmark results of local LLMs 
 sorting and filtering.
 
 - Live: <https://allophylus.github.io/llmbench/>
-- Original site (videos, per-test detail): <https://www.lowtechplace.com/llmbench/>
 
 ## Why this exists: Markdown tables cannot sort
 
