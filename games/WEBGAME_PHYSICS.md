@@ -1,4 +1,4 @@
-IMPORTANT: keep the whole file under about 350 lines. A truncated file is a failed submission.
+IMPORTANT: keep the whole file under 250 lines. No large <style> block — at most 30 lines of CSS, inline styles elsewhere. A truncated file is a failed submission.
 Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
 Reply with the full file inside one ```html fenced block and nothing else.
 

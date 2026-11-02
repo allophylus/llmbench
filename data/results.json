@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-02T16:19:24+08:00",
+ "generated": "2026-11-02T20:29:47+08:00",
  "video_base": "https://www.lowtechplace.com/llmbench/videos/",
  "rows": [
   {
@@ -504,9 +504,9 @@
    "quant": "Q4_K_M",
    "arch": "MoE qwen36, 131k ctx",
    "engine": "Vulkan",
-   "decode_tps": null,
-   "prefill_tps": null,
-   "context_window": null,
+   "decode_tps": 106.7,
+   "prefill_tps": 1290.0,
+   "context_window": 131072,
    "vram_mib": null,
    "size_gb": null,
    "date": "2026-11-01",
@@ -529,15 +529,25 @@
    },
    "videos": {
     "galaga": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__galaga.mp4",
+    "galaga-dark": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__galaga-dark.mp4",
     "gta": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__gta.mp4",
-    "physics": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__physics.mp4"
+    "gta-dark": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__gta-dark.mp4",
+    "physics": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__physics.mp4",
+    "physics-dark": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__physics-dark.mp4"
    },
    "sources": [
     "results/qwen3-6-35b-a3b-ud-q4km.json"
    ],
-   "speed_measured_at": null,
-   "speed_method": null,
-   "status": "done"
+   "speed_measured_at": "2026-11-02T12:29:15+0000",
+   "speed_method": "cache_prompt=false, ~700-token prompt, max_tokens=256 temp 0",
+   "status": "done",
+   "game": {
+    "attempts": 1,
+    "retries": 0,
+    "tokens": 3946,
+    "build_s": 22.0,
+    "url": "games/qwen3-6-35b-a3b-ud-q4km/"
+   }
   },
   {
    "slug": "qwen3-8-27b-q4-0",
