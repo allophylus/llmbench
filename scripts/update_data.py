@@ -329,9 +329,11 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
             cells["ctx_sweep"] = {k: v for k, v in sweep.items() if _num(v) is not None}
 
         vram = _num(env.get("peak_vram_mib"))
+        import re as _re
+        _name = _re.sub(r"\s*\((?:[^)]*prod[^)]*|[^)]*:\d{2,5}[^)]*)\)", "", name or "").strip()
         row = {
             "slug": slug,
-            "name": name,
+            "name": _name or name,
             "params_total": mo.get("params_total") or None,
             "params_active": mo.get("params_active") or None,
             "quant": q or None,
@@ -350,6 +352,8 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
                 if _under(r["_path"], raw_dir) else r["_src"]
                 for r in recs}),
             "speed_measured_at": (sp or {}).get("measured_at"),
+            "filename": (sp or {}).get("filename"),
+            "features": (sp or {}).get("features") or {},
             "speed_method": (sp or {}).get("method"),
             "status": "done" if any(r.get("status") == "done" for r in recs) else
                       ("partial" if any(r.get("status") == "partial" for r in recs) else "failed"),

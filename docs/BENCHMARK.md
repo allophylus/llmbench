@@ -57,7 +57,7 @@ The always-on serving instance answers on **port 8080** (systemd unit `qwen-long
 
 Rules that exist because they were learned the hard way:
 
-- Queue work takes `flock /home/ubuntu/llmbench/queue.lock`; suites stop prod after the lock and
+- Queue work takes `flock <suite>/queue.lock`; suites stop prod after the lock and
   **must** restore it in a trap (`restore-prod.sh`) and health-check port 8080 before exiting.
 - Never `pkill -f llama-server`. A clean exit (`status=0/SUCCESS`) does not trigger
   `Restart=on-failure` and the unit sits dead. Restart the unit instead.
@@ -71,7 +71,7 @@ Rules that exist because they were learned the hard way:
 Full pass for one model (prod stops, restores on exit):
 
 ```bash
-bash /home/ubuntu/llmbench/suite/bin/run_suite.sh --models <slug> --cells 1,2,3,c1,c2,a,b,8,0
+bash <suite>/bin/run_suite.sh --models <slug> --cells 1,2,3,c1,c2,a,b,8,0
 ```
 
 Cells: `1`=GPQA `2`=AIME `3`=LiveBench `c1`=ctx30k `c2`=ctx110k `a`=tau2 `b`=shell `8`=termbench `0`=llama-bench sweep.
@@ -90,7 +90,7 @@ tau2_cell.py   --slug <slug> --dry 0     # -> agent-tau2-telecom20 (20 tasks)
 termbench_cell.py --n 8                  # -> agent-termbench8 (8 frozen ids)
 ```
 
-Outputs: `/home/ubuntu/llmbench/suite/results{7}/<slug>.json` plus per-cell
+Outputs: `<suite>/results/<slug>.json` plus per-cell
 `<cell>.pub.json` / `<cell>.detail.json`, and `.cast` recordings per cell.
 
 ---

@@ -75,7 +75,7 @@ python3 scripts/update_data.py --raw-out raw
 git add data raw && git commit -m "data: refresh benchmark results" && git push
 
 # 2. (optional) local preview — any static server works
-python3 -m http.server 8765     # then open http://localhost:8765/
+python3 -m http.server 8765     # then open the printed local URL
 ```
 
 Paths may be overridden for a different machine or a copied run:

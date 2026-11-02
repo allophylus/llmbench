@@ -15,7 +15,7 @@ browser counterpart: one frozen prompt (`WEBGAME_PROMPT.md`, sha256 recorded in 
 Usage:
 ```sh
 ./webgen.py <your-server-url> WEBGAME_PROMPT.md ../llmbench/games/<slug> <slug>
-# e.g. the URL of any OpenAI-compatible server: http://127.0.0.1:8080
+# e.g. the URL of any OpenAI-compatible server you run
 python3 webadapt.py ../llmbench/games <slug>      # optional, evidence only
 python3 webvalidate.py ../llmbench/games/<slug>
 python3 build_index.py ../llmbench/games

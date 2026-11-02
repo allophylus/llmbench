@@ -29,7 +29,7 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,SFMono-Regular
 
 <table>
 <caption>Scores are percent correct unless stated. Throughput measured on the live server, cold (cache_prompt=false). Both models ran with identical flags: -ngl 99 -fa on -c 32768 -np 1 -b 16384 -ub 2048 -ctk q8_0 -ctv q4_0 --cache-reuse 256, no speculative decoding, same prompt file.</caption>
-<thead><tr><th>Test</th><th>Qwen3.8-27B</th><th>Qwen3.6-35B-A3B</th><th>Winner</th></tr></thead>
+<thead><tr><th>Test</th><th>Qwen3.8-27B <span class="tag tag-fa">FA</span><span class="tag tag-mtp">MTP</span><br><span class="mono">Qwen3.8-27B-Q4_K_M.gguf</span></th><th>Qwen3.6-35B-A3B <span class="tag tag-fa">FA</span><br><span class="mono">Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></th><th>Winner</th></tr></thead>
 <tbody>
 <tr><td>GPQA (diamond, 25)</td><td class="num win">76.0</td><td class="num">72.0</td><td>27B</td></tr>
 <tr><td>AIME (15×3)</td><td class="num">46.7</td><td class="num win">60.0</td><td>A3B</td></tr>

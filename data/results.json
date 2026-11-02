@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-02T20:44:16+08:00",
+ "generated": "2026-11-02T20:53:08+08:00",
  "video_base": "https://www.lowtechplace.com/llmbench/videos/",
  "rows": [
   {
@@ -58,6 +58,49 @@
     "results/tune_davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
+   "speed_method": null,
+   "status": "done"
+  },
+  {
+   "slug": "flint-q4-k-m",
+   "name": "Flint",
+   "params_total": "40B",
+   "params_active": "2.5B",
+   "quant": "Q4_K_M",
+   "arch": "RecursiveSI MoE 40B total / 2.5B active",
+   "engine": "Vulkan",
+   "decode_tps": null,
+   "prefill_tps": null,
+   "context_window": null,
+   "vram_mib": null,
+   "size_gb": null,
+   "date": "2026-10-31",
+   "cells": {
+    "gpqa": 64.0,
+    "aime": 40.0,
+    "livebench": 12.0,
+    "ctx30k": 52.0,
+    "ctx110k": 48.0,
+    "tau2": 55.0,
+    "shell": null,
+    "termbench": 62.5,
+    "mmlupro": null,
+    "arc": null,
+    "math": null,
+    "logic": null,
+    "code": null,
+    "tetris_gen": null,
+    "tetris_play": null
+   },
+   "videos": {},
+   "sources": [
+    "results/flint-q4-k-m.json"
+   ],
+   "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -100,6 +143,8 @@
     "results/rebench_huihui-abl-q4-k-m.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -142,6 +187,8 @@
     "results/rebench_lfm2-5-24b-a2b-q4-k-m.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -205,6 +252,8 @@
     "results/tune_lfm2-5-8b-a1b-q6-k.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -244,6 +293,8 @@
     "results/lfm3-1-7b-q4-k-m.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -286,6 +337,8 @@
     "results/rebench_minicpm5-2b-q8-0.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -328,6 +381,8 @@
     "results/rebench_muse-glimmer-30b-q4-k-m.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -370,6 +425,8 @@
     "results/rebench_nemotron-3-5-lightning-30b-a3b-q4-0.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -412,6 +469,8 @@
     "results/rebench_ornith-1-5-35b-a3b-q4-k-m.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -454,6 +513,8 @@
     "results/rebench_ornith-1-5-9b-q8-0.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -500,6 +561,14 @@
     "results/qwen3-6-35b-a3b-ud-q4km.json"
    ],
    "speed_measured_at": "2026-11-02T20:44:16+0800",
+   "filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+   "features": {
+    "fa": true,
+    "mtp": false,
+    "dflash": false,
+    "kv": "q8_0/q4_0",
+    "spec": "none"
+   },
    "speed_method": "cold cache_prompt=false; identical flags both models (-ngl 99 -fa on -c 32768 -np 1 -b 16384 -ub 2048 -ctk q8_0 -ctv q4_0 --cache-reuse 256, no speculative decoding); same 2652-token prompt file",
    "status": "done",
    "game": {
@@ -568,12 +637,14 @@
     "results/tune_qwen3-8-27b-q4-0.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
   {
    "slug": "qwen3-8-27b-q4km",
-   "name": "Qwen3.8-27B (prod :8080)",
+   "name": "Qwen3.8-27B",
    "params_total": "27B",
    "params_active": "27B",
    "quant": "Q4_K_M",
@@ -644,6 +715,14 @@
     "results/tune_qwen3-8-27b-q4-k-m.json"
    ],
    "speed_measured_at": "2026-11-02T20:44:16+0800",
+   "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+   "features": {
+    "fa": true,
+    "mtp": true,
+    "dflash": false,
+    "kv": "q8_0/q4_0",
+    "spec": "draft-mtp+ngram"
+   },
    "speed_method": "cold cache_prompt=false; identical flags both models (-ngl 99 -fa on -c 32768 -np 1 -b 16384 -ub 2048 -ctk q8_0 -ctv q4_0 --cache-reuse 256, no speculative decoding); same 2652-token prompt file",
    "status": "done",
    "game": {
@@ -691,6 +770,8 @@
     "results/qwen3-8-27b-dflash2-q4-k-m.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "failed"
   },
@@ -731,6 +812,8 @@
     "results/radiance_qwen3-8-27b-mxfp4.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -795,6 +878,8 @@
     "results/underdog-saluki-27b-iq2.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -835,6 +920,8 @@
     "results/xing4-0-29b-a4b-q5-0.json"
    ],
    "speed_measured_at": null,
+   "filename": null,
+   "features": {},
    "speed_method": null,
    "status": "failed"
   }

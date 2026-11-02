@@ -324,3 +324,11 @@ a.cellvid:hover{border-bottom-color:var(--blue);color:#fff}
 a.cellvid .play{font-size:9px;margin-left:3px;opacity:.55;vertical-align:super}
 a.cellvid:hover .play{opacity:1;color:var(--blue)}
 td.c-game a{color:var(--blue);text-decoration:none}
+
+/* ---- feature tags next to the model name ---- */
+.tag{display:inline-block;margin-left:4px;padding:1px 6px;border-radius:999px;
+     font:600 10.5px/1.6 var(--mono);letter-spacing:.04em;vertical-align:2px;
+     border:1px solid var(--line);background:#1a2431;color:var(--fg-dim)}
+.tag-fa{border-color:#2f4a63;color:#9ccbe8}
+.tag-mtp{border-color:#4a3f1d;color:#e5c96b}
+.tag-dflash{border-color:#3f2a4a;color:#c9a0e0}

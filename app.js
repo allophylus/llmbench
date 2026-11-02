@@ -202,6 +202,14 @@
       t + '<span class="play">&#9654;</span></a>';
   }
 
+  function featBadges(r) {
+    var f = r.features || {}, out = [];
+    if (f.fa) out.push('<span class="tag tag-fa" title="flash attention">FA</span>');
+    if (f.mtp) out.push('<span class="tag tag-mtp" title="multi-token prediction (speculative)">MTP</span>');
+    if (f.dflash) out.push('<span class="tag tag-dflash" title="DFlash speculative decoding">DFlash</span>');
+    return out.length ? ' ' + out.join('') : '';
+  }
+
   function rowHTML(r, rank) {
     var c = r.cells || {};
     var cls = rank ? "rank rank-" + rank : "";
@@ -213,8 +221,8 @@
       r.vram_mib ? Math.round(r.vram_mib / 1024) + " GiB" : "", r.date || ""
     ].filter(Boolean).join(" · ");
     return '<tr class="' + cls + '">' +
-      '<td class="c-name">' + badge + esc(r.name) +
-        '<span class="slug">' + esc(r.slug) + "</span>" +
+      '<td class="c-name">' + badge + esc(r.name) + featBadges(r) +
+        '<span class="slug">' + esc(r.filename || r.slug) + "</span>" +
         '<span class="meta">' + esc(meta) + "</span></td>" +
       '<td class="num c-params" data-label="Params">' + esc(r.params_total || "—") + pAct + "</td>" +
       '<td class="c-quant" data-label="Quant"><span class="pill">' + esc(r.quant || "—") + "</span></td>" +
