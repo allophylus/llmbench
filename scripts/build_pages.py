@@ -73,6 +73,16 @@ def game_rows():
         if not base:
             continue
         game = slug[len(base):].lstrip("-") or "space shooter (v1 prompt)"
+        model_file = ""
+        _gj = os.path.join(d, "gen.json")
+        if os.path.exists(_gj):
+            try:
+                model_file = os.path.basename(json.load(open(_gj)).get("model_requested") or "")
+            except Exception:
+                model_file = ""
+        if model_file in ("", "active.gguf"):
+            model_file = {"qwen3-8-27b-q4km": "Qwen3.8-27B-Q4_K_M.gguf",
+                          "qwen3-6-35b-a3b-ud-q4km": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"}.get(base, model_file)
         model = MODEL_LABEL[base]
         b = json.load(open(os.path.join(d, "build.json"))) if os.path.exists(os.path.join(d, "build.json")) else {}
         g = json.load(open(os.path.join(d, "gen.json"))) if os.path.exists(os.path.join(d, "gen.json")) else {}
@@ -88,7 +98,7 @@ def game_rows():
         if s and not s.get("animation_ok"): notes.append("animation not advancing")
         if not notes and status == "renders": notes.append("playable in browser")
         shot = "shot.png" if os.path.exists(os.path.join(d, "shot.png")) else ""
-        rows.append(dict(model=model, game=GAME_LABEL.get(game, game), slug=slug,
+        rows.append(dict(model=model, model_file=model_file, game=GAME_LABEL.get(game, game), slug=slug,
                          thinking=bool(b.get("thinking")),
                          attempts=att, retries=retries, tokens=tok, wall=wall,
                          status=status, notes="; ".join(notes), shot=shot))
@@ -100,7 +110,7 @@ def build_games():
     for r in rows:
         shot = (f"<img class=thumb src='{esc(r['slug'])}/{esc(r['shot'])}' alt=''>") if r["shot"] else "—"
         tr.append("<tr>"
-                  f"<td><a href='#{esc(r['slug'])}'>{esc(r['model'])}</a></td><td>{esc(r['game'])}</td>"
+                  f"<td><a href='#{esc(r['slug'])}'>{esc(r['model'])}</a><br><span class=meta>{esc(r.get('model_file'))}</span></td><td>{esc(r['game'])}</td>"
                   f"<td>{'on' if r.get('thinking') else 'off'}</td>"
                   f"<td class=num>{esc(r['attempts'])}</td><td class=num>{esc(r['retries'])}</td>"
                   f"<td class=num>{'' if r['tokens'] is None else r['tokens']}</td>"
@@ -120,7 +130,7 @@ def build_games():
         shot = (f"<img class=bigshot src='{esc(r['slug'])}/{esc(r['shot'])}' alt=''>") if r["shot"] else ""
         details.append(
             f"<section class=detail id='{esc(r['slug'])}'>"
-            f"<h2>{esc(r['model'])} — {esc(r['game'])}</h2>"
+            f"<h2>{esc(r['model'])} — {esc(r['game'])}</h2><p class=meta>{esc(r.get('model_file'))}</p>"
             f"<p class=meta>{esc(r['status'])} · thinking {'on' if r.get('thinking') else 'off'} · "
             f"{esc(r['attempts'])} attempt(s), {esc(r['retries'])} repeat(s) · "
             f"{'' if r['tokens'] is None else r['tokens']} tokens · "

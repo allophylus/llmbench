@@ -28,9 +28,6 @@
     { key: "context_window", type: "num"    },
     { key: "vram_mib",       type: "num"    },
     { key: "date",           type: "text"   },
-    { key: "game_attempts",  type: "num"    },
-    { key: "game_tokens",    type: "num"    },
-    { key: "game_build",     type: "num"    }
   ];
   var COL = {};
   COLUMNS.forEach(function (c) { COL[c.key] = c; });
@@ -243,9 +240,6 @@
       '<td class="num" data-label="VRAM">' +
         (num(r.vram_mib) !== null ? (r.vram_mib / 1024).toFixed(1) : '<span class="dash">—</span>') + "</td>" +
       '<td class="num c-date" data-label="Date">' + esc(r.date || "—") + "</td>" +
-      '<td class="num c-game" data-label="Game">' +
-        (r.game && r.game.url ? '<a href="' + esc(r.game.url) + '" target="_blank" rel="noopener">yes</a>'
-                              : '<span class="dash">—</span>') + "</td>" +
       '<td class="num" data-label="Attempts">' +
         (r.game && r.game.attempts != null ? esc(String(r.game.attempts)) : '<span class="dash">—</span>') + "</td>" +
       '<td class="num" data-label="Tokens">' +
