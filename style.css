@@ -333,3 +333,9 @@ td.c-game a{color:var(--blue);text-decoration:none}
 .tag-mtp{border-color:#4a3f1d;color:#e5c96b}
 .tag-dflash{border-color:#3f2a4a;color:#c9a0e0}
 .tag-quant{border-color:#2e4a3a;color:#9fe0b8}
+
+/* ---- section tabs ---- */
+.tabs{display:flex;gap:8px;margin:0 0 16px;padding:0 2px}
+.tabs a{padding:5px 11px;border:1px solid var(--line);border-radius:8px;color:var(--fg-dim);text-decoration:none;font-size:12.5px}
+.tabs a.on{background:#1b2431;color:var(--fg);border-color:#33506b}
+.tabs a:hover{border-color:var(--blue);color:var(--fg)}
