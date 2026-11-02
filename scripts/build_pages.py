@@ -157,7 +157,7 @@ def build_chat():
                 f"<td><a href='#{esc(anchor)}'>{esc(label)}</a></td><td>{mode}</td>"
                 f"<td class=num>{corr}</td><td class=num>{part}</td><td class=num>{wrong}</td>"
                 f"<td class=num>{'' if acc is None else acc}%</td>"
-                f"<td class=num>{toks}</td><td class=num>{'' if avg_ms is None else avg_ms}</td>"
+                f"<td class=num>{toks}</td><td class=num>{'' if avg_ms is None else round(avg_ms/1000.0,2)}</td>"
                 "</tr>")
             tr = []
             for q in qs:
@@ -169,20 +169,20 @@ def build_chat():
                           f"<td class=ans>{esc(q.get('answer') or q.get('error') or '—')}</td>"
                           f"<td class={cls}>{esc(v)}</td>"
                           f"<td class=num>{'' if q.get('tokens') is None else q['tokens']}</td>"
-                          f"<td class=num>{'' if q.get('ms') is None else q['ms']}</td></tr>")
+                          f"<td class=num>{'' if q.get('ms') is None else round(q['ms']/1000.0,2)}</td></tr>")
             details.append(
                 f"<section class=detail id='{esc(anchor)}'>"
                 f"<h2>{esc(label)} — thinking {mode} <span class=pill>{'' if acc is None else acc}%</span></h2>"
                 f"<p class=meta>{corr} correct · {part} partial · {wrong} wrong · {toks} tokens · "
                 f"avg {'' if avg_ms is None else avg_ms} ms/question</p>"
                 "<table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th>"
-                "<th>Verdict</th><th>Tokens</th><th>ms</th></tr></thead><tbody>"
+                "<th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody>"
                 + "".join(tr) + "</tbody></table></section>")
 
     body = ("<p class=sub>Ten fixed knowledge questions, temperature 0, run twice per model "
             "(thinking off, then on). Accuracy = strictly correct answers.</p>"
             "<table><thead><tr><th>Model</th><th>Thinking</th><th>Correct</th><th>Partial</th>"
-            "<th>Wrong</th><th>Accuracy</th><th>Tokens</th><th>Avg ms</th></tr></thead><tbody>"
+            "<th>Wrong</th><th>Accuracy</th><th>Tokens</th><th>Avg s</th></tr></thead><tbody>"
             + "".join(summary_rows) + "</tbody></table>"
             "<h2 class=sec>Per-question detail</h2>" + "".join(details))
     os.makedirs(os.path.join(ROOT, "chat"), exist_ok=True)
