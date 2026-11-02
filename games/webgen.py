@@ -207,6 +207,15 @@ if src:
     if accepted:
         shutil.copyfile(os.path.join(src, "gen.json"), os.path.join(outdir, "gen.json"))
         shutil.copyfile(os.path.join(src, "raw_reply.md"), os.path.join(outdir, "raw.md"))
+
+    # every published game gets the harness touch layer: humans test these on phones
+    _hp = os.path.join(outdir, "index.html")
+    _html = open(_hp).read()
+    if "touch.js" not in _html:
+        _tag = '<script src="../touch.js"></script>'
+        _html = (_html.replace("</body>", _tag + "\n</body>", 1)
+                 if "</body>" in _html else _html + _tag)
+        open(_hp, "w").write(_html)
 json.dump(build, open(os.path.join(outdir, "build.json"), "w"), indent=1)
 
 if not accepted:
