@@ -6,6 +6,22 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GAMES = os.path.join(ROOT, "games")
 CHAT = os.path.join(ROOT, "data", "chat")
 
+
+def overview_names():
+    """name strings exactly as the overview table shows them, keyed by short slug."""
+    try:
+        d = json.load(open(os.path.join(ROOT, "data", "results.json")))
+    except Exception:
+        return {}
+    out = {}
+    for r in d.get("rows", []):
+        slug = r.get("slug", "")
+        if slug == "qwen3-8-27b-q4km":
+            out["27b"] = r.get("name")
+        elif slug == "qwen3-6-35b-a3b-ud-q4km":
+            out["a3b"] = r.get("name")
+    return {k: v for k, v in out.items() if v}
+
 MODEL_LABEL = {
     "27b": "Qwen3.8-27B",
     "a3b": "Qwen3.6-35B-A3B",
@@ -128,6 +144,7 @@ def build_games():
 
 def build_chat():
     files = sorted(glob.glob(os.path.join(CHAT, "*.json")))
+    OV = overview_names()
     groups = {}
     for f in files:
         d = json.load(open(f))
@@ -137,7 +154,7 @@ def build_chat():
 
     summary_rows, details = [], []
     for base, modes in groups.items():
-        label = MODEL_LABEL.get(base, base)
+        label = OV.get(base) or MODEL_LABEL.get(base, base)
         for think in (False, True):
             d = modes.get(think)
             if not d:
