@@ -16,6 +16,22 @@ slugs = sorted(d for d in os.listdir(games_dir)
 if any(d.endswith("-b") for d in slugs):
     slugs.sort(key=lambda s: (s.rstrip("-b"), s))
 
+
+MODELS = {}
+try:
+    MODELS = {k: v for k, v in json.load(open(os.path.join(games_dir, "models.json"))).items()
+              if not k.startswith("_")}
+except Exception:
+    MODELS = {}
+
+def display_model(mid):
+    """Show the real model file, never the server's internal path."""
+    if not mid:
+        return "unknown"
+    if mid in MODELS:
+        return MODELS[mid]
+    return os.path.basename(mid)
+
 rows = []
 for slug in slugs:
     d = os.path.join(games_dir, slug)
@@ -134,7 +150,7 @@ for slug, m, g, s in rows:
       <a class="shot" href="{slug}/index.html"><img src="{slug}/shot.png" alt="screenshot of {slug}" loading="lazy"></a>
       <div>
         <h2>{slug} <span class="pill {'ok' if s['pass'] else 'bad'}">{'PASS' if s['pass'] else 'FAIL'}</span></h2>
-        <p class="meta">model <code>{g['model_requested']}</code> · {g['server_fingerprint']} ·
+        <p class="meta">model <code>{display_model(g.get('model_requested'))}</code> · {g['server_fingerprint']} ·
           temp {g['temperature']} · max_tokens {g['max_tokens']} · prompt sha256 <code>{g['prompt_sha256'][:16]}…</code></p>
         <p class="meta">renders with {three} · {m['http'].get('canvas_count', 0)} canvas ·
           {g['html_lines']} lines · {g['completion_tokens']} tokens · {g['decode_tps']} t/s · {g['wall_s']}s</p>

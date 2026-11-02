@@ -1,0 +1,5 @@
+{
+  "_comment": "server model id -> real model filename shown to visitors",
+  "/home/ubuntu/models/active.gguf": "Qwen3.8-27B-Q4_K_M.gguf",
+  "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+}
