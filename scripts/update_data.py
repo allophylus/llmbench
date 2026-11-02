@@ -353,11 +353,24 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
                 for r in recs}),
             "speed_measured_at": (sp or {}).get("measured_at"),
             "filename": (sp or {}).get("filename"),
-            "features": (sp or {}).get("features") or {},
+            "features": (sp or {}).get("features") or None,
             "speed_method": (sp or {}).get("method"),
             "status": "done" if any(r.get("status") == "done" for r in recs) else
                       ("partial" if any(r.get("status") == "partial" for r in recs) else "failed"),
         }
+        if not row.get("features"):
+            hay = " ".join(str(x or "") for x in
+                           (row.get("name"), row.get("arch"), row.get("quant"), row.get("slug"))).lower()
+            f = {}
+            if "mxfp4" in hay:
+                f["mxfp4"] = True
+            if "dflash2" in hay:
+                f["dflash2"] = True
+            elif "dflash" in hay:
+                f["dflash"] = True
+            if "mtp" in hay or "nextn" in hay:
+                f["mtp"] = True
+            row["features"] = f
         rows.append(row)
     rows.sort(key=lambda r: (r["name"] or "").lower())
     return rows

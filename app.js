@@ -207,6 +207,8 @@
     if (f.fa) out.push('<span class="tag tag-fa" title="flash attention">FA</span>');
     if (f.mtp) out.push('<span class="tag tag-mtp" title="multi-token prediction (speculative)">MTP</span>');
     if (f.dflash) out.push('<span class="tag tag-dflash" title="DFlash speculative decoding">DFlash</span>');
+    if (f.dflash2) out.push('<span class="tag tag-dflash" title="DFlash2 speculative decoding">DFlash2</span>');
+    if (f.mxfp4) out.push('<span class="tag tag-quant" title="MXFP4 quantised weights">MXFP4</span>');
     return out.length ? ' ' + out.join('') : '';
   }
 

@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-02T20:53:08+08:00",
+ "generated": "2026-11-02T20:55:06+08:00",
  "video_base": "https://www.lowtechplace.com/llmbench/videos/",
  "rows": [
   {
@@ -59,7 +59,9 @@
    ],
    "speed_measured_at": null,
    "filename": null,
-   "features": {},
+   "features": {
+    "mtp": true
+   },
    "speed_method": null,
    "status": "done"
   },
@@ -771,7 +773,9 @@
    ],
    "speed_measured_at": null,
    "filename": null,
-   "features": {},
+   "features": {
+    "dflash2": true
+   },
    "speed_method": null,
    "status": "failed"
   },
@@ -813,7 +817,10 @@
    ],
    "speed_measured_at": null,
    "filename": null,
-   "features": {},
+   "features": {
+    "mxfp4": true,
+    "dflash2": true
+   },
    "speed_method": null,
    "status": "done"
   },
