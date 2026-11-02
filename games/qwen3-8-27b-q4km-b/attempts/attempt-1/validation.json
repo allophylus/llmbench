@@ -1,5 +1,5 @@
 {
- "ok": false,
+ "ok": true,
  "checks": {
   "load_ok": true,
   "canvas": true,
@@ -7,11 +7,8 @@
   "three_js": true,
   "animation": true,
   "input": true,
-  "contract": null
+  "console_clean": true
  },
- "reasons": [
-  "contract"
- ],
- "backfilled": true,
- "source": "metrics.json"
+ "reasons": [],
+ "backfilled": true
 }

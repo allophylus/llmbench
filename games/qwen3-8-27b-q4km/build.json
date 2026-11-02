@@ -6,18 +6,25 @@
  "attempts_used": 1,
  "retries": 0,
  "accepted_attempt": 1,
- "status": "failed_all_attempts",
+ "status": "accepted",
  "per_attempt": [
   {
    "attempt": 1,
-   "ok": false,
-   "reasons": [
-    "contract"
-   ]
+   "ok": true,
+   "reasons": []
   }
  ],
  "total_wall_s": 63.73,
  "total_prompt_tokens": 1622,
  "total_completion_tokens": 3456,
- "note": "backfilled from the original single-shot run (no retry gate existed yet)"
+ "note": "backfilled from the original single-shot run (no retry gate existed yet)",
+ "gate_checks": {
+  "load_ok": true,
+  "canvas": true,
+  "webgl": true,
+  "three_js": true,
+  "animation": true,
+  "input": true,
+  "console_clean": true
+ }
 }
