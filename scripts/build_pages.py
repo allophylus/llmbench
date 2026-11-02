@@ -7,6 +7,8 @@ GAMES = os.path.join(ROOT, "games")
 CHAT = os.path.join(ROOT, "data", "chat")
 
 MODEL_LABEL = {
+    "27b": "Qwen3.8-27B",
+    "a3b": "Qwen3.6-35B-A3B",
     "qwen3-8-27b-q4km": "Qwen3.8-27B",
     "qwen3-6-35b-a3b-ud-q4km": "Qwen3.6-35B-A3B",
 }
@@ -132,21 +134,33 @@ def build_chat():
         base = d.get("model", "model")
         think = bool(d.get("thinking"))
         groups.setdefault(base, {})[think] = d
-    blocks = []
+
+    summary_rows, details = [], []
     for base, modes in groups.items():
         label = MODEL_LABEL.get(base, base)
         for think in (False, True):
             d = modes.get(think)
             if not d:
                 continue
-            s2 = d.get("summary", {})
-            mode_tag = ("<span class=pill>thinking on</span>" if think
-                        else "<span class=pill>thinking off</span>")
-            head = (f"<h2>{esc(label)} {mode_tag} <span class=pill>{s2.get('accuracy','—')}% accurate</span> "
-                    f"<span class=meta>{s2.get('correct',0)} correct · {s2.get('partial',0)} partial · "
-                    f"{s2.get('wrong',0)} wrong</span></h2>")
+            qs = d.get("questions", [])
+            corr = sum(1 for q in qs if q.get("verdict") == "correct")
+            part = sum(1 for q in qs if q.get("verdict") == "partial")
+            wrong = len(qs) - corr - part
+            toks = sum(q.get("tokens") or 0 for q in qs)
+            ms = [q.get("ms") for q in qs if q.get("ms")]
+            avg_ms = int(sum(ms) / len(ms)) if ms else None
+            acc = round(100.0 * corr / len(qs), 1) if qs else None
+            anchor = "chat-%s-%s" % (base, "on" if think else "off")
+            mode = "on" if think else "off"
+            summary_rows.append(
+                "<tr>"
+                f"<td><a href='#{esc(anchor)}'>{esc(label)}</a></td><td>{mode}</td>"
+                f"<td class=num>{corr}</td><td class=num>{part}</td><td class=num>{wrong}</td>"
+                f"<td class=num>{'' if acc is None else acc}%</td>"
+                f"<td class=num>{toks}</td><td class=num>{'' if avg_ms is None else avg_ms}</td>"
+                "</tr>")
             tr = []
-            for q in d.get("questions", []):
+            for q in qs:
                 v = q.get("verdict", "unscored")
                 cls = {"correct": "ok", "partial": "warn", "wrong": "bad"}.get(v, "")
                 tr.append("<tr>"
@@ -156,11 +170,21 @@ def build_chat():
                           f"<td class={cls}>{esc(v)}</td>"
                           f"<td class=num>{'' if q.get('tokens') is None else q['tokens']}</td>"
                           f"<td class=num>{'' if q.get('ms') is None else q['ms']}</td></tr>")
-            blocks.append(head + "<table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th>"
-                                 "<th>Verdict</th><th>Tokens</th><th>ms</th></tr></thead><tbody>"
-                                 + "".join(tr) + "</tbody></table>")
-    body = ("<p class=sub>Ten fixed knowledge questions, temperature 0. Each model runs the same set "
-            "twice: thinking off, then thinking on.</p>" + "".join(blocks))
+            details.append(
+                f"<section class=detail id='{esc(anchor)}'>"
+                f"<h2>{esc(label)} — thinking {mode} <span class=pill>{'' if acc is None else acc}%</span></h2>"
+                f"<p class=meta>{corr} correct · {part} partial · {wrong} wrong · {toks} tokens · "
+                f"avg {'' if avg_ms is None else avg_ms} ms/question</p>"
+                "<table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th>"
+                "<th>Verdict</th><th>Tokens</th><th>ms</th></tr></thead><tbody>"
+                + "".join(tr) + "</tbody></table></section>")
+
+    body = ("<p class=sub>Ten fixed knowledge questions, temperature 0, run twice per model "
+            "(thinking off, then on). Accuracy = strictly correct answers.</p>"
+            "<table><thead><tr><th>Model</th><th>Thinking</th><th>Correct</th><th>Partial</th>"
+            "<th>Wrong</th><th>Accuracy</th><th>Tokens</th><th>Avg ms</th></tr></thead><tbody>"
+            + "".join(summary_rows) + "</tbody></table>"
+            "<h2 class=sec>Per-question detail</h2>" + "".join(details))
     os.makedirs(os.path.join(ROOT, "chat"), exist_ok=True)
     open(os.path.join(ROOT, "chat", "index.html"), "w").write(page("chat — knowledge accuracy", body))
     print("chat groups:", len(groups))
