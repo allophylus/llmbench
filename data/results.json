@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-01T21:25:44+08:00",
+ "generated": "2026-11-02T08:14:11+08:00",
  "video_base": "https://www.lowtechplace.com/llmbench/videos/",
  "rows": [
   {
@@ -56,43 +56,6 @@
     "results/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json",
     "results/rebench_davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json",
     "results/tune_davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json"
-   ],
-   "status": "done"
-  },
-  {
-   "slug": "flint-q4-k-m",
-   "name": "Flint",
-   "params_total": "40B",
-   "params_active": "2.5B",
-   "quant": "Q4_K_M",
-   "arch": "RecursiveSI MoE 40B total / 2.5B active",
-   "engine": "Vulkan",
-   "decode_tps": null,
-   "prefill_tps": null,
-   "context_window": null,
-   "vram_mib": null,
-   "size_gb": null,
-   "date": "2026-10-31",
-   "cells": {
-    "gpqa": 64.0,
-    "aime": 40.0,
-    "livebench": 12.0,
-    "ctx30k": 52.0,
-    "ctx110k": 48.0,
-    "tau2": 55.0,
-    "shell": null,
-    "termbench": 62.5,
-    "mmlupro": null,
-    "arc": null,
-    "math": null,
-    "logic": null,
-    "code": null,
-    "tetris_gen": null,
-    "tetris_play": null
-   },
-   "videos": {},
-   "sources": [
-    "results/flint-q4-k-m.json"
    ],
    "status": "done"
   },
@@ -475,6 +438,47 @@
    "status": "done"
   },
   {
+   "slug": "qwen3-6-35b-a3b-ud-q4km",
+   "name": "Qwen3.6-35B-A3B",
+   "params_total": "35B",
+   "params_active": "3B",
+   "quant": "Q4_K_M",
+   "arch": "MoE qwen36, 131k ctx",
+   "engine": "Vulkan",
+   "decode_tps": null,
+   "prefill_tps": null,
+   "context_window": null,
+   "vram_mib": null,
+   "size_gb": null,
+   "date": "2026-11-01",
+   "cells": {
+    "gpqa": 72.0,
+    "aime": 60.0,
+    "livebench": 4.0,
+    "ctx30k": 60.0,
+    "ctx110k": 60.0,
+    "tau2": 85.0,
+    "shell": 40.0,
+    "termbench": 62.5,
+    "mmlupro": null,
+    "arc": null,
+    "math": null,
+    "logic": null,
+    "code": null,
+    "tetris_gen": null,
+    "tetris_play": null
+   },
+   "videos": {
+    "galaga": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__galaga.mp4",
+    "gta": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__gta.mp4",
+    "physics": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__physics.mp4"
+   },
+   "sources": [
+    "results/qwen3-6-35b-a3b-ud-q4km.json"
+   ],
+   "status": "done"
+  },
+  {
    "slug": "qwen3-8-27b-q4-0",
    "name": "Qwen3.8-27B",
    "params_total": "27B",
@@ -546,16 +550,16 @@
    "context_window": 131072,
    "vram_mib": 25166,
    "size_gb": 16.5,
-   "date": "2026-10-30",
+   "date": "2026-11-01",
    "cells": {
-    "gpqa": 64.0,
-    "aime": 53.3,
+    "gpqa": 76.0,
+    "aime": 46.7,
     "livebench": 24.0,
-    "ctx30k": 56.0,
-    "ctx110k": 44.0,
-    "tau2": 52.6,
+    "ctx30k": 64.0,
+    "ctx110k": 36.0,
+    "tau2": 55.0,
     "shell": 50.0,
-    "termbench": 75.0,
+    "termbench": 100.0,
     "mmlupro": 60.0,
     "arc": 32.0,
     "math": 90.0,
