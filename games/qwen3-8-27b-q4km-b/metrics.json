@@ -1,13 +1,13 @@
 {
  "slug": "qwen3-8-27b-q4km-b",
- "probed_at": "2026-11-02T08:39:23+0800",
+ "probed_at": "2026-11-02T08:58:07+0800",
  "chrome": "google-chrome (headless, playwright)",
  "viewport": {
   "width": 1280,
   "height": 800
  },
  "http": {
-  "url": "http://127.0.0.1:49617/index.html",
+  "url": "http://127.0.0.1:56695/index.html",
   "scheme": "http",
   "load_ok": true,
   "canvas_present": true,
@@ -22,117 +22,136 @@
    ],
    "overlays": [
     {
-     "x": 22,
-     "y": 16,
-     "w": 48,
-     "h": 12,
-     "tag": "div",
+     "x": 455,
+     "y": 14,
+     "w": 370,
+     "h": 25,
+     "tag": "h1",
      "id": null,
-     "cls": "lbl"
+     "cls": ""
+    },
+    {
+     "x": 455,
+     "y": 43,
+     "w": 370,
+     "h": 11,
+     "tag": "p",
+     "id": null,
+     "cls": ""
     },
     {
      "x": 22,
-     "y": 28,
+     "y": 16,
      "w": 48,
-     "h": 34,
+     "h": 13,
+     "tag": "div",
+     "id": null,
+     "cls": "lab"
+    },
+    {
+     "x": 22,
+     "y": 29,
+     "w": 48,
+     "h": 30,
      "tag": "div",
      "id": "score",
      "cls": "val"
     },
     {
-     "x": 1160,
+     "x": 1166,
      "y": 16,
-     "w": 98,
-     "h": 12,
+     "w": 92,
+     "h": 13,
      "tag": "div",
      "id": null,
-     "cls": "lbl"
+     "cls": "lab"
     },
     {
-     "x": 1160,
-     "y": 28,
-     "w": 98,
-     "h": 30,
+     "x": 1166,
+     "y": 29,
+     "w": 92,
+     "h": 28,
      "tag": "div",
      "id": "lives",
-     "cls": "val"
-    },
-    {
-     "x": 0,
-     "y": 770,
-     "w": 1280,
-     "h": 14,
-     "tag": "div",
-     "id": null,
-     "cls": "hint"
+     "cls": "lives"
     }
    ]
   },
   "overlays": [
    {
-    "x": 22,
-    "y": 16,
-    "w": 48,
-    "h": 12,
-    "tag": "div",
+    "x": 455,
+    "y": 14,
+    "w": 370,
+    "h": 25,
+    "tag": "h1",
     "id": null,
-    "cls": "lbl",
-    "pixels_differ_when_hidden": 184
+    "cls": "",
+    "pixels_differ_when_hidden": 5376
+   },
+   {
+    "x": 455,
+    "y": 43,
+    "w": 370,
+    "h": 11,
+    "tag": "p",
+    "id": null,
+    "cls": "",
+    "pixels_differ_when_hidden": 0
    },
    {
     "x": 22,
-    "y": 28,
+    "y": 16,
     "w": 48,
-    "h": 34,
+    "h": 13,
+    "tag": "div",
+    "id": null,
+    "cls": "lab",
+    "pixels_differ_when_hidden": 230
+   },
+   {
+    "x": 22,
+    "y": 29,
+    "w": 48,
+    "h": 30,
     "tag": "div",
     "id": "score",
     "cls": "val",
-    "pixels_differ_when_hidden": 591
+    "pixels_differ_when_hidden": 639
    },
    {
-    "x": 1160,
+    "x": 1166,
     "y": 16,
-    "w": 98,
-    "h": 12,
+    "w": 92,
+    "h": 13,
     "tag": "div",
     "id": null,
-    "cls": "lbl",
-    "pixels_differ_when_hidden": 120
+    "cls": "lab",
+    "pixels_differ_when_hidden": 216
    },
    {
-    "x": 1160,
-    "y": 28,
-    "w": 98,
-    "h": 30,
+    "x": 1166,
+    "y": 29,
+    "w": 92,
+    "h": 28,
     "tag": "div",
     "id": "lives",
-    "cls": "val",
-    "pixels_differ_when_hidden": 1270
-   },
-   {
-    "x": 0,
-    "y": 770,
-    "w": 1280,
-    "h": 14,
-    "tag": "div",
-    "id": null,
-    "cls": "hint",
-    "pixels_differ_when_hidden": 1080
+    "cls": "lives",
+    "pixels_differ_when_hidden": 1339
    }
   ],
   "hidden_geometry_under_overlays": true,
   "animation_advancing": true,
   "frame_hashes": [
-   "137d73c6f8da6964",
-   "36bdce3b04462b90"
+   "3ea68b37a0c1666e",
+   "c71f316010624696"
   ],
   "input_changes_pixels": true,
   "input_left_changes_pixels": true,
   "input_ok": true,
   "control_vs_input_hashes": [
-   "8c8c26acf90d09a9",
-   "57edc503fe6991b6",
-   "faaf43fafde4274f"
+   "5c61980c2ed4a92c",
+   "40f06bb3dfcfca7b",
+   "2cba608c5957adfe"
   ],
   "screenshot": "shot.png",
   "hud_markers": {
@@ -161,117 +180,136 @@
    ],
    "overlays": [
     {
-     "x": 22,
-     "y": 16,
-     "w": 48,
-     "h": 12,
-     "tag": "div",
+     "x": 455,
+     "y": 14,
+     "w": 370,
+     "h": 25,
+     "tag": "h1",
      "id": null,
-     "cls": "lbl"
+     "cls": ""
+    },
+    {
+     "x": 455,
+     "y": 43,
+     "w": 370,
+     "h": 11,
+     "tag": "p",
+     "id": null,
+     "cls": ""
     },
     {
      "x": 22,
-     "y": 28,
+     "y": 16,
      "w": 48,
-     "h": 34,
+     "h": 13,
+     "tag": "div",
+     "id": null,
+     "cls": "lab"
+    },
+    {
+     "x": 22,
+     "y": 29,
+     "w": 48,
+     "h": 30,
      "tag": "div",
      "id": "score",
      "cls": "val"
     },
     {
-     "x": 1160,
+     "x": 1166,
      "y": 16,
-     "w": 98,
-     "h": 12,
+     "w": 92,
+     "h": 13,
      "tag": "div",
      "id": null,
-     "cls": "lbl"
+     "cls": "lab"
     },
     {
-     "x": 1160,
-     "y": 28,
-     "w": 98,
-     "h": 30,
+     "x": 1166,
+     "y": 29,
+     "w": 92,
+     "h": 28,
      "tag": "div",
      "id": "lives",
-     "cls": "val"
-    },
-    {
-     "x": 0,
-     "y": 770,
-     "w": 1280,
-     "h": 14,
-     "tag": "div",
-     "id": null,
-     "cls": "hint"
+     "cls": "lives"
     }
    ]
   },
   "overlays": [
    {
-    "x": 22,
-    "y": 16,
-    "w": 48,
-    "h": 12,
-    "tag": "div",
+    "x": 455,
+    "y": 14,
+    "w": 370,
+    "h": 25,
+    "tag": "h1",
     "id": null,
-    "cls": "lbl",
-    "pixels_differ_when_hidden": 184
+    "cls": "",
+    "pixels_differ_when_hidden": 5376
+   },
+   {
+    "x": 455,
+    "y": 43,
+    "w": 370,
+    "h": 11,
+    "tag": "p",
+    "id": null,
+    "cls": "",
+    "pixels_differ_when_hidden": 18
    },
    {
     "x": 22,
-    "y": 28,
+    "y": 16,
     "w": 48,
-    "h": 34,
+    "h": 13,
+    "tag": "div",
+    "id": null,
+    "cls": "lab",
+    "pixels_differ_when_hidden": 230
+   },
+   {
+    "x": 22,
+    "y": 29,
+    "w": 48,
+    "h": 30,
     "tag": "div",
     "id": "score",
     "cls": "val",
-    "pixels_differ_when_hidden": 591
+    "pixels_differ_when_hidden": 610
    },
    {
-    "x": 1160,
+    "x": 1166,
     "y": 16,
-    "w": 98,
-    "h": 12,
+    "w": 92,
+    "h": 13,
     "tag": "div",
     "id": null,
-    "cls": "lbl",
-    "pixels_differ_when_hidden": 120
+    "cls": "lab",
+    "pixels_differ_when_hidden": 211
    },
    {
-    "x": 1160,
-    "y": 28,
-    "w": 98,
-    "h": 30,
+    "x": 1166,
+    "y": 29,
+    "w": 92,
+    "h": 28,
     "tag": "div",
     "id": "lives",
-    "cls": "val",
-    "pixels_differ_when_hidden": 1246
-   },
-   {
-    "x": 0,
-    "y": 770,
-    "w": 1280,
-    "h": 14,
-    "tag": "div",
-    "id": null,
-    "cls": "hint",
-    "pixels_differ_when_hidden": 1034
+    "cls": "lives",
+    "pixels_differ_when_hidden": 1354
    }
   ],
   "hidden_geometry_under_overlays": true,
   "animation_advancing": true,
   "frame_hashes": [
-   "be139fdb120cb507",
-   "0fe921308cc246d0"
+   "0e144c01baabd0d0",
+   "0751ef08f35ecd1d"
   ],
   "input_changes_pixels": true,
   "input_left_changes_pixels": true,
   "input_ok": true,
   "control_vs_input_hashes": [
-   "f963dec01eef9f82",
-   "87136a123af0e3f6",
-   "89f358de1443185b"
+   "f712451fe1a17bf5",
+   "b1a7e159bb4a3a73",
+   "010736db2898c364"
   ],
   "screenshot": "shot-file.png",
   "hud_markers": {
@@ -287,29 +325,29 @@
  "internals": {
   "scene_exposed": true,
   "player_bbox_px": [
-   232,
-   454,
-   1048,
-   1270
+   266,
+   380,
+   1014,
+   1129
   ],
   "player_bbox_onscreen": true,
   "player_bbox_fully_onscreen": false,
-  "children": 8,
+  "children": 9,
   "player_world": [
    0,
-   -4,
-   6
+   -6.14,
+   0
   ],
   "player_ndc": [
    0,
-   -1.155,
-   0.967
+   -0.887,
+   0.984
   ],
   "player_px": [
    640,
-   862
+   755
   ],
-  "player_onscreen": false,
+  "player_onscreen": true,
   "viewport": [
    1280,
    800
@@ -319,25 +357,25 @@
     "x": 22,
     "y": 16,
     "w": 48,
-    "h": 12
+    "h": 13
    },
    {
     "x": 22,
-    "y": 28,
+    "y": 29,
     "w": 48,
-    "h": 34
-   },
-   {
-    "x": 1160,
-    "y": 16,
-    "w": 98,
-    "h": 12
-   },
-   {
-    "x": 1160,
-    "y": 28,
-    "w": 98,
     "h": 30
+   },
+   {
+    "x": 1166,
+    "y": 16,
+    "w": 92,
+    "h": 13
+   },
+   {
+    "x": 1166,
+    "y": 29,
+    "w": 92,
+    "h": 28
    }
   ]
  },
@@ -353,14 +391,14 @@
   "console_error_count": 0,
   "cdn_reachable": false,
   "overlays_cover_geometry": true,
-  "player_centre_onscreen": false,
+  "player_centre_onscreen": true,
   "player_visible": true,
   "player_fully_onscreen": false,
   "player_bbox_px": [
-   232,
-   454,
-   1048,
-   1270
+   266,
+   380,
+   1014,
+   1129
   ],
   "pass": true
  }

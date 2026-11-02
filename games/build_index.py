@@ -61,6 +61,31 @@ for slug, m, g, s in rows:
         find.append('some 3D geometry is painted under the HTML HUD/hint overlay')
     findings_html = ('<ul class="findings">' + ''.join(f'<li>{x}</li>' for x in find) + '</ul>'
                      if find else '<p class="meta ok">no visible-artefact findings</p>')
+
+    # ---- robot result (optional; only if robot_player.py has run) ----
+    rj = os.path.join(d, "robot_metrics.json")
+    robot = json.load(open(rj)) if os.path.isfile(rj) else None
+    robot_html = ""
+    if robot:
+        cd_ = (robot.get("closest_bullet_to_enemy_px") or {})
+        v = robot.get("verdict")
+        vs = {"scored": "scored", "zero-score": "ZERO SCORE"}.get(v, "no contract")
+        robot_html = f"""
+        <div class="robot">
+          <div class="rlbl">🤖 robot run</div>
+          <div class="rstats">
+            <span><b>{robot.get('final_score')}</b> score</span>
+            <span><b>{robot.get('survival_s')}</b> s survived</span>
+            <span><b>{robot.get('lives_lost')}</b> lives lost</span>
+            <span><b>{robot.get('frames_advanced')}</b> frames</span>
+            <span><b>{robot.get('action_count')}</b> key events</span>
+          </div>
+          <p class="meta">policy verdict: <b class="{'ok' if v == 'scored' else 'bad'}">{vs}</b>
+            · contract ok: {robot.get('contract_ok')} · page threw: {robot.get('page_threw')}
+            · closest bullet→enemy: {cd_.get('min_dy')} px vertical
+            {"<a href='" + slug + "/robot_play.mp4'>watch (.mp4)</a> <a href='" + slug + "/robot_play.webm'>webm</a>" if robot.get('video') else ""}</p>
+          {'<p class="findings">Zero is a game defect, not a policy failure: every shot flew at a fixed y the enemies never occupy (measured closest vertical gap ' + str(cd_.get("min_dy")) + ' px), so nothing could ever collide.</p>' if v == 'zero-score' else ''}
+        </div>"""
     cards.append(f"""
     <article class="card">
       <a class="shot" href="{slug}/index.html"><img src="{slug}/shot.png" alt="screenshot of {slug}" loading="lazy"></a>
@@ -72,6 +97,7 @@ for slug, m, g, s in rows:
           {g['html_lines']} lines · {g['completion_tokens']} tokens · {g['decode_tps']} t/s · {g['wall_s']}s</p>
         <p class="meta">console errors: {errs_html}</p>
         {findings_html}
+        {robot_html}
         <p><a class="play" href="{slug}/index.html">▶ PLAY {slug}</a></p>
       </div>
     </article>""")
@@ -101,6 +127,10 @@ html = f"""<!DOCTYPE html>
   .dim {{ color: var(--fg-faint); }}
   .findings {{ margin: .2rem 0 0; padding-left: 1.1rem; color: var(--warn); font-size: 12px; }}
   .meta.ok {{ color: var(--accent); }}
+  .robot {{ border-top: 1px dashed var(--line); padding-top: .7rem; }}
+  .rlbl {{ font: 700 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: .35rem; }}
+  .rstats {{ display: flex; flex-wrap: wrap; gap: .3rem .9rem; font: 12px var(--mono); }}
+  .rstats b {{ color: var(--fg); }}
   .errs {{ margin: .2rem 0 0; padding-left: 1.1rem; color: var(--warn); font-size: 12px; word-break: break-word; }}
   .ok {{ color: var(--accent); }}
   .bad {{ color: #ff7a8a; }}
@@ -133,7 +163,7 @@ html = f"""<!DOCTYPE html>
   <h2 class="note" style="font:700 14px var(--mono)">checks</h2>
   <table class="v">
     <thead><tr><th>game</th><th>all</th><th>console errors</th><th>canvas</th><th>webgl</th>
-      <th>animation</th><th>input</th><th>http</th><th>file</th><th>lines</th><th>tokens</th><th>t/s</th><th>ship</th><th></th></tr></thead>
+      <th>animation</th><th>input</th><th>http</th><th>file</th><th>lines</th><th>tokens</th><th>t/s</th><th>ship</th><th>robot</th><th></th></tr></thead>
     <tbody>{table_rows}</tbody>
   </table>
   <p class="note" style="margin-top:1.2rem">

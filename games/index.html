@@ -17,6 +17,10 @@
   .dim { color: var(--fg-faint); }
   .findings { margin: .2rem 0 0; padding-left: 1.1rem; color: var(--warn); font-size: 12px; }
   .meta.ok { color: var(--accent); }
+  .robot { border-top: 1px dashed var(--line); padding-top: .7rem; }
+  .rlbl { font: 700 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: .35rem; }
+  .rstats { display: flex; flex-wrap: wrap; gap: .3rem .9rem; font: 12px var(--mono); }
+  .rstats b { color: var(--fg); }
   .errs { margin: .2rem 0 0; padding-left: 1.1rem; color: var(--warn); font-size: 12px; word-break: break-word; }
   .ok { color: var(--accent); }
   .bad { color: #ff7a8a; }
@@ -37,7 +41,7 @@
     <a class="back" href="../">← llmbench</a>
     <h1>games</h1>
     <p class="sub">Browser game cell: the same frozen prompt (<code>WEBGAME_PROMPT.md</code>,
-      sha256 <code>b57d8257ad6e79b5…</code>) asks each model for a complete single-file
+      sha256 <code>924b140acb58aae2…</code>) asks each model for a complete single-file
       three.js arcade shooter. Each game is opened in headless Google Chrome over both
       <code>file://</code> and <code>http://</code>; every number below comes from that probe
       (<code>metrics.json</code>) or the generation log (<code>gen.json</code>).</p>
@@ -50,11 +54,27 @@
       <div>
         <h2>qwen3-8-27b-q4km <span class="pill ok">PASS</span></h2>
         <p class="meta">model <code>/home/ubuntu/models/active.gguf</code> · b11517-8a1a9b512 ·
-          temp 0.0 · max_tokens 8000 · prompt sha256 <code>b57d8257ad6e79b5…</code></p>
+          temp 0.0 · max_tokens 8000 · prompt sha256 <code>924b140acb58aae2…</code></p>
         <p class="meta">renders with three.js <code>WebGLRenderer</code> · 1 canvas ·
-          234 lines · 3062 tokens · 58.22 t/s · 54.26s</p>
+          238 lines · 3456 tokens · 56.22 t/s · 63.73s</p>
         <p class="meta">console errors: <span class="dim">none</span></p>
-        <ul class="findings"><li>player ship never appears on screen (mesh projects to y=1052..1827px in a 800px viewport, below the camera frustum) — it still moves, shoots and collides</li><li>some 3D geometry is painted under the HTML HUD/hint overlay</li></ul>
+        <ul class="findings"><li>player ship is only partly on screen (y=257..1005px in a 800px viewport, bottom cut off)</li><li>some 3D geometry is painted under the HTML HUD/hint overlay</li></ul>
+        
+        <div class="robot">
+          <div class="rlbl">🤖 robot run</div>
+          <div class="rstats">
+            <span><b>0</b> score</span>
+            <span><b>60.08</b> s survived</span>
+            <span><b>0</b> lives lost</span>
+            <span><b>3601</b> frames</span>
+            <span><b>818</b> key events</span>
+          </div>
+          <p class="meta">policy verdict: <b class="bad">ZERO SCORE</b>
+            · contract ok: True · page threw: False
+            · closest bullet→enemy: 51.9 px vertical
+            <a href='qwen3-8-27b-q4km/robot_play.mp4'>watch (.mp4)</a> <a href='qwen3-8-27b-q4km/robot_play.webm'>webm</a></p>
+          <p class="findings">Zero is a game defect, not a policy failure: every shot flew at a fixed y the enemies never occupy (measured closest vertical gap 51.9 px), so nothing could ever collide.</p>
+        </div>
         <p><a class="play" href="qwen3-8-27b-q4km/index.html">▶ PLAY qwen3-8-27b-q4km</a></p>
       </div>
     </article>
@@ -63,11 +83,27 @@
       <div>
         <h2>qwen3-8-27b-q4km-b <span class="pill ok">PASS</span></h2>
         <p class="meta">model <code>/home/ubuntu/models/active.gguf</code> · b11517-8a1a9b512 ·
-          temp 0.0 · max_tokens 8000 · prompt sha256 <code>b57d8257ad6e79b5…</code></p>
+          temp 0.0 · max_tokens 8000 · prompt sha256 <code>924b140acb58aae2…</code></p>
         <p class="meta">renders with three.js <code>WebGLRenderer</code> · 1 canvas ·
-          252 lines · 3288 tokens · 55.37 t/s · 59.72s</p>
+          267 lines · 3594 tokens · 55.9 t/s · 64.65s</p>
         <p class="meta">console errors: <span class="dim">none</span></p>
-        <ul class="findings"><li>player ship is only partly on screen (y=454..1270px in a 800px viewport, bottom cut off)</li><li>some 3D geometry is painted under the HTML HUD/hint overlay</li></ul>
+        <ul class="findings"><li>player ship is only partly on screen (y=380..1129px in a 800px viewport, bottom cut off)</li><li>some 3D geometry is painted under the HTML HUD/hint overlay</li></ul>
+        
+        <div class="robot">
+          <div class="rlbl">🤖 robot run</div>
+          <div class="rstats">
+            <span><b>0</b> score</span>
+            <span><b>60.08</b> s survived</span>
+            <span><b>0</b> lives lost</span>
+            <span><b>3601</b> frames</span>
+            <span><b>818</b> key events</span>
+          </div>
+          <p class="meta">policy verdict: <b class="bad">ZERO SCORE</b>
+            · contract ok: True · page threw: False
+            · closest bullet→enemy: 51.9 px vertical
+            <a href='qwen3-8-27b-q4km-b/robot_play.mp4'>watch (.mp4)</a> <a href='qwen3-8-27b-q4km-b/robot_play.webm'>webm</a></p>
+          <p class="findings">Zero is a game defect, not a policy failure: every shot flew at a fixed y the enemies never occupy (measured closest vertical gap 51.9 px), so nothing could ever collide.</p>
+        </div>
         <p><a class="play" href="qwen3-8-27b-q4km-b/index.html">▶ PLAY qwen3-8-27b-q4km-b</a></p>
       </div>
     </article>
@@ -75,7 +111,7 @@
   <h2 class="note" style="font:700 14px var(--mono)">checks</h2>
   <table class="v">
     <thead><tr><th>game</th><th>all</th><th>console errors</th><th>canvas</th><th>webgl</th>
-      <th>animation</th><th>input</th><th>http</th><th>file</th><th>lines</th><th>tokens</th><th>t/s</th><th>ship</th><th></th></tr></thead>
+      <th>animation</th><th>input</th><th>http</th><th>file</th><th>lines</th><th>tokens</th><th>t/s</th><th>ship</th><th>robot</th><th></th></tr></thead>
     <tbody>
     <tr><td><a href="qwen3-8-27b-q4km/index.html">qwen3-8-27b-q4km</a></td>
       <td><b class="ok">PASS</b></td>
@@ -86,9 +122,9 @@
       <td><b class="ok">PASS</b></td>
       <td><b class="ok">PASS</b></td>
       <td><b class="ok">PASS</b></td>
-      <td>234</td>
-      <td>3062</td>
-      <td>58.22</td>
+      <td>238</td>
+      <td>3456</td>
+      <td>56.22</td>
       <td><a href="qwen3-8-27b-q4km/metrics.json">metrics.json</a></td></tr>
     <tr><td><a href="qwen3-8-27b-q4km-b/index.html">qwen3-8-27b-q4km-b</a></td>
       <td><b class="ok">PASS</b></td>
@@ -99,9 +135,9 @@
       <td><b class="ok">PASS</b></td>
       <td><b class="ok">PASS</b></td>
       <td><b class="ok">PASS</b></td>
-      <td>252</td>
-      <td>3288</td>
-      <td>55.37</td>
+      <td>267</td>
+      <td>3594</td>
+      <td>55.9</td>
       <td><a href="qwen3-8-27b-q4km-b/metrics.json">metrics.json</a></td></tr></tbody>
   </table>
   <p class="note" style="margin-top:1.2rem">
