@@ -1,0 +1,27 @@
+{
+ "slug": "qwen3-8-27b-q4km-physics",
+ "probed_at": "2026-11-02T21:18:33+0800",
+ "http": {
+  "load_ok": true,
+  "canvas_present": true,
+  "webgl_ok": true,
+  "animation_advancing": true,
+  "input_ok": false,
+  "console_errors": [
+   "missing ) after argument list"
+  ],
+  "console_error_count": 1
+ },
+ "summary": {
+  "http_load_ok": true,
+  "canvas_ok": true,
+  "webgl_ok": true,
+  "uses_three": true,
+  "animation_ok": true,
+  "input_ok": false,
+  "console_error_count": 1,
+  "contract_ok": false,
+  "pass": false
+ },
+ "title": "GRAVITY WELL"
+}

@@ -10,7 +10,7 @@ MODEL_LABEL = {
     "qwen3-8-27b-q4km": "Qwen3.8-27B",
     "qwen3-6-35b-a3b-ud-q4km": "Qwen3.6-35B-A3B",
 }
-GAME_LABEL = {"galaga": "arcade shooter", "gta": "top-down driving mission", "physics": "3D physics sandbox"}
+GAME_LABEL = {"galaga": "arcade shooter (TUI-derived)", "gta": "top-down driving (TUI-derived)", "physics": "3D physics sandbox (TUI-derived)", "solar": "solar system mission"}
 
 NAV = """<nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a></nav>"""
 
@@ -54,7 +54,7 @@ def game_rows():
         base = next((m for m in MODEL_LABEL if slug.startswith(m)), None)
         if not base:
             continue
-        game = slug[len(base):].lstrip("-") or "shooter"
+        game = slug[len(base):].lstrip("-") or "space shooter (v1 prompt)"
         model = MODEL_LABEL[base]
         b = json.load(open(os.path.join(d, "build.json"))) if os.path.exists(os.path.join(d, "build.json")) else {}
         g = json.load(open(os.path.join(d, "gen.json"))) if os.path.exists(os.path.join(d, "gen.json")) else {}
