@@ -58,7 +58,8 @@ FILLER_TXT = os.path.join(PACKS, "ctx_filler.txt")
 MANIFEST = os.path.join(PACKS, "manifest.json")
 GPQA = os.path.join(PACKS, "gpqa25.jsonl")
 
-CELLS = {"c1": ("ctx-gpqa30k", 30000), "c2": ("ctx-gpqa110k", 110000)}
+CELLS = {"c1": ("ctx-gpqa30k", 30000), "c2": ("ctx-gpqa110k", 110000),
+         "c3": ("ctx-gpqa260k", 260000)}
 DEPTHS = (25, 50, 75)         # percent of haystack BEFORE the needle
 TOL = 0.05                    # ±5 % prompt-token tolerance
 LONG_CAP = 4096               # completion budget (thinking models burn ~300-600 first)

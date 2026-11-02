@@ -23,6 +23,7 @@ Principles:
 | `pub-livebench25` | LiveBench subset | 25 | temp 0.0, seed 7, max_tokens 4096 | mixed reasoning |
 | `ctx-gpqa30k` (`c1`) | GPQA embedded in 30,000 tokens of context | 25 | temp 0.0, seed 9, max_tokens 4096 | retrieval at 30k |
 | `ctx-gpqa110k` (`c2`) | GPQA embedded in 110,000 tokens | 25 | temp 0.0, seed 9, max_tokens 4096 | retrieval near the 131k window |
+| `ctx-gpqa260k` (`c3`) | GPQA embedded in 260,000 tokens | 25 | temp 0.0, seed 9, max_tokens 4096 | full 256k window (nightly only — ~2 min prefill per request) |
 | `agent-tau2-telecom20` (`a`) | tau2-bench telecom | 20 tasks | task default, pass^1 headline | multi-turn tool use |
 | `agent-shell10` (`b`) | shell command tasks | 10, 6 turns max | temp 0.0, seed 11 | shell competence |
 | `agent-termbench8` (`8`) | terminal-bench core | 8 frozen task ids | task default | real terminal tasks |
@@ -84,6 +85,7 @@ score_pack.py livebench                  # -> pub-livebench25
 score_pack.py shell --n 10 --turns 6     # -> agent-shell10
 ctx_embed.py   --cell c1                 # 30k  -> ctx-gpqa30k
 ctx_embed.py   --cell c2                 # 110k -> ctx-gpqa110k
+ctx_embed.py   --cell c3                 # 260k -> ctx-gpqa260k (needs -c 262144 and a big KV budget)
 tau2_cell.py   --slug <slug> --dry 0     # -> agent-tau2-telecom20 (20 tasks)
 termbench_cell.py --n 8                  # -> agent-termbench8 (8 frozen ids)
 ```

@@ -33,6 +33,7 @@ for c in "${LIST[@]}"; do
     3) echo "== $SLUG cell 3: LiveBench";   python3 score_pack.py livebench ;;
     c1) echo "== $SLUG c1: GPQA @30k";      python3 ctx_embed.py --cell c1 ;;
     c2) echo "== $SLUG c2: GPQA @110k";     python3 ctx_embed.py --cell c2 ;;
+    c3) echo "== $SLUG c3: GPQA @260k";     python3 ctx_embed.py --cell c3 ;;
     b) echo "== $SLUG b: shell10";          python3 score_pack.py shell --n 10 --turns 6 ;;
     a) echo "== $SLUG a: tau2 telecom";     python3 tau2_cell.py --slug "$SLUG" --dry 0 ;;
     8) echo "== $SLUG 8: terminal-bench";   python3 termbench_cell.py --n 8 ;;
