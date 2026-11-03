@@ -41,7 +41,8 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 NAV = ("<nav class=tabs><a href='../'>overview</a>"
        "<a href='../games/'>games</a>"
        "<a href='../thinking/' class=on>thinking on/off</a>"
-       "<a href='../chat/'>chat</a></nav>")
+       "<a href='../chat/'>chat</a>"
+       "<a href='../ablation/'>ablation</a></nav>")
 
 
 def esc(s):

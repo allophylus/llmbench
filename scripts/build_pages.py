@@ -30,7 +30,7 @@ MODEL_LABEL = {
 }
 GAME_LABEL = {"galaga": "arcade shooter (TUI-derived)", "gta": "top-down driving (TUI-derived)", "physics": "3D physics sandbox (TUI-derived)", "solar": "solar system mission"}
 
-NAV = """<nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a></nav>"""
+NAV = """<nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a><a href="../ablation/">ablation</a></nav>"""
 
 CSS = """
 :root{--bg:#0f141b;--panel:#151c26;--line:#243040;--fg:#e8eef8;--dim:#9fb0c6;--faint:#6f8296;--gold:#f5c542;--blue:#8cc8ff;--bad:#ff7b72;--ok:#7ee787}
