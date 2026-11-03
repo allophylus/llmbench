@@ -34,12 +34,13 @@ h1{font-size:24px;margin:0 0 4px}h2{font-size:16px;margin:30px 0 8px;color:var(-
 .tabs a.on{background:#1b2431;color:var(--fg);border-color:#33506b}
 .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:8px 0 14px}
 table{width:100%;min-width:560px;border-collapse:collapse;background:var(--panel)}
-/* the method page links the real stylesheet (for the sticky bar), so its own tables are
+/* the method page embeds the real stylesheet (for the sticky bar), so its own tables are
    pinned against style.css's <=760px card rules — otherwise every table cell becomes a block */
-table,thead,tbody,tr,th,td{display:revert}
-table{display:table;table-layout:auto}
-thead{display:table-header-group}tbody{display:table-row-group}tr{display:table-row}
-th,td{display:table-cell;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:13px}
+.method-tbl table,.method-tbl thead,.method-tbl tbody,.method-tbl tr{display:revert}
+.method-tbl table{display:table;table-layout:auto}
+.method-tbl thead{display:table-header-group}.method-tbl tbody{display:table-row-group}
+.method-tbl tr{display:table-row}
+.method-tbl th,.method-tbl td{display:table-cell;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:13px}
 thead th{background:#1b2431;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
 td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text-align:right;white-space:nowrap}
 code{font:12px/1.45 ui-monospace,monospace;color:var(--fg);background:#111821;padding:1px 4px;border-radius:4px}
@@ -52,8 +53,8 @@ ul{padding-left:1.2rem}
 .dl a:hover{border-color:var(--blue)}
 h3.rawh{font-size:14px;margin:20px 0 6px;color:var(--fg)}
 @media(max-width:640px){.wrap{padding:20px 12px 48px}h1{font-size:20px}
-table{min-width:0;font-size:12px}
-th,td{display:table-cell;padding:6px 6px;font-size:12px;overflow-wrap:anywhere}
+.method-tbl table{min-width:0;font-size:12px}
+.method-tbl th,.method-tbl td{display:table-cell;padding:6px 6px;font-size:12px;overflow-wrap:anywhere}
 td.num{word-break:keep-all}}
 """
 
@@ -172,7 +173,7 @@ def raw_files_html():
             "<p>Each file holds every question, the expected answer, the model's answer, "
             "the verdict, tokens, milliseconds and decode rate for that run. "
             "Built by <code>scripts/build_pages_method.py</code> from <code>data/chat/</code>.</p>"
-            '<div class=table-wrap><table><thead><tr><th>File</th><th>Model</th>'
+            '<div class=\"table-wrap method-tbl\"><table><thead><tr><th>File</th><th>Model</th>'
             "<th>Mode</th><th>Questions</th></tr></thead><tbody>"
             + "".join(rows) + "</tbody></table></div>")
 
