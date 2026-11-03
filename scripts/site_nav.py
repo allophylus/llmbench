@@ -10,8 +10,12 @@ Adding a section: append it to ``ITEMS`` once, make sure its directory (with an
 exist in the worktree are omitted, so a half-built section can never ship a
 dead nav link.
 
-Order (canonical):
-    Overview, Games, Chat, Thinking, Ablation, Context sweep, Method, Raw data
+Order (canonical, seven items):
+    Overview, Games, Chat, Thinking, Ablation, Method, Raw data
+
+The matched-context speed matrix is not a nav item: it is a section of the
+overview's Speed view (/index.html#speed-sweep), and the logic-trap set is a
+section of /thinking/ (/thinking/#logic). Both used to be their own tabs.
 
 Two visual flavours exist in the site CSS:
 
@@ -32,7 +36,6 @@ ITEMS = [
     ("chat", "Chat"),
     ("thinking", "Thinking"),
     ("ablation", "Ablation"),
-    ("sweep", "Context sweep"),
     ("method", "Method"),
     ("raw", "Raw data"),
 ]

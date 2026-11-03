@@ -4,7 +4,12 @@
 Fails (exit 1) if, on any page:
   * the <nav> link set differs from scripts/site_nav.py (missing / extra / duped
     entries, wrong labels, wrong order, wrong active marker count), or
-  * a nav (or any internal) href points at a path that does not exist.
+  * a nav (or any internal) href points at a path that does not exist, or
+  * an internal link (nav or body) still points at a retired section
+    (/sweep/, /logic/ — folded into /#speed-sweep and /thinking/#logic).
+
+The canonical set is exactly the seven items in scripts/site_nav.py. This checker
+fails if a page ships more (a new tab was invented) or fewer (an item was dropped).
 """
 import os
 import re
@@ -22,7 +27,6 @@ PAGES = [
     ("/chat/", "chat/index.html"),
     ("/thinking/", "thinking/index.html"),
     ("/ablation/", "ablation/index.html"),
-    ("/sweep/", "sweep/index.html"),
     ("/method/", "method/index.html"),
     ("/raw-chat/", "raw-chat/index.html"),
     ("/games/sidebyside/", "games/sidebyside/index.html"),
@@ -131,10 +135,38 @@ def check_page(url_path, rel_file):
     return errors
 
 
+CANON = ["Overview", "Games", "Chat", "Thinking", "Ablation", "Method", "Raw data"]
+
+
+def check_canonical():
+    """The one nav list itself: exactly the seven canonical items, in order."""
+    errs = []
+    labels = [label for _, label, _ in site_nav.nav_items()]
+    if labels != CANON:
+        errs.append(f"site_nav: canonical nav is {labels}, expected {CANON}")
+    return errs
+
+
+def check_retired(url_path, rel_file):
+    """No internal link on a shipped page may point at a removed section."""
+    errs = []
+    html = open(os.path.join(ROOT, rel_file), encoding="utf-8").read()
+    for m in re.finditer(r'href\s*=\s*["\']([^"\']+)["\']', html, re.I):
+        href = m.group(1)
+        if href.startswith(("http://", "https://", "mailto:", "data:")):
+            continue
+        if re.search(r'(^|/)(sweep|logic)(/|$|#|\?)', href, re.I):
+            errs.append(f"{url_path}: link to retired section {href!r}")
+    return errs
+
+
 def main():
     failures = 0
+    for e in check_canonical():
+        failures += 1
+        print("FAIL", e)
     for url_path, rel_file in PAGES:
-        errs = check_page(url_path, rel_file)
+        errs = check_page(url_path, rel_file) + check_retired(url_path, rel_file)
         if errs:
             failures += 1
             for e in errs:
@@ -142,11 +174,16 @@ def main():
         else:
             print("ok  ", url_path)
     canonical = [u for _, _, u in site_nav.nav_items()]
-    print("canonical nav:", ", ".join(canonical))
+    print(f"canonical nav ({len(canonical)}):", ", ".join(canonical))
     if failures:
         print(f"\nNAV CHECK FAILED on {failures} page(s)")
         return 1
-    print(f"\nnav ok on {len(PAGES)} pages")
+    # the retired output directories must not ship
+    for d in ("sweep", "logic"):
+        if os.path.isdir(os.path.join(ROOT, d)):
+            print(f"FAIL retired output directory still present: {d}/")
+            failures += 1
+    print(f"\nnav ok on {len(PAGES)} pages, {len(canonical)} canonical items")
     return 0
 
 

@@ -441,10 +441,13 @@ def build():
         "change its answers, and what does it cost? Same server, same temperature 0, same seed, identical "
         "token cap; the only variable is the thinking switch. Times are wall-clock seconds; tokens are "
         "generated (completion) tokens.</p>"
+        "<p class=sub><b>Two different question sets, never averaged together.</b> "
+        "<a href=\"#logic\">Part 2 (logic traps)</a> is a separate set of ten everyday questions and "
+        "has its own scores; nothing on this page combines the two.</p>"
         "<div class=part><h2>Part 1 — accuracy questions (GPQA-diamond, 25)</h2>"
         "<span class=meta>Hard multiple-choice science questions: the ceiling test.</span></div>"
         + accuracy_html()
-        + "<div class=part><h2>Part 2 — logic traps (everyday questions, 10)</h2>"
+        + "<div class=part id=logic><h2>Part 2 — logic traps (everyday questions, 10)</h2>"
           "<span class=meta>Short questions with an obvious-looking wrong answer: the reasoning test.</span></div>"
         + logic_html())
     page = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
