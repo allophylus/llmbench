@@ -101,7 +101,8 @@ h1,h2,h3,h4,section[id],section[class]{scroll-margin-top:calc(var(--topbar-h) + 
   border-bottom:1px solid #24303f}
 .topbar>.wrap{height:100%;display:flex;align-items:center}
 .topbar .tabs,.topbar .site-nav{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;
-  margin:0;padding:0 2px;gap:1.1rem;width:100%;height:100%;align-items:center;
+  margin:0;padding:0 2px;gap:1.1rem;width:100%;align-items:center;
+  height:auto;min-height:var(--topbar-h);
   scrollbar-width:none;-ms-overflow-style:none}
 .topbar .tabs::-webkit-scrollbar,.topbar .site-nav::-webkit-scrollbar{display:none}
 .topbar .tabs a,.topbar .site-nav a{white-space:nowrap}
