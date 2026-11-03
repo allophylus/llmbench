@@ -22,7 +22,7 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 .notes{color:var(--dim);margin:4px 0 8px}.sec{margin:26px 0 6px;font-size:15px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
 .meta{color:var(--faint);font-size:12px}
 @media(max-width:640px){th,td{padding:7px 6px;font-size:12px}.thumb{width:96px}}
-</style></head><body><div class=wrap><nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a></nav><h1>games — model-written browser games</h1><p class=sub>Each model writes a single-file three.js game from a frozen prompt. The model draws everything with geometry — no images, textures or audio files. Repeats = extra generation turns allowed to fix a failing build (max 10).</p><table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th><th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th><th>Robot</th><th>Screenshot</th><th>Play</th></tr></thead><tbody><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>2324</td><td class=num>22.0</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it; animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>3508</td><td class=num>79.5</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it</td><td>0</td><td><img class=thumb src='qwen3-8-27b-q4km/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-galaga'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-gta'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-physics'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-physics/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-solar'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>solar system mission</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td>—</td><td>—</td><td><a href='qwen3-8-27b-q4km-solar/index.html'>play</a></td></tr></tbody></table><h2 class=sec>Details</h2><section class=detail id='qwen3-6-35b-a3b-ud-q4km'><h2>Qwen3.6-35B-A3B — space shooter (v1 prompt)</h2><p class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 2324 tokens · 22.0s</p><p class=notes>no window.__game contract → robot cannot score it; animation not advancing</p><details><summary>prompt used</summary><pre class=promptbox>&lt;!--
+</style></head><body><div class=wrap><nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a></nav><h1>games — model-written browser games</h1><p class=sub>Each model writes a single-file three.js game from a frozen prompt. The model draws everything with geometry — no images, textures or audio files. Repeats = extra generation turns allowed to fix a failing build (max 10).</p><table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th><th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th><th>Robot</th><th>Screenshot</th><th>Play</th></tr></thead><tbody><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>2324</td><td class=num>22.0</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it; animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>3508</td><td class=num>79.5</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it</td><td>0</td><td><img class=thumb src='qwen3-8-27b-q4km/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-galaga'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-gta'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-physics'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-physics/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-solar'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>solar system mission</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td>—</td><td>—</td><td><a href='qwen3-8-27b-q4km-solar/index.html'>play</a></td></tr></tbody></table><h2 class=sec>Details</h2><section class=detail id='qwen3-6-35b-a3b-ud-q4km'><h2>Qwen3.6-35B-A3B — space shooter (v1 prompt)</h2><p class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 2324 tokens · 22.0s</p><p class=notes>no window.__game contract → robot cannot score it; animation not advancing</p><details><summary>prompt used</summary><pre class=promptbox>&lt;!--
 WEBGAME_PROMPT — FROZEN (llmbench browser-game cell v1, game cell &quot;webgame-3js&quot;)
 
 Sent verbatim as the single user message to every model. Never edit; the sha256 of
@@ -665,31 +665,312 @@ GAME BRIEF:
 TOP-DOWN DRIVING MISSION. A car the player steers (left/right turn, up/down accelerate/brake)
 on a simple city grid with roads, buildings as obstacles, and 5 pickup waypoints shown on the map.
 Reaching a waypoint scores. Colliding with a building costs time; a 60 second timer. Camera follows the car
-from above. Draw roads, buildings, car and waypoints with geometry only.</pre></details><img class=bigshot src='qwen3-8-27b-q4km-gta/shot.png' alt=''><p><a href='qwen3-8-27b-q4km-gta/index.html'>play the game →</a> · <a href='qwen3-8-27b-q4km-gta/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-8-27b-q4km-physics'><h2>Qwen3.8-27B — 3D physics sandbox (TUI-derived)</h2><p class=meta>Qwen3.8-27B-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) ·  tokens · s</p><p class=notes>no window.__game contract → robot cannot score it</p><details><summary>prompt used</summary><pre class=promptbox>Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
-Reply with the full file inside one ```html fenced block and nothing else.
+from above. Draw roads, buildings, car and waypoints with geometry only.</pre></details><img class=bigshot src='qwen3-8-27b-q4km-gta/shot.png' alt=''><p><a href='qwen3-8-27b-q4km-gta/index.html'>play the game →</a> · <a href='qwen3-8-27b-q4km-gta/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-8-27b-q4km-physics'><h2>Qwen3.8-27B — 3D physics sandbox (TUI-derived)</h2><p class=meta>Qwen3.8-27B-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 2 attempt(s), 1 repeat(s) ·  tokens · s</p><p class=notes>playable in browser</p><details><summary>prompt used</summary><pre class=promptbox>You wrote this single-file three.js browser game. It FAILS in a real browser.
 
-Hard requirements (an automated browser grader checks them):
-1. ONE FILE, NO BUILD STEP, runs from file:// — load three.js from a pinned CDN import map:
-   &lt;script type=&quot;importmap&quot;&gt;{&quot;imports&quot;:{&quot;three&quot;:&quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}&lt;/script&gt;
-   &lt;script type=&quot;module&quot;&gt;import * as THREE from &#x27;three&#x27;; ...&lt;/script&gt;
-2. You must DRAW everything yourself with three.js geometry, materials, lights and particles.
-   NO external images, textures, models, fonts or audio files. No base64 art. Code-drawn only.
-3. You must expose a machine-readable state, updated every frame:
-   window.__game = { ready:true, score:0, lives:3, over:false, player:{x,y}, enemies:[{x,y}], bullets:[{x,y}] };
-   window.__game.reset = function(){...};
-4. Input: listen on window for keydown/keyup (Arrows/WASD + Space). Also support touch:
-   on-screen buttons using pointerdown/pointerup with touch-action:none, usable at 390x844.
-5. Visual quality bar (this is graded by a human): deliberate 4-5 colour palette, gradient or
-   nebula background instead of flat black, additive particle bursts on hits, hit-flash and
-   screen shake, eased movement (no linear jumps), readable typographic HUD.
-6. Keep it under ~450 lines. No commentary outside the code block.
+Observed failure:
+pageerror: missing ) after argument list
 
-GAME BRIEF:
-3D PHYSICS SANDBOX. A translucent box. Balls spawn and fall under gravity, bounce off the
-floor and walls with restitution, and collide with each other (simple sphere-sphere). The player launches a ball
-with Space from a random position; a HUD shows ball count. Score = number of simultaneous balls still bouncing after
-they settle is a failure; the game ends when 25 balls have been launched. Determinism matters: same seed/timing must
-bounce the same way.</pre></details><img class=bigshot src='qwen3-8-27b-q4km-physics/shot.png' alt=''><p><a href='qwen3-8-27b-q4km-physics/index.html'>play the game →</a> · <a href='qwen3-8-27b-q4km-physics/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-8-27b-q4km-solar'><h2>Qwen3.8-27B — solar system mission</h2><p class=meta>Qwen3.8-27B-Q4_K_M.gguf</p><p class=meta>unverified · thinking off · 1 attempt(s),  repeat(s) ·  tokens · s</p><p class=notes>—</p><details><summary>prompt used</summary><pre class=promptbox>Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
+Requirements it must satisfy: one self-contained HTML file, three.js from the pinned CDN import map, everything drawn with geometry (no external assets), a working window.__game = {ready:true, score, lives, over, player:{x,y}, enemies:[{x,y}], bullets:[{x,y}]} updated every frame plus window.__game.reset(), keyboard and touch controls, and it must run without console errors. Keep it under 350 lines.
+
+Fix the actual defect and reply with the complete corrected file in one ```html block.
+
+Current code:
+```html
+```html
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no&quot;&gt;
+&lt;title&gt;GRAVITY WELL — 3D Physics Sandbox&lt;/title&gt;
+&lt;style&gt;
+  :root{
+    --bg0:#05070f; --bg1:#0b1226; --bg2:#141d3a;
+    --ink:#eaf1ff; --dim:#8ea0c8; --faint:#5a6a92;
+    --cyan:#5fe6ff; --amber:#ffb454; --coral:#ff6f91; --mint:#7dffb0;
+    --line:rgba(120,160,255,.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:var(--bg0);color:var(--ink);
+    font-family:ui-monospace,&quot;SF Mono&quot;,&quot;Cascadia Code&quot;,Menlo,Consolas,monospace;
+    -webkit-user-select:none;user-select:none;touch-action:none;overscroll-behavior:none}
+  #c{position:fixed;inset:0;display:block}
+  .vignette{position:fixed;inset:0;pointer-events:none;z-index:5;
+    background:radial-gradient(120% 90% at 50% 42%,transparent 40%,rgba(3,5,12,.55) 100%)}
+  .hud{position:fixed;inset:0;pointer-events:none;z-index:10}
+  .panel{position:absolute;background:linear-gradient(180deg,rgba(14,22,44,.72),rgba(9,14,30,.55));
+    border:1px solid var(--line);border-radius:12px;padding:12px 16px;backdrop-filter:blur(6px);
+    box-shadow:0 8px 30px rgba(0,0,0,.35)}
+  .tl{top:16px;left:16px;min-width:190px}
+  .tr{top:16px;right:16px;text-align:right;min-width:150px}
+  .brand{font-size:19px;font-weight:800;letter-spacing:.14em;line-height:1}
+  .brand b{color:var(--cyan)}
+  .sub{font-size:10px;letter-spacing:.34em;color:var(--faint);margin-top:6px}
+  .stat{margin-top:12px}
+  .stat .k{font-size:9px;letter-spacing:.28em;color:var(--dim)}
+  .stat .v{font-size:34px;font-weight:800;line-height:1;margin-top:2px;color:var(--ink)}
+  .stat .v small{font-size:13px;color:var(--faint);font-weight:600}
+  .bar{height:6px;border-radius:4px;background:rgba(255,255,255,.08);margin-top:8px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;border-radius:4px;
+    background:linear-gradient(90deg,var(--cyan),var(--mint));transition:width .18s ease}
+  .legend{margin-top:12px;font-size:10px;letter-spacing:.12em;color:var(--dim);line-height:1.7}
+  .legend span{color:var(--cyan)}
+  .controls{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);
+    display:flex;gap:10px;align-items:center;pointer-events:none;
+    font-size:10px;letter-spacing:.16em;color:var(--faint)}
+  .controls b{color:var(--dim);font-weight:700}
+  .pad{position:absolute;inset:0;pointer-events:none;z-index:12}
+  .btn{position:absolute;pointer-events:auto;touch-action:none;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    border:1px solid var(--line);border-radius:16px;color:var(--ink);
+    background:linear-gradient(180deg,rgba(20,30,58,.6),rgba(10,16,34,.5));
+    backdrop-filter:blur(4px);font-family:inherit;letter-spacing:.14em;
+    box-shadow:0 6px 20px rgba(0,0,0,.35);transition:transform .06s,background .12s,border-color .12s}
+  .btn .ic{font-size:22px;line-height:1}
+  .btn .lb{font-size:9px;color:var(--dim);margin-top:3px}
+  .btn:active,.btn.on{transform:scale(.94);border-color:var(--cyan);
+    background:linear-gradient(180deg,rgba(40,70,120,.7),rgba(16,26,52,.6))}
+  .btn.on .ic{color:var(--cyan)}
+  .dpad{left:16px;bottom:16px;width:150px;height:150px}
+  .dpad .btn{width:48px;height:48px;border-radius:12px}
+  .dpad .up{left:51px;top:0}.dpad .down{left:51px;bottom:0}
+  .dpad .left{left:0;top:51px}.dpad .right{right:0;top:51px}
+  .dpad .mid{left:51px;top:51px;background:transparent;border:none;box-shadow:none;
+    color:var(--faint);font-size:9px;letter-spacing:.2em}
+  .fire{right:16px;bottom:22px;width:96px;height:96px;border-radius:50%;
+    border-color:rgba(255,180,84,.5)}
+  .fire .ic{font-size:30px;color:var(--amber)}
+  .fire.on{border-color:var(--amber);background:linear-gradient(180deg,rgba(120,80,30,.6),rgba(40,26,12,.5))}
+  .fire.on .ic{color:#fff}
+  .reset{right:16px;bottom:132px;width:64px;height:44px;border-radius:12px}
+  .reset .ic{font-size:20px;color:var(--mint)}
+  .overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(120% 100% at 50% 40%,rgba(6,10,22,.55),rgba(3,5,12,.86));
+    backdrop-filter:blur(3px);transition:opacity .4s ease}
+  .overlay.hide{opacity:0;pointer-events:none}
+  .card{max-width:440px;width:88%;text-align:center;padding:34px 30px;border-radius:18px;
+    background:linear-gradient(180deg,rgba(16,24,48,.9),rgba(9,14,30,.85));
+    border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .card h1{font-size:30px;font-weight:800;letter-spacing:.16em}
+  .card h1 b{color:var(--cyan)}
+  .card p{margin-top:14px;font-size:12px;line-height:1.8;color:var(--dim);letter-spacing:.04em}
+  .card .keys{margin-top:18px;font-size:11px;letter-spacing:.14em;color:var(--faint)}
+  .card .keys b{color:var(--ink);background:rgba(255,255,255,.06);padding:3px 8px;border-radius:6px;margin:0 2px}
+  .card .go{margin-top:24px;font-size:13px;letter-spacing:.24em;color:var(--amber);
+    animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+  .final{font-size:44px;font-weight:800;color:var(--mint);margin-top:10px}
+  @media (max-width:520px){
+    .tl{min-width:150px;padding:10px 12px}.tr{min-width:120px;padding:10px 12px}
+    .stat .v{font-size:26px}.brand{font-size:16px}.legend{display:none}
+    .controls{display:none}
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
+&lt;div class=&quot;vignette&quot;&gt;&lt;/div&gt;
+
+&lt;div class=&quot;hud&quot;&gt;
+  &lt;div class=&quot;panel tl&quot;&gt;
+    &lt;div class=&quot;brand&quot;&gt;GRAVITY&lt;b&gt;WELL&lt;/b&gt;&lt;/div&gt;
+    &lt;div class=&quot;sub&quot;&gt;3D PHYSICS SANDBOX&lt;/div&gt;
+    &lt;div class=&quot;stat&quot;&gt;&lt;div class=&quot;k&quot;&gt;BALLS IN PLAY&lt;/div&gt;&lt;div class=&quot;v&quot; id=&quot;count&quot;&gt;0&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;stat&quot;&gt;&lt;div class=&quot;k&quot;&gt;LAUNCHED&lt;/div&gt;&lt;div class=&quot;v&quot; id=&quot;launch&quot;&gt;0 &lt;small&gt;/ 25&lt;/small&gt;&lt;/div&gt;
+      &lt;div class=&quot;bar&quot;&gt;&lt;i id=&quot;bar&quot;&gt;&lt;/i&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;panel tr&quot;&gt;
+    &lt;div class=&quot;stat&quot;&gt;&lt;div class=&quot;k&quot;&gt;SETTLED&lt;/div&gt;&lt;div class=&quot;v&quot; id=&quot;settle&quot; style=&quot;color:var(--coral)&quot;&gt;0&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;legend&quot;&gt;SPACE / FIRE&lt;br&gt;launch a ball&lt;br&gt;&lt;span&gt;25&lt;/span&gt; launches ends the run&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;controls&quot;&gt;
+    &lt;span&gt;&lt;b&gt;W A S D&lt;/b&gt; / &lt;b&gt;← ↑ ↓ →&lt;/b&gt; aim&lt;/span&gt;
+    &lt;span&gt;·&lt;/span&gt;
+    &lt;span&gt;&lt;b&gt;SPACE&lt;/b&gt; launch&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;pad&quot;&gt;
+  &lt;div class=&quot;dpad&quot;&gt;
+    &lt;div class=&quot;btn up&quot; data-k=&quot;up&quot;&gt;&lt;span class=&quot;ic&quot;&gt;▲&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;btn left&quot; data-k=&quot;left&quot;&gt;&lt;span class=&quot;ic&quot;&gt;◀&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;btn mid&quot;&gt;AIM&lt;/div&gt;
+    &lt;div class=&quot;btn right&quot; data-k=&quot;right&quot;&gt;&lt;span class=&quot;ic&quot;&gt;▶&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;btn down&quot; data-k=&quot;down&quot;&gt;&lt;span class=&quot;ic&quot;&gt;▼&lt;/span&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;btn reset&quot; id=&quot;resetBtn&quot;&gt;&lt;span class=&quot;ic&quot;&gt;↻&lt;/span&gt;&lt;span class=&quot;lb&quot;&gt;RESET&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;btn fire&quot; id=&quot;fireBtn&quot;&gt;&lt;span class=&quot;ic&quot;&gt;✦&lt;/span&gt;&lt;span class=&quot;lb&quot;&gt;FIRE&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;overlay&quot; id=&quot;overlay&quot;&gt;
+  &lt;div class=&quot;card&quot; id=&quot;card&quot;&gt;
+    &lt;h1&gt;GRAVITY&lt;b&gt;WELL&lt;/b&gt;&lt;/h1&gt;
+    &lt;p&gt;Launch balls into the translucent chamber. They fall, bounce off the walls and floor, and collide with one another. Every launch counts — the run ends at &lt;b&gt;25&lt;/b&gt;.&lt;/p&gt;
+    &lt;div class=&quot;keys&quot;&gt;&lt;b&gt;W A S D&lt;/b&gt; / &lt;b&gt;← ↑ ↓ →&lt;/b&gt; aim &amp;nbsp;·&amp;nbsp; &lt;b&gt;SPACE&lt;/b&gt; launch&lt;/div&gt;
+    &lt;div class=&quot;go&quot; id=&quot;go&quot;&gt;PRESS SPACE TO BEGIN&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script type=&quot;importmap&quot;&gt;{&quot;imports&quot;:{&quot;three&quot;:&quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}&lt;/script&gt;
+&lt;script type=&quot;module&quot;&gt;
+import * as THREE from &#x27;three&#x27;;
+
+/* ---------- deterministic RNG ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a&gt;&gt;&gt;15,1|a);t=t+Math.imul(t^t&gt;&gt;&gt;7,61|t)^t;return((t^t&gt;&gt;&gt;14)&gt;&gt;&gt;0)/4294967296;};}
+let rng=mulberry32(1337);
+
+/* ---------- constants ---------- */
+const BOX={x:6,y:4.5,z:6}, R=0.42, GRAV=-15, REST=0.72, FRICTION=0.985,
+      AIR=0.999, SETTLE=0.55, MAXB=25, STEP=1/120, LAUNCH=13;
+const PALETTE=[0x5fe6ff,0xffb454,0xff6f91,0x7dffb0,0xb98cff];
+
+/* ---------- renderer / scene ---------- */
+const canvas=document.getElementById(&#x27;c&#x27;);
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.setClearColor(0x05070f,1);
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x0a1024,0.028);
+const camera=new THREE.PerspectiveCamera(52,innerWidth/innerHeight,0.1,200);
+const camTarget=new THREE.Vector3(0,BOX.y*0.42,0);
+const camPos=new THREE.Vector3(0,BOX.y*0.9,15.5);
+camera.position.copy(camPos);
+
+/* ---------- lights ---------- */
+scene.add(new THREE.AmbientLight(0x2a3a66,0.7));
+const key=new THREE.DirectionalLight(0xbfe0ff,1.1); key.position.set(6,12,8); scene.add(key);
+const rim=new THREE.DirectionalLight(0xff9a5a,0.5); rim.position.set(-8,4,-6); scene.add(rim);
+const fill=new THREE.PointLight(0x5fe6ff,0.6,40); fill.position.set(0,BOX.y,0); scene.add(fill);
+
+/* ---------- nebula background (shader) ---------- */
+const bgMat=new THREE.ShaderMaterial({
+  side:THREE.BackSide, depthWrite:false, depthTest:false,
+  uniforms:{uT:{value:0}},
+  vertexShader:`varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+  fragmentShader:`varying vec3 vP;uniform float uT;
+    float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
+      return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+    float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i&lt;5;i++){v+=a*n(p);p*=2.02;a*=.5;}return v;}
+    void main(){vec3 d=normalize(vP);float t=uT*0.02;
+      float neb=fbm(d.xy*2.2+t)+0.6*fbm(d.zy*3.0-t*1.3);
+      vec3 c1=vec3(0.02,0.03,0.09),c2=vec3(0.10,0.05,0.20),c3=vec3(0.02,0.16,0.20);
+      vec3 col=mix(c1,c2,smoothstep(0.2,0.9,neb));
+      col=mix(col,c3,smoothstep(0.55,1.0,fbm(d.yx*1.6-t*0.7))*0.7);
+      col+=vec3(0.35,0.15,0.45)*pow(max(0.0,fbm(d.xy*4.0+t)),3.0)*0.5;
+      col*=smoothstep(1.0,-0.4,d.y)*0.9+0.1;
+      gl_FragColor=vec4(col,1.0);}`
+});
+const bg=new THREE.Mesh(new THREE.SphereGeometry(60,32,24),bgMat);
+bg.renderOrder=-1; scene.add(bg);
+
+/* ---------- chamber ---------- */
+const boxGeo=new THREE.BoxGeometry(BOX.x*2,BOX.y*2,BOX.z*2);
+const glass=new THREE.Mesh(boxGeo,new THREE.MeshPhysicalMaterial({
+  color:0x8fb8ff,transparent:true,opacity:0.06,roughness:0.1,metalness:0,
+  side:THREE.DoubleSide,depthWrite:false}));
+glass.renderOrder=2; scene.add(glass);
+const edges=new THREE.LineSegments(new THREE.EdgesGeometry(boxGeo),
+  new THREE.LineBasicMaterial({color:0x5fe6ff,transparent:true,opacity:0.55}));
+scene.add(edges);
+const grid=new THREE.GridHelper(BOX.x*2,12,0x2a4a8a,0x182a52);
+grid.position.y=-BOX.y; grid.material.transparent=true; grid.material.opacity=0.5; scene.add(grid);
+const floorGlow=new THREE.Mesh(new THREE.PlaneGeometry(BOX.x*2,BOX.z*2),
+  new THREE.MeshBasicMaterial({color:0x1a3a6a,transparent:true,opacity:0.25,blending:THREE.AdditiveBlending,depthWrite:false}));
+floorGlow.rotation.x=-Math.PI/2; floorGlow.position.y=-BOX.y+0.01; scene.add(floorGlow);
+
+/* ---------- ball geometry / materials ---------- */
+const ballGeo=new THREE.SphereGeometry(R,24,18);
+const mats=PALETTE.map(c=&gt;new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:0.35,roughness:0.35,metalness:0.1}));
+const ballMeshes=[]; for(let i=0;i&lt;MAXB;i++){const m=new THREE.Mesh(ballGeo,mats[i%PALETTE.length]);m.visible=false;scene.add(m);ballMeshes.push(m);}
+
+/* ---------- particles ---------- */
+const PMAX=600;
+const pPos=new Float32Array(PMAX*3), pCol=new Float32Array(PMAX*3), pVel=new Float32Array(PMAX*3), pLife=new Float32Array(PMAX);
+let pHead=0;
+const pGeo=new THREE.BufferGeometry();
+pGeo.setAttribute(&#x27;position&#x27;,new THREE.BufferAttribute(pPos,3));
+pGeo.setAttribute(&#x27;color&#x27;,new THREE.BufferAttribute(pCol,3));
+const pMat=new THREE.PointsMaterial({size:0.16,vertexColors:true,transparent:true,opacity:1,
+  blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
+const points=new THREE.Points(pGeo,pMat); points.frustumCulled=false; scene.add(points);
+const _c=new THREE.Color();
+function burst(x,y,z,color,n,spd){
+  _c.set(color);
+  for(let i=0;i&lt;n;i++){
+    const a=rng()*6.283, b=(rng()-0.5)*3.14, s=spd*(0.4+rng()*0.9);
+    const idx=pHead; pHead=(pHead+1)%PMAX;
+    pPos[idx*3]=x; pPos[idx*3+1]=y; pPos[idx*3+2]=z;
+    pVel[idx*3]=Math.cos(a)*Math.cos(b)*s; pVel[idx*3+1]=Math.sin(b)*s+1.5; pVel[idx*3+2]=Math.sin(a)*Math.cos(b)*s;
+    pCol[idx*3]=_c.r; pCol[idx*3+1]=_c.g; pCol[idx*3+2]=_c.b;
+    pLife[idx]=0.5+rng()*0.5;
+  }
+}
+function updateParticles(dt){
+  for(let i=0;i&lt;PMAX;i++){
+    if(pLife[i]&lt;=0)continue;
+    pLife[i]-=dt;
+    if(pLife[i]&lt;=0){pPos[i*3+1]=-999;continue;}
+    pVel[i*3+1]+=GRAV*0.35*dt;
+    pPos[i*3]+=pVel[i*3]*dt; pPos[i*3+1]+=pVel[i*3+1]*dt; pPos[i*3+2]+=pVel[i*3+2]*dt;
+    const f=Math.min(1,pLife[i]*2);
+    pCol[i*3]*=0.98; pCol[i*3+1]*=0.98; pCol[i*3+2]*=0.98;
+  }
+  pGeo.attributes.position.needsUpdate=true; pGeo.attributes.color.needsUpdate=true;
+}
+
+/* ---------- state ---------- */
+let balls=[], launched=0, over=false, started=false, shake=0, flash=0, flashCol=new THREE.Color(0x5fe6ff);
+const aim={x:0,y:0};
+const keys={up:false,down:false,left:false,right:false,fire:false};
+const flashEl=document.createElement(&#x27;div&#x27;);
+flashEl.style.cssText=&#x27;position:fixed;inset:0;pointer-events:none;z-index:8;opacity:0;background:radial-gradient(circle,rgba(255,255,255,.5),transparent 70%)&#x27;;
+document.body.appendChild(flashEl);
+
+function launch(){
+  if(over||launched&gt;=MAXB)return;
+  const px=(rng()*2-1)*(BOX.x-R-0.3), pz=(rng()*2-1)*(BOX.z-R-0.3);
+  const py=BOX.y-R-0.2;
+  const vx=aim.x*LAUNCH+(rng()*2-1)*1.5, vy=2+rng()*2, vz=aim.y*LAUNCH+(rng()*2-1)*1.5;
+  const b={x:px,y:py,z:pz,vx,vy,vz,r:R,rest:REST,flash:1,settled:false,
+    color:PALETTE[launched%PALETTE.length],mesh:ballMeshes[launched]};
+  b.mesh.visible=true; balls.push(b); launched++;
+  burst(px,py,pz,b.color,26,7); shake=Math.min(1,shake+0.5); flash=0.5; flashCol.set(b.color);
+  updateHUD();
+  if(launched&gt;=MAXB) endGame();
+}
+function endGame(){
+  over=true;
+  const card=document.getElementById(&#x27;card&#x27;);
+  const settled=balls.filter(b=&gt;b.settled).length;
+  card.innerHTML=`&lt;h1&gt;RUN &lt;b&gt;COMPLETE&lt;/b&gt;&lt;/h1&gt;
+    &lt;p&gt;All &lt;b&gt;25&lt;/b&gt; balls launched into the chamber.&lt;/p&gt;
+    &lt;div class=&quot;final&quot;&gt;${settled}&lt;/div&gt;
+    &lt;p style=&quot;margin-top:4px&quot;&gt;balls settled at rest&lt;/p&gt;
+    &lt;div class=&quot;keys&quot;&gt;&lt;b&gt;R&lt;/b&gt; / &lt;b&gt;RESET&lt;/b&gt; to run again&lt;/div&gt;`;
+  document.getElementById(&#x27;overlay&#x27;).classList.remove(&#x27;hide&#x27;);
+}
+
+/* ---------- physics (fixed step, deterministic) ---------- */
+function step(dt){
+  for(const b of balls){
+    b.vy+=GRAV*dt;
+    b.vx*=AIR; b.vy*=AIR; b.vz*=AIR;
+    b.x+=b.vx*dt; b.y+=b.vy*dt; b.z+=b.vz*dt;
+    const fx=BOX.x-b.r, fz=BOX.z-b.r, fy=BOX.y-b.r;
+    if(b.x&lt;-fx){b.x=-fx;b.vx=-b.vx*b.rest;b.vz*=FRICTION;}
+    else if(b.x&gt;fx){b.x=fx;b.vx=-b.vx*b.rest;b.vz*=FRICTION;}
+    if(b.z&lt;-fz){b.z=-fz;b.vz=-b.vz*b.rest;b.vx*=FRICTION;}
+    else if(b.z&gt;fz){b.z=fz;b.vz=-b.vz*b.rest;b.vx*=FRICTION;}
+    if(b.y&gt;fy){b.y=fy;b.vy=-b.vy*b.rest;}
+    if(b.y&lt;-fy){
+      b.y=-fy;
+      if(Math.abs(b.vy)&gt;1.2){b.vy=-b.vy*b.rest;b.vx*=FRICTION;b.vz*=FRICTION;
+        burst(b.x,-fy+0.0
+&lt;script src=&quot;../touch.js&quot;&gt;&lt;/script&gt;
+
+```</pre></details><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=bad>failed</td><td class=meta>pageerror: missing ) after argument list</td><td class=num>8224</td><td class=num>192.2</td></tr><tr><td class=num>2</td><td class=ok>ok</td><td class=meta>renders</td><td class=num></td><td class=num></td></tr></tbody></table><img class=bigshot src='qwen3-8-27b-q4km-physics/shot.png' alt=''><p><a href='qwen3-8-27b-q4km-physics/index.html'>play the game →</a> · <a href='qwen3-8-27b-q4km-physics/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-8-27b-q4km-solar'><h2>Qwen3.8-27B — solar system mission</h2><p class=meta>Qwen3.8-27B-Q4_K_M.gguf</p><p class=meta>unverified · thinking off · 1 attempt(s),  repeat(s) ·  tokens · s</p><p class=notes>—</p><details><summary>prompt used</summary><pre class=promptbox>Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
 Reply with the full file inside one ```html fenced block and nothing else.
 
 IMPORTANT: keep the whole file under 350 lines. No large &lt;style&gt; block (30 lines max).

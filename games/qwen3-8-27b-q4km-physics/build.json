@@ -1,0 +1,28 @@
+{
+ "slug": "qwen3-8-27b-q4km-physics",
+ "turns_allowed": 10,
+ "turns_used": 2,
+ "status": "plays",
+ "per_turn": [
+  {
+   "attempt": 1,
+   "ok": false,
+   "canvas": 1,
+   "ready": false,
+   "errors": [
+    "pageerror: missing ) after argument list"
+   ],
+   "wall_s": 192.2,
+   "tokens": 8224,
+   "bytes": 21024
+  },
+  {
+   "attempt": 2,
+   "ok": true,
+   "canvas": 1,
+   "ready": true,
+   "errors": []
+  }
+ ],
+ "total_s": 198.8
+}
