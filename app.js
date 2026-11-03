@@ -407,7 +407,7 @@
     var when = r.speed_measured_at && coarseDate(r.speed_measured_at) !== String(r.date || "")
       ? shortDate(r.speed_measured_at) : "";
     var whenFull = r.speed_measured_at ? coarseDate(r.speed_measured_at) : "";
-    var buildShort = build.length > 11 ? esc((r.engine_build || "").slice(0, 11)) + "…" : build;
+    var buildShort = build ? esc(String(r.engine_build || "").split(/[-+]/)[0]) : build;
     var prov = '<span class="prov" title="build ' + esc(r.engine_build || "-") +
       (whenFull ? ", measured " + esc(whenFull) : "") + '">' +
       [buildShort, when].filter(Boolean).join(" · ") + "</span>";
