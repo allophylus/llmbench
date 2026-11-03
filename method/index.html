@@ -204,7 +204,9 @@ thead th:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: -
 /* Fixed layout with explicit pixel widths (they sum to exactly the 1400px min-width): padding and
    a header word can never push the table wider than planned, so no cell gets squeezed. */
 /* intrinsic widths: never compress a cell until its content clips */
-#tbl { table-layout: auto; width: max-content; min-width: 100%; }
+@media (min-width: 761px) {
+  #tbl { table-layout: auto; width: max-content; min-width: 100%; }
+}
 #tbl td.num, #tbl th.num { white-space: nowrap; }
 #tbl td.c-evidence, #tbl th.c-evidence { white-space: nowrap; }
 /* keep the model name anchored while the wide grid scrolls sideways */
@@ -697,4 +699,167 @@ body.show-scores #tbl td.sc { display: table-cell; }
 /* the brand header must not inherit page-content .wrap padding: on sub-pages that
    added 28px top + 60px bottom, which is why their nav sat 60px lower than the overview */
 .site-head > .wrap, .site-head .wrap { padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; }
-</style></head><body><header class="site-head"><div class="wrap"><h1>llmbench</h1><p class="sub">Raw, repeatable benchmark numbers for local models served by <strong>llama.cpp (Vulkan)</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB box.</p></div></header><div class="topbar"><div class="wrap"><nav class="site-nav" aria-label="Sections"><a href="../">Overview</a><a href="../games/">Games</a><a href="../chat/">Chat</a><a href="../thinking/">Thinking</a><a href="../ablation/">Ablation</a><a href="../logic/">Logic</a><a href="../sweep/">Context sweep</a><a href="../method/" aria-current="page">Method</a><a href="../raw-chat/">Raw data</a></nav></div></div><div class=wrap><h1>method — how each number was measured</h1><p class=sub>How every number on this site is produced, and what is deliberately not measured. Nothing here is inferred: if a request did not produce a value, the cell is blank.</p><h2>Model set</h2><p>Local open-weight models in GGUF form, quantised so each one fits a single 32&nbsp;GiB GPU. One model per card at a time; a model's throughput is never measured while another is loaded.</p><div class=table-wrap><table><thead><tr><th>Model</th><th>Params</th><th>Quant</th><th>Engine</th><th>Context (tokens)</th><th>Status</th></tr></thead><tbody><tr><td>DavidAU Qwen3.8-27B NEO-MAX MTP</td><td>27B</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>262144</td><td>done</td></tr><tr><td>Huihui abliterated</td><td>27B</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>—</td><td>done</td></tr><tr><td>LFM3-1.7B</td><td>1.7B</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>—</td><td>done</td></tr><tr><td>Ornith-1.5-35B-A3B</td><td>35B / 3B active</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>—</td><td>done</td></tr><tr><td>Qwen3.6-35B-A3B</td><td>35B / 3B active</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>32768, 262144</td><td>done</td></tr><tr><td>Qwen3.8-27B</td><td>27B</td><td>Q4_0</td><td>Vulkan</td><td class=num>262144</td><td>done</td></tr><tr><td>Qwen3.8-27B</td><td>27B</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>32768</td><td>done</td></tr></tbody></table></div><h2>Engine and build</h2><ul><li><strong>Engine:</strong> llama.cpp <code>llama-server</code>, Vulkan backend on an AMD Radeon AI PRO R9700 (32&nbsp;GiB). Models run on a different engine (e.g. a proprietary container format) are labelled with that engine in the table instead.</li><li><strong>Builds:</strong> the build id is printed in the <em>Speed evidence</em> column of each row. Two builds appear: <code>b11517</code> (the mainline server used for the suite and the standard speed probe) and <code>b11874</code>, needed for one newer architecture. A number is only comparable across rows measured on the same build.</li><li><strong>Flags</strong> (one server at a time, recorded per row): <code>-ngl 99 -fa on -c &lt;window&gt; --jinja -np 1 -ctk q8_0 -ctv q4_0</code>, plus <code>-b 16384 -ub 2048</code> on the serving-shaped probes. <code>-np 1</code> means one sequence slot: no batching, no concurrency.</li><li><strong>KV cache types:</strong> keys q8_0, values q4_0 on most suite runs; a few earlier runs used f16, and the ablation tab measures what changing the KV type does. The per-row value is in the evidence column.</li><li><strong>Reasoning/thinking</strong> is off unless a tab says otherwise (<code>enable_thinking:false</code> via the chat template); the thinking tab is the on/off comparison.</li></ul><h2>Throughput: the standard probe</h2><ul><li><strong>Prompt calibration.</strong> The probe uses a fixed filler document repeated and then trimmed so that <code>/tokenize</code> reports ~30,000 tokens (calibrated 29,953, actual 29,963–29,965 after templating). The same calibrated prompt is reused at every server window, so prefill at 32K and at 256K compare like with like.</li><li><strong>Cold-probe policy.</strong> Temperature 0, <code>cache_prompt:false</code>, no warm-up reuse: every measured request pays the full prefill. A discarded warm-up request runs first when the server needs graph capture.</li><li><strong>Decode.</strong> The server's own <code>predicted_per_second</code> over a 64-token generation that ends on the length limit, not on an end-of-answer token. <code>/completion</code> with <code>ignore_eos</code> is used where a model stops early.</li><li><strong>Prefill</strong> is the server's <code>prompt_per_second</code> for the same request; VRAM is the GPU's peak used memory sampled during it.</li></ul><p>The table's Decode / Prefill columns are a different measurement: <code>llama-bench</code> <code>tg128</code>/<code>pp512</code> with the model loaded directly, no HTTP layer. That is why the two columns differ for the same model.</p><h2>Error bars</h2><p>Three identical cold repetitions per point. Spread is (max−min)/mean. See the values below.</p><div class=table-wrap><table><thead><tr><th>Point</th><th>Prompt tokens</th><th>Prefill t/s (spread)</th><th>Decode t/s (spread)</th><th>Reps</th></tr></thead><tbody></tbody></table></div><p>A short chat answer that stops after two tokens is not a decode measurement; that figure is discarded, not published.</p><h2>Browser games: how they are gated</h2><ul><li>One frozen prompt per game, temperature 0, max 8,000 tokens, up to three attempts; only a passing attempt is published.</li><li>A headless browser loads the page over http and file:// and checks: no console errors, canvas and a live WebGL context, three.js actually used at runtime, animation advancing between screenshots, keyboard input changing the scene, and a <code>window.__game</code> contract object being present and ready.</li><li>A robot then plays for 60&nbsp;s with real keyboard events and records score, lives, survival and console errors. A score of zero with aligned aim means the game's collision geometry is broken — reported as a defect, not fixed.</li></ul><h2>Chat: how it is scored</h2><p> </p><div class=table-wrap><table><thead><tr><th>Model</th><th>Accuracy</th><th>Correct</th><th>Partial</th><th>Decode t/s</th></tr></thead><tbody></tbody></table></div><p>The decode t/s column is the mean of the server's per-question decode rate for short answers; it includes the first (warm-up) question and is therefore slightly below the steady-state number in the main table.</p><h2>What is NOT measured</h2><ul><li><strong>Concurrency and batching.</strong> Everything runs one sequence per server (<code>-np 1</code>). No multi-user throughput, no batch-size sweep, no queueing latency.</li><li><strong>Vision.</strong> Multimodal projector files are present for some models, but no image task is scored; vision is not benchmarked here.</li><li><strong>Regression over time.</strong> Each row is a point-in-time measurement; there is no nightly re-run tracking drift, so a row from October is not a statement about today's speed on newer builds.</li><li><strong>Memory over long sessions</strong>, thermal throttling at sustained load, and power-cap effects are only explored in the ablation tab, not per model.</li></ul><h2>Check any number yourself</h2><p>The machine-readable dataset is the same file this page renders. The per-question chat JSONs contain every prompt, answer, verdict, token count and timing.</p><div class=dl><a href="../data/results.json" download>results.json — every row</a><a href="../raw-chat/">chat JSONs — per question</a><a href="../benchmarks/gapclose/RESULTS.md">gap-close results (markdown)</a></div><p class="note">Generated by <code>scripts/build_pages_method.py</code> from <code>data/results.json</code>; regenerated with the data, never hand-edited.</p></div></body></html>
+
+/* =====================================================================
+   2026-11-04: four views over one dataset
+   The 24-column grid is gone. Each view renders its own small column set,
+   the first column is anchored, and a model's context variants collapse into
+   sub-rows instead of reading as separate models.
+   ===================================================================== */
+
+/* ---- view switcher ---- */
+.viewtabs { display: flex; flex-wrap: wrap; gap: .45rem; margin: 1.15rem 0 .2rem; }
+.viewtab {
+  font: 600 12px/1 var(--mono);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .55rem 1.05rem;
+  cursor: pointer;
+}
+.viewtab:hover { color: var(--fg); border-color: #33506b; }
+.viewtab[aria-selected="true"] { background: #1b2431; color: var(--accent); border-color: var(--accent-dim); }
+.viewtab:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: 2px; }
+.viewsub { margin: .4rem 0 .1rem; color: var(--fg-dim); font-size: 13.5px; max-width: 92ch; }
+.allcols {
+  font: 600 12px/1 var(--mono);
+  color: var(--fg-dim);
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: .5rem .8rem;
+  min-height: 38px;
+  cursor: pointer;
+}
+.allcols[aria-pressed="true"] { color: var(--accent); border-color: var(--accent-dim); }
+.allcols:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: 1px; }
+.legend { margin: .1rem 0 .9rem; color: var(--fg-faint); font-size: 12.5px; max-width: 95ch; }
+.legend b { color: var(--fg-dim); font-weight: 600; }
+
+/* ---- two-row header: group band above individual column labels ---- */
+@media (min-width: 761px) {
+  #tbl { table-layout: auto; width: max-content; min-width: 100%; }
+}
+#tbl thead tr.grprow th {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  cursor: default;
+  text-align: center;
+  font: 700 9.5px/1.2 var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  background: #111925;
+  border-bottom: 1px solid var(--line-soft);
+  padding: .4rem .45rem .3rem;
+  user-select: none;
+}
+#tbl thead tr.grprow th.gcell-empty { background: #111925; }
+#tbl thead tr.colrow th { top: 27px; }
+#tbl thead tr.colrow th.num { text-align: right; }
+#tbl thead tr.colrow th.c-name { text-align: left; }
+
+/* ---- one row per model + collapsible ctx sub-rows ---- */
+#tbl tbody tr.sub td {
+  background: #0b1017;
+  border-bottom: 1px dashed var(--line-soft);
+  font-size: 12.5px;
+}
+#tbl tbody tr.sub td.c-name { padding-left: 1.5rem; background: #0b1017; }
+#tbl tbody tr.sub:hover td { background: #0e1620; }
+#tbl tbody tr.sub:hover td.c-name { background: #0e1620; }
+#tbl tbody tr.sub .name { font-size: 12.5px; }
+#tbl tbody tr.sub .slug { color: var(--fg-faint); }
+.disclosure {
+  display: inline-block;
+  margin-top: .3rem;
+  font: 600 10px/1 var(--mono);
+  letter-spacing: .04em;
+  color: var(--accent);
+  background: none;
+  border: 1px solid var(--accent-dim);
+  border-radius: 4px;
+  padding: .2rem .4rem;
+  cursor: pointer;
+}
+.disclosure:hover { background: #14251d; }
+.disclosure:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: 1px; }
+
+/* ---- first column anchored while the grid scrolls (same colour as its row,
+       so it reads as a column edge, not a highlighted row) ---- */
+#tbl thead tr.colrow th.c-name { position: sticky; left: 0; z-index: 5; background: #16202c; }
+#tbl tbody td.c-name { position: sticky; left: 0; z-index: 2; background: var(--bg); box-shadow: 1px 0 0 var(--line); }
+#tbl tbody tr:nth-child(even) td.c-name { background: var(--bg-zebra); }
+#tbl tbody tr:hover td.c-name { background: #152030; }
+
+/* ---- bucket cells: mean + n ---- */
+#tbl td.bkt { white-space: nowrap; }
+#tbl td.bkt .bkt-v { font-size: 13px; }
+#tbl td.bkt .bkt-n { display: block; font: 9.5px/1.2 var(--mono); color: var(--fg-faint); }
+.delta-up { color: var(--accent); }
+.delta-down { color: #e08a8a; }
+
+/* ---- archive group ---- */
+#tbl tbody tr.archhead td {
+  background: #121a24;
+  border-top: 1px solid var(--line);
+  font: 600 10.5px/1.3 var(--mono);
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  padding: .55rem .7rem;
+}
+#tbl tbody tr.archhead td::before { display: none; content: none; }
+
+/* ---- the old single-grid width rules no longer describe this table ---- */
+#tbl th[data-key="name"] { width: auto; min-width: 230px; }
+#tbl th[data-key="params"] { width: auto; }
+#tbl th[data-key="arch"],
+#tbl th[data-key="gpqa"], #tbl th[data-key="aime"], #tbl th[data-key="livebench"],
+#tbl th[data-key="ctx30k"], #tbl th[data-key="ctx110k"], #tbl th[data-key="tau2"],
+#tbl th[data-key="shell"], #tbl th[data-key="termbench"],
+#tbl td.sc { display: table-cell; }
+#tbl td.sc, #tbl td.c-sp, #tbl td.c-std, #tbl td.c-nat, #tbl td.c-deep { font-size: 12.5px; }
+
+/* ---- phone: views stay, the header band goes, cards as before ---- */
+@media (max-width: 760px) {
+  /* the old card CSS hid every data-label; the cards have no other labels on a phone */
+  #tbl tbody td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font: 600 9.5px/1.4 var(--mono);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+  #tbl tbody td.c-name::before { display: none; content: none; }
+  .viewtabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .25rem; scrollbar-width: none; }
+  .viewtabs::-webkit-scrollbar { display: none; }
+  .viewtab { flex: none; padding: .5rem .85rem; font-size: 11px; }
+  .viewsub { font-size: 12.5px; }
+  #tbl thead tr.grprow { display: none; }
+  #tbl thead tr.colrow th { top: var(--thead-stick); }
+  #tbl thead tr.colrow th.c-name,
+  #tbl tbody td.c-name { position: static; box-shadow: none; }
+  #tbl tbody tr.sub td { border-bottom: 0; }
+  #tbl tbody tr.sub { margin-left: .6rem; border-left: 2px solid var(--accent-dim); }
+  #tbl tbody tr.sub td.c-name { padding-left: 0; }
+  #tbl td.bkt .bkt-n { display: inline; margin-left: .3rem; }
+  .legend { font-size: 12px; }
+}
+
+/* model column: a fixed, predictable width with ellipsis inside it — the slug line
+   used to spill into the next column when the cell sized itself by content */
+#tbl th.c-name, #tbl td.c-name { width: 272px; min-width: 272px; max-width: 272px; }
+#tbl td.c-name { white-space: normal; overflow: hidden; }
+#tbl td.c-name .name { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#tbl td.c-name .slug { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#tbl td.c-name .disclosure { max-width: 100%; }
+@media (max-width: 760px) {
+  #tbl th.c-name, #tbl td.c-name { width: auto; min-width: 0; max-width: none; }
+}
+</style></head><body><header class="site-head"><div class="wrap"><h1>llmbench</h1><p class="sub">Raw, repeatable benchmark numbers for local models served by <strong>llama.cpp (Vulkan)</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB box.</p></div></header><div class="topbar"><div class="wrap"><nav class="site-nav" aria-label="Sections"><a href="../">Overview</a><a href="../games/">Games</a><a href="../chat/">Chat</a><a href="../thinking/">Thinking</a><a href="../ablation/">Ablation</a><a href="../sweep/">Context sweep</a><a href="../method/" aria-current="page">Method</a><a href="../raw-chat/">Raw data</a></nav></div></div><div class=wrap><h1>method — how each number was measured</h1><p class=sub>How every number on this site is produced, and what is deliberately not measured. Nothing here is inferred: if a request did not produce a value, the cell is blank.</p><h2>Model set</h2><p>Local open-weight models in GGUF form, quantised so each one fits a single 32&nbsp;GiB GPU. One model per card at a time; a model's throughput is never measured while another is loaded.</p><div class=table-wrap><table><thead><tr><th>Model</th><th>Params</th><th>Quant</th><th>Engine</th><th>Context (tokens)</th><th>Status</th></tr></thead><tbody><tr><td>DavidAU Qwen3.8-27B NEO-MAX MTP</td><td>27B</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>262144</td><td>done</td></tr><tr><td>Huihui abliterated</td><td>27B</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>—</td><td>done</td></tr><tr><td>LFM3-1.7B</td><td>1.7B</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>—</td><td>done</td></tr><tr><td>Ornith-1.5-35B-A3B</td><td>35B / 3B active</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>—</td><td>done</td></tr><tr><td>Qwen3.6-35B-A3B</td><td>35B / 3B active</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>32768, 262144</td><td>done</td></tr><tr><td>Qwen3.8-27B</td><td>27B</td><td>Q4_0</td><td>Vulkan</td><td class=num>262144</td><td>done</td></tr><tr><td>Qwen3.8-27B</td><td>27B</td><td>Q4_K_M</td><td>Vulkan</td><td class=num>32768</td><td>done</td></tr></tbody></table></div><h2>Engine and build</h2><ul><li><strong>Engine:</strong> llama.cpp <code>llama-server</code>, Vulkan backend on an AMD Radeon AI PRO R9700 (32&nbsp;GiB). Models run on a different engine (e.g. a proprietary container format) are labelled with that engine in the table instead.</li><li><strong>Builds:</strong> the build id is printed in the <em>Speed evidence</em> column of each row. Two builds appear: <code>b11517</code> (the mainline server used for the suite and the standard speed probe) and <code>b11874</code>, needed for one newer architecture. A number is only comparable across rows measured on the same build.</li><li><strong>Flags</strong> (one server at a time, recorded per row): <code>-ngl 99 -fa on -c &lt;window&gt; --jinja -np 1 -ctk q8_0 -ctv q4_0</code>, plus <code>-b 16384 -ub 2048</code> on the serving-shaped probes. <code>-np 1</code> means one sequence slot: no batching, no concurrency.</li><li><strong>KV cache types:</strong> keys q8_0, values q4_0 on most suite runs; a few earlier runs used f16, and the ablation tab measures what changing the KV type does. The per-row value is in the evidence column.</li><li><strong>Reasoning/thinking</strong> is off unless a tab says otherwise (<code>enable_thinking:false</code> via the chat template); the thinking tab is the on/off comparison.</li></ul><h2>Throughput: the standard probe</h2><ul><li><strong>Prompt calibration.</strong> The probe uses a fixed filler document repeated and then trimmed so that <code>/tokenize</code> reports ~30,000 tokens (calibrated 29,953, actual 29,963–29,965 after templating). The same calibrated prompt is reused at every server window, so prefill at 32K and at 256K compare like with like.</li><li><strong>Cold-probe policy.</strong> Temperature 0, <code>cache_prompt:false</code>, no warm-up reuse: every measured request pays the full prefill. A discarded warm-up request runs first when the server needs graph capture.</li><li><strong>Decode.</strong> The server's own <code>predicted_per_second</code> over a 64-token generation that ends on the length limit, not on an end-of-answer token. <code>/completion</code> with <code>ignore_eos</code> is used where a model stops early.</li><li><strong>Prefill</strong> is the server's <code>prompt_per_second</code> for the same request; VRAM is the GPU's peak used memory sampled during it.</li></ul><p>The table's Decode / Prefill columns are a different measurement: <code>llama-bench</code> <code>tg128</code>/<code>pp512</code> with the model loaded directly, no HTTP layer. That is why the two columns differ for the same model.</p><h2>Error bars</h2><p>Three identical cold repetitions per point. Spread is (max−min)/mean. See the values below.</p><div class=table-wrap><table><thead><tr><th>Point</th><th>Prompt tokens</th><th>Prefill t/s (spread)</th><th>Decode t/s (spread)</th><th>Reps</th></tr></thead><tbody></tbody></table></div><p>A short chat answer that stops after two tokens is not a decode measurement; that figure is discarded, not published.</p><h2>Browser games: how they are gated</h2><ul><li>One frozen prompt per game, temperature 0, max 8,000 tokens, up to three attempts; only a passing attempt is published.</li><li>A headless browser loads the page over http and file:// and checks: no console errors, canvas and a live WebGL context, three.js actually used at runtime, animation advancing between screenshots, keyboard input changing the scene, and a <code>window.__game</code> contract object being present and ready.</li><li>A robot then plays for 60&nbsp;s with real keyboard events and records score, lives, survival and console errors. A score of zero with aligned aim means the game's collision geometry is broken — reported as a defect, not fixed.</li></ul><h2>Chat: how it is scored</h2><p> </p><div class=table-wrap><table><thead><tr><th>Model</th><th>Accuracy</th><th>Correct</th><th>Partial</th><th>Decode t/s</th></tr></thead><tbody></tbody></table></div><p>The decode t/s column is the mean of the server's per-question decode rate for short answers; it includes the first (warm-up) question and is therefore slightly below the steady-state number in the main table.</p><h2>What is NOT measured</h2><ul><li><strong>Concurrency and batching.</strong> Everything runs one sequence per server (<code>-np 1</code>). No multi-user throughput, no batch-size sweep, no queueing latency.</li><li><strong>Vision.</strong> Multimodal projector files are present for some models, but no image task is scored; vision is not benchmarked here.</li><li><strong>Regression over time.</strong> Each row is a point-in-time measurement; there is no nightly re-run tracking drift, so a row from October is not a statement about today's speed on newer builds.</li><li><strong>Memory over long sessions</strong>, thermal throttling at sustained load, and power-cap effects are only explored in the ablation tab, not per model.</li></ul><h2>Check any number yourself</h2><p>The machine-readable dataset is the same file this page renders. The per-question chat JSONs contain every prompt, answer, verdict, token count and timing.</p><div class=dl><a href="../data/results.json" download>results.json — every row</a><a href="../raw-chat/">chat JSONs — per question</a><a href="../benchmarks/gapclose/RESULTS.md">gap-close results (markdown)</a></div><p class="note">Generated by <code>scripts/build_pages_method.py</code> from <code>data/results.json</code>; regenerated with the data, never hand-edited.</p></div></body></html>

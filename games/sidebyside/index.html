@@ -215,7 +215,9 @@ thead th:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: -
 /* Fixed layout with explicit pixel widths (they sum to exactly the 1400px min-width): padding and
    a header word can never push the table wider than planned, so no cell gets squeezed. */
 /* intrinsic widths: never compress a cell until its content clips */
-#tbl { table-layout: auto; width: max-content; min-width: 100%; }
+@media (min-width: 761px) {
+  #tbl { table-layout: auto; width: max-content; min-width: 100%; }
+}
 #tbl td.num, #tbl th.num { white-space: nowrap; }
 #tbl td.c-evidence, #tbl th.c-evidence { white-space: nowrap; }
 /* keep the model name anchored while the wide grid scrolls sideways */
@@ -708,4 +710,167 @@ body.show-scores #tbl td.sc { display: table-cell; }
 /* the brand header must not inherit page-content .wrap padding: on sub-pages that
    added 28px top + 60px bottom, which is why their nav sat 60px lower than the overview */
 .site-head > .wrap, .site-head .wrap { padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; }
-</style></head><body><header class="site-head"><div class="wrap"><h1>llmbench</h1><p class="sub">Raw, repeatable benchmark numbers for local models served by <strong>llama.cpp (Vulkan)</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB box.</p></div></header><div class="topbar"><div class="wrap"><nav class="site-nav" aria-label="Sections"><a href="../../">Overview</a><a href="../../games/" aria-current="page">Games</a><a href="../../chat/">Chat</a><a href="../../thinking/">Thinking</a><a href="../../ablation/">Ablation</a><a href="../../logic/">Logic</a><a href="../../sweep/">Context sweep</a><a href="../../method/">Method</a><a href="../../raw-chat/">Raw data</a></nav></div></div><div class=wrap><h1>games, side by side</h1><p class=sub>Four browser games, one frozen prompt each, the same models. Every game is generated as a single self-contained HTML file drawn with three.js, then graded in a headless browser: it must run, and a grader drives it through a small published state object and checks the rules numerically (determinism, counts, economy, stability). <b>Assertions</b> = rules verified by execution. <b>Compliance</b> = did it build what was asked, and only that (0-100, points off for extras the task did not request). <b>Attempts</b> = generations used, including up to 10 repair turns after a failure. Live frames are playable; a failed build shows its last screenshot.</p><div class=scroll><table class=mx><thead><tr><th class=rowh>game</th><th><span>Qwen3.8-27B Q4_K_M</span><span class=fn>Qwen3.8-27B-Q4_K_M.gguf</span></th></tr></thead><tbody><tr><th class=rowh><b>ball drop sandbox</b><span>25 balls dropped into a glass box: gravity, restitution, ball-to-ball collisions. Deterministic seed, no player input beyond pause.</span><span class=fn><a href='../specs/GAME_SPEC_ball-drop-sandbox.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr><tr><th class=rowh><b>tower stacker</b><span>20 blocks dropped at seeded offsets: stacking, friction, and a tower that must not topple from jitter or drift.</span><span class=fn><a href='../specs/GAME_SPEC_tower-stacker.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr><tr><th class=rowh><b>tower defence</b><span>A fixed path, five fixed waves, finite gold and one automatic build policy — no tower spam, exact economy.</span><span class=fn><a href='../specs/GAME_SPEC_tower-defence.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr><tr><th class=rowh><b>match 3 cascades</b><span>8x8 seeded board, adjacent swaps, cascades resolved until the board is stable, a stated numeric scoring rule.</span><span class=fn><a href='../specs/GAME_SPEC_match3-cascades.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr></tbody></table></div><div class=stack><h2>ball drop sandbox</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div><h2>tower stacker</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div><h2>tower defence</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div><h2>match 3 cascades</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div></div><p class=note>Each specification uses its own minimal programmatic interface — only what that game needs — so a physics sandbox is never graded as a shooter. Scores are recorded per attempt; the full attempt history of every cell is linked under its frame.</p></div></body></html>
+
+/* =====================================================================
+   2026-11-04: four views over one dataset
+   The 24-column grid is gone. Each view renders its own small column set,
+   the first column is anchored, and a model's context variants collapse into
+   sub-rows instead of reading as separate models.
+   ===================================================================== */
+
+/* ---- view switcher ---- */
+.viewtabs { display: flex; flex-wrap: wrap; gap: .45rem; margin: 1.15rem 0 .2rem; }
+.viewtab {
+  font: 600 12px/1 var(--mono);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .55rem 1.05rem;
+  cursor: pointer;
+}
+.viewtab:hover { color: var(--fg); border-color: #33506b; }
+.viewtab[aria-selected="true"] { background: #1b2431; color: var(--accent); border-color: var(--accent-dim); }
+.viewtab:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: 2px; }
+.viewsub { margin: .4rem 0 .1rem; color: var(--fg-dim); font-size: 13.5px; max-width: 92ch; }
+.allcols {
+  font: 600 12px/1 var(--mono);
+  color: var(--fg-dim);
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: .5rem .8rem;
+  min-height: 38px;
+  cursor: pointer;
+}
+.allcols[aria-pressed="true"] { color: var(--accent); border-color: var(--accent-dim); }
+.allcols:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: 1px; }
+.legend { margin: .1rem 0 .9rem; color: var(--fg-faint); font-size: 12.5px; max-width: 95ch; }
+.legend b { color: var(--fg-dim); font-weight: 600; }
+
+/* ---- two-row header: group band above individual column labels ---- */
+@media (min-width: 761px) {
+  #tbl { table-layout: auto; width: max-content; min-width: 100%; }
+}
+#tbl thead tr.grprow th {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  cursor: default;
+  text-align: center;
+  font: 700 9.5px/1.2 var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  background: #111925;
+  border-bottom: 1px solid var(--line-soft);
+  padding: .4rem .45rem .3rem;
+  user-select: none;
+}
+#tbl thead tr.grprow th.gcell-empty { background: #111925; }
+#tbl thead tr.colrow th { top: 27px; }
+#tbl thead tr.colrow th.num { text-align: right; }
+#tbl thead tr.colrow th.c-name { text-align: left; }
+
+/* ---- one row per model + collapsible ctx sub-rows ---- */
+#tbl tbody tr.sub td {
+  background: #0b1017;
+  border-bottom: 1px dashed var(--line-soft);
+  font-size: 12.5px;
+}
+#tbl tbody tr.sub td.c-name { padding-left: 1.5rem; background: #0b1017; }
+#tbl tbody tr.sub:hover td { background: #0e1620; }
+#tbl tbody tr.sub:hover td.c-name { background: #0e1620; }
+#tbl tbody tr.sub .name { font-size: 12.5px; }
+#tbl tbody tr.sub .slug { color: var(--fg-faint); }
+.disclosure {
+  display: inline-block;
+  margin-top: .3rem;
+  font: 600 10px/1 var(--mono);
+  letter-spacing: .04em;
+  color: var(--accent);
+  background: none;
+  border: 1px solid var(--accent-dim);
+  border-radius: 4px;
+  padding: .2rem .4rem;
+  cursor: pointer;
+}
+.disclosure:hover { background: #14251d; }
+.disclosure:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: 1px; }
+
+/* ---- first column anchored while the grid scrolls (same colour as its row,
+       so it reads as a column edge, not a highlighted row) ---- */
+#tbl thead tr.colrow th.c-name { position: sticky; left: 0; z-index: 5; background: #16202c; }
+#tbl tbody td.c-name { position: sticky; left: 0; z-index: 2; background: var(--bg); box-shadow: 1px 0 0 var(--line); }
+#tbl tbody tr:nth-child(even) td.c-name { background: var(--bg-zebra); }
+#tbl tbody tr:hover td.c-name { background: #152030; }
+
+/* ---- bucket cells: mean + n ---- */
+#tbl td.bkt { white-space: nowrap; }
+#tbl td.bkt .bkt-v { font-size: 13px; }
+#tbl td.bkt .bkt-n { display: block; font: 9.5px/1.2 var(--mono); color: var(--fg-faint); }
+.delta-up { color: var(--accent); }
+.delta-down { color: #e08a8a; }
+
+/* ---- archive group ---- */
+#tbl tbody tr.archhead td {
+  background: #121a24;
+  border-top: 1px solid var(--line);
+  font: 600 10.5px/1.3 var(--mono);
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  padding: .55rem .7rem;
+}
+#tbl tbody tr.archhead td::before { display: none; content: none; }
+
+/* ---- the old single-grid width rules no longer describe this table ---- */
+#tbl th[data-key="name"] { width: auto; min-width: 230px; }
+#tbl th[data-key="params"] { width: auto; }
+#tbl th[data-key="arch"],
+#tbl th[data-key="gpqa"], #tbl th[data-key="aime"], #tbl th[data-key="livebench"],
+#tbl th[data-key="ctx30k"], #tbl th[data-key="ctx110k"], #tbl th[data-key="tau2"],
+#tbl th[data-key="shell"], #tbl th[data-key="termbench"],
+#tbl td.sc { display: table-cell; }
+#tbl td.sc, #tbl td.c-sp, #tbl td.c-std, #tbl td.c-nat, #tbl td.c-deep { font-size: 12.5px; }
+
+/* ---- phone: views stay, the header band goes, cards as before ---- */
+@media (max-width: 760px) {
+  /* the old card CSS hid every data-label; the cards have no other labels on a phone */
+  #tbl tbody td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font: 600 9.5px/1.4 var(--mono);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+  #tbl tbody td.c-name::before { display: none; content: none; }
+  .viewtabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: .25rem; scrollbar-width: none; }
+  .viewtabs::-webkit-scrollbar { display: none; }
+  .viewtab { flex: none; padding: .5rem .85rem; font-size: 11px; }
+  .viewsub { font-size: 12.5px; }
+  #tbl thead tr.grprow { display: none; }
+  #tbl thead tr.colrow th { top: var(--thead-stick); }
+  #tbl thead tr.colrow th.c-name,
+  #tbl tbody td.c-name { position: static; box-shadow: none; }
+  #tbl tbody tr.sub td { border-bottom: 0; }
+  #tbl tbody tr.sub { margin-left: .6rem; border-left: 2px solid var(--accent-dim); }
+  #tbl tbody tr.sub td.c-name { padding-left: 0; }
+  #tbl td.bkt .bkt-n { display: inline; margin-left: .3rem; }
+  .legend { font-size: 12px; }
+}
+
+/* model column: a fixed, predictable width with ellipsis inside it — the slug line
+   used to spill into the next column when the cell sized itself by content */
+#tbl th.c-name, #tbl td.c-name { width: 272px; min-width: 272px; max-width: 272px; }
+#tbl td.c-name { white-space: normal; overflow: hidden; }
+#tbl td.c-name .name { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#tbl td.c-name .slug { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#tbl td.c-name .disclosure { max-width: 100%; }
+@media (max-width: 760px) {
+  #tbl th.c-name, #tbl td.c-name { width: auto; min-width: 0; max-width: none; }
+}
+</style></head><body><header class="site-head"><div class="wrap"><h1>llmbench</h1><p class="sub">Raw, repeatable benchmark numbers for local models served by <strong>llama.cpp (Vulkan)</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB box.</p></div></header><div class="topbar"><div class="wrap"><nav class="site-nav" aria-label="Sections"><a href="../../">Overview</a><a href="../../games/" aria-current="page">Games</a><a href="../../chat/">Chat</a><a href="../../thinking/">Thinking</a><a href="../../ablation/">Ablation</a><a href="../../sweep/">Context sweep</a><a href="../../method/">Method</a><a href="../../raw-chat/">Raw data</a></nav></div></div><div class=wrap><h1>games, side by side</h1><p class=sub>Four browser games, one frozen prompt each, the same models. Every game is generated as a single self-contained HTML file drawn with three.js, then graded in a headless browser: it must run, and a grader drives it through a small published state object and checks the rules numerically (determinism, counts, economy, stability). <b>Assertions</b> = rules verified by execution. <b>Compliance</b> = did it build what was asked, and only that (0-100, points off for extras the task did not request). <b>Attempts</b> = generations used, including up to 10 repair turns after a failure. Live frames are playable; a failed build shows its last screenshot.</p><div class=scroll><table class=mx><thead><tr><th class=rowh>game</th><th><span>Qwen3.8-27B Q4_K_M</span><span class=fn>Qwen3.8-27B-Q4_K_M.gguf</span></th></tr></thead><tbody><tr><th class=rowh><b>ball drop sandbox</b><span>25 balls dropped into a glass box: gravity, restitution, ball-to-ball collisions. Deterministic seed, no player input beyond pause.</span><span class=fn><a href='../specs/GAME_SPEC_ball-drop-sandbox.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr><tr><th class=rowh><b>tower stacker</b><span>20 blocks dropped at seeded offsets: stacking, friction, and a tower that must not topple from jitter or drift.</span><span class=fn><a href='../specs/GAME_SPEC_tower-stacker.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr><tr><th class=rowh><b>tower defence</b><span>A fixed path, five fixed waves, finite gold and one automatic build policy — no tower spam, exact economy.</span><span class=fn><a href='../specs/GAME_SPEC_tower-defence.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr><tr><th class=rowh><b>match 3 cascades</b><span>8x8 seeded board, adjacent swaps, cascades resolved until the board is stable, a stated numeric scoring rule.</span><span class=fn><a href='../specs/GAME_SPEC_match3-cascades.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr></tbody></table></div><div class=stack><h2>ball drop sandbox</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div><h2>tower stacker</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div><h2>tower defence</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div><h2>match 3 cascades</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div></div><p class=note>Each specification uses its own minimal programmatic interface — only what that game needs — so a physics sandbox is never graded as a shooter. Scores are recorded per attempt; the full attempt history of every cell is linked under its frame.</p></div></body></html>

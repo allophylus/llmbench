@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """logic10_fetch.py — copy logic10 result JSONs from the GPU host into the repo and
-regenerate the /logic/ page.
+regenerate the thinking page (the logic traps are Part 2 of thinking/index.html; there is
+no separate /logic/ page).
 
 The host-side files live in ~/logic10-out on the benchmark box; they are pulled with
 rsync over the operator's existing SSH alias and written to
@@ -47,7 +48,7 @@ def main():
         got[d.get("slug") or f[:-5]] = {m: len((modes.get(m) or {}).get("rows") or [])
                                         for m in ("off", "on")}
     print(json.dumps(got, indent=1))
-    subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "build_pages_logic.py")],
+    subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "build_pages_thinking.py")],
                    check=True)
 
 

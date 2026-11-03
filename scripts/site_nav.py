@@ -11,7 +11,7 @@ exist in the worktree are omitted, so a half-built section can never ship a
 dead nav link.
 
 Order (canonical):
-    Overview, Games, Chat, Thinking, Ablation, Logic, Context sweep, Method, Raw data
+    Overview, Games, Chat, Thinking, Ablation, Context sweep, Method, Raw data
 
 Two visual flavours exist in the site CSS:
 
@@ -32,7 +32,6 @@ ITEMS = [
     ("chat", "Chat"),
     ("thinking", "Thinking"),
     ("ablation", "Ablation"),
-    ("logic", "Logic"),
     ("sweep", "Context sweep"),
     ("method", "Method"),
     ("raw", "Raw data"),
