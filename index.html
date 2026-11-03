@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>llmbench — sortable R9700 benchmark table</title>
 <meta name="description" content="Sortable, filterable benchmark results for local LLMs served by llama.cpp (Vulkan) on an AMD Radeon AI PRO R9700.">
-<link rel="stylesheet" href="style.css?v=20261103f">
+<link rel="stylesheet" href="style.css?v=20261104a">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%223%22 fill=%22%230d1117%22/%3E%3Cpath d=%22M4 3v10M12 3v10M4 8h8%22 stroke=%22%235ee0a3%22 stroke-width=%222%22/%3E%3C/svg%3E">
 </head>
 <body>
@@ -24,6 +24,14 @@
 <!-- topbar:end -->
 
 <main class="wrap">
+  <div class="viewtabs" role="tablist" aria-label="Views">
+    <button type="button" role="tab" id="tab-speed" class="viewtab" data-view="speed" aria-selected="true" aria-controls="tablepanel">Speed</button>
+    <button type="button" role="tab" id="tab-accuracy" class="viewtab" data-view="accuracy" aria-selected="false" aria-controls="tablepanel" tabindex="-1">Accuracy</button>
+    <button type="button" role="tab" id="tab-games" class="viewtab" data-view="games" aria-selected="false" aria-controls="tablepanel" tabindex="-1">Games</button>
+    <button type="button" role="tab" id="tab-logic" class="viewtab" data-view="logic" aria-selected="false" aria-controls="tablepanel" tabindex="-1">Logic</button>
+  </div>
+  <p class="viewsub" id="viewsub"></p>
+
   <section class="controls" aria-label="Filters">
     <label class="ctl search">
       <span class="ctl-label">Search</span>
@@ -33,34 +41,29 @@
       <span class="ctl-label">Arch</span>
       <select id="arch"><option value="">All architectures</option></select>
     </label>
-    <label class="ctl">
-      <span class="ctl-label">Show</span>
-      <select id="grp">
-        <option value="all">All rows</option>
-        <option value="multi">Context/speed rows</option>
-        <option value="thinking">With thinking on/off</option>
-        <option value="games">With browser games</option>
-      </select>
-    </label>
     <label class="ctl check">
       <input id="vid" type="checkbox">
       <span>Only rows with video</span>
     </label>
-    <label class="ctl check"><input id="scores" type="checkbox"><span>Show accuracy columns</span></label>
-    <label class="ctl check" title="rows that carry a speed probe: the standardised 30K probe or a native-context speed measurement">
-      <input id="spdonly" type="checkbox" checked>
-      <span>Only speed rows</span>
-    </label>
+    <button type="button" id="allcols" class="allcols" aria-pressed="false">Show all columns</button>
     <span class="ctl count" id="count" aria-live="polite"></span>
     <span class="ctl ranknote" id="ranknote" aria-live="polite"></span>
   </section>
 
-  <p class="hint">
-    Click a column header to sort ascending, again for descending, a third time to clear.
-    Scores are percent correct; <span class="dash">—</span> means not measured (never guessed)
-    and <span class="pending">pending</span> means the probe has not been run yet.
-    Arrow keys move a focused header, Enter/Space sorts it.
-  </p>
+  <p class="hint" id="viewhint"></p>
+
+  <p class="legend" id="legend"></p>
+
+  <div class="table-wrap" id="tablepanel" role="tabpanel" aria-labelledby="tab-speed" tabindex="0">
+    <table id="tbl" aria-describedby="viewhint">
+      <thead>
+        <tr class="grprow" id="grprow"></tr>
+        <tr class="colrow" id="colrow"></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p class="empty" id="empty" hidden>No rows match that filter. <button type="button" id="reset" class="linkbtn">Reset filters</button></p>
+  </div>
 
   <section class="notice" aria-label="Data status">
     <p>
@@ -72,59 +75,6 @@
       <em>Speed evidence</em> column instead of showing a number that looks reproducible.
     </p>
   </section>
-
-  <section class="ctl-legend" aria-label="Context and speed columns">
-    <p class="hint">
-      Two different speed measurements sit side by side and are never merged.
-      <strong>@ 30K</strong> (group <b class="grp-tag">A</b>) is the standardised probe: one cold
-      request on a calibrated ~30K-token prompt, server rows only. <strong>Native ctx</strong>
-      (groups <b class="grp-tag">B</b>/<b class="grp-tag">C</b>) is one probe at that row&#39;s own
-      server context — group <b class="grp-tag">B</b> shows the deepest depth probe (with
-      <span class="dep">@tokens</span>), group <b class="grp-tag">C</b> the llama-bench
-      pp512/tg128 pair at the row&#39;s own context. A row with no 30K probe shows
-      <sup class="nat">&#8226;n</sup> in group B and its rate in group C: it is a different
-      measurement, not a restatement. <span class="pending">pending</span> means the
-      standard probe is scheduled at that server context but has not been run yet.
-    </p>
-  </section>
-
-  <div class="table-wrap">
-    <table id="tbl">
-      <thead>
-        <tr>
-          <th class="num" data-key="name"  data-type="text"   scope="col">Model</th>
-          <th class="num" data-key="params" data-type="params" scope="col">Params<br><span class="th-sub">total/<br>active</span></th>
-          <th class="num" data-key="quant" data-type="text"   scope="col">Quant</th>
-          <th class="num" data-key="arch"  data-type="text"   scope="col">Arch</th>
-          <th class="num" data-key="ctx_label" data-type="text" scope="col" title="server context window this row was served at">Server<br><span class="th-sub">ctx</span></th>
-          <th class="num grp grp-a" data-key="std_prefill" data-type="num" scope="col" title="standardised 30K probe (group A): one cold request on a calibrated ~30K-token prompt; measured only on the per-context server rows"><span class="grp-tag">A</span>Prefill<br><span class="th-sub">t/s @ 30K</span></th>
-          <th class="num grp grp-a" data-key="std_decode" data-type="num" scope="col" title="standardised 30K probe (group A): one cold request on a calibrated ~30K-token prompt; measured only on the per-context server rows"><span class="grp-tag">A</span>Decode<br><span class="th-sub">t/s @ 30K</span></th>
-          <th class="num grp grp-b" data-key="deep_prefill" data-type="num" scope="col" title="group B: the row's own measurement — deepest depth probe (prefill/decode + @tokens) for server rows; for llama-bench rows a bare n pointing at its value in group C"><span class="grp-tag">B</span>Native ctx<br><span class="th-sub">prefill /<br>decode t/s</span></th>
-          <th class="num" data-key="gpqa"      data-type="num" scope="col">GPQA</th>
-          <th class="num" data-key="aime"      data-type="num" scope="col">AIME</th>
-          <th class="num" data-key="livebench" data-type="num" scope="col" title="LiveBench 2025"><span class="hw">LiveBench</span></th>
-          <th class="num" data-key="ctx30k"    data-type="num" scope="col" title="accuracy with ~30K embedded context"><span class="hw">ctx30k</span></th>
-          <th class="num" data-key="ctx110k" data-type="num" scope="col" title="accuracy with ~110K embedded context"><span class="hw">ctx110k</span></th>
-          <th class="num" data-key="tau2"      data-type="num" scope="col">tau2</th>
-          <th class="num" data-key="shell"     data-type="num" scope="col">Shell</th>
-          <th class="num" data-key="termbench" data-type="num" scope="col" title="TermBench Pro tasks"><span class="hw">TermBench</span></th>
-          <th class="num grp grp-c" data-key="decode_tps" data-type="num" scope="col" title="group C: llama-bench tg128 at the row's own context"><span class="grp-tag">C</span>Decode<br><span class="th-sub">t/s</span></th>
-          <th class="num grp grp-c" data-key="prefill_tps" data-type="num" scope="col" title="group C: llama-bench pp512 at the row's own context"><span class="grp-tag">C</span>Prefill<br><span class="th-sub">t/s</span></th>
-          <th class="num" data-key="context_window" data-type="num" scope="col">Ctx<br><span class="th-sub">tokens</span></th>
-          <th class="num" data-key="vram_mib" data-type="num" scope="col">VRAM<br><span class="th-sub">GiB</span></th>
-          <th class="num" data-key="date"  data-type="text"   scope="col">Date</th>
-          <th class="num" data-key="speed_evidence" data-type="text" scope="col">Speed<br><span class="th-sub">evidence</span></th>
-        </tr>
-      </thead>
-      <tbody id="rows"></tbody>
-    </table>
-    <p class="speedkey" id="speedkey" hidden>
-      <span class="sk"><b class="grp-tag">A</b> standardised 30K probe, measured only on the per-context server rows</span>
-      <span class="sk"><b class="grp-tag">B</b> the row&#39;s own measurement: deepest depth probe (prefill/decode @tokens), or <sup class="nat">&#8226;n</sup> = single native-ctx probe (value in C)</span>
-      <span class="sk"><b class="grp-tag">C</b> llama-bench pp512 / tg128 at the row&#39;s own context</span>
-    </p>
-    <p class="empty" id="empty" hidden>No rows match that filter. <button type="button" id="reset" class="linkbtn">Reset filters</button></p>
-  </div>
 
   <section class="probes" id="errbars" aria-label="Error bars" hidden></section>
 
@@ -192,13 +142,6 @@
   </div>
 </footer>
 
-<script src="app.js?v=20261103f"></script>
-<script>
-    (function(){
-      var c=document.getElementById('scores');
-      if(!c) return;
-      c.addEventListener('change',function(){ document.body.classList.toggle('show-scores', c.checked); });
-    })();
-  </script>
+<script src="app.js?v=20261104a"></script>
 </body>
 </html>
