@@ -396,6 +396,13 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
         }
         if _meas:
             row["measurement_status"] = _meas
+        # excluded rows: weights no longer on the host -> removed from the published table entirely
+        try:
+            _ex = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "measurement-status.json")))
+            if slug in (_ex.get("slugs") or []):
+                continue
+        except Exception:
+            pass
         # authoritative override: rows whose weights are not on the card (see data/measurement-status.json)
         try:
             _ms = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "measurement-status.json")))

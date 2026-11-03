@@ -53,7 +53,7 @@
     ctx_label: "Server ctx", speed_evidence: "Speed evidence"
   };
 
-  var state = { sortKey: null, dir: 0, rows: [], view: [], group: "all" };
+  var state = { sortKey: null, dir: 0, rows: [], view: [], group: "all", spdOnly: true };
 
   /* ------------------------------------------------------------------ data */
 
@@ -66,7 +66,33 @@
 
   function hasSpeed(r) { return !!(r && r.speed); }
 
+  /** ctx_label may be plain ("32K") or markup ("256K<span class=\"native\">n</span>"):
+      give consumers the plain text; speedCells reads the span through ctxMarkup(). */
+  function ctxText(r) {
+    if (!r || !r.ctx_label) return "";
+    return String(r.ctx_label).replace(/<[^>]*>/g, "");
+  }
+  function ctxMarkup(r) {
+    if (r && r.ctx_label && /<[^>]+>/.test(String(r.ctx_label))) return r.ctx_label;
+    return '<span class="th-sub">' + esc(ctxText(r)) + "</span>";
+  }
+
+
   function speed(row) { return row.speed || null; }
+
+  /* Rows without a `speed` block carry one probe at the row's own server context in the
+     top-level prefill_tps / decode_tps fields. That is one cold request at whatever token
+     count the server saw — NOT the standardised 30K probe — so it renders in the "native
+     ctx" column pair marked with a superscript, and never inside the 30K cells. */
+  function nativeProbe(row) {
+    var p = num(row.prefill_tps), d = num(row.decode_tps);
+    if (p === null && d === null) return null;
+    return { prefill_tps: p, decode_tps: d };
+  }
+
+  var NATIVE_TIP = 'a single probe at this row&#39;s own server context (\u00b7n) \u2014 ' +
+    'not the standardised 30K probe';
+  var NATIVE_MARK = '<sup class="nat" title="' + NATIVE_TIP + '">n</sup>';
 
   /** deepest deep-context probe: the one at the largest prompt size */
   function deepest(row) {
@@ -90,9 +116,9 @@
       return num(row[key]);
     if (key === "std_prefill")  { var s = speed(row); return s && s.standard ? num(s.standard.prefill_tps) : null; }
     if (key === "std_decode")   { var s2 = speed(row); return s2 && s2.standard ? num(s2.standard.decode_tps) : null; }
-    if (key === "deep_prefill") { var d = deepest(row); return d ? num(d.prefill_tps) : null; }
-    if (key === "deep_decode")  { var d2 = deepest(row); return d2 ? num(d2.decode_tps) : null; }
-    if (key === "ctx_label") return row.ctx_label || (row.context_window ? fmtCtx(num(row.context_window)) : null);
+    if (key === "deep_prefill") { var n = nativeProbe(row); return n ? n.prefill_tps : null; }
+    if (key === "deep_decode")  { var n2 = nativeProbe(row); return n2 ? n2.decode_tps : null; }
+    if (key === "ctx_label") return ctxText(row) || (row.context_window ? fmtCtx(num(row.context_window)) : null);
     if (key === "date") return row.date || null;
     if (key === "speed_evidence") {
       if (row.measurement_status) return row.measurement_status;
@@ -174,7 +200,11 @@
     return true;
   }
 
+  /* a row "has speed" when it carries a speed block or a native ctx prefill/decode probe */
+  function hasSpeedData(r) { return !!nativeProbe(r) || !!(r.speed && r.speed.standard); }
+
   function matches(row, q, arch, onlyVid) {
+    if (state.spdOnly && !hasSpeedData(row)) return false;
     if (onlyVid && !Object.keys(row.videos || {}).length) return false;
     if (arch && (row.arch || "") !== arch) return false;
     if (!inGroup(row, state.group)) return false;
@@ -191,7 +221,8 @@
   function esc(s) {
     return String(s === null || s === undefined ? "" : s)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;")
+      .replace(/\n/g, " ");
   }
 
   function fmtNum(v, digits) {
@@ -218,9 +249,15 @@
     return m ? m[0] : String(v || "");
   }
 
+  /** same date, year dropped: "2026-10-30" -> "10-30" (keeps the evidence cell on one line) */
+  function shortDate(v) {
+    var m = String(v || "").match(/^\d{4}-(\d{2}-\d{2})/);
+    return m ? m[1] : coarseDate(v);
+  }
+
   function shortNum(v) {
     if (v === null || v === undefined) return "";
-    return v >= 10000 ? Math.round(v / 1000) + "K" : v.toLocaleString();
+    return v >= 10000 ? Math.round(v / 1000).toLocaleString() + "K" : v.toLocaleString();
   }
 
   /* ---- per-cell video links: the video belongs on the score it proves ---- */
@@ -262,34 +299,44 @@
     return out.length ? ' ' + out.join('') : '';
   }
 
-  /* ---- the speed block of a row: one line per server context ---- */
+  /* ---- the speed block of a row: one line per server context ----
+     group A (c-std): standardised 30K probe, server only (blank when the row has no speed block)
+     group B (c-nat): single probe at the row's own server ctx — used for every non-A3B row,
+                      shown with a superscript n so it is never read as a 30K number         */
   function speedCells(r) {
     var s = speed(r);
+    var ctx = ctxText(r) || fmtCtx(num(r.context_window));
+    var ctxCell = '<td class="num c-ctx" data-label="Server ctx">' + (ctx ? ctxMarkup(r) : "—") + "</td>";
     if (!s) {
-      return '<td class="num" data-label="Server ctx"><span class="dash">—</span></td>' +
+      var n = nativeProbe(r);
+      /* the values themselves are printed once, in group C (llama-bench pp512 / tg128);
+         group B only certifies their provenance, so it stays narrow instead of repeating them */
+      var nP = n ? '<span class="natbox" title="' + NATIVE_TIP + '">' + NATIVE_MARK + "</span>"
+        : '<span class="dash">—</span>';
+      var nD = nP;
+      return ctxCell +
         '<td class="num c-std" data-label="Prefill t/s at 30K"><span class="dash">—</span></td>' +
         '<td class="num c-std" data-label="Decode t/s at 30K"><span class="dash">—</span></td>' +
-        '<td class="num" data-label="Prefill t/s at depth"><span class="dash">—</span></td>' +
-        '<td class="num" data-label="Decode t/s at depth"><span class="dash">—</span></td>';
+        '<td class="num c-nat" data-label="Prefill t/s native ctx">' + nP + "</td>" +
+        '<td class="num c-nat" data-label="Decode t/s native ctx">' + nD + "</td>";
     }
     var std = s.standard || {};
     var d = deepest(r);
-    var ctx = r.ctx_label || fmtCtx(num(r.context_window));
     var stdP = std.pending
       ? '<span class="pending" title="not probed yet at this server context">pending</span>'
-      : fmtNum(num(std.prefill_tps), 0);
+      : '<span class="stdv">' + fmtNum(num(std.prefill_tps), 1) + "</span>";
     var stdD = std.pending
       ? '<span class="pending" title="not probed yet at this server context">pending</span>'
-      : fmtNum(num(std.decode_tps), 2);
-    var deepP = d ? fmtNum(num(d.prefill_tps), 0) + '<span class="dep">@' + shortNum(d.tokens) + "</span>"
+      : '<span class="stdv">' + fmtNum(num(std.decode_tps), 2) + "</span>";
+    var deepP = d ? fmtNum(num(d.prefill_tps), 1) + '<span class="dep">@' + shortNum(d.tokens) + "</span>"
       : '<span class="dash">—</span>';
     var deepD = d ? fmtNum(num(d.decode_tps), 2) + '<span class="dep">@' + shortNum(d.tokens) + "</span>"
       : '<span class="dash">—</span>';
-    return '<td class="num c-ctx" data-label="Server ctx">' + esc(ctx || "—") + "</td>" +
+    return ctxCell +
       '<td class="num c-std" data-label="Prefill t/s at 30K">' + stdP + "</td>" +
       '<td class="num c-std" data-label="Decode t/s at 30K">' + stdD + "</td>" +
-      '<td class="num" data-label="Prefill t/s at depth">' + deepP + "</td>" +
-      '<td class="num" data-label="Decode t/s at depth">' + deepD + "</td>";
+      '<td class="num c-nat" data-label="Prefill · decode t/s at depth">' +
+        deepP + '<span class="pair">/</span>' + deepD + "</td>";
   }
 
   function metaLine(r) {
@@ -308,11 +355,12 @@
     var pAct = r.params_active && r.params_active !== r.params_total
       ? ' <span class="act">/ ' + esc(r.params_active) + "</span>" : "";
     var sp = speed(r);
-    var prev = r._prevRow;                  // set in paint(): the row above in default order
-    var firstOfModel = !prev || prev.name !== r.name;
+    var firstOfModel = !r._repeat;          // _repeat is set in paint() from the default order
+    var ctxLabel = ctxText(r) || (r.slug && r.slug !== r.name ? r.slug : "");
     var nameCell = firstOfModel
-      ? esc(r.name) + featBadges(r)
-      : '<span class="same-model">&#8635;</span>' + esc(r.name) + ' <span class="dim">(' + esc(r.ctx_label || "") + ')</span>';
+      ? '<span class="name">' + esc(r.name) + "</span>" + featBadges(r)
+      : '<span class="name dim">' + esc(r.name) + "</span> " +
+        '<span class="again">' + (ctxLabel ? esc(ctxLabel) : "&mdash;") + "</span>";
     var deepNote = "";                    // the per-context probe table below carries the rungs
     if (r.status === "failed") cls = (cls ? cls + " " : "") + "row-failed";
     return '<tr class="' + cls + '">' +
@@ -333,8 +381,10 @@
       '<td class="num sc" data-label="tau2">' + scoreCell(r, "tau2", c.tau2) + "</td>" +
       '<td class="num sc" data-label="Shell">' + scoreCell(r, "shell", c.shell) + "</td>" +
       '<td class="num sc" data-label="TermBench">' + scoreCell(r, "termbench", c.termbench) + "</td>" +
-      '<td class="num sv" data-label="Decode t/s">' + fmtNum(num(r.decode_tps), 1) + "</td>" +
-      '<td class="num sv" data-label="Prefill t/s">' + fmtNum(num(r.prefill_tps), 0) + "</td>" +
+      '<td class="num sv" data-label="Decode t/s (llama-bench)">' +
+        (num(r.decode_tps) !== null ? fmtNum(num(r.decode_tps), 1) + NATIVE_MARK : '<span class="dash">—</span>') + "</td>" +
+      '<td class="num sv" data-label="Prefill t/s (llama-bench)">' +
+        (num(r.prefill_tps) !== null ? fmtNum(num(r.prefill_tps), 1) + NATIVE_MARK : '<span class="dash">—</span>') + "</td>" +
       '<td class="num sv" data-label="Ctx">' + fmtCtx(num(r.context_window)) + "</td>" +
       '<td class="num sv" data-label="VRAM">' +
         (num(r.vram_mib) !== null ? (r.vram_mib / 1024).toFixed(1) : '<span class="dash">—</span>') + "</td>" +
@@ -343,39 +393,33 @@
     "</tr>";
   }
 
-  /* ---- last column: can this row be trusted, and can it be re-run here? ---- */
+  /* ---- last column: compact one-line provenance ----
+     "b11517 · 10-30" plus, when the weights are gone, a small amber "·s" badge whose
+     tooltip carries a generic restatement of measurement_status (the raw text can name the
+     measurement host). Nothing here may wrap the row except on the mobile card. */
   function evidenceCell(r) {
+    var build = r.engine_build ? esc(r.engine_build) : "";
+    /* the row already has its own Date column: only repeat the date here when it differs
+       (speed measured on a different day than the accuracy run) */
+    var when = r.speed_measured_at && coarseDate(r.speed_measured_at) !== String(r.date || "")
+      ? shortDate(r.speed_measured_at) : "";
+    var whenFull = r.speed_measured_at ? coarseDate(r.speed_measured_at) : "";
+    var prov = '<span class="prov" title="measured ' + esc(whenFull) + '">' +
+      [build, when].filter(Boolean).join(" · ") + "</span>";
+    var badge = "";
     if (r.speed) {
-      var st = (r.speed.standard || {});
-      var meta = [];
-      if (r.kv_cache) meta.push("KV " + esc(r.kv_cache));
-      if (r.engine_build) meta.push(esc(r.engine_build));
-      if (r.speed_measured_at) meta.push(coarseDate(r.speed_measured_at));
-      return '<td class="ev c-evidence" data-label="Speed evidence">' +
-        '<span class="probe-tag">live probe · ' + (st.tokens || 0).toLocaleString() + " tok" +
-        (st.pending ? " · pending" : "") + "</span>" +
-        (r.speed_flags ? '<code>' + esc(r.speed_flags) + "</code>" : "") +
-        (meta.length ? '<span class="ev-meta">' + meta.join(" · ") + "</span>" : "") +
-        "</td>";
+      var st = r.speed.standard || {};
+      var tag = '<span class="probe-tag" title="cold request, standard prompt">30K probe' +
+        (st.pending ? " · pending" : "") + "</span>";
+      var flags = r.speed_flags ? '<code class="ev-flags" title="' + esc(r.speed_flags) + '">' +
+        esc(r.speed_flags) + "</code>" : "";
+      return '<td class="ev c-evidence" data-label="Speed evidence">' + tag + badge + prov +
+        flags + "</td>";
     }
-    if (r.measurement_status) {
-      var failed = /^failed/.test(r.measurement_status);
-      return '<td class="ev c-evidence" data-label="Speed evidence">' +
-        '<span class="' + (failed ? "st st-failed" : "st st-hist") + '">' +
-        esc(r.measurement_status) + "</span>" +
-        (r.engine_build ? '<span class="ev-meta">' + esc(r.engine_build) + "</span>" : "") +
-        "</td>";
+    if (build || when || badge) {
+      return '<td class="ev c-evidence" data-label="Speed evidence">' + badge + prov + "</td>";
     }
-    var bits = [];
-    if (r.speed_flags) bits.push('<code>' + esc(r.speed_flags) + "</code>");
-    var meta = [];
-    if (r.kv_cache) meta.push("KV " + esc(r.kv_cache));
-    if (r.engine_build) meta.push(esc(r.engine_build));
-    if (r.speed_measured_at) meta.push(coarseDate(r.speed_measured_at));
-    return '<td class="ev c-evidence" data-label="Speed evidence">' +
-      (bits.join(" ") || '<span class="dash">—</span>') +
-      (meta.length ? '<span class="ev-meta">' + meta.join(" · ") + "</span>" : "") +
-      "</td>";
+    return '<td class="ev c-evidence" data-label="Speed evidence"><span class="dash">—</span></td>';
   }
 
   /* ---- top-3 highlight: follows the active numeric sort, else Decode t/s ---- */
@@ -406,7 +450,11 @@
     var order = state.view.filter(function (r) { return shown.indexOf(r) !== -1; });
     var ranks = topRanks(order);
 
-    state.rows.forEach(function (r, i) { r._prevRow = i ? state.rows[i - 1] : null; });
+    state.rows.forEach(function (r, i) {
+      var prev = i ? state.rows[i - 1] : null;
+      r._prevRow = prev;
+      r._repeat = !!(prev && prev.name === r.name);
+    });
     document.getElementById("rows").innerHTML = order.map(function (r) {
       var rank = 0;
       for (var i = 0; i < ranks.length; i++) { if (ranks[i][0] === r) { rank = ranks[i][1]; break; } }
@@ -419,6 +467,8 @@
         (state.sortKey && state.sortKey !== rk ? " (sorted column is not numeric)" : "");
     }
     document.getElementById("empty").hidden = order.length > 0;
+    var lg = document.getElementById("speedkey");
+    if (lg) lg.hidden = false;
     document.getElementById("count").textContent =
       order.length + " / " + state.rows.length + " models";
 
@@ -464,12 +514,16 @@
     document.getElementById("q").addEventListener("input", paint);
     document.getElementById("arch").addEventListener("change", paint);
     document.getElementById("vid").addEventListener("change", paint);
+    var spd = document.getElementById("spdonly");
+    if (spd) spd.addEventListener("change", function () { state.spdOnly = spd.checked; paint(); });
     var grp = document.getElementById("grp");
     if (grp) grp.addEventListener("change", function () { state.group = grp.value; paint(); });
     document.getElementById("reset").addEventListener("click", function () {
       document.getElementById("q").value = "";
       document.getElementById("arch").value = "";
       document.getElementById("vid").checked = false;
+      var spd = document.getElementById("spdonly");
+      if (spd) { spd.checked = true; state.spdOnly = true; }
       if (grp) grp.value = "all";
       state.group = "all";
       paint();
@@ -556,7 +610,7 @@
           return '<span class="rung">' + Math.round(d.tokens).toLocaleString() + ' tok: ' +
             fmtNum(num(d.prefill_tps), 1) + " prefill / " + fmtNum(num(d.decode_tps), 2) + " decode</span>";
         }).join("") : '<span class="dash">none — 30K standard prompt only</span>';
-        body += '<tr><td class="num">' + esc(r.ctx_label || fmtCtx(num(r.context_window))) + "</td>" +
+        body += '<tr><td class="num">' + esc(ctxText(r) || fmtCtx(num(r.context_window))) + "</td>" +
           '<td class="num">' + (std.pending ? '<span class="pending">pending</span>' :
             fmtNum(num(std.prefill_tps), 1) + " / " + fmtNum(num(std.decode_tps), 2) +
             ' <span class="dash">at ' + (std.tokens || 0).toLocaleString() + " tok</span>") + "</td>" +

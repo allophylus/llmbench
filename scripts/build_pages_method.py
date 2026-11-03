@@ -143,12 +143,6 @@ def build():
         "GPU. One model per card at a time; a model's throughput is never measured while another "
         "is loaded.</p>",
         models_table(doc),
-        ('<p class="note">Some rows cannot be re-measured here: their weight files have since been '
-         'deleted, so their numbers are historical. Those rows say '
-         '<code>not re-measurable on this host</code> and carry the date they were taken — read '
-         'them as past results, not as something reproducible on this machine today.</p>'
-         if any("not re-measurable" in (r.get("measurement_status") or "") for r in doc.get("rows", []))
-         else ""),
 
         "<h2>Engine and build</h2>",
         "<ul>",

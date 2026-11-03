@@ -53,6 +53,10 @@
       <input id="vid" type="checkbox">
       <span>Only rows with video</span>
     </label>
+    <label class="ctl check" title="rows that carry a speed probe: the standardised 30K probe or a native-context speed measurement">
+      <input id="spdonly" type="checkbox" checked>
+      <span>Only speed rows</span>
+    </label>
     <span class="ctl count" id="count" aria-live="polite"></span>
     <span class="ctl ranknote" id="ranknote" aria-live="polite"></span>
   </section>
@@ -101,8 +105,8 @@
           <th class="num" data-key="ctx_label" data-type="text" scope="col" title="server context window this row was served at">Server<br><span class="th-sub">ctx</span></th>
           <th class="num grp grp-a" data-key="std_prefill" data-type="num" scope="col" title="group A, standardised probe: one cold request on a calibrated ~30K-token prompt"><span class="grp-tag">A</span>Prefill<br><span class="th-sub">@ 30K</span></th>
           <th class="num grp grp-a" data-key="std_decode" data-type="num" scope="col" title="group A, standardised probe: one cold request on a calibrated ~30K-token prompt"><span class="grp-tag">A</span>Decode<br><span class="th-sub">@ 30K</span></th>
-          <th class="num grp grp-b" data-key="deep_prefill" data-type="num" scope="col" title="group B: deepest depth probe for server rows; a bare n means the row's single native-context probe (value in group C)"><span class="grp-tag">B</span>Prefill<br><span class="th-sub">t/s @ depth</span></th>
-          <th class="num grp grp-b" data-key="deep_decode" data-type="num" scope="col" title="group B: deepest depth probe for server rows; a bare n means the row's single native-context probe (value in group C)"><span class="grp-tag">B</span>Decode<br><span class="th-sub">t/s @ depth</span></th>
+          <th class="num grp grp-b" data-key="deep_prefill" data-type="num" scope="col" title="group B: deepest depth probe for server rows; a bare n means the row's single native-context probe (value in group C)"><span class="grp-tag">B</span>Prefill<br><span class="th-sub">@ depth</span></th>
+          <th class="num grp grp-b" data-key="deep_decode" data-type="num" scope="col" title="group B: deepest depth probe for server rows; a bare n means the row's single native-context probe (value in group C)"><span class="grp-tag">B</span>Decode<br><span class="th-sub">@ depth</span></th>
           <th class="num" data-key="gpqa"      data-type="num" scope="col">GPQA</th>
           <th class="num" data-key="aime"      data-type="num" scope="col">AIME</th>
           <th class="num" data-key="livebench" data-type="num" scope="col" title="LiveBench 2025"><span class="hw">LiveBench</span></th>
@@ -125,7 +129,6 @@
       <span class="sk"><b class="grp-tag">A</b> standardised probe: one cold request on a ~30K prompt (server rows only)</span>
       <span class="sk"><b class="grp-tag">B</b> deepest depth probe at the row&#39;s own context; a lone <sup class="nat">n</sup> = single native-ctx probe, value in C</span>
       <span class="sk"><b class="grp-tag">C</b> llama-bench pp512 / tg128 at the row&#39;s own context</span>
-      <span class="sk"><span class="st st-hist">&#8226;s</span> historical: weights no longer on the host, not re-measurable (hover)</span>
     </p>
     <p class="empty" id="empty" hidden>No rows match that filter. <button type="button" id="reset" class="linkbtn">Reset filters</button></p>
   </div>
