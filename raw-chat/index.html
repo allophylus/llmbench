@@ -21,4 +21,27 @@ ul{padding-left:1.2rem}
 .dl a{border:1px solid var(--line);border-radius:8px;padding:6px 11px;color:var(--blue);text-decoration:none;font:12.5px ui-monospace,monospace}
 .dl a:hover{border-color:var(--blue)}
 @media(max-width:640px){.wrap{padding:20px 12px 48px}h1{font-size:20px}th,td{padding:7px 7px;font-size:12.5px}}
-</style></head><body><div class=wrap><nav class="tabs"><a href="../">Overview</a><a href="../games/">Games</a><a href="../chat/">Chat</a><a href="../thinking/">Thinking</a><a href="../ablation/">Ablation</a><a href="../logic/">Logic</a><a href="../method/">Method</a><a href="../raw-chat/" class="on">Raw data</a></nav><h1>raw chat data</h1><h2>Chat JSONs</h2><p>One file per model: every question, expected answer, model answer, verdict, tokens, milliseconds and decode rate.</p><div class=table-wrap><table><thead><tr><th>File</th></tr></thead><tbody><tr><td><a href="27b.json">27b.json</a></td></tr><tr><td><a href="davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json">davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json</a></td></tr><tr><td><a href="huihui-abl-q4-k-m.json">huihui-abl-q4-k-m.json</a></td></tr><tr><td><a href="lfm3-1-7b-q4-k-m.json">lfm3-1-7b-q4-k-m.json</a></td></tr><tr><td><a href="ornith-1-5-35b-a3b-q4-k-m.json">ornith-1-5-35b-a3b-q4-k-m.json</a></td></tr><tr><td><a href="qwen3-6-35b-a3b-ud-q4km.json">qwen3-6-35b-a3b-ud-q4km.json</a></td></tr><tr><td><a href="qwen3-8-27b-q4-0.json">qwen3-8-27b-q4-0.json</a></td></tr><tr><td><a href="qwen3-8-27b-q4km.json">qwen3-8-27b-q4km.json</a></td></tr></tbody></table></div><p class="note">Copied from <code>data/chat/</code> by <code>scripts/build_pages_method.py</code> on every build.</p></div></body></html>
+
+:root{--topbar-h:52px}
+.scroll-root{scroll-padding-top:calc(var(--topbar-h) + 8px)}
+h1,h2,h3,h4,section[id],section[class]{scroll-margin-top:calc(var(--topbar-h) + 8px)}
+:root{--thead-stick:0px}
+@media(max-width:760px){:root{--thead-stick:var(--topbar-h)}}
+.topbar{position:sticky;top:0;z-index:60;height:var(--topbar-h);background:#131a24;
+  border-bottom:1px solid #24303f}
+.topbar>.wrap{height:100%;display:flex;align-items:center}
+.topbar .tabs,.topbar .site-nav{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;
+  margin:0;padding:0 2px;gap:1.1rem;width:100%;height:100%;align-items:center;
+  scrollbar-width:none;-ms-overflow-style:none}
+.topbar .tabs::-webkit-scrollbar,.topbar .site-nav::-webkit-scrollbar{display:none}
+.topbar .tabs a,.topbar .site-nav a{white-space:nowrap}
+.topbar .site-nav a{padding:0;border-bottom:2px solid transparent;
+  line-height:calc(var(--topbar-h) - 3px)}
+.topbar .tabs a{padding:5px 11px}
+@media(max-width:760px){
+  :root{--topbar-h:48px}
+  .topbar .tabs,.topbar .site-nav{gap:.75rem;white-space:nowrap}
+  .topbar .site-nav a{font-size:11px;letter-spacing:.04em}
+  .topbar .tabs a{font-size:12px;padding:4px 9px}
+}
+</style></head><body><div class="topbar"><div class="wrap"><nav class="tabs"><a href="../">Overview</a><a href="../games/">Games</a><a href="../chat/">Chat</a><a href="../thinking/">Thinking</a><a href="../ablation/">Ablation</a><a href="../logic/">Logic</a><a href="../method/">Method</a><a href="../raw-chat/" class="on">Raw data</a></nav></div></div><div class=wrap><h1>raw chat data</h1><h2>Chat JSONs</h2><p>One file per model: every question, expected answer, model answer, verdict, tokens, milliseconds and decode rate.</p><div class=table-wrap><table><thead><tr><th>File</th></tr></thead><tbody><tr><td><a href="27b.json">27b.json</a></td></tr><tr><td><a href="davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json">davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json</a></td></tr><tr><td><a href="huihui-abl-q4-k-m.json">huihui-abl-q4-k-m.json</a></td></tr><tr><td><a href="lfm3-1-7b-q4-k-m.json">lfm3-1-7b-q4-k-m.json</a></td></tr><tr><td><a href="ornith-1-5-35b-a3b-q4-k-m.json">ornith-1-5-35b-a3b-q4-k-m.json</a></td></tr><tr><td><a href="qwen3-6-35b-a3b-ud-q4km.json">qwen3-6-35b-a3b-ud-q4km.json</a></td></tr><tr><td><a href="qwen3-8-27b-q4-0.json">qwen3-8-27b-q4-0.json</a></td></tr><tr><td><a href="qwen3-8-27b-q4km.json">qwen3-8-27b-q4km.json</a></td></tr></tbody></table></div><p class="note">Copied from <code>data/chat/</code> by <code>scripts/build_pages_method.py</code> on every build.</p></div></body></html>

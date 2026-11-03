@@ -20,7 +20,7 @@ import re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav  # noqa: E402  single source of truth for the nav
+from site_nav import render_nav, render_topbar, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 ABL = os.path.join(ROOT, "benchmarks", "ablation")
 OUT = os.path.join(ROOT, "ablation", "index.html")
 
@@ -70,7 +70,7 @@ code{font-family:ui-monospace,monospace;font-size:12px;color:var(--blue)}
 @media(max-width:640px){.wrap{padding:18px 12px 48px}th,td{padding:7px 7px;font-size:12px}table{min-width:820px}td.arm{min-width:120px}td.arm b{white-space:nowrap}td.arm span{display:none}#mob{display:block}.tabs a{font-size:12px;padding:6px 10px}}#mob{display:none;color:var(--faint);font-size:12px;margin:6px 0 0}
 """
 
-NAV = render_nav("../", "ablation")
+TOPBAR = render_topbar("../", "ablation")
 
 
 def esc(s):
@@ -263,8 +263,8 @@ def build():
 
     page = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            "<title>ablation — llmbench</title><style>" + CSS + "</style></head>"
-            "<body><div class=wrap>" + NAV + body + "</div></body></html>")
+            "<title>ablation — llmbench</title><style>" + CSS + TOPBAR_CSS + "</style></head>"
+            "<body>" + TOPBAR + "<div class=wrap>" + body + "</div></body></html>")
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     open(OUT, "w", encoding="utf-8").write(page)
     print("ablation page:", OUT, "| arms:", len(arms))

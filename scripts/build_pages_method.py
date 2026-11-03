@@ -18,9 +18,9 @@ import shutil
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav  # noqa: E402  single source of truth for the nav
+from site_nav import render_nav, render_topbar, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 
-NAV = render_nav("../", "method")
+TOPBAR = render_topbar("../", "method")
 
 CSS = """
 :root{--bg:#0f141b;--panel:#151c26;--line:#243040;--fg:#e8eef8;--dim:#9fb0c6;--faint:#6f8296;--gold:#f5c542;--blue:#8cc8ff;--bad:#ff7b72;--ok:#7ee787}
@@ -56,8 +56,8 @@ def esc(s):
 def page(title, body):
     return ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            f"<title>{esc(title)}</title><style>{CSS}</style></head><body><div class=wrap>"
-            f"{NAV}<h1>{esc(title)}</h1>{body}</div></body></html>")
+            f"<title>{esc(title)}</title><style>{CSS}{TOPBAR_CSS}</style></head><body>" + TOPBAR +
+            f"<div class=wrap><h1>{esc(title)}</h1>{body}</div></body></html>")
 
 
 def load():
@@ -259,7 +259,7 @@ def build():
     idx.append('<p class="note">Copied from <code>data/chat/</code> by '
                '<code>scripts/build_pages_method.py</code> on every build.</p>')
     raw_page = page("raw chat data", "".join(idx)).replace(
-        NAV, render_nav("../", "raw"), 1)
+        TOPBAR, render_topbar("../", "raw", style="tabs"), 1)
     with open(os.path.join(dst, "index.html"), "w", encoding="utf-8") as f:
         f.write(raw_page)
 

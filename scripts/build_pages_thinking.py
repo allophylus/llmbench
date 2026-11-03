@@ -13,7 +13,7 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav  # noqa: E402  single source of truth for the nav
+from site_nav import render_nav, render_topbar, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 OUT = os.path.join(ROOT, "thinking", "index.html")
 
 CSS = """
@@ -41,7 +41,7 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 @media(max-width:640px){.wrap{padding:18px 12px 48px}th,td{padding:7px 7px;font-size:12px}table{min-width:540px}}
 """
 
-NAV = render_nav("../", "thinking")
+TOPBAR = render_topbar("../", "thinking")
 
 
 def esc(s):
@@ -136,8 +136,8 @@ def build():
     body = "".join(sections) if sections else "<h1>thinking on/off</h1><p>Nothing measured yet.</p>"
     page = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            "<title>thinking on/off — llmbench</title><style>" + CSS + "</style></head>"
-            "<body><div class=wrap>" + NAV + body + "</div></body></html>")
+            "<title>thinking on/off — llmbench</title><style>" + CSS + TOPBAR_CSS + "</style></head>"
+            "<body>" + TOPBAR + "<div class=wrap>" + body + "</div></body></html>")
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     open(OUT, "w", encoding="utf-8").write(page)
     print("thinking page:", OUT, "| blocks:", len(blocks))

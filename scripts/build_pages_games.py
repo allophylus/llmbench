@@ -22,7 +22,7 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav  # noqa: E402  single source of truth for the nav
+from site_nav import render_nav, render_topbar, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 GAMES = os.path.join(ROOT, "games")
 
 MODEL_LABEL = {
@@ -85,7 +85,7 @@ a{color:var(--blue)}
 }
 """
 
-NAV = render_nav("../", "games")
+TOPBAR = render_topbar("../", "games")
 
 
 def rel(slug):
@@ -320,9 +320,9 @@ def build():
         "<h2 class=sec>Details</h2>" + "".join(details))
     out = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
            "<meta name=viewport content='width=device-width,initial-scale=1'>"
-           "<title>games — model-written browser games</title><style>" + CSS + "</style>"
-           "</head><body><div class=wrap>" + NAV
-           + "<h1>games — model-written browser games</h1>" + body + "</div></body></html>")
+           "<title>games — model-written browser games</title><style>" + CSS + TOPBAR_CSS + "</style>"
+           "</head><body>" + TOPBAR
+           + "<div class=wrap><h1>games — model-written browser games</h1>" + body + "</div></body></html>")
     open(os.path.join(GAMES, "index.html"), "w", encoding="utf-8").write(out)
     print("games rows:", len(rows),
           "| pass:", sum(1 for r in rows if r["status"] == "pass"),

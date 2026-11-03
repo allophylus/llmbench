@@ -77,6 +77,19 @@ def check_page(url_path, rel_file):
         return [f"{url_path}: expected 1 <nav>, found {len(navs)}"]
     links = link_set(navs[0])
 
+    # sticky bar: exactly one .topbar, a direct child of <body>, holding the nav,
+    # and never nested inside the header (sticky would then release with it).
+    if html.count('class="topbar"') != 1:
+        errors.append(f"{url_path}: expected 1 .topbar, found {html.count('class=\"topbar\"')}")
+    body = html.split("<body>", 1)[-1]
+    if '<div class="topbar">' not in body:
+        errors.append(f"{url_path}: .topbar is not a top-level child of <body>")
+    header = re.search(r"<header\b.*?</header>", html, re.S)
+    if header and "<nav" in header.group(0):
+        errors.append(f"{url_path}: nav still nested inside <header> (sticky would not hold)")
+    if html.find('<div class="topbar">') < html.find("</header>"):
+        errors.append(f"{url_path}: .topbar appears before the header ends")
+
     key = "overview" if url_path == "/" else url_path.strip("/").split("/")[0]
     depth = len([p for p in url_path.strip("/").split("/") if p])
     prefix = "../" * depth

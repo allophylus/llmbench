@@ -17,7 +17,7 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav  # noqa: E402  single source of truth for the nav
+from site_nav import render_nav, render_topbar, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 SRC = os.path.join(ROOT, "benchmarks", "logic10")
 QFILE = os.path.join(SRC, "questions.json")
 RESDIR = os.path.join(SRC, "results")
@@ -76,7 +76,7 @@ pre{white-space:pre-wrap;word-break:break-word;font:12px/1.45 ui-monospace,monos
 }
 """
 
-NAV = render_nav("../", "logic")
+TOPBAR = render_topbar("../", "logic")
 
 SHORT = {"wash": "car wash", "race": "race", "batball": "bat+ball", "widgets": "widgets",
          "lilypad": "lily pads", "pills": "pills", "months": "months", "ladder": "ladder",
@@ -291,8 +291,8 @@ def build():
 
     page = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            "<title>logic traps — llmbench</title><style>" + CSS + "</style></head>"
-            "<body><div class=wrap>" + NAV + "<h1>everyday logic traps</h1>" + body
+            "<title>logic traps — llmbench</title><style>" + CSS + TOPBAR_CSS + "</style></head>"
+            "<body>" + TOPBAR + "<div class=wrap><h1>everyday logic traps</h1>" + body
             + "</div></body></html>")
     os.makedirs(OUTDIR, exist_ok=True)
     open(OUT, "w", encoding="utf-8").write(page)

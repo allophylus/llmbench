@@ -7,7 +7,7 @@ GAMES = os.path.join(ROOT, "games")
 CHAT = os.path.join(ROOT, "data", "chat")
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav  # noqa: E402  single source of truth for the nav
+from site_nav import render_nav, render_topbar, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 
 
 def overview_names():
@@ -33,7 +33,7 @@ MODEL_LABEL = {
 }
 GAME_LABEL = {"galaga": "arcade shooter (TUI-derived)", "gta": "top-down driving (TUI-derived)", "physics": "3D physics sandbox (TUI-derived)", "solar": "solar system mission"}
 
-NAV = render_nav("../", "games")
+TOPBAR = render_topbar("../", "games")
 
 CSS = """
 :root{--bg:#0f141b;--panel:#151c26;--line:#243040;--fg:#e8eef8;--dim:#9fb0c6;--faint:#6f8296;--gold:#f5c542;--blue:#8cc8ff;--bad:#ff7b72;--ok:#7ee787}
@@ -74,8 +74,8 @@ def esc(s):
 def page(title, body):
     return ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            f"<title>{esc(title)}</title><style>{CSS}</style></head><body><div class=wrap>"
-            f"{NAV}<h1>{esc(title)}</h1>{body}</div></body></html>")
+            f"<title>{esc(title)}</title><style>{CSS}{TOPBAR_CSS}</style></head><body>" + TOPBAR +
+            f"<div class=wrap><h1>{esc(title)}</h1>{body}</div></body></html>")
 
 def game_rows():
     rows = []
@@ -303,7 +303,8 @@ def build_chat():
             "<h2 class=sec>Per-question detail</h2>" + "".join(details))
     os.makedirs(os.path.join(ROOT, "chat"), exist_ok=True)
     open(os.path.join(ROOT, "chat", "index.html"), "w").write(
-        page("chat — knowledge accuracy", body).replace(NAV, render_nav("../", "chat"), 1))
+        page("chat — knowledge accuracy", body).replace(
+            TOPBAR, render_topbar("../", "chat"), 1))
     print("chat groups:", len(groups))
 
 def build_sidebyside():

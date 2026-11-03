@@ -88,6 +88,45 @@ def render_nav(prefix="", current=None, style="tabs"):
     return "".join(parts)
 
 
+# Self-contained sticky-bar CSS. Sub-pages ship their own inline <style> and do
+# not link style.css, so every builder embeds TOPBAR_CSS to get identical bar
+# behaviour on all pages. Keep in sync with the .topbar block in style.css.
+TOPBAR_CSS = """
+:root{--topbar-h:52px}
+.scroll-root{scroll-padding-top:calc(var(--topbar-h) + 8px)}
+h1,h2,h3,h4,section[id],section[class]{scroll-margin-top:calc(var(--topbar-h) + 8px)}
+:root{--thead-stick:0px}
+@media(max-width:760px){:root{--thead-stick:var(--topbar-h)}}
+.topbar{position:sticky;top:0;z-index:60;height:var(--topbar-h);background:#131a24;
+  border-bottom:1px solid #24303f}
+.topbar>.wrap{height:100%;display:flex;align-items:center}
+.topbar .tabs,.topbar .site-nav{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;
+  margin:0;padding:0 2px;gap:1.1rem;width:100%;height:100%;align-items:center;
+  scrollbar-width:none;-ms-overflow-style:none}
+.topbar .tabs::-webkit-scrollbar,.topbar .site-nav::-webkit-scrollbar{display:none}
+.topbar .tabs a,.topbar .site-nav a{white-space:nowrap}
+.topbar .site-nav a{padding:0;border-bottom:2px solid transparent;
+  line-height:calc(var(--topbar-h) - 3px)}
+.topbar .tabs a{padding:5px 11px}
+@media(max-width:760px){
+  :root{--topbar-h:48px}
+  .topbar .tabs,.topbar .site-nav{gap:.75rem;white-space:nowrap}
+  .topbar .site-nav a{font-size:11px;letter-spacing:.04em}
+  .topbar .tabs a{font-size:12px;padding:4px 9px}
+}
+"""
+
+
+def render_topbar(prefix="", current=None, style="tabs"):
+    """The persistent sticky bar: a top-level sibling of <header>, not inside it.
+
+    Must be placed directly in <body> (never in a padded/short parent) so it can
+    stick to the viewport for the whole page.
+    """
+    return ('<div class="topbar"><div class="wrap">'
+            + render_nav(prefix, current, style=style) + "</div></div>")
+
+
 def expected_hrefs(prefix=""):
     """Canonical href set for a page at ``prefix`` depth (checker helper)."""
     return [_href(prefix, key) for key, _, _ in nav_items()]

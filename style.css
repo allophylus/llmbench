@@ -27,7 +27,16 @@ html { -webkit-text-size-adjust: 100%; }
    overflow, so a stray wide block cannot produce a horizontal scrollbar. */
 html, body { max-width: 100%; overflow-x: clip; }
 /* anchor jumps must not land underneath the sticky bar */
-html { scroll-padding-top: calc(var(--topbar-h) + 8px); }
+.scroll-root { scroll-padding-top: calc(var(--topbar-h) + 8px); }
+
+/* Vertical offset for the sticky table head.
+   Desktop #tbl lives in .table-wrap with overflow:auto, and a sticky child only
+   sticks inside its own scroll box — at top:52px it would push the first header
+   row 52px down inside the table. So the offset applies only where the <thead>
+   really sticks against the page (the mobile card view). Keep in sync with
+   TOPBAR_CSS in scripts/site_nav.py. */
+:root { --thead-stick: 0px; }
+@media (max-width: 760px) { :root { --thead-stick: var(--topbar-h); } }
 
 body {
   margin: 0;
@@ -108,7 +117,7 @@ table {
 
 thead th {
   position: sticky;
-  top: var(--topbar-h);
+  top: var(--thead-stick);
   z-index: 2;
   background: #16202c;
   color: var(--fg-dim);
@@ -342,7 +351,7 @@ h1, h2, h3, section[id], section[class] { scroll-margin-top: calc(var(--topbar-h
   table { min-width: 0; table-layout: auto; }
   #tbl th[data-key] { width: auto; }
   table, thead, tbody, tr, td { display: block; width: 100%; }
-  thead { position: sticky; top: var(--topbar-h); z-index: 3; }
+  thead { position: sticky; top: var(--thead-stick); z-index: 3; }
   thead tr {
     display: flex;
     gap: .4rem;
