@@ -41,7 +41,7 @@ CLASSIC = {"batball", "widgets", "lilypad"}
 CSS = """
 :root{--bg:#0f141b;--panel:#151c26;--line:#243040;--fg:#e8eef8;--dim:#9fb0c6;--faint:#6f8296;--gold:#f5c542;--blue:#8cc8ff;--bad:#ff7b72;--ok:#7ee787}
 *{box-sizing:border-box}
-html,body{max-width:100vw;overflow-x:hidden}
+html,body{max-width:100%;overflow-x:clip}
 body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 60px}
 h1{font-size:24px;margin:0 0 4px}
