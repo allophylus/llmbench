@@ -6,6 +6,8 @@ videos/
 # are published with the results. Only the compressed copies are tracked:
 !games/*/robot_play_repo.mp4
 !games/*/attempts/*/build.webm
+# the passing game's screen recording is published with the cell
+!games/*-physics/video/physics-3d.webm
 
 # tooling / editor noise
 node_modules/
