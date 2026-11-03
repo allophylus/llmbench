@@ -23,6 +23,7 @@ PAGES = [
     ("/thinking/", "thinking/index.html"),
     ("/ablation/", "ablation/index.html"),
     ("/logic/", "logic/index.html"),
+    ("/sweep/", "sweep/index.html"),
     ("/method/", "method/index.html"),
     ("/raw-chat/", "raw-chat/index.html"),
     ("/games/sidebyside/", "games/sidebyside/index.html"),
