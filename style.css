@@ -382,6 +382,13 @@ td.c-name .dep-note { display: block; font: 11px/1.35 var(--mono); color: var(--
 .tabs-cards .card:hover, .tabs-cards .card:focus-visible { border-color: var(--accent-dim); text-decoration: none; }
 
 @media (max-width: 760px) {
+  /* the desktop rule `#tbl { min-width: 1460px }` outranks the plain `table` reset in the
+     card layout below (file order), so restate both here at equal specificity */
+  #tbl, #tbl thead, #tbl tbody { display: block; min-width: 0; width: 100%; }
+  #tbl { table-layout: auto; }
+  #tbl thead tr { display: flex; }
+  #tbl tbody tr { display: grid; }
+  #tbl tbody td, #tbl thead th { display: block; width: auto; }
   .ctl-legend .hint { display: block; }
   /* keep the deep-context depth line visible inside the card view */
   td .dep { display: inline; margin-left: .25rem; }
@@ -442,8 +449,21 @@ td.c-evidence .ev-meta { display: block; font: 10.5px/1.4 var(--mono); color: va
 @media (max-width: 760px) {
   .notice { font-size: 12.5px; }
   td.c-evidence { min-width: 0; max-width: none; grid-column: 1 / -1; }
+  /* the card layout above sets `table` to display:block; these sub-tables need a real table
+     again, inside their own scroll box (otherwise a 400px phone scrolls the whole page) */
   .probes .table-wrap { overflow-x: auto; }
-  .probe { min-width: 560px; }
+  .probes .table-wrap table.probe { display: table; width: 100%; min-width: 560px; table-layout: auto; }
+  .probes .table-wrap table.probe thead, .probes .table-wrap table.probe tbody { display: table-header-group; }
+  .probes .table-wrap table.probe tbody { display: table-row-group; }
+  .probes .table-wrap table.probe tr { display: table-row; border: 0; padding: 0; margin: 0; background: transparent; }
+  .probes .table-wrap table.probe th, .probes .table-wrap table.probe td {
+    display: table-cell; width: auto; padding: .45rem .55rem; border-bottom: 1px solid var(--line);
+    text-align: left; font-size: 12.5px; white-space: normal;
+  }
+  .probes .table-wrap table.probe td.num { text-align: right; white-space: nowrap; }
+  .probes .table-wrap table.probe thead th { position: static; border: 0; border-bottom: 1px solid var(--line); }
+  .probes .table-wrap table.probe tbody tr:nth-child(even) td { background: transparent; }
+  .probes .table-wrap table.probe td::before { content: none; display: none; }
 }
 .probe-tag {
   display: inline-block;
