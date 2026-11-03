@@ -632,3 +632,16 @@ td.c-evidence .st-hist { cursor: help; }
   letter-spacing: .04em;
   white-space: nowrap;
 }
+
+/* ---- default view: fit the window; accuracy detail is opt-in ---- */
+#tbl th[data-key="arch"],
+#tbl th[data-key="gpqa"], #tbl th[data-key="aime"], #tbl th[data-key="livebench"],
+#tbl th[data-key="ctx30k"], #tbl th[data-key="ctx110k"], #tbl th[data-key="tau2"],
+#tbl th[data-key="shell"], #tbl th[data-key="termbench"],
+#tbl td.sc { display: none; }
+body.show-scores #tbl th[data-key="arch"],
+body.show-scores #tbl th[data-key="gpqa"], body.show-scores #tbl th[data-key="aime"],
+body.show-scores #tbl th[data-key="livebench"], body.show-scores #tbl th[data-key="ctx30k"],
+body.show-scores #tbl th[data-key="ctx110k"], body.show-scores #tbl th[data-key="tau2"],
+body.show-scores #tbl th[data-key="shell"], body.show-scores #tbl th[data-key="termbench"],
+body.show-scores #tbl td.sc { display: table-cell; }
