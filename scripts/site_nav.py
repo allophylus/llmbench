@@ -10,12 +10,13 @@ Adding a section: append it to ``ITEMS`` once, make sure its directory (with an
 exist in the worktree are omitted, so a half-built section can never ship a
 dead nav link.
 
-Order (canonical, seven items):
-    Overview, Games, Chat, Thinking, Ablation, Method, Raw data
+Order (canonical, six items):
+    Overview, Games, Chat, Thinking, Ablation, Method
 
 The matched-context speed matrix is not a nav item: it is a section of the
 overview's Speed view (/index.html#speed-sweep), and the logic-trap set is a
-section of /thinking/ (/thinking/#logic). Both used to be their own tabs.
+section of /thinking/ (/thinking/#logic); the downloadable raw records are a
+section of /method/ (/method/#raw). All three used to be their own tabs.
 
 Two visual flavours exist in the site CSS:
 
@@ -37,11 +38,10 @@ ITEMS = [
     ("thinking", "Thinking"),
     ("ablation", "Ablation"),
     ("method", "Method"),
-    ("raw", "Raw data"),
 ]
 
-# Raw data has no landing index.html; the entry point is the chat JSONs.
-URL_PATHS = {"raw": "raw-chat/"}
+# Every section has a landing index.html; no overrides are needed today.
+URL_PATHS = {}
 
 
 def _rel_url(key):

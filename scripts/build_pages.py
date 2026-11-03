@@ -298,7 +298,7 @@ def build_chat():
             '<p class=meta>Decode t/s is the mean of the server rate for each short answer '
             '(includes the first, warm-up question), so it sits slightly below the steady-state '
             'figure in the overview table. Raw per-question JSONs: '
-            '<a href="../raw-chat/">raw-chat/</a>. How it is scored: '
+            '<a href="../method/#raw">method — raw records</a>. How it is scored: '
             '<a href="../method/">method</a>.</p>' 
             "<h2 class=sec>Per-question detail</h2>" + "".join(details))
     os.makedirs(os.path.join(ROOT, "chat"), exist_ok=True)
