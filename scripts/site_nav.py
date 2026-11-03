@@ -65,7 +65,7 @@ def nav_items():
     return [(k, label, _rel_url(k)) for k, label in ITEMS if _exists(k)]
 
 
-def render_nav(prefix="", current=None, style="tabs"):
+def render_nav(prefix="", current=None, style="site"):
     """Nav markup for a page ``prefix`` directory levels below the site root.
 
     prefix: "" for root pages, "../" for one-level pages, "../../" for deeper.
@@ -108,7 +108,7 @@ def _load_css():
 TOPBAR_CSS = _load_css()
 
 
-def render_topbar(prefix="", current=None, style="tabs"):
+def render_topbar(prefix="", current=None, style="site"):
     """The persistent sticky bar: a top-level sibling of <header>, not inside it.
 
     Must be placed directly in <body> (never in a padded/short parent) so it can
@@ -121,3 +121,16 @@ def render_topbar(prefix="", current=None, style="tabs"):
 def expected_hrefs(prefix=""):
     """Canonical href set for a page at ``prefix`` depth (checker helper)."""
     return [_href(prefix, key) for key, _, _ in nav_items()]
+
+
+# ---- site brand header ----------------------------------------------------
+# The overview used to be the only page with the logo + description, so every
+# sub-page looked like a different site. One helper, used by every builder.
+BRAND_TEXT = ("Raw, repeatable benchmark numbers for local models served by "
+              "<strong>llama.cpp (Vulkan)</strong> on an AMD Radeon AI PRO R9700 "
+              "32&nbsp;GiB box.")
+
+
+def render_brand():
+    return ('<header class="site-head"><div class="wrap"><h1>llmbench</h1>'
+            '<p class="sub">' + BRAND_TEXT + '</p></div></header>')
