@@ -353,8 +353,8 @@
 
   function rowHTML(r, rank) {
     var c = r.cells || {};
-    var cls = rank ? "rank rank-" + rank : "";
-    var badge = rank ? '<span class="rank-badge" title="top three by the sorted column">' + rank + "</span>" : "";
+    var cls = "";   /* no row highlighting: tints read as unexplained state */
+    var badge = "";
     var pAct = r.params_active && r.params_active !== r.params_total
       ? ' <span class="act">/ ' + esc(r.params_active) + "</span>" : "";
     var sp = speed(r);
