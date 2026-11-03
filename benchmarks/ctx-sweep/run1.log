@@ -1,0 +1,168 @@
+RUN  lfm3-1-7b-q4-k-m|4096 @ 15:53:40
+DONE lfm3-1-7b-q4-k-m|4096 status=ok prefill=8214.8 decode=170.52 vram=25.12 took=9s
+RUN  lfm3-1-7b-q4-k-m|32768 @ 15:53:49
+DONE lfm3-1-7b-q4-k-m|32768 status=ok prefill=7463.1 decode=158.82 vram=25.41 took=12s
+RUN  lfm3-1-7b-q4-k-m|65536 @ 15:54:01
+DONE lfm3-1-7b-q4-k-m|65536 status=ok prefill=5264.6 decode=145.53 vram=25.69 took=20s
+RUN  lfm3-1-7b-q4-k-m|131072 @ 15:54:21
+DONE lfm3-1-7b-q4-k-m|131072 status=ok prefill=3268.2 decode=123.13 vram=26.24 took=48s
+RUN  lfm3-1-7b-q4-k-m|262144 @ 15:55:09
+DONE lfm3-1-7b-q4-k-m|262144 status=ok prefill=1985.1 decode=124.06 vram=27.35 took=140s
+RUN  qwen3-8-27b-q4km|4096 @ 15:57:29
+DONE qwen3-8-27b-q4km|4096 status=ok prefill=797.0 decode=25.13 vram=20.47 took=14s
+RUN  qwen3-8-27b-q4km|32768 @ 15:57:42
+SKIP lfm3-1-7b-q4-k-m|4096 (done)
+RUN  lfm3-1-7b-q4-k-m|32768 @ 15:58:22
+DONE lfm3-1-7b-q4-k-m|32768 status=ok prefill=7309.9 decode=227.88 vram=21.12 took=12s
+RUN  lfm3-1-7b-q4-k-m|65536 @ 15:58:34
+DONE lfm3-1-7b-q4-k-m|65536 status=ok prefill=5295.5 decode=210.56 vram=1.95 took=20s
+SKIP lfm3-1-7b-q4-k-m|131072 (done)
+SKIP lfm3-1-7b-q4-k-m|262144 (done)
+RUN  qwen3-8-27b-q4km|4096 @ 15:58:54
+DONE qwen3-8-27b-q4km|4096 status=ok prefill=843.2 decode=26.31 vram=16.94 took=19s
+RUN  qwen3-8-27b-q4km|32768 @ 15:59:13
+DONE qwen3-8-27b-q4km|32768 status=ok prefill=669.6 decode=24.72 vram=17.76 took=55s
+RUN  qwen3-8-27b-q4km|65536 @ 16:00:08
+DONE qwen3-8-27b-q4km|65536 status=does_not_fit prefill=None decode=None vram=None took=6s
+RUN  qwen3-8-27b-q4km|131072 @ 16:00:14
+SKIP lfm3-1-7b-q4-k-m|4096 (done)
+SKIP lfm3-1-7b-q4-k-m|32768 (done)
+SKIP lfm3-1-7b-q4-k-m|65536 (done)
+SKIP lfm3-1-7b-q4-k-m|131072 (done)
+SKIP lfm3-1-7b-q4-k-m|262144 (done)
+SKIP qwen3-8-27b-q4km|4096 (done)
+SKIP qwen3-8-27b-q4km|32768 (done)
+RUN  qwen3-8-27b-q4km|65536 @ 16:03:31
+DONE qwen3-8-27b-q4km|65536 status=ok prefill=526.3 decode=22.1 vram=18.69 took=133s
+RUN  qwen3-8-27b-q4km|131072 @ 16:05:44
+SKIP lfm3-1-7b-q4-k-m|4096 (done)
+SKIP lfm3-1-7b-q4-k-m|32768 (done)
+SKIP lfm3-1-7b-q4-k-m|65536 (done)
+SKIP lfm3-1-7b-q4-k-m|131072 (done)
+SKIP lfm3-1-7b-q4-k-m|262144 (done)
+SKIP qwen3-8-27b-q4km|4096 (done)
+SKIP qwen3-8-27b-q4km|32768 (done)
+SKIP qwen3-8-27b-q4km|65536 (done)
+RUN  qwen3-8-27b-q4km|131072 @ 16:09:05
+DONE qwen3-8-27b-q4km|131072 status=ok prefill=365.6 decode=20.61 vram=20.57 took=367s
+RUN  qwen3-8-27b-q4km|262144 @ 16:15:12
+SKIP lfm3-1-7b-q4-k-m|4096 (done)
+SKIP lfm3-1-7b-q4-k-m|32768 (done)
+SKIP lfm3-1-7b-q4-k-m|65536 (done)
+SKIP lfm3-1-7b-q4-k-m|131072 (done)
+SKIP lfm3-1-7b-q4-k-m|262144 (done)
+SKIP qwen3-8-27b-q4km|4096 (done)
+SKIP qwen3-8-27b-q4km|32768 (done)
+SKIP qwen3-8-27b-q4km|65536 (done)
+SKIP qwen3-8-27b-q4km|131072 (done)
+RUN  qwen3-8-27b-q4km|262144 @ 16:26:08
+SKIP lfm3-1-7b-q4-k-m|4096 (done)
+SKIP lfm3-1-7b-q4-k-m|32768 (done)
+SKIP lfm3-1-7b-q4-k-m|65536 (done)
+SKIP lfm3-1-7b-q4-k-m|131072 (done)
+SKIP lfm3-1-7b-q4-k-m|262144 (done)
+SKIP qwen3-8-27b-q4km|4096 (done)
+SKIP qwen3-8-27b-q4km|32768 (done)
+SKIP qwen3-8-27b-q4km|65536 (done)
+SKIP qwen3-8-27b-q4km|131072 (done)
+RUN  qwen3-8-27b-q4km|262144 @ 17:16:29
+SKIP lfm3-1-7b-q4-k-m|4096 (done)
+SKIP lfm3-1-7b-q4-k-m|32768 (done)
+SKIP lfm3-1-7b-q4-k-m|65536 (done)
+SKIP lfm3-1-7b-q4-k-m|131072 (done)
+SKIP lfm3-1-7b-q4-k-m|262144 (done)
+SKIP qwen3-8-27b-q4km|4096 (done)
+SKIP qwen3-8-27b-q4km|32768 (done)
+SKIP qwen3-8-27b-q4km|65536 (done)
+SKIP qwen3-8-27b-q4km|131072 (done)
+SKIP qwen3-8-27b-q4km|262144 (done)
+RUN  qwen3-8-27b-q4-0|4096 @ 17:16:54
+DONE qwen3-8-27b-q4-0|4096 status=ok prefill=1040.0 decode=28.86 vram=16.64 took=22s
+RUN  qwen3-8-27b-q4-0|32768 @ 17:17:17
+DONE qwen3-8-27b-q4-0|32768 status=ok prefill=779.3 decode=26.55 vram=17.46 took=91s
+RUN  qwen3-8-27b-q4-0|65536 @ 17:18:47
+DONE qwen3-8-27b-q4-0|65536 status=ok prefill=590.5 decode=24.77 vram=18.39 took=228s
+RUN  qwen3-8-27b-q4-0|131072 @ 17:22:35
+DONE qwen3-8-27b-q4-0|131072 status=ok prefill=396.2 decode=21.96 vram=20.27 took=667s
+RUN  qwen3-8-27b-q4-0|262144 @ 17:33:42
+DONE qwen3-8-27b-q4-0|262144 status=ok prefill=236.6 decode=17.54 vram=24.02 took=2220s
+RUN  huihui-abl-q4-k-m|4096 @ 18:10:41
+DONE huihui-abl-q4-k-m|4096 status=ok prefill=846.0 decode=28.02 vram=17.02 took=24s
+RUN  huihui-abl-q4-k-m|32768 @ 18:11:06
+DONE huihui-abl-q4-k-m|32768 status=ok prefill=665.8 decode=25.66 vram=17.84 took=108s
+RUN  huihui-abl-q4-k-m|65536 @ 18:12:54
+DONE huihui-abl-q4-k-m|65536 status=ok prefill=522.7 decode=24.24 vram=18.78 took=260s
+RUN  huihui-abl-q4-k-m|131072 @ 18:17:14
+DONE huihui-abl-q4-k-m|131072 status=ok prefill=360.0 decode=21.25 vram=20.65 took=735s
+RUN  huihui-abl-q4-k-m|262144 @ 18:29:29
+RUN  lfm3-1-7b-q4-k-m|4096 @ 18:57:01
+DONE lfm3-1-7b-q4-k-m|4096 status=ok prefill=7720.9 decode=270.13 gen=64 vram=1.38 took=8s
+RUN  lfm3-1-7b-q4-k-m|32768 @ 18:57:09
+DONE lfm3-1-7b-q4-k-m|32768 status=ok prefill=7480.2 decode=255.01 gen=64 vram=1.67 took=12s
+RUN  lfm3-1-7b-q4-k-m|65536 @ 18:57:21
+DONE lfm3-1-7b-q4-k-m|65536 status=ok prefill=5296.5 decode=223.59 gen=64 vram=1.95 took=20s
+RUN  lfm3-1-7b-q4-k-m|131072 @ 18:57:41
+DONE lfm3-1-7b-q4-k-m|131072 status=ok prefill=3281.4 decode=176.39 gen=64 vram=2.5 took=48s
+RUN  lfm3-1-7b-q4-k-m|262144 @ 18:58:29
+DONE lfm3-1-7b-q4-k-m|262144 status=ok prefill=1992.2 decode=127.92 gen=64 vram=3.61 took=139s
+RUN  qwen3-8-27b-q4km|4096 @ 19:00:48
+DONE qwen3-8-27b-q4km|4096 status=ok prefill=846.8 decode=30.61 gen=64 vram=16.94 took=18s
+RUN  qwen3-8-27b-q4km|32768 @ 19:01:06
+DONE qwen3-8-27b-q4km|32768 status=ok prefill=674.7 decode=28.49 gen=64 vram=17.76 took=57s
+RUN  qwen3-8-27b-q4km|65536 @ 19:02:03
+DONE qwen3-8-27b-q4km|65536 status=ok prefill=528.1 decode=26.55 gen=64 vram=18.7 took=133s
+RUN  qwen3-8-27b-q4km|131072 @ 19:04:16
+DONE qwen3-8-27b-q4km|131072 status=ok prefill=365.8 decode=23.16 gen=64 vram=20.57 took=367s
+RUN  qwen3-8-27b-q4km|262144 @ 19:10:23
+DONE qwen3-8-27b-q4km|262144 status=ok prefill=225.9 decode=18.62 gen=64 vram=24.32 took=1169s
+RUN  qwen3-8-27b-q4-0|4096 @ 19:29:53
+DONE qwen3-8-27b-q4-0|4096 status=ok prefill=992.3 decode=31.09 gen=64 vram=16.64 took=17s
+RUN  qwen3-8-27b-q4-0|32768 @ 19:30:10
+DONE qwen3-8-27b-q4-0|32768 status=ok prefill=782.1 decode=29.18 gen=64 vram=17.46 took=55s
+RUN  qwen3-8-27b-q4-0|65536 @ 19:31:05
+DONE qwen3-8-27b-q4-0|65536 status=ok prefill=590.8 decode=27.15 gen=64 vram=18.39 took=120s
+RUN  qwen3-8-27b-q4-0|131072 @ 19:33:04
+DONE qwen3-8-27b-q4-0|131072 status=ok prefill=396.4 decode=23.65 gen=64 vram=20.27 took=340s
+RUN  qwen3-8-27b-q4-0|262144 @ 19:38:44
+DONE qwen3-8-27b-q4-0|262144 status=ok prefill=236.7 decode=18.92 gen=64 vram=24.02 took=1116s
+RUN  huihui-abl-q4-k-m|4096 @ 19:57:20
+DONE huihui-abl-q4-k-m|4096 status=ok prefill=815.0 decode=30.45 gen=64 vram=17.02 took=18s
+RUN  huihui-abl-q4-k-m|32768 @ 19:57:38
+DONE huihui-abl-q4-k-m|32768 status=ok prefill=667.0 decode=28.4 gen=64 vram=17.84 took=62s
+RUN  huihui-abl-q4-k-m|65536 @ 19:58:40
+DONE huihui-abl-q4-k-m|65536 status=ok prefill=523.0 decode=26.48 gen=64 vram=18.78 took=134s
+RUN  huihui-abl-q4-k-m|131072 @ 20:00:54
+DONE huihui-abl-q4-k-m|131072 status=ok prefill=363.5 decode=23.19 gen=64 vram=20.65 took=369s
+RUN  huihui-abl-q4-k-m|262144 @ 20:07:04
+DONE huihui-abl-q4-k-m|262144 status=ok prefill=225.0 decode=18.59 gen=64 vram=24.4 took=1174s
+RUN  davidau-qwen3-8-27b-neo-max-mtp-q4-k-m|4096 @ 20:26:38
+DONE davidau-qwen3-8-27b-neo-max-mtp-q4-k-m|4096 status=ok prefill=756.2 decode=28.56 gen=64 vram=18.74 took=18s
+RUN  davidau-qwen3-8-27b-neo-max-mtp-q4-k-m|32768 @ 20:26:56
+DONE davidau-qwen3-8-27b-neo-max-mtp-q4-k-m|32768 status=ok prefill=632.5 decode=26.63 gen=64 vram=19.56 took=65s
+RUN  davidau-qwen3-8-27b-neo-max-mtp-q4-k-m|65536 @ 20:28:01
+DONE davidau-qwen3-8-27b-neo-max-mtp-q4-k-m|65536 status=ok prefill=501.7 decode=24.9 gen=64 vram=20.5 took=144s
+RUN  davidau-qwen3-8-27b-neo-max-mtp-q4-k-m|131072 @ 20:30:25
+DONE davidau-qwen3-8-27b-neo-max-mtp-q4-k-m|131072 status=ok prefill=353.1 decode=22.02 gen=64 vram=22.37 took=384s
+RUN  davidau-qwen3-8-27b-neo-max-mtp-q4-k-m|262144 @ 20:36:49
+DONE davidau-qwen3-8-27b-neo-max-mtp-q4-k-m|262144 status=ok prefill=221.0 decode=17.82 gen=64 vram=26.12 took=1199s
+RUN  qwen3-6-35b-a3b-ud-q4km|4096 @ 20:56:48
+DONE qwen3-6-35b-a3b-ud-q4km|4096 status=ok prefill=3097.6 decode=105.65 gen=64 vram=21.91 took=17s
+RUN  qwen3-6-35b-a3b-ud-q4km|32768 @ 20:57:05
+DONE qwen3-6-35b-a3b-ud-q4km|32768 status=ok prefill=2389.3 decode=96.49 gen=64 vram=22.24 took=30s
+RUN  qwen3-6-35b-a3b-ud-q4km|65536 @ 20:57:35
+DONE qwen3-6-35b-a3b-ud-q4km|65536 status=ok prefill=1660.1 decode=88.09 gen=64 vram=22.62 took=51s
+RUN  qwen3-6-35b-a3b-ud-q4km|131072 @ 20:58:26
+DONE qwen3-6-35b-a3b-ud-q4km|131072 status=ok prefill=1013.5 decode=78.33 gen=64 vram=23.38 took=141s
+RUN  qwen3-6-35b-a3b-ud-q4km|262144 @ 21:00:47
+DONE qwen3-6-35b-a3b-ud-q4km|262144 status=ok prefill=563.5 decode=62.23 gen=64 vram=24.89 took=477s
+RUN  ornith-1-5-35b-a3b-q4-k-m|4096 @ 21:08:45
+DONE ornith-1-5-35b-a3b-q4-k-m|4096 status=ok prefill=2976.1 decode=115.3 gen=64 vram=20.17 took=17s
+RUN  ornith-1-5-35b-a3b-q4-k-m|32768 @ 21:09:02
+DONE ornith-1-5-35b-a3b-q4-k-m|32768 status=ok prefill=2321.4 decode=103.38 gen=64 vram=20.5 took=26s
+RUN  ornith-1-5-35b-a3b-q4-k-m|65536 @ 21:09:28
+DONE ornith-1-5-35b-a3b-q4-k-m|65536 status=ok prefill=1627.4 decode=96.88 gen=64 vram=20.88 took=52s
+RUN  ornith-1-5-35b-a3b-q4-k-m|131072 @ 21:10:20
+DONE ornith-1-5-35b-a3b-q4-k-m|131072 status=ok prefill=1002.1 decode=82.62 gen=64 vram=21.64 took=143s
+RUN  ornith-1-5-35b-a3b-q4-k-m|262144 @ 21:12:42
+DONE ornith-1-5-35b-a3b-q4-k-m|262144 status=ok prefill=559.8 decode=66.03 gen=64 vram=23.16 took=480s
+wrote /home/ubuntu/ctx-sweep/sweep.json and /home/ubuntu/ctx-sweep/RESULTS.md

@@ -1,0 +1,22 @@
+[15:53:40] SWEEP START models=lfm3-1-7b-q4-k-m,qwen3-8-27b-q4km,qwen3-8-27b-q4-0,huihui-abl-q4-k-m,davidau-qwen3-8-27b-neo-max-mtp-q4-k-m,qwen3-6-35b-a3b-ud-q4km,ornith-1-5-35b-a3b-q4-k-m (+) rungs=4096,32768,65536,131072,262144
+[15:58:22] SWEEP START models=lfm3-1-7b-q4-k-m,qwen3-8-27b-q4km,qwen3-8-27b-q4-0,huihui-abl-q4-k-m,davidau-qwen3-8-27b-neo-max-mtp-q4-k-m,qwen3-6-35b-a3b-ud-q4km,ornith-1-5-35b-a3b-q4-k-m (+) rungs=4096,32768,65536,131072,262144
+[16:03:31] SWEEP START models=lfm3-1-7b-q4-k-m,qwen3-8-27b-q4km,qwen3-8-27b-q4-0,huihui-abl-q4-k-m,davidau-qwen3-8-27b-neo-max-mtp-q4-k-m,qwen3-6-35b-a3b-ud-q4km,ornith-1-5-35b-a3b-q4-k-m (+) rungs=4096,32768,65536,131072,262144
+[16:09:05] SWEEP START models=lfm3-1-7b-q4-k-m,qwen3-8-27b-q4km,qwen3-8-27b-q4-0,huihui-abl-q4-k-m,davidau-qwen3-8-27b-neo-max-mtp-q4-k-m,qwen3-6-35b-a3b-ud-q4km,ornith-1-5-35b-a3b-q4-k-m (+) rungs=4096,32768,65536,131072,262144
+[16:26:08] SWEEP START models=lfm3-1-7b-q4-k-m,qwen3-8-27b-q4km,qwen3-8-27b-q4-0,huihui-abl-q4-k-m,davidau-qwen3-8-27b-neo-max-mtp-q4-k-m,qwen3-6-35b-a3b-ud-q4km,ornith-1-5-35b-a3b-q4-k-m (+) rungs=4096,32768,65536,131072,262144
+[17:16:29] SWEEP START models=lfm3-1-7b-q4-k-m,qwen3-8-27b-q4km,qwen3-8-27b-q4-0,huihui-abl-q4-k-m,davidau-qwen3-8-27b-neo-max-mtp-q4-k-m,qwen3-6-35b-a3b-ud-q4km,ornith-1-5-35b-a3b-q4-k-m (+) rungs=4096,32768,65536,131072,262144
+[17:16:54] SWEEP START models=lfm3-1-7b-q4-k-m,qwen3-8-27b-q4km,qwen3-8-27b-q4-0,huihui-abl-q4-k-m,davidau-qwen3-8-27b-neo-max-mtp-q4-k-m,qwen3-6-35b-a3b-ud-q4km,ornith-1-5-35b-a3b-q4-k-m (+) rungs=4096,32768,65536,131072,262144
+[18:57:01] SWEEP START models=lfm3-1-7b-q4-k-m,qwen3-8-27b-q4km,qwen3-8-27b-q4-0,huihui-abl-q4-k-m,davidau-qwen3-8-27b-neo-max-mtp-q4-k-m,qwen3-6-35b-a3b-ud-q4km,ornith-1-5-35b-a3b-q4-k-m (+) rungs=4096,32768,65536,131072,262144
+[21:20:43] RUN1 rc=0 57 cells logged
+[21:20:43] UNIT UNLOCKED (zz-ctxsweep-lock.conf removed)
+[21:20:43] REPORT rc=0
+SERVICE DIED
+Nov 03 21:20:44 ubuntu24 llama-server[3109872]: 0.00.033.420 I srv    operator(): operator(): cleaning up before exit...
+Nov 03 21:20:44 ubuntu24 llama-server[3109872]: 0.00.033.492 E srv  llama_server: exiting due to HTTP server error
+Nov 03 21:20:44 ubuntu24 systemd[1502758]: qwen-longctx.service: Main process exited, code=exited, status=1/FAILURE
+Nov 03 21:20:44 ubuntu24 systemd[1502758]: qwen-longctx.service: Failed with result 'exit-code'.
+Nov 03 21:20:44 ubuntu24 systemd[1502758]: qwen-longctx.service: Scheduled restart job, restart counter is at 5.
+Nov 03 21:20:44 ubuntu24 systemd[1502758]: qwen-longctx.service: Start request repeated too quickly.
+Nov 03 21:20:44 ubuntu24 systemd[1502758]: qwen-longctx.service: Failed with result 'exit-code'.
+Nov 03 21:20:44 ubuntu24 systemd[1502758]: Failed to start qwen-longctx.service - Qwen3.8-27B llama.cpp Vulkan 128k R9700 (vision).
+[21:20:48] RESTORED stock38mtp
+[21:20:48] ALL DONE
