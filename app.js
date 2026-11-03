@@ -353,8 +353,8 @@
 
   function rowHTML(r, rank) {
     var c = r.cells || {};
-    var cls = rank ? "rank rank-" + rank : "";
-    var badge = rank ? '<span class="rank-badge">' + rank + "</span>" : "";
+    var cls = "";   /* podium removed: rank tints were unreadable and misordered */
+    var badge = "";
     var pAct = r.params_active && r.params_active !== r.params_total
       ? ' <span class="act">/ ' + esc(r.params_active) + "</span>" : "";
     var sp = speed(r);
@@ -563,8 +563,9 @@
     var rk = rankKey();
     var note = document.getElementById("ranknote");
     if (note) {
-      note.textContent = "Top 3 by " + (LABELS[rk] || rk) +
-        (state.sortKey && state.sortKey !== rk ? " (sorted column is not numeric)" : "");
+      note.textContent = state.sortKey
+        ? "Sorted by " + (LABELS[state.sortKey] || state.sortKey) + (state.dir === 1 ? " ↑" : " ↓")
+        : "";
     }
     document.getElementById("empty").hidden = order.length > 0;
     var lg = document.getElementById("speedkey");
