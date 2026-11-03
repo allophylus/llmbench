@@ -1,0 +1,135 @@
+{
+ "model": "27b",
+ "server_model": "<served model>",
+ "ran_at": "2026-11-02T13:12:25+0000",
+ "questions": [
+  {
+   "id": "q01",
+   "topic": "Terminator",
+   "q": "In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?",
+   "expect": "Skynet",
+   "answer": "The AI system is called Skynet.",
+   "tokens": 9,
+   "ms": 5908,
+   "decode_tps": 44.0,
+   "ok": true,
+   "verdict": "correct"
+  },
+  {
+   "id": "q02",
+   "topic": "Pokemon",
+   "q": "Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum's first partner?",
+   "expect": "Pikachu",
+   "answer": "The Pokémon known as the Electric Mouse Pokémon is Pikachu, who was Ash Ketchum's first partner.",
+   "tokens": 22,
+   "ms": 1108,
+   "decode_tps": 36.1,
+   "ok": true,
+   "verdict": "correct"
+  },
+  {
+   "id": "q03",
+   "topic": "Basketball",
+   "q": "In the NBA, how many points is a successful shot from beyond the three-point arc worth?",
+   "expect": "3",
+   "answer": "A successful shot from beyond the three-point arc is worth three points.",
+   "tokens": 15,
+   "ms": 688,
+   "decode_tps": 79.8,
+   "ok": true,
+   "verdict": "correct"
+  },
+  {
+   "id": "q04",
+   "topic": "World heritage",
+   "q": "The ancient city of Petra is a UNESCO World Heritage Site in which country?",
+   "expect": "Jordan",
+   "answer": "Petra is located in Jordan. It is a renowned archaeological site carved into rose-red cliffs and designated as a UNESCO World Heritage Site in 1985.",
+   "tokens": 34,
+   "ms": 1041,
+   "decode_tps": 56.9,
+   "ok": true,
+   "verdict": "correct"
+  },
+  {
+   "id": "q05",
+   "topic": "Malaysian food",
+   "q": "Name three traditional Malaysian dishes and say which state or region each is most associated with.",
+   "expect": "nasi lemak / char kway teow (Penang) / laksa Sarawak (Sarawak)",
+   "answer": "Nasi Lemak is most associated with the West Coast, particularly Selangor and Kuala Lumpur, while Satay is strongly linked to Penang. Additionally, Laksa is a signature dish of the East Coast, specifically Terengganu and Kelantan.",
+   "tokens": 53,
+   "ms": 1631,
+   "decode_tps": 44.8,
+   "ok": true,
+   "verdict": "partial",
+   "note": "listed only two dishes (nasi lemak, satay) and vague regional links"
+  },
+  {
+   "id": "q06",
+   "topic": "Bunnings",
+   "q": "At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?",
+   "expect": "so the onion does not fall out / it stays in the bread",
+   "answer": "Placing the onion under the sausage allows it to cook through and caramelize in the heat of the pan, ensuring it is soft and flavorful rather than raw. This positioning also helps the onion act as a bed that keeps the sausage elevated, preventing it from sticking to the hot surface.",
+   "tokens": 58,
+   "ms": 1756,
+   "decode_tps": 43.4,
+   "ok": true,
+   "verdict": "wrong",
+   "note": "answered 'caramelise in the pan' — misses the actual reason (keeps the onion in the bread)"
+  },
+  {
+   "id": "q07",
+   "topic": "Geography",
+   "q": "What is the capital city of Australia, and which state or territory is it in?",
+   "expect": "Canberra, ACT",
+   "answer": "The capital city of Australia is Canberra, which is located in the Australian Capital Territory (ACT).",
+   "tokens": 20,
+   "ms": 662,
+   "decode_tps": 86.1,
+   "ok": true,
+   "verdict": "correct"
+  },
+  {
+   "id": "q08",
+   "topic": "Science",
+   "q": "At sea level, at what temperature does pure water boil in degrees Celsius?",
+   "expect": "100",
+   "answer": "Pure water boils at 100 degrees Celsius at sea level.",
+   "tokens": 15,
+   "ms": 809,
+   "decode_tps": 35.7,
+   "ok": true,
+   "verdict": "correct"
+  },
+  {
+   "id": "q09",
+   "topic": "Literature",
+   "q": "Who wrote the novel Pride and Prejudice?",
+   "expect": "Jane Austen",
+   "answer": "The novel *Pride and Prejudice* was written by Jane Austen. It was first published in 1813.",
+   "tokens": 29,
+   "ms": 773,
+   "decode_tps": 82.4,
+   "ok": true,
+   "verdict": "correct"
+  },
+  {
+   "id": "q10",
+   "topic": "Internet",
+   "q": "What does the acronym HTTP stand for?",
+   "expect": "HyperText Transfer Protocol",
+   "answer": "HTTP stands for HyperText Transfer Protocol. It is the fundamental protocol used for exchanging data on the World Wide Web.",
+   "tokens": 24,
+   "ms": 809,
+   "decode_tps": 59.4,
+   "ok": true,
+   "verdict": "correct"
+  }
+ ],
+ "summary": {
+  "correct": 8,
+  "partial": 1,
+  "wrong": 1,
+  "accuracy": 80.0
+ }
+}

@@ -30,14 +30,14 @@ MODEL_LABEL = {
 }
 GAME_LABEL = {"galaga": "arcade shooter (TUI-derived)", "gta": "top-down driving (TUI-derived)", "physics": "3D physics sandbox (TUI-derived)", "solar": "solar system mission"}
 
-NAV = """<nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a><a href="../ablation/">ablation</a></nav>"""
+NAV = """<nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a><a href="../thinking/">thinking</a><a href="../ablation/">ablation</a><a href="../method/">method</a></nav>"""
 
 CSS = """
 :root{--bg:#0f141b;--panel:#151c26;--line:#243040;--fg:#e8eef8;--dim:#9fb0c6;--faint:#6f8296;--gold:#f5c542;--blue:#8cc8ff;--bad:#ff7b72;--ok:#7ee787}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 60px}
 h1{font-size:24px;margin:0 0 4px}.sub{color:var(--dim);margin:0 0 16px}
-.tabs{display:flex;gap:8px;margin:0 0 18px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
 .tabs a{padding:6px 12px;border:1px solid var(--line);border-radius:8px;color:var(--dim);text-decoration:none;font-size:13px}
 .tabs a.on{background:#1b2431;color:var(--fg);border-color:#33506b}
 table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -51,7 +51,18 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 .q{color:var(--fg)}.ans{color:var(--dim);font-size:13px}
 .prompt{color:var(--faint);font-size:12px;max-width:52ch}\n.detail{border:1px solid var(--line);border-radius:10px;padding:14px;margin:16px 0;background:var(--panel)}\n.detail h2{margin:0 0 6px;font-size:17px}.bigshot{width:min(560px,100%);border-radius:8px;border:1px solid var(--line);margin:10px 0}\n.promptbox{white-space:pre-wrap;font:12px/1.45 ui-monospace,monospace;color:var(--dim);background:#111821;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:260px;overflow:auto}\n.notes{color:var(--dim);margin:4px 0 8px}.sec{margin:26px 0 6px;font-size:15px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
 .meta{color:var(--faint);font-size:12px}
-@media(max-width:640px){th,td{padding:7px 6px;font-size:12px}.thumb{width:96px}}
+@media(max-width:640px){th,td{padding:7px 6px;font-size:12px}.thumb{width:96px}
+.detail,.wrap{min-width:0;max-width:100%}
+.table-wrap{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+body{overflow-x:hidden}
+.wrap{box-sizing:border-box}
+html,body{max-width:100vw}
+.wrap{width:100%;max-width:1180px;margin:0 auto;padding:28px 18px 60px}
+@media(max-width:640px){.wrap{padding:20px 12px 48px}}
+table{min-width:520px}
+.detail .promptbox{max-height:180px}
+.ans,.q{word-break:break-word}
+}
 """
 
 def esc(s):
@@ -80,7 +91,7 @@ def game_rows():
                 model_file = os.path.basename(json.load(open(_gj)).get("model_requested") or "")
             except Exception:
                 model_file = ""
-        if model_file in ("", "active.gguf"):
+        if model_file.startswith("active.") or model_file == "":
             model_file = {"qwen3-8-27b-q4km": "Qwen3.8-27B-Q4_K_M.gguf",
                           "qwen3-6-35b-a3b-ud-q4km": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"}.get(base, model_file)
         model = MODEL_LABEL[base]
@@ -182,10 +193,10 @@ def build_games():
     body = ("<p class=sub>Each model writes a single-file three.js game from a frozen prompt. "
             "The model draws everything with geometry — no images, textures or audio files. "
             "Repeats = extra generation turns allowed to fix a failing build (max 10).</p>"
-            "<table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th>"
+            "<div class=table-wrap><table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th>"
             "<th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th>"
             "<th>Robot</th><th>Screenshot</th><th>Play</th></tr></thead><tbody>"
-            + "".join(tr) + "</tbody></table>"
+            + "".join(tr) + "</tbody></table></div>"
             "<h2 class=sec>Details</h2>" + "".join(details))
     open(os.path.join(GAMES, "index.html"), "w").write(page("games — model-written browser games", body))
     print("games rows:", len(rows))
@@ -215,6 +226,8 @@ def build_chat():
             ms = [q.get("ms") for q in qs if q.get("ms")]
             avg_ms = int(sum(ms) / len(ms)) if ms else None
             acc = round(100.0 * corr / len(qs), 1) if qs else None
+            tps = [q.get("decode_tps") for q in qs if isinstance(q.get("decode_tps"), (int, float))]
+            mean_tps = round(sum(tps) / len(tps), 1) if tps else None
             anchor = "chat-%s-%s" % (base, "on" if think else "off")
             mode = "on" if think else "off"
             summary_rows.append(
@@ -222,6 +235,7 @@ def build_chat():
                 f"<td><a href='#{esc(anchor)}'>{esc(label)}</a></td><td>{mode}</td>"
                 f"<td class=num>{corr}</td><td class=num>{part}</td><td class=num>{wrong}</td>"
                 f"<td class=num>{'' if acc is None else acc}%</td>"
+                f"<td class=num>{'' if mean_tps is None else mean_tps}</td>"
                 f"<td class=num>{toks}</td><td class=num>{'' if avg_ms is None else round(avg_ms/1000.0,2)}</td>"
                 "</tr>")
             tr = []
@@ -240,15 +254,46 @@ def build_chat():
                 f"<h2>{esc(label)} — thinking {mode} <span class=pill>{'' if acc is None else acc}%</span></h2>"
                 f"<p class=meta>{corr} correct · {part} partial · {wrong} wrong · {toks} tokens · "
                 f"avg {'' if avg_ms is None else avg_ms} ms/question</p>"
-                "<table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th>"
+                "<div class=table-wrap><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th>"
                 "<th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody>"
-                + "".join(tr) + "</tbody></table></section>")
+                + "".join(tr) + "</tbody></table></div></section>")
 
-    body = ("<p class=sub>Ten fixed knowledge questions, temperature 0, run twice per model "
-            "(thinking off, then on). Accuracy = strictly correct answers.</p>"
-            "<table><thead><tr><th>Model</th><th>Thinking</th><th>Correct</th><th>Partial</th>"
-            "<th>Wrong</th><th>Accuracy</th><th>Tokens</th><th>Avg s</th></tr></thead><tbody>"
-            + "".join(summary_rows) + "</tbody></table>"
+    # the campaign suite: every model on the same 10 questions, thinking off. Older one-off
+    # files ("27b") used a different prompt set and are not part of this comparison.
+    camp = []
+    for base, modes in groups.items():
+        d = modes.get(False)
+        if not d or base == "27b":
+            continue
+        qs = d.get("questions", [])
+        c = sum(1 for q in qs if q.get("verdict") == "correct")
+        p = sum(1 for q in qs if q.get("verdict") == "partial")
+        tps = [q.get("decode_tps") for q in qs if isinstance(q.get("decode_tps"), (int, float))]
+        camp.append((OV.get(base) or MODEL_LABEL.get(base, base), c, p, len(qs) - c - p,
+                     round(100.0 * c / len(qs), 1) if qs else None,
+                     round(sum(tps) / len(tps), 1) if tps else None))
+    camp.sort(key=lambda x: -(x[5] or 0))
+    saturated = len(camp) >= 3 and len({(x[1], x[2]) for x in camp}) == 1
+
+
+    body = ("<p class=sub>Ten fixed knowledge questions, temperature 0, thinking off. "
+            "Accuracy = strictly correct answers.</p>"
+            + (f"<p class=warn><b>Saturated test.</b> All {len(camp)} models score "
+               f"{camp[0][1]}/{camp[0][3]} correct plus {camp[0][2]} partial "
+               f"({camp[0][4]}%), so this suite cannot tell these models apart. "
+               "The table is ordered by decode speed, not by quality — a tie is a tie.</p>"
+               if saturated else "")
+            + "<div class=table-wrap><table><thead><tr><th>Model</th><th>Correct</th><th>Partial</th>"
+            "<th>Wrong</th><th>Accuracy</th><th>Decode t/s</th></tr></thead><tbody>"
+            + "".join(f"<tr><td>{esc(n)}</td><td class=num>{c}</td><td class=num>{p}</td>"
+                      f"<td class=num>{w}</td><td class=num>{a}%</td><td class=num>{t}</td></tr>"
+                      for (n, c, p, w, a, t) in camp)
+            + '</tbody></table></div>'
+            '<p class=meta>Decode t/s is the mean of the server rate for each short answer '
+            '(includes the first, warm-up question), so it sits slightly below the steady-state '
+            'figure in the overview table. Raw per-question JSONs: '
+            '<a href="../raw-chat/">raw-chat/</a>. How it is scored: '
+            '<a href="../method/">method</a>.</p>' 
             "<h2 class=sec>Per-question detail</h2>" + "".join(details))
     os.makedirs(os.path.join(ROOT, "chat"), exist_ok=True)
     open(os.path.join(ROOT, "chat", "index.html"), "w").write(page("chat — knowledge accuracy", body))

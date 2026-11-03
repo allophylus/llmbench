@@ -1,0 +1,62 @@
+[
+ {
+  "id": "q01",
+  "topic": "Terminator",
+  "q": "In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?",
+  "expect": "Skynet"
+ },
+ {
+  "id": "q02",
+  "topic": "Pokemon",
+  "q": "Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum's first partner?",
+  "expect": "Pikachu"
+ },
+ {
+  "id": "q03",
+  "topic": "Basketball",
+  "q": "In the NBA, how many points is a successful shot from beyond the three-point arc worth?",
+  "expect": "3"
+ },
+ {
+  "id": "q04",
+  "topic": "World heritage",
+  "q": "The ancient city of Petra is a UNESCO World Heritage Site in which country?",
+  "expect": "Jordan"
+ },
+ {
+  "id": "q05",
+  "topic": "Malaysian food",
+  "q": "Name three traditional Malaysian dishes and say which state or region each is most associated with.",
+  "expect": "nasi lemak / char kway teow (Penang) / laksa Sarawak (Sarawak)"
+ },
+ {
+  "id": "q06",
+  "topic": "Bunnings",
+  "q": "At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?",
+  "expect": "so the onion does not fall out / it stays in the bread"
+ },
+ {
+  "id": "q07",
+  "topic": "Geography",
+  "q": "What is the capital city of Australia, and which state or territory is it in?",
+  "expect": "Canberra, ACT"
+ },
+ {
+  "id": "q08",
+  "topic": "Science",
+  "q": "At sea level, at what temperature does pure water boil in degrees Celsius?",
+  "expect": "100"
+ },
+ {
+  "id": "q09",
+  "topic": "Literature",
+  "q": "Who wrote the novel Pride and Prejudice?",
+  "expect": "Jane Austen"
+ },
+ {
+  "id": "q10",
+  "topic": "Internet",
+  "q": "What does the acronym HTTP stand for?",
+  "expect": "HyperText Transfer Protocol"
+ }
+]

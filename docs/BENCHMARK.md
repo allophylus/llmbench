@@ -53,7 +53,7 @@ llama-server -m <model.gguf> \
 
 The always-on serving instance answers on **port 8080** (systemd unit `qwen-longctx.service`; same flags, model via
 `~/.config/systemd/user/qwen-longctx.service.d/z-active-model.conf`).
-`switch-model.sh <preset>` relinks `models/active.gguf` and rewrites that drop-in.
+`switch-model.sh <preset>` relinks the served model file and rewrites that drop-in.
 
 Rules that exist because they were learned the hard way:
 

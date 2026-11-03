@@ -1,6 +1,6 @@
 {
  "model": "27b",
- "server_model": "/home/ubuntu/models/active.gguf",
+ "server_model": "<served model>",
  "ran_at": "2026-11-02T13:12:25+0000",
  "questions": [
   {
@@ -20,7 +20,7 @@
    "topic": "Pokemon",
    "q": "Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum's first partner?",
    "expect": "Pikachu",
-   "answer": "The Pok\u00e9mon known as the Electric Mouse Pok\u00e9mon is Pikachu, who was Ash Ketchum's first partner.",
+   "answer": "The Pokémon known as the Electric Mouse Pokémon is Pikachu, who was Ash Ketchum's first partner.",
    "tokens": 22,
    "ms": 1108,
    "decode_tps": 36.1,
@@ -75,7 +75,7 @@
    "decode_tps": 43.4,
    "ok": true,
    "verdict": "wrong",
-   "note": "answered 'caramelise in the pan' \u2014 misses the actual reason (keeps the onion in the bread)"
+   "note": "answered 'caramelise in the pan' — misses the actual reason (keeps the onion in the bread)"
   },
   {
    "id": "q07",

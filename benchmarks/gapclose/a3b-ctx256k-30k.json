@@ -1,0 +1,62 @@
+{
+ "label": "a3b-ctx256k-30k",
+ "base": "local server",
+ "model_path": "<served model>",
+ "build_info": "b11517-8a1a9b512",
+ "target_tokens": 30000,
+ "tokens_calibrated": 29953,
+ "calibration": {
+  "units": 4,
+  "tail_chars": 2613,
+  "unit_tokens": 7340,
+  "unit_chars": 30000,
+  "err": 0.00157
+ },
+ "max_tokens": 64,
+ "temperature": 0,
+ "cache_prompt": false,
+ "n_ctx": 262144,
+ "when": "2026-11-03T10:06:12+0000",
+ "vram_idle_gib": 24.83,
+ "runs": [
+  {
+   "rep": 1,
+   "wall_s": 12.8,
+   "prompt_n": 29963,
+   "predicted_n": 64,
+   "prefill_ms": 12081.2,
+   "prefill_tps": 2480.1,
+   "decode_ms": 641.6,
+   "decode_tps": 98.19,
+   "cached_tokens": 0,
+   "finish_reason": "length",
+   "content_head": ""
+  }
+ ],
+ "vram_peak_gib": 24.89,
+ "vram_tail_gib": 24.89,
+ "vram_samples": 15,
+ "summary": {
+  "prefill_tps": {
+   "mean": 2480.1,
+   "min": 2480.1,
+   "max": 2480.1,
+   "spread_pct": 0.0,
+   "n": 1
+  },
+  "decode_tps": {
+   "mean": 98.19,
+   "min": 98.19,
+   "max": 98.19,
+   "spread_pct": 0.0,
+   "n": 1
+  },
+  "wall_s": {
+   "mean": 12.8,
+   "min": 12.8,
+   "max": 12.8,
+   "spread_pct": 0.0,
+   "n": 1
+  }
+ }
+}

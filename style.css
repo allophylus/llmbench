@@ -401,3 +401,58 @@ td.c-name .dep-note { display: block; font: 11px/1.35 var(--mono); color: var(--
 .probe th:nth-child(3) { width: 44%; }
 .probe .rung { display: block; font-size: 12.5px; }
 .probe td { vertical-align: top; }
+
+/* ---- v4: data status, failed rows, speed evidence, error bars ---- */
+.notice {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent-dim);
+  border-radius: 8px;
+  background: var(--bg-soft);
+  padding: .7rem .9rem;
+  margin: 1rem 0;
+  color: var(--fg-dim);
+  font-size: 13.5px;
+  max-width: 92ch;
+}
+.notice p { margin: 0; }
+.notice strong { color: var(--fg); }
+
+tbody tr.row-failed td { color: var(--fg-dim); }
+tbody tr.row-failed .c-name { color: var(--fg-dim); }
+tbody tr.row-failed .c-name .slug { color: var(--fg-faint); }
+.st {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font: 10.5px/1.6 var(--mono);
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.st-failed { color: #ff9a91; border-color: rgba(255,123,114,.5); background: rgba(255,123,114,.08); }
+.st-hist { color: var(--warn); border-color: rgba(224,176,94,.45); background: rgba(224,176,94,.07); text-transform: none; letter-spacing: 0; }
+td.c-evidence { min-width: 210px; max-width: 300px; white-space: normal; text-align: left; }
+td.c-evidence code { font: 11px/1.4 var(--mono); color: var(--fg); word-break: break-word; }
+td.c-evidence .ev-meta { display: block; font: 10.5px/1.4 var(--mono); color: var(--fg-faint); margin-top: .15rem; }
+.probe .spread { color: var(--fg-faint); font-size: 11.5px; }
+.probe-note.sm { font-size: 12.5px; margin-top: .2rem; }
+.err table { min-width: 640px; }
+
+@media (max-width: 760px) {
+  .notice { font-size: 12.5px; }
+  td.c-evidence { min-width: 0; max-width: none; grid-column: 1 / -1; }
+  .probes .table-wrap { overflow-x: auto; }
+  .probe { min-width: 560px; }
+}
+.probe-tag {
+  display: inline-block;
+  margin-bottom: .2rem;
+  padding: 1px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(94,224,163,.4);
+  color: #9fe0b8;
+  font: 10.5px/1.6 var(--mono);
+  letter-spacing: .04em;
+  white-space: nowrap;
+}

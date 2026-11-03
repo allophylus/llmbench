@@ -37,6 +37,7 @@
     { key: "context_window", type: "num"    },
     { key: "vram_mib",       type: "num"    },
     { key: "date",           type: "text"   },
+    { key: "speed_evidence", type: "text"   },
   ];
   var COL = {};
   COLUMNS.forEach(function (c) { COL[c.key] = c; });
@@ -49,7 +50,7 @@
     quant: "Quant", arch: "Arch", date: "Date",
     std_prefill: "Prefill t/s at 30K", std_decode: "Decode t/s at 30K",
     deep_prefill: "Prefill t/s at depth", deep_decode: "Decode t/s at depth",
-    ctx_label: "Server ctx"
+    ctx_label: "Server ctx", speed_evidence: "Speed evidence"
   };
 
   var state = { sortKey: null, dir: 0, rows: [], view: [], group: "all" };
@@ -93,6 +94,21 @@
     if (key === "deep_decode")  { var d2 = deepest(row); return d2 ? num(d2.decode_tps) : null; }
     if (key === "ctx_label") return row.ctx_label || (row.context_window ? fmtCtx(num(row.context_window)) : null);
     if (key === "date") return row.date || null;
+    if (key === "speed_evidence") {
+      if (row.measurement_status) return row.measurement_status;
+      if (row.speed) {
+        var std0 = (row.speed.standard || {});
+        var rungs = (row.speed.deep || []).length;
+        return "live probe " + (std0.tokens || 0).toLocaleString() + " tok" +
+          (rungs ? " + " + rungs + " deep rung(s)" : "") +
+          (row.engine_build ? " · " + row.engine_build : "");
+      }
+      var bits = [];
+      if (row.speed_flags) bits.push(row.speed_flags);
+      if (row.engine_build) bits.push(row.engine_build);
+      if (row.speed_measured_at) bits.push(coarseDate(row.speed_measured_at));
+      return bits.join(" · ") || null;
+    }
     if (key === "name") return (row.name || "") + " " + (row.slug || "");
     if (key === "quant") return row.quant || null;
     if (key === "arch") return row.arch || null;
@@ -196,6 +212,12 @@
     return v >= 1024 ? Math.round(v / 1024) + "k" : String(v);
   }
 
+  /** "2026-11-02T20:44:16+0800" -> "2026-11-02" (source dates are ISO-ish, but not always Z) */
+  function coarseDate(v) {
+    var m = String(v || "").match(/^\d{4}-\d{2}-\d{2}/);
+    return m ? m[0] : String(v || "");
+  }
+
   function shortNum(v) {
     if (v === null || v === undefined) return "";
     return v >= 10000 ? Math.round(v / 1000) + "K" : v.toLocaleString();
@@ -292,9 +314,10 @@
       ? esc(r.name) + featBadges(r)
       : '<span class="same-model">&#8635;</span>' + esc(r.name) + ' <span class="dim">(' + esc(r.ctx_label || "") + ')</span>';
     var deepNote = "";                    // the per-context probe table below carries the rungs
-    var img = r.slug;
+    if (r.status === "failed") cls = (cls ? cls + " " : "") + "row-failed";
     return '<tr class="' + cls + '">' +
       '<td class="c-name">' + (firstOfModel ? badge : "") + nameCell +
+        (r.status === "failed" ? ' <span class="st st-failed" title="the run did not produce a measurement">failed</span>' : "") +
         '<span class="slug">' + esc(r.filename || r.slug) + "</span>" +
         '<span class="meta">' + esc(metaLine(r)) + "</span>" +
         (deepNote ? deepNote : "") + "</td>" +
@@ -316,7 +339,43 @@
       '<td class="num" data-label="VRAM">' +
         (num(r.vram_mib) !== null ? (r.vram_mib / 1024).toFixed(1) : '<span class="dash">—</span>') + "</td>" +
       '<td class="num c-date" data-label="Date">' + esc(r.date || "—") + "</td>" +
+      evidenceCell(r) +
     "</tr>";
+  }
+
+  /* ---- last column: can this row be trusted, and can it be re-run here? ---- */
+  function evidenceCell(r) {
+    if (r.speed) {
+      var st = (r.speed.standard || {});
+      var meta = [];
+      if (r.kv_cache) meta.push("KV " + esc(r.kv_cache));
+      if (r.engine_build) meta.push(esc(r.engine_build));
+      if (r.speed_measured_at) meta.push(coarseDate(r.speed_measured_at));
+      return '<td class="ev c-evidence" data-label="Speed evidence">' +
+        '<span class="probe-tag">live probe · ' + (st.tokens || 0).toLocaleString() + " tok" +
+        (st.pending ? " · pending" : "") + "</span>" +
+        (r.speed_flags ? '<code>' + esc(r.speed_flags) + "</code>" : "") +
+        (meta.length ? '<span class="ev-meta">' + meta.join(" · ") + "</span>" : "") +
+        "</td>";
+    }
+    if (r.measurement_status) {
+      var failed = /^failed/.test(r.measurement_status);
+      return '<td class="ev c-evidence" data-label="Speed evidence">' +
+        '<span class="' + (failed ? "st st-failed" : "st st-hist") + '">' +
+        esc(r.measurement_status) + "</span>" +
+        (r.engine_build ? '<span class="ev-meta">' + esc(r.engine_build) + "</span>" : "") +
+        "</td>";
+    }
+    var bits = [];
+    if (r.speed_flags) bits.push('<code>' + esc(r.speed_flags) + "</code>");
+    var meta = [];
+    if (r.kv_cache) meta.push("KV " + esc(r.kv_cache));
+    if (r.engine_build) meta.push(esc(r.engine_build));
+    if (r.speed_measured_at) meta.push(coarseDate(r.speed_measured_at));
+    return '<td class="ev c-evidence" data-label="Speed evidence">' +
+      (bits.join(" ") || '<span class="dash">—</span>') +
+      (meta.length ? '<span class="ev-meta">' + meta.join(" · ") + "</span>" : "") +
+      "</td>";
   }
 
   /* ---- top-3 highlight: follows the active numeric sort, else Decode t/s ---- */
@@ -432,6 +491,49 @@
 
   /* ----------------------------------------------------------------- boot */
 
+  /* ---- error bars: how much a single number can move between identical runs ---- */
+  function pct(v, d) {
+    return v === null || v === undefined ? "—" : Number(v).toFixed(d === undefined ? 2 : d) + "%";
+  }
+
+  function errorBars(eb) {
+    var host = document.getElementById("errbars");
+    if (!host) return;
+    if (!eb) { host.hidden = true; return; }
+    var rows = [
+      ["A3B, 32K server window", eb.a3b_32k, false],
+      ["A3B, 256K server window", eb.a3b_256k, false],
+      ["Qwen3.8-27B, 131K server window", eb.qwen38_27b_32k, true]
+    ];
+    var body = rows.map(function (r) {
+      var k = r[1];
+      if (!k) return "";
+      var dec = k.decode || {};
+      var decTxt = dec.mean === null || dec.mean === undefined ? "—"
+        : fmtNum(dec.mean, 2) + (dec.n > 1
+          ? ' <span class="spread">' + pct(dec.spread_pct) + " spread</span>"
+          : ' <span class="spread">' + esc(dec.n === 1 ? "1 rep" : "n/a") + "</span>");
+      return "<tr><td>" + esc(r[0]) + "</td>" +
+        '<td class="num">' + fmtNum(k.prefill.mean, 1) + ' <span class="spread">' + pct(k.prefill.spread_pct) + "</span></td>" +
+        '<td class="num">' + decTxt + "</td>" +
+        '<td class="num">' + fmtNum(k.wall_s.mean, 2) + ' <span class="spread">' + pct(k.wall_s.spread_pct) + "</span></td>" +
+        '<td class="num">' + (k.n || "") + "</td></tr>";
+    }).join("");
+    host.innerHTML = '<h2>Error bars — how far one identical run moves</h2>' +
+      '<p class="probe-note">' + esc(eb.policy) + " Every measured spread in the campaign was under 5% " +
+      "(largest " + pct(eb.max_spread_pct) + "), so the single-run numbers elsewhere on this page are " +
+      "trustworthy at that level. Prefill/decode are the server's own rates; spread is (max−min)/mean.</p>" +
+      '<div class="table-wrap"><table class="probe"><thead><tr><th>Point</th>' +
+      "<th>Prefill t/s (spread)</th><th>Decode t/s (spread)</th><th>Wall s (spread)</th><th>Reps</th>" +
+      "</tr></thead><tbody>" + body + "</tbody></table></div>" +
+      '<p class="probe-note sm">Qwen3.8-27B decode is one valid <code>/completion ignore_eos</code> run at ' +
+      "28.61 t/s (400 generated tokens); its chat-probe figure (25.9 at 2 tokens) is an end-of-answer " +
+      "stop, i.e. noise, and is not a decode measurement — so no decode spread is quoted for it.</p>" +
+      '<p class="probe-note sm">Accuracy cells stop at ctx110k; speed reaches 262k (the A3B rows). ' +
+      "A missing accuracy cell above 110k means not measured, not not-run.</p>";
+    host.hidden = false;
+  }
+
   /* ---- "how each number was measured": one compact table per model that has them ---- */
   function probesTable(rows) {
     var host = document.getElementById("probes");
@@ -485,6 +587,7 @@
     if (sortable) sortable.dataset.ready = "1";
     fillArchSelects(state.rows);
     probesTable(state.rows);
+    errorBars(doc && doc.error_bars);
     wire();
     paint();
   }

@@ -287,12 +287,18 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
 
         # throughput: llama-bench family > tune c0-ppextended; *_tps metric spelling handled
         pp_src = [r for r in _ranked(measured) if norm_kind(r) in ("rebench", "bench", "tune", "power-sweep")]
+        # the prefill/decode numbers in the speed column come from ONE cell, so the
+        # recorded flags/build describe both (mixing cells would mislabel one of them)
         prefill = _first(pp_src, PP_IDS, "pp512")
         decode = _first(pp_src, PP_IDS, "tg128")
+        _src_rec = next((r for r in pp_src
+                         if _cell(_tests(r).get("llama-bench-ppextended"), "pp512") is not None),
+                        None)
         if prefill is None:
             prefill = _first(pp_src, (TUNE_PP_ID,), "pp512")
-        if decode is None:
             decode = _first(pp_src, (TUNE_PP_ID,), "tg128")
+            _src_rec = next((r for r in pp_src
+                             if _cell(_tests(r).get(TUNE_PP_ID), "pp512") is not None), None)
 
         # live speed probe (results/speed.<slug>.json) overrides bench-cell values when present
         sp = None
@@ -329,6 +335,34 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
             cells["ctx_sweep"] = {k: v for k, v in sweep.items() if _num(v) is not None}
 
         vram = _num(env.get("peak_vram_mib"))
+        # measurement block: the serve shape the throughput numbers were taken under
+        row_status = ("done" if any(r.get("status") == "done" for r in recs) else
+                      ("partial" if any(r.get("status") == "partial" for r in recs) else "failed"))
+        # identity comes from the record that produced THIS row's speed: the top-ranked
+        # measured record. Falling through the whole group would lend one record's build
+        # and flags to a row measured by a different one.
+        _id = _src_rec or (_ranked(measured) or [{}])[0]
+        _ienv = _id.get("env") or {}
+        _flags = _ienv.get("flags")
+        _kv = _ienv.get("kv_cache")
+        _build = _ienv.get("llama_build")
+        if sp and sp.get("measured_at"):
+            _at, _how = sp.get("measured_at"), sp.get("method")
+        elif prefill is not None or decode is not None:
+            _at, _how = (date or None), "llama-bench / suite cell (pp512 prefill, tg128 decode)"
+        else:
+            _at, _how = None, None
+        # weights gone from the card, or a run that never loaded: say so in the data,
+        # so an old number never reads as something the reader could reproduce today
+        if not prefill and not decode:
+            _meas = "failed — no speed measured" if row_status == "failed" else "no speed probe recorded (accuracy cells still valid)"
+        elif not (_flags or _kv or _build):
+            # env has no build/flags: this record came from the pre-rebench era, when the
+            # weights were on the card. None of those files are here now (INVENTORY), so the
+            # card cannot re-run them without a fresh multi-GB download.
+            _meas = "not re-measurable on this host (weights deleted; historical numbers)"
+        else:
+            _meas = None
         import re as _re
         _name = _re.sub(r"\s*\((?:[^)]*prod[^)]*|[^)]*:\d{2,5}[^)]*)\)", "", name or "").strip()
         row = {
@@ -351,13 +385,17 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
                 os.path.relpath(r["_path"], raw_dir).replace(os.sep, "/")
                 if _under(r["_path"], raw_dir) else r["_src"]
                 for r in recs}),
-            "speed_measured_at": (sp or {}).get("measured_at"),
+            "speed_measured_at": _at,
             "filename": (sp or {}).get("filename"),
             "features": (sp or {}).get("features") or None,
-            "speed_method": (sp or {}).get("method"),
-            "status": "done" if any(r.get("status") == "done" for r in recs) else
-                      ("partial" if any(r.get("status") == "partial" for r in recs) else "failed"),
+            "speed_method": _how,
+            "speed_flags": _flags,
+            "kv_cache": _kv,
+            "engine_build": _build,
+            "status": row_status,
         }
+        if _meas:
+            row["measurement_status"] = _meas
         if not row.get("features"):
             hay = " ".join(str(x or "") for x in
                            (row.get("name"), row.get("arch"), row.get("quant"), row.get("slug"))).lower()
@@ -393,7 +431,7 @@ def main():
     rows = build(recs, video_index(a.videos_dir), a.video_base, a.raw_dir)
 
     # merge game-creation stats (attempts, tokens, build time) from the games cells
-    _gdir = os.environ.get("GAMES_DIR", "/home/fen/repos/llmbench/games")
+    _gdir = os.environ.get("GAMES_DIR", os.path.join(REPO, "games"))
     for r in rows:
         _gp = os.path.join(_gdir, r["slug"], "build.json")
         if not os.path.exists(_gp):

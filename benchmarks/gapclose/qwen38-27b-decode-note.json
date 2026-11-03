@@ -1,0 +1,21 @@
+{
+ "label": "qwen38-27b-decode-x3",
+ "method": "/completion ignore_eos n_predict=400 (ablate2 method), 30k calibrated prompt",
+ "n_ctx": 131072,
+ "note": "rep-1 completed and is a valid steady-state decode (predicted_n=400); reps 2-3 hung on the /completion endpoint and were killed. Chat probe (probe_std.py) reverse-verified the hang: chat returns predicted_n=2 (EOS 'DONE'), which is noise per BENCHMARK.md S4, not a decode number.",
+ "runs": [
+  {
+   "rep": 1,
+   "wall_s": 57.6,
+   "prompt_n": 29965,
+   "predicted_n": 400,
+   "prefill_tps": 687.4,
+   "decode_tps": 28.61,
+   "stopped": true,
+   "truncated": false
+  }
+ ],
+ "decode_tps_valid": 28.61,
+ "prefill_tps_valid": 687.4,
+ "crosscheck_ablation_27k": "28.7 t/s decode, 698 t/s prefill at 27.7k ctx (ablation arm 1 baseline) -- consistent"
+}

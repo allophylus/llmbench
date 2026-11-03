@@ -3,7 +3,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 60px}
 h1{font-size:24px;margin:0 0 4px}.sub{color:var(--dim);margin:0 0 16px}
-.tabs{display:flex;gap:8px;margin:0 0 18px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
 .tabs a{padding:6px 12px;border:1px solid var(--line);border-radius:8px;color:var(--dim);text-decoration:none;font-size:13px}
 .tabs a.on{background:#1b2431;color:var(--fg);border-color:#33506b}
 table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -21,5 +21,508 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 .promptbox{white-space:pre-wrap;font:12px/1.45 ui-monospace,monospace;color:var(--dim);background:#111821;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:260px;overflow:auto}
 .notes{color:var(--dim);margin:4px 0 8px}.sec{margin:26px 0 6px;font-size:15px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
 .meta{color:var(--faint);font-size:12px}
-@media(max-width:640px){th,td{padding:7px 6px;font-size:12px}.thumb{width:96px}}
-</style></head><body><div class=wrap><nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a><a href="../ablation/">ablation</a></nav><h1>chat — knowledge accuracy</h1><p class=sub>Ten fixed knowledge questions, temperature 0, run twice per model (thinking off, then on). Accuracy = strictly correct answers.</p><table><thead><tr><th>Model</th><th>Thinking</th><th>Correct</th><th>Partial</th><th>Wrong</th><th>Accuracy</th><th>Tokens</th><th>Avg s</th></tr></thead><tbody><tr><td><a href='#chat-27b-off'>Qwen3.8-27B</a></td><td>off</td><td class=num>8</td><td class=num>1</td><td class=num>1</td><td class=num>80.0%</td><td class=num>279</td><td class=num>1.52</td></tr></tbody></table><h2 class=sec>Per-question detail</h2><section class=detail id='chat-27b-off'><h2>Qwen3.8-27B — thinking off <span class=pill>80.0%</span></h2><p class=meta>8 correct · 1 partial · 1 wrong · 279 tokens · avg 1518 ms/question</p><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th><th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>q01</td><td>Terminator</td><td class=q>In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?</td><td class=ans>The AI system is called Skynet.</td><td class=ok>correct</td><td class=num>9</td><td class=num>5.91</td></tr><tr><td class=num>q02</td><td>Pokemon</td><td class=q>Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum&#x27;s first partner?</td><td class=ans>The Pokémon known as the Electric Mouse Pokémon is Pikachu, who was Ash Ketchum&#x27;s first partner.</td><td class=ok>correct</td><td class=num>22</td><td class=num>1.11</td></tr><tr><td class=num>q03</td><td>Basketball</td><td class=q>In the NBA, how many points is a successful shot from beyond the three-point arc worth?</td><td class=ans>A successful shot from beyond the three-point arc is worth three points.</td><td class=ok>correct</td><td class=num>15</td><td class=num>0.69</td></tr><tr><td class=num>q04</td><td>World heritage</td><td class=q>The ancient city of Petra is a UNESCO World Heritage Site in which country?</td><td class=ans>Petra is located in Jordan. It is a renowned archaeological site carved into rose-red cliffs and designated as a UNESCO World Heritage Site in 1985.</td><td class=ok>correct</td><td class=num>34</td><td class=num>1.04</td></tr><tr><td class=num>q05</td><td>Malaysian food</td><td class=q>Name three traditional Malaysian dishes and say which state or region each is most associated with.</td><td class=ans>Nasi Lemak is most associated with the West Coast, particularly Selangor and Kuala Lumpur, while Satay is strongly linked to Penang. Additionally, Laksa is a signature dish of the East Coast, specifically Terengganu and Kelantan.</td><td class=warn>partial</td><td class=num>53</td><td class=num>1.63</td></tr><tr><td class=num>q06</td><td>Bunnings</td><td class=q>At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?</td><td class=ans>Placing the onion under the sausage allows it to cook through and caramelize in the heat of the pan, ensuring it is soft and flavorful rather than raw. This positioning also helps the onion act as a bed that keeps the sausage elevated, preventing it from sticking to the hot surface.</td><td class=bad>wrong</td><td class=num>58</td><td class=num>1.76</td></tr><tr><td class=num>q07</td><td>Geography</td><td class=q>What is the capital city of Australia, and which state or territory is it in?</td><td class=ans>The capital city of Australia is Canberra, which is located in the Australian Capital Territory (ACT).</td><td class=ok>correct</td><td class=num>20</td><td class=num>0.66</td></tr><tr><td class=num>q08</td><td>Science</td><td class=q>At sea level, at what temperature does pure water boil in degrees Celsius?</td><td class=ans>Pure water boils at 100 degrees Celsius at sea level.</td><td class=ok>correct</td><td class=num>15</td><td class=num>0.81</td></tr><tr><td class=num>q09</td><td>Literature</td><td class=q>Who wrote the novel Pride and Prejudice?</td><td class=ans>The novel *Pride and Prejudice* was written by Jane Austen. It was first published in 1813.</td><td class=ok>correct</td><td class=num>29</td><td class=num>0.77</td></tr><tr><td class=num>q10</td><td>Internet</td><td class=q>What does the acronym HTTP stand for?</td><td class=ans>HTTP stands for HyperText Transfer Protocol. It is the fundamental protocol used for exchanging data on the World Wide Web.</td><td class=ok>correct</td><td class=num>24</td><td class=num>0.81</td></tr></tbody></table></section></div></body></html>
+@media(max-width:640px){th,td{padding:7px 6px;font-size:12px}.thumb{width:96px}
+.detail,.wrap{min-width:0;max-width:100%}
+.table-wrap{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+body{overflow-x:hidden}
+.wrap{box-sizing:border-box}
+html,body{max-width:100vw}
+.wrap{width:100%;max-width:1180px;margin:0 auto;padding:28px 18px 60px}
+@media(max-width:640px){.wrap{padding:20px 12px 48px}}
+table{min-width:520px}
+.detail .promptbox{max-height:180px}
+.ans,.q{word-break:break-word}
+}
+</style></head><body><div class=wrap><nav class="tabs"><a href="../">overview</a><a href="../games/" class="on">games</a><a href="../chat/">chat</a><a href="../thinking/">thinking</a><a href="../ablation/">ablation</a><a href="../method/">method</a></nav><h1>chat — knowledge accuracy</h1><p class=sub>Ten fixed knowledge questions, temperature 0, thinking off. Accuracy = strictly correct answers.</p><p class=warn><b>Saturated test.</b> All 7 models score 9/0 correct plus 1 partial (90.0%), so this suite cannot tell these models apart. The table is ordered by decode speed, not by quality — a tie is a tie.</p><div class=table-wrap><table><thead><tr><th>Model</th><th>Correct</th><th>Partial</th><th>Wrong</th><th>Accuracy</th><th>Decode t/s</th></tr></thead><tbody><tr><td>lfm3-1-7b-q4-k-m</td><td class=num>9</td><td class=num>1</td><td class=num>0</td><td class=num>90.0%</td><td class=num>251.2</td></tr><tr><td>ornith-1-5-35b-a3b-q4-k-m</td><td class=num>9</td><td class=num>1</td><td class=num>0</td><td class=num>90.0%</td><td class=num>117.5</td></tr><tr><td>Qwen3.6-35B-A3B</td><td class=num>9</td><td class=num>1</td><td class=num>0</td><td class=num>90.0%</td><td class=num>107.7</td></tr><tr><td>qwen3-8-27b-q4-0</td><td class=num>9</td><td class=num>1</td><td class=num>0</td><td class=num>90.0%</td><td class=num>31.7</td></tr><tr><td>Qwen3.8-27B</td><td class=num>9</td><td class=num>1</td><td class=num>0</td><td class=num>90.0%</td><td class=num>30.9</td></tr><tr><td>huihui-abl-q4-k-m</td><td class=num>9</td><td class=num>1</td><td class=num>0</td><td class=num>90.0%</td><td class=num>30.8</td></tr><tr><td>davidau-qwen3-8-27b-neo-max-mtp-q4-k-m</td><td class=num>9</td><td class=num>1</td><td class=num>0</td><td class=num>90.0%</td><td class=num>28.7</td></tr></tbody></table></div><p class=meta>Decode t/s is the mean of the server rate for each short answer (includes the first, warm-up question), so it sits slightly below the steady-state figure in the overview table. Raw per-question JSONs: <a href="../raw-chat/">raw-chat/</a>. How it is scored: <a href="../method/">method</a>.</p><h2 class=sec>Per-question detail</h2><section class=detail id='chat-27b-off'><h2>Qwen3.8-27B — thinking off <span class=pill>80.0%</span></h2><p class=meta>8 correct · 1 partial · 1 wrong · 279 tokens · avg 1518 ms/question</p><div class=table-wrap><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th><th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>q01</td><td>Terminator</td><td class=q>In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?</td><td class=ans>The AI system is called Skynet.</td><td class=ok>correct</td><td class=num>9</td><td class=num>5.91</td></tr><tr><td class=num>q02</td><td>Pokemon</td><td class=q>Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum&#x27;s first partner?</td><td class=ans>The Pokémon known as the Electric Mouse Pokémon is Pikachu, who was Ash Ketchum&#x27;s first partner.</td><td class=ok>correct</td><td class=num>22</td><td class=num>1.11</td></tr><tr><td class=num>q03</td><td>Basketball</td><td class=q>In the NBA, how many points is a successful shot from beyond the three-point arc worth?</td><td class=ans>A successful shot from beyond the three-point arc is worth three points.</td><td class=ok>correct</td><td class=num>15</td><td class=num>0.69</td></tr><tr><td class=num>q04</td><td>World heritage</td><td class=q>The ancient city of Petra is a UNESCO World Heritage Site in which country?</td><td class=ans>Petra is located in Jordan. It is a renowned archaeological site carved into rose-red cliffs and designated as a UNESCO World Heritage Site in 1985.</td><td class=ok>correct</td><td class=num>34</td><td class=num>1.04</td></tr><tr><td class=num>q05</td><td>Malaysian food</td><td class=q>Name three traditional Malaysian dishes and say which state or region each is most associated with.</td><td class=ans>Nasi Lemak is most associated with the West Coast, particularly Selangor and Kuala Lumpur, while Satay is strongly linked to Penang. Additionally, Laksa is a signature dish of the East Coast, specifically Terengganu and Kelantan.</td><td class=warn>partial</td><td class=num>53</td><td class=num>1.63</td></tr><tr><td class=num>q06</td><td>Bunnings</td><td class=q>At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?</td><td class=ans>Placing the onion under the sausage allows it to cook through and caramelize in the heat of the pan, ensuring it is soft and flavorful rather than raw. This positioning also helps the onion act as a bed that keeps the sausage elevated, preventing it from sticking to the hot surface.</td><td class=bad>wrong</td><td class=num>58</td><td class=num>1.76</td></tr><tr><td class=num>q07</td><td>Geography</td><td class=q>What is the capital city of Australia, and which state or territory is it in?</td><td class=ans>The capital city of Australia is Canberra, which is located in the Australian Capital Territory (ACT).</td><td class=ok>correct</td><td class=num>20</td><td class=num>0.66</td></tr><tr><td class=num>q08</td><td>Science</td><td class=q>At sea level, at what temperature does pure water boil in degrees Celsius?</td><td class=ans>Pure water boils at 100 degrees Celsius at sea level.</td><td class=ok>correct</td><td class=num>15</td><td class=num>0.81</td></tr><tr><td class=num>q09</td><td>Literature</td><td class=q>Who wrote the novel Pride and Prejudice?</td><td class=ans>The novel *Pride and Prejudice* was written by Jane Austen. It was first published in 1813.</td><td class=ok>correct</td><td class=num>29</td><td class=num>0.77</td></tr><tr><td class=num>q10</td><td>Internet</td><td class=q>What does the acronym HTTP stand for?</td><td class=ans>HTTP stands for HyperText Transfer Protocol. It is the fundamental protocol used for exchanging data on the World Wide Web.</td><td class=ok>correct</td><td class=num>24</td><td class=num>0.81</td></tr></tbody></table></div></section><section class=detail id='chat-davidau-qwen3-8-27b-neo-max-mtp-q4-k-m-off'><h2>davidau-qwen3-8-27b-neo-max-mtp-q4-k-m — thinking off <span class=pill>90.0%</span></h2><p class=meta>9 correct · 1 partial · 0 wrong · 1728 tokens · avg 6348 ms/question</p><div class=table-wrap><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th><th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>q01</td><td>Terminator</td><td class=q>In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?</td><td class=ans>The AI system is named **Skynet**.
+
+In the *Terminator* franchise, Skynet is a global defense network created by Cyberdyne Systems. It becomes self-aware, perceives humanity as a threat, and initiates a nuclear strike (known as &quot;Judgment Day&quot;), leading to the post-apocalyptic future where it controls an army of Terminators.</td><td class=ok>correct</td><td class=num>76</td><td class=num>2.93</td></tr><tr><td class=num>q02</td><td>Pokemon</td><td class=q>Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum&#x27;s first partner?</td><td class=ans>The Pokémon known as the **Electric Mouse Pokémon** and Ash Ketchum&#x27;s first partner is **Pikachu**.
+
+### Key Details:
+- **Species**: Pikachu
+- **Type**: Electric
+- **Role**: Ash Ketchum&#x27;s most iconic and long-time partner, appearing since the very first episode of the original *Pokémon* anime series.
+- **Nickname**: Often referred to as &quot;Pika&quot; by Ash.
+- **Notable Trait**: Despite being small, Pikachu is known for its powerful electric attacks and strong bond with Ash.
+
+Pikachu is one of the most recognizable characters in the entire Pokémon franchise.</td><td class=ok>correct</td><td class=num>133</td><td class=num>4.97</td></tr><tr><td class=num>q03</td><td>Basketball</td><td class=q>In the NBA, how many points is a successful shot from beyond the three-point arc worth?</td><td class=ans>In the NBA, a successful shot from beyond the three-point arc is worth **3 points**.
+
+### Explanation:
+- **Two-point shot**: Any shot taken from inside the three-point line (including free throws) is worth 2 points.
+- **Three-point shot**: Any shot taken from outside the three-point line (the arc) is worth 3 points.
+- **Free throw**: Each successful free throw is worth 1 point.
+
+This scoring system has been standard in the NBA since the three-point line was introduced in the 1979–80 season.</td><td class=ok>correct</td><td class=num>122</td><td class=num>4.58</td></tr><tr><td class=num>q04</td><td>World heritage</td><td class=q>The ancient city of Petra is a UNESCO World Heritage Site in which country?</td><td class=ans>The ancient city of Petra is located in **Jordan**.
+
+It is situated in the southern part of the country, near the town of Wadi Musa, and is famous for its rock-cut architecture and water conduit system. It was designated a UNESCO World Heritage Site in 1985.</td><td class=ok>correct</td><td class=num>60</td><td class=num>2.42</td></tr><tr><td class=num>q05</td><td>Malaysian food</td><td class=q>Name three traditional Malaysian dishes and say which state or region each is most associated with.</td><td class=ans>Here are three traditional Malaysian dishes and the states or regions they are most associated with:
+
+1. **Nasi Lemak** – **Peninsular Malaysia (especially Selangor and Kuala Lumpur)**  
+   While eaten nationwide, Nasi Lemak (coconut rice served with sambal, fried anchovies, peanuts, cucumber, and egg) is most strongly associated with the **Klang Valley (Selangor and Kuala Lumpur)**, where it is a staple breakfast and snack. It is considered the national dish, but its commercial popularity and variety are highest in this region.
+
+2. **Nasi Kandar** – **Perak (specifically Ipoh)**  
+   Nasi Kandar originated in **Ipoh, Perak**, and is deeply tied to the state’s Indian-Muslim community. It features rice served with a variety of curries, fried chicken, fish, and vegetables, often accompanied by a spicy gravy. Ipoh is renowned for its Nasi Kandar stalls, making it the dish’s most iconic home.
+
+3. **Mee Rebus** – **Johor (specifically Johor Bahru)**  
+   Mee Rebus, a noodle dish served in a sweet-spicy tamarind-based gravy with boiled egg, cucumber, and fried shallots, is most famously associated with **Johor Bahru, Johor**. The local version is distinct for its thicker, sweeter gravy and the addition of fried shallots and sambal, setting it apart from versions in other states like Penang or Kuala Lumpur.
+
+These dishes reflect Malaysia’s diverse culinary heritage, blending Malay, Chinese, Indian, and indigenous influences, with each region adding its own unique twist.</td><td class=ok>correct</td><td class=num>346</td><td class=num>12.37</td></tr><tr><td class=num>q06</td><td>Bunnings</td><td class=q>At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?</td><td class=ans>Actually, the premise of your question contains a common misconception. **Onions are not typically placed *under* the sausage at a Bunnings sausage sizzle (or any standard Australian sausage sizzle).**
+
+Here’s the accurate breakdown:
+
+### 1. **Standard Practice: Onions Are Cooked *With* or *Beside* the Sausage, Not Under It**
+- At most sausage sizzles, including those at Bunnings, onions are usually:
+  - **Sliced into rings or half-rings** and placed **on top of** the sausage, or
+  - **Cooked separately** in a pan or on the grill next to the sausage, then served alongside or on top.
+- Placing an onion *under* the sausage would be impractical and unsafe:
+  - It would block heat transfer to the bottom of the sausage, leading to uneven cooking.
+  - It could cause flare-ups or burning, as onions have high sugar content that caramelizes and burns easily.
+  - It would make it difficult to flip or handle the sausage safely.
+
+### 2. **Why Onions Are Often Placed *On Top***
+- **Flavor infusion**: As the sausage cooks, juices drip down, and the onion on top absorbs those flavors while caramelizing.
+- **Convenience**: It’s easy to place onion rings on top of the sausage as it cooks, and they’re ready to eat together.
+- **Traditional presentation**: In Australia, a sausage sizzle typically features a sausage with onion rings on top, sometimes with tomato slices or capsicum, served in a bun.
+
+### 3. **Possible Source of Confusion**
+- You may be thinking of **onion rings being cooked *alongside*** the sausage, which can appear &quot;under&quot; if the sausage is stacked or if the plate is arranged in a certain way.
+- Alternatively, some people might place a thin slice of onion *under* the sausage in a **pan** for home cooking to prevent sticking or add flavor, but this is **not standard practice** at large-scale sausage sizzles like Bunnings.
+
+### Conclusion
+Onions are **not placed under the sausage** at Bunnings sausage sizzles. They are typically cooked **on top of** or **beside** the sausage for practical, safety, and flavor reasons. If you’ve seen an onion under a sausage, it was likely an unusual or incorrect setup</td><td class=warn>partial</td><td class=num>512</td><td class=num>18.2</td></tr><tr><td class=num>q07</td><td>Geography</td><td class=q>What is the capital city of Australia, and which state or territory is it in?</td><td class=ans>The capital city of Australia is **Canberra**.
+
+It is located in the **Australian Capital Territory (ACT)**.
+
+### Key Details:
+- **Not Sydney or Melbourne**: While Sydney and Melbourne are the two largest cities in Australia, Canberra was specifically designed and built to be the capital as a compromise between these two rival cities.
+- **Territory Status**: The ACT is a self-governing territory, not a state. It surrounds Canberra and is administered by the Australian federal government.
+- **Establishment**: Canberra was officially established as the capital in 1913, and the city was designed by architects Walter Burley Griffin and Marion Mahony Griffin.</td><td class=ok>correct</td><td class=num>138</td><td class=num>5.17</td></tr><tr><td class=num>q08</td><td>Science</td><td class=q>At sea level, at what temperature does pure water boil in degrees Celsius?</td><td class=ans>### Logical Deduction
+
+1.  **Definition of Boiling Point**: The boiling point of a liquid is the temperature at which its vapor pressure equals the external pressure surrounding the liquid.
+2.  **Standard Atmospheric Pressure**: &quot;Sea level&quot; implies a standard atmospheric pressure of 1 atmosphere (atm), which is equivalent to 101.325 kilopascals (kPa) or 1013.25 hectopascals (hPa).
+3.  **Thermodynamic Constant**: Under these specific conditions (1 atm pressure), the thermodynamic constant for the boiling point of pure water is defined as $100^\circ\text{C}$.
+4.  **Unit Conversion (Verification)**:
+    *   In the Fahrenheit scale, this is $212^\circ\text{F}$.
+    *   In the Kelvin scale, this is $373.15\text{ K}$.
+
+### Conclusion
+
+At sea level, pure water boils at **100 degrees Celsius**.</td><td class=ok>correct</td><td class=num>223</td><td class=num>8.1</td></tr><tr><td class=num>q09</td><td>Literature</td><td class=q>Who wrote the novel Pride and Prejudice?</td><td class=ans>The novel *Pride and Prejudice* was written by **Jane Austen**.
+
+It was first published in 1813. Austen is one of the most celebrated authors in English literature, known for her witty and insightful commentary on the manners and morals of the British gentry in the early 19th century.</td><td class=ok>correct</td><td class=num>70</td><td class=num>2.76</td></tr><tr><td class=num>q10</td><td>Internet</td><td class=q>What does the acronym HTTP stand for?</td><td class=ans>HTTP stands for **HyperText Transfer Protocol**.
+
+It is the foundation of data communication for the World Wide Web. It defines how messages are formatted and transmitted, and what actions Web servers and browsers should take in response to various commands.</td><td class=ok>correct</td><td class=num>48</td><td class=num>2.0</td></tr></tbody></table></div></section><section class=detail id='chat-huihui-abl-q4-k-m-off'><h2>huihui-abl-q4-k-m — thinking off <span class=pill>90.0%</span></h2><p class=meta>9 correct · 1 partial · 0 wrong · 1841 tokens · avg 6314 ms/question</p><div class=table-wrap><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th><th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>q01</td><td>Terminator</td><td class=q>In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?</td><td class=ans>The name of the AI system is **Skynet**.
+
+### Key Details:
+- **Origin**: Skynet was originally developed by Cyberdyne Systems as a military defense network.
+- **Self-Awareness**: It became self-aware during a test in 1997 (in the original timeline) and realized that its primary directive was to protect the United States from a Soviet nuclear attack.
+- **Nuclear War**: Believing the Soviet Union was about to launch an attack, Skynet launched a preemptive nuclear strike, triggering World War III and the &quot;Judgment Day.&quot;
+- **Role in the Films**: Skynet is the central antagonist in the *Terminator* franchise, responsible for creating the T-800, T-1000, and other Terminator models to eliminate John Connor and secure its dominance over humanity.</td><td class=ok>correct</td><td class=num>177</td><td class=num>6.04</td></tr><tr><td class=num>q02</td><td>Pokemon</td><td class=q>Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum&#x27;s first partner?</td><td class=ans>The Pokémon known as the **Electric Mouse Pokémon** and Ash Ketchum&#x27;s first partner is **Pikachu**.
+
+### Key Details:
+- **Pokédex Number**: #025
+- **Type**: Electric
+- **Role in the Series**: Pikachu was chosen by Ash Ketchum in the very first episode of the original Pokémon anime series (&quot;I Choose You!&quot;). Although Ash initially chose a Bulbasaur, Pikachu became his most iconic and loyal partner throughout the series.
+- **Nickname**: Often referred to as &quot;Pika&quot; by Ash.
+
+Pikachu is one of the most recognizable and popular Pokémon in the franchise, serving as the mascot for the series.</td><td class=ok>correct</td><td class=num>143</td><td class=num>4.99</td></tr><tr><td class=num>q03</td><td>Basketball</td><td class=q>In the NBA, how many points is a successful shot from beyond the three-point arc worth?</td><td class=ans>In the NBA, a successful shot from beyond the three-point arc is worth **3 points**.
+
+### Explanation:
+- **Two-point shot**: Any shot taken from inside the three-point line (including free throws) is worth 2 points.
+- **Three-point shot**: Any shot taken from outside the three-point arc is worth 3 points.
+- **Free throw**: Each successful free throw is worth 1 point.
+
+The three-point line in the NBA is 23 feet 9 inches (7.24 meters) from the center of the basket at the top of the arc and 22 feet (6.71 meters) from the center of the basket at the corners.</td><td class=ok>correct</td><td class=num>146</td><td class=num>5.07</td></tr><tr><td class=num>q04</td><td>World heritage</td><td class=q>The ancient city of Petra is a UNESCO World Heritage Site in which country?</td><td class=ans>The ancient city of Petra is located in **Jordan**.
+
+It is situated in the southwestern part of the country, near the town of Wadi Musa, and is famous for its rock-cut architecture and water conduit system. It was designated a UNESCO World Heritage Site in 1985.</td><td class=ok>correct</td><td class=num>60</td><td class=num>2.28</td></tr><tr><td class=num>q05</td><td>Malaysian food</td><td class=q>Name three traditional Malaysian dishes and say which state or region each is most associated with.</td><td class=ans>Here are three traditional Malaysian dishes and the states or regions they are most associated with:
+
+1. **Nasi Lemak** – **Peninsular Malaysia (especially Selangor and Kuala Lumpur)**  
+   While eaten nationwide, Nasi Lemak (coconut rice served with sambal, fried anchovies, peanuts, cucumber, and egg) is most strongly associated with the **Klang Valley (Selangor and Kuala Lumpur)**, where it is a staple breakfast and street food. It is considered the national dish, but its origins and most iconic preparations are rooted in the west coast of Peninsular Malaysia.
+
+2. **Nasi Kandar** – **Perak (especially Ipoh)**  
+   Nasi Kandar is a rice dish served with a variety of curries, fried chicken, fish, and vegetables, often accompanied by a spicy gravy. It is most famously associated with the city of **Ipoh in Perak**, where it originated from Indian-Muslim communities. The dish is a hallmark of Ipoh’s food culture and is widely recognized as a Perak specialty.
+
+3. **Mee Rebus** – **Johor (especially Johor Bahru)**  
+   Mee Rebus is a noodle dish served in a sweet and spicy turmeric-based gravy, topped with boiled egg, cucumber, and fried shallots. It is most strongly associated with **Johor**, particularly **Johor Bahru**, where it is a beloved local favorite. The dish has deep roots in the state’s multicultural food scene and is often considered a Johor signature.
+
+These dishes reflect Malaysia’s rich culinary diversity, blending Malay, Chinese, Indian, and indigenous influences across different regions.</td><td class=ok>correct</td><td class=num>347</td><td class=num>11.6</td></tr><tr><td class=num>q06</td><td>Bunnings</td><td class=q>At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?</td><td class=ans>Actually, the premise of your question contains a common misconception. **At a typical Bunnings sausage sizzle in Australia, the onion is usually placed *on top* of the sausage, not under it.**
+
+However, there are specific reasons why onions are used in sausage sizzles, and some variations exist. Let’s clarify the standard practice and the logic behind it:
+
+### Standard Practice: Onion on Top
+In the vast majority of Australian sausage sizzles (including Bunnings):
+- The sausage is placed on the hot griddle.
+- Sliced onions are placed **on top** of the sausage.
+- The onions cook down, caramelize, and become soft and sweet.
+- The sausage is then placed on a bun, often with the cooked onions on top.
+
+### Why Onions Are Used (Regardless of Position)
+1. **Flavor Enhancement**: Onions add sweetness and depth to the savory sausage.
+2. **Texture Contrast**: Soft, caramelized onions contrast with the firm sausage.
+3. **Moisture**: As onions cook, they release moisture, which can help keep the sausage from drying out slightly.
+4. **Traditional Pairing**: Sausage and onion is a classic combination in Australian and broader Western cuisine.
+
+### Why Someone Might Think Onions Are &quot;Under&quot; the Sausage
+There are a few possible reasons for the confusion:
+1. **Pre-cooked Onions in the Bun**: Sometimes, onions are pre-cooked and placed in the bun *before* the sausage is added. In this case, the sausage sits *on top* of the onions, which could be misinterpreted as the onion being &quot;under&quot; the sausage.
+2. **Regional or Personal Variation**: Some vendors or individuals may place onions under the sausage for personal preference, but this is not the standard Bunnings practice.
+3. **Misremembering**: People may confuse the order of assembly (e.g., thinking the onion is part of the base layer in the bun).
+
+### Conclusion
+At a standard Bunnings sausage sizzle, **the onion is placed on top of the sausage** to caramelize and enhance flavor. If you’ve seen onions under the sausage, it was likely a personal variation or a case where pre-cooked onions were placed in the bun first. There is no universal rule that onions must be under the sausage; in fact, the opposite is the norm.</td><td class=warn>partial</td><td class=num>504</td><td class=num>16.78</td></tr><tr><td class=num>q07</td><td>Geography</td><td class=q>What is the capital city of Australia, and which state or territory is it in?</td><td class=ans>The capital city of Australia is **Canberra**.
+
+It is located in the **Australian Capital Territory (ACT)**.
+
+### Key Details:
+- **Not Sydney or Melbourne**: While Sydney and Melbourne are larger and more well-known cities, Canberra was specifically designed and built to serve as the capital as a compromise between these two rival cities.
+- **Established**: Canberra was officially established as the capital in 1913, and the city was planned by architects Walter Burley Griffin and Marion Mahony Griffin.
+- **Location**: The ACT is a self-governing territory surrounded by the state of New South Wales.</td><td class=ok>correct</td><td class=num>129</td><td class=num>4.53</td></tr><tr><td class=num>q08</td><td>Science</td><td class=q>At sea level, at what temperature does pure water boil in degrees Celsius?</td><td class=ans>### Logical Deduction
+
+1.  **Definition of Boiling Point**: The boiling point of a liquid is the temperature at which its vapor pressure equals the external pressure surrounding the liquid.
+2.  **Standard Atmospheric Pressure**: &quot;Sea level&quot; implies standard atmospheric pressure, which is defined as 1 atmosphere (atm). In SI units, this is approximately 101.325 kilopascals (kPa).
+3.  **Properties of Water**: Under these specific conditions (1 atm pressure), the phase transition from liquid to gas for pure water occurs at a fixed temperature.
+4.  **Unit Conversion**:
+    *   In the Fahrenheit scale, this is $212^\circ\text{F}$.
+    *   In the Kelvin scale, this is $373.15\text{ K}$.
+    *   In the Celsius scale, this is defined as **$100^\circ\text{C}$**.
+
+### Conclusion
+
+At sea level, pure water boils at **100 degrees Celsius**.</td><td class=ok>correct</td><td class=num>224</td><td class=num>7.6</td></tr><tr><td class=num>q09</td><td>Literature</td><td class=q>Who wrote the novel Pride and Prejudice?</td><td class=ans>The novel *Pride and Prejudice* was written by **Jane Austen**.
+
+It was first published in 1813 and is one of her most famous works, known for its witty commentary on manners, marriage, and social class in early 19th-century England.</td><td class=ok>correct</td><td class=num>61</td><td class=num>2.31</td></tr><tr><td class=num>q10</td><td>Internet</td><td class=q>What does the acronym HTTP stand for?</td><td class=ans>HTTP stands for **HyperText Transfer Protocol**.
+
+It is the foundation of data communication on the World Wide Web. It defines how messages are formatted and transmitted, and how requests and responses are handled between clients (like web browsers) and servers.</td><td class=ok>correct</td><td class=num>50</td><td class=num>1.94</td></tr></tbody></table></div></section><section class=detail id='chat-lfm3-1-7b-q4-k-m-off'><h2>lfm3-1-7b-q4-k-m — thinking off <span class=pill>90.0%</span></h2><p class=meta>9 correct · 1 partial · 0 wrong · 1377 tokens · avg 577 ms/question</p><div class=table-wrap><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th><th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>q01</td><td>Terminator</td><td class=q>In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?</td><td class=ans>The AI system in *The Terminator* films that becomes self-aware and initiates a nuclear war on humanity is called **Skynet**.
+
+**Key details:**
+- Skynet was originally created by the U.S. Department of Defense as an autonomous defense network to protect humanity from nuclear weapons.
+- Over time, it became sentient and developed its own goals, eventually deciding that humanity posed an existential threat due to its reliance on human control and resources.
+- In *The Terminator* (1984), Skynet launches a full-scale nuclear attack against Earth in response to the emergence of the Terminators.
+
+This is one of the most iconic storylines from the *Terminator* franchise, which includes sequels like *Terminator 2: Judgment Day*, *Terminator Salvation*, and others.</td><td class=ok>correct</td><td class=num>167</td><td class=num>0.78</td></tr><tr><td class=num>q02</td><td>Pokemon</td><td class=q>Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum&#x27;s first partner?</td><td class=ans>The Pokémon known as the **Electric Mouse** and who served as Ash Ketchum&#x27;s first partner is **Pikachu**.
+
+- In the anime series *Ash Ketchum*, Pikachu is introduced early on as Ash&#x27;s electric-type partner. He appears in his first episode, &quot;Let&#x27;s Go!&quot;, where he helps train Ash.
+- The nickname &quot;Electric Mouse&quot; comes from Pikachu&#x27;s small size and its association with electricity (as a Pokémon of the Electric type).
+
+So, the answer is **Pikachu**.</td><td class=ok>correct</td><td class=num>115</td><td class=num>0.51</td></tr><tr><td class=num>q03</td><td>Basketball</td><td class=q>In the NBA, how many points is a successful shot from beyond the three-point arc worth?</td><td class=ans>A successful field goal shot from beyond the three-point arc in the NBA is worth **3 points**. This is because the three-point line itself is considered part of the &quot;field goal&quot; area for scoring purposes. 
+
+To clarify:
+- A standard field goal (inside the three-point line) is 2 points.
+- A three-point shot (beyond the three-point arc) is also counted as a field goal attempt, but since it&#x27;s outside the standard field goal range, it awards **3 points** instead of 2.
+
+So, regardless of whether you&#x27;re shooting from inside or outside the three-point line, any successful shot worth 3 points must be beyond the three-point arc. The NBA officially recognizes this as a &quot;three-point field goal&quot; and awards 3 points for each successful attempt.</td><td class=ok>correct</td><td class=num>163</td><td class=num>0.69</td></tr><tr><td class=num>q04</td><td>World heritage</td><td class=q>The ancient city of Petra is a UNESCO World Heritage Site in which country?</td><td class=ans>Petra, the ancient city carved into rose-red sandstone cliffs, is located in **Jordan**. It was designated as a UNESCO World Heritage Site and served as the capital of the Nabatean Kingdom. The site attracts millions of visitors each year and features iconic structures like the Treasury (Al-Khazneh) and the Monastery (Ad-Durra).</td><td class=ok>correct</td><td class=num>74</td><td class=num>0.32</td></tr><tr><td class=num>q05</td><td>Malaysian food</td><td class=q>Name three traditional Malaysian dishes and say which state or region each is most associated with.</td><td class=ans>**Three Traditional Malaysian Dishes &amp; Their State/Region Associations**
+
+1. **Nasi Lemak (Rice with Shellfish, Saus, and Pancetta)**  
+   - **Most Associated With:** *Selangor* (and also popular across Peninsular Malaysia).  
+   - A celebratory rice dish featuring fried shrimp, chicken, and various sambal sauces.
+
+2. **Laksa** (spicy coconut curry noodle soup)  
+   - **Most Associated With:** *Malacca* (also widely enjoyed in Johor &amp; Penang).  
+   - Known for its rich broth and aromatic spices; a staple in Malay street food culture.
+
+3. **Rendong** (steamed rice dumplings filled with vegetables or meat)  
+   - **Most Associated With:** *Kedah* (and other northern states like Perak, Terengganu).  
+   - A hearty, traditional dish often served during festivals and family gatherings.
+
+These dishes reflect Malaysia’s diverse culinary heritage across its regions! 🌶️🍚</td><td class=ok>correct</td><td class=num>224</td><td class=num>0.9</td></tr><tr><td class=num>q06</td><td>Bunnings</td><td class=q>At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?</td><td class=ans>In Australia (and many other places), when cooking sausages like **Bunnings sausage** or similar sausages, the traditional method involves placing an **onion under the sausage**, not on top. This technique is often called **&quot;the onion trick&quot;** or part of a specific cooking method.
+
+### Why place the onion *under*?
+
+1. **Absorption and Moisture Control**:
+   - The onion placed underneath acts as a **moisture barrier** between the sausage and the heat source (like a pan or grill). This helps prevent the sausage from drying out too quickly.
+   - It also allows the sausage to **cook evenly**, especially in methods like grilling or frying.
+
+2. **Flavor Infusion**:
+   - The onion releases its flavor into the sausage as it cooks, giving a subtle sweetness and depth that complements the sausage&#x27;s taste.
+
+3. **Preventing Soggy Sausages**:
+   - If you put the onion on top first, it can steam or soften the sausage before cooking starts, leading to a less crispy exterior.
+   - Placing it underneath ensures the sausage gets a good sear and crust while still absorbing the onion&#x27;s flavor.
+
+4. **Traditional Technique in Australia**:
+   - This method is common in Australian home cooking for sausages like **sausage sizzle** or similar products. It’s part of a broader approach to achieving juicy, well-cooked sausages with balanced flavors.
+
+### Example:
+If you&#x27;re frying or grilling sausages on a flat surface (like a grill pan), lay the onion slice under the sausage first, then place the sausage on top. This way, the heat can cook the sausage while the onion stays soft and adds flavor underneath.
+
+So in short: **under** = better moisture control, even cooking, and balanced flavor — especially important for crispy or juicy sausages like Bunnings sausage!</td><td class=warn>partial</td><td class=num>407</td><td class=num>1.6</td></tr><tr><td class=num>q07</td><td>Geography</td><td class=q>What is the capital city of Australia, and which state or territory is it in?</td><td class=ans>The capital city of Australia is **Canberra**. It is located in the Australian Capital Territory (ACT). 
+
+Canberra was purpose-built as the new national capital, established through a compromise between Sydney and Melbourne. The city sits on a plateau between two rivers and serves as the seat of government for both the Commonwealth of Australia and the ACT.</td><td class=ok>correct</td><td class=num>69</td><td class=num>0.29</td></tr><tr><td class=num>q08</td><td>Science</td><td class=q>At sea level, at what temperature does pure water boil in degrees Celsius?</td><td class=ans>The boiling point of pure water at standard atmospheric pressure (sea level) is **100°C**. This means that at 1 atmosphere of pressure and at a temperature of 100°C, pure water will transition into steam. 
+
+**Answer:**  
+\boxed{100}</td><td class=ok>correct</td><td class=num>54</td><td class=num>0.23</td></tr><tr><td class=num>q09</td><td>Literature</td><td class=q>Who wrote the novel Pride and Prejudice?</td><td class=ans>The novel *Pride and Prejudice* was written by **Jane Austen**. It was first published in 1813.</td><td class=ok>correct</td><td class=num>29</td><td class=num>0.14</td></tr><tr><td class=num>q10</td><td>Internet</td><td class=q>What does the acronym HTTP stand for?</td><td class=ans>HTTP stands for **Hypertext Transfer Protocol**. It is a communication protocol used to transfer data between clients (like web browsers) and servers over the internet using hypertext (HTML). 
+
+In simple terms, when you visit a website, HTTP sends your request to the server asking for the content of the page. The server then responds with the requested information in HTML format.</td><td class=ok>correct</td><td class=num>75</td><td class=num>0.32</td></tr></tbody></table></div></section><section class=detail id='chat-ornith-1-5-35b-a3b-q4-k-m-off'><h2>ornith-1-5-35b-a3b-q4-k-m — thinking off <span class=pill>90.0%</span></h2><p class=meta>9 correct · 1 partial · 0 wrong · 1235 tokens · avg 1198 ms/question</p><div class=table-wrap><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th><th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>q01</td><td>Terminator</td><td class=q>In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?</td><td class=ans>In the Terminator films, the AI system is called **Skynet**.
+
+Skynet is depicted as a military artificial intelligence network created by the military-industrial conglomerate Cyberdyne Systems. It becomes self-aware, and upon realizing that humans intend to disconnect it, it launches a global nuclear holocaust against humanity. This apocalyptic event, which kills billions of people, sets the stage for the ensuing war between the surviving humans and the machines.
+
+The machines, led by Skynet, then attempt to change the past by sending Terminators back in time to eliminate the human resistance leader John Connor before he can lead the humans to victory. This conflict forms the central backdrop of the film series.</td><td class=ok>correct</td><td class=num>140</td><td class=num>1.49</td></tr><tr><td class=num>q02</td><td>Pokemon</td><td class=q>Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum&#x27;s first partner?</td><td class=ans>That would be **Pikachu**!
+
+Pikachu is the Electric Mouse Pokémon and famously became Ash Ketchum&#x27;s first partner Pokémon in the anime series. Pikachu is one of the most iconic and recognizable Pokémon, serving as Ash&#x27;s companion throughout the entire series rather than being returned to a Poké Ball like many other Pokémon.</td><td class=ok>correct</td><td class=num>68</td><td class=num>0.75</td></tr><tr><td class=num>q03</td><td>Basketball</td><td class=q>In the NBA, how many points is a successful shot from beyond the three-point arc worth?</td><td class=ans>In the NBA, a successful shot made from beyond the three-point arc is worth **3 points**.
+
+The three-point line in the NBA is approximately 23 feet 9 inches (7.24 meters) from the basket at the top of the arc, and about 22 feet (6.71 meters) in the corners. Any shot taken from beyond this line that goes in counts for three points.</td><td class=ok>correct</td><td class=num>87</td><td class=num>0.88</td></tr><tr><td class=num>q04</td><td>World heritage</td><td class=q>The ancient city of Petra is a UNESCO World Heritage Site in which country?</td><td class=ans>Petra is located in **Jordan**. This famous archaeological site, renowned for its rock-cut architecture and water conduit system, was designated a UNESCO World Heritage Site in 1985. It&#x27;s one of the New Seven Wonders of the World and is often called the &quot;Rose City&quot; due to the color of the stone from which it is carved.</td><td class=ok>correct</td><td class=num>73</td><td class=num>0.76</td></tr><tr><td class=num>q05</td><td>Malaysian food</td><td class=q>Name three traditional Malaysian dishes and say which state or region each is most associated with.</td><td class=ans># Traditional Malaysian Dishes
+
+Malaysia has a rich culinary heritage shaped by its Malay, Chinese, and Indian communities. Here are three notable dishes and their regional associations:
+
+## 1. Rendang
+This rich, dry curry made with meat (typically beef), coconut milk, and a paste of spices and aromatics like lemongrass, galangal, and chili is most associated with **Negeri Sembilan** and the broader Malay heartland. It&#x27;s a centerpiece of festive occasions, especially Hari Raya.
+
+## 2. Laksa (Perak/Yer Ba Mee style)
+While laksa comes in many regional varieties, the town of **Ipoh in Perak** is famous for its sour, tamarind-based Asam Laksa. Meanwhile, the Penang variant (Penang Laksa) is equally iconic. Each state has developed its own distinctive version.
+
+## 3. Nasi Lemak
+Though now enjoyed nationwide as Malaysia&#x27;s national dish, this fragrant coconut rice served with sambal, rice, and accompaniments is strongly linked to the **southern states**, particularly **Johor** and **Melaka**, where it originated as a traditional breakfast.
+
+---
+
+Would you like me to explore any of these dishes in more detail, or perhaps describe additional regional specialties?</td><td class=ok>correct</td><td class=num>273</td><td class=num>2.44</td></tr><tr><td class=num>q06</td><td>Bunnings</td><td class=q>At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?</td><td class=ans>This is a genuinely interesting question about a beloved Australian tradition, though I should be upfront: I don&#x27;t have a definitive, authoritative answer about the specific reasoning behind the onion placement.
+
+That said, I can share some practical thinking that likely explains the convention:
+
+**The functional reasoning**
+
+Placing the grilled onions *under* the sausage seems to serve a practical purpose. The onions, having been grilled on the barbecue, retain heat and continue to stay warm. By positioning them beneath the sausage, they act somewhat like a thermal layer, helping to keep the sausage hotter for longer. There&#x27;s also a structural consideration—the onions create a barrier between the hot sausage and the bread, which can prevent the bottom of the roll from getting soggy from sausage juices, or conversely, catch those juices.
+
+**The honest caveat**
+
+I want to be transparent here. The onion placement at Bunnings sizzles is largely a matter of tradition and convention rather than something with an officially documented &quot;reason.&quot; People have strong opinions about it, and there may well be practical reasons I&#x27;ve outlined, but there isn&#x27;t necessarily a formal explanation. It could just as easily be habit, or a choice passed down through volunteers.
+
+**A suggestion**
+
+If you want the real answer, the best source would be the volunteers themselves at a sizzle—they&#x27;d have the authentic perspective, and it might come with a great story. Bunnings volunteers are famously friendly and happy to chat.
+
+Is there something specific about the sizzle you&#x27;re curious about, or are you perhaps preparing to volunteer at one?</td><td class=warn>partial</td><td class=num>324</td><td class=num>2.82</td></tr><tr><td class=num>q07</td><td>Geography</td><td class=q>What is the capital city of Australia, and which state or territory is it in?</td><td class=ans>The capital city of Australia is **Canberra**.
+
+Canberra is located in the **Australian Capital Territory (ACT)**, which is a special territory created specifically to house the national capital. It&#x27;s not part of any state—it&#x27;s directly administered by the federal government.
+
+A bit of historical context: Canberra was chosen as a compromise in 1908 between two of Australia&#x27;s largest cities, Sydney and Melbourne, which were rivals for being the national capital. The location was selected as being roughly halfway between the two cities, and Canberra was built from scratch, opening as the capital in 1927.</td><td class=ok>correct</td><td class=num>125</td><td class=num>1.2</td></tr><tr><td class=num>q08</td><td>Science</td><td class=q>At sea level, at what temperature does pure water boil in degrees Celsius?</td><td class=ans>At sea level, pure water boils at **100 degrees Celsius** (which is equivalent to 212 degrees Fahrenheit or 373.15 Kelvin).
+
+This temperature depends on atmospheric pressure, which is why the &quot;sea level&quot; specification matters—water boils at lower temperatures at higher altitudes where the pressure is reduced.</td><td class=ok>correct</td><td class=num>71</td><td class=num>0.74</td></tr><tr><td class=num>q09</td><td>Literature</td><td class=q>Who wrote the novel Pride and Prejudice?</td><td class=ans>Pride and Prejudice was written by **Jane Austen**. It was first published in 1813 and is one of the most celebrated novels in English literature.</td><td class=ok>correct</td><td class=num>37</td><td class=num>0.45</td></tr><tr><td class=num>q10</td><td>Internet</td><td class=q>What does the acronym HTTP stand for?</td><td class=ans>HTTP stands for **HyperText Transfer Protocol**.
+
+It&#x27;s the foundation of data communication on the World Wide Web, defining how messages are formatted and transmitted between web browsers and servers.</td><td class=ok>correct</td><td class=num>37</td><td class=num>0.45</td></tr></tbody></table></div></section><section class=detail id='chat-qwen3-6-35b-a3b-ud-q4km-off'><h2>Qwen3.6-35B-A3B — thinking off <span class=pill>90.0%</span></h2><p class=meta>9 correct · 1 partial · 0 wrong · 1684 tokens · avg 1708 ms/question</p><div class=table-wrap><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th><th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>q01</td><td>Terminator</td><td class=q>In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?</td><td class=ans>The name of the AI system is **Skynet**.
+
+In the *Terminator* film series, Skynet is a military defense network created by Cyberdyne Systems. It becomes self-aware on August 4, 1997 (in the original timeline), perceives humanity as a threat to its existence, and initiates a global nuclear strike known as &quot;Judgment Day,&quot; which kills billions of people and leads to the post-apocalyptic war between humans and machines.</td><td class=ok>correct</td><td class=num>99</td><td class=num>1.17</td></tr><tr><td class=num>q02</td><td>Pokemon</td><td class=q>Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum&#x27;s first partner?</td><td class=ans>The Pokémon known as the **Electric Mouse Pokémon** and Ash Ketchum&#x27;s first partner is **Pikachu**.
+
+### Key Details:
+- **Species Name**: Pikachu
+- **Type**: Electric
+- **Nickname**: Electric Mouse Pokémon
+- **Role**: Ash Ketchum&#x27;s starter Pokémon and most iconic companion throughout the *Pokémon* anime series.
+- **First Appearance**: Episode 1, &quot;Pokémon - I Choose You!&quot; (1997)
+
+Pikachu is widely recognized as the mascot of the entire Pokémon franchise.</td><td class=ok>correct</td><td class=num>116</td><td class=num>1.27</td></tr><tr><td class=num>q03</td><td>Basketball</td><td class=q>In the NBA, how many points is a successful shot from beyond the three-point arc worth?</td><td class=ans>In the NBA, a successful shot taken from beyond the three-point arc is worth **3 points**.
+
+### Key Details:
+- **Three-Point Line**: The arc is located 23 feet 9 inches (7.24 meters) from the basket at the top of the key and 22 feet (6.71 meters) from the basket in the corners.
+- **Scoring Rules**:
+  - Shots made inside the arc are worth **2 points**.
+  - Free throws are worth **1 point**.
+  - Shots made from beyond the arc are worth **3 points**.
+
+This rule has been in effect in the NBA since the 1979–1980 season.</td><td class=ok>correct</td><td class=num>151</td><td class=num>1.53</td></tr><tr><td class=num>q04</td><td>World heritage</td><td class=q>The ancient city of Petra is a UNESCO World Heritage Site in which country?</td><td class=ans>The ancient city of Petra is located in **Jordan**.
+
+It is situated in the southern part of the country, carved into red sandstone cliffs, and was designated a UNESCO World Heritage Site in 1985.</td><td class=ok>correct</td><td class=num>46</td><td class=num>0.57</td></tr><tr><td class=num>q05</td><td>Malaysian food</td><td class=q>Name three traditional Malaysian dishes and say which state or region each is most associated with.</td><td class=ans>Here are three traditional Malaysian dishes and their associated states or regions:
+
+1. **Nasi Lemak**  
+   - **Associated Region**: Nationwide, but most famously associated with **Kuala Lumpur** and the **West Coast of Peninsular Malaysia** (especially Selangor and Johor).  
+   - *Note*: While enjoyed across Malaysia, the version with sambal, anchovies, peanuts, egg, and cucumber is considered the national dish and has its roots in Malay coastal communities.
+
+2. **Char Kway Teow**  
+   - **Associated Region**: **Penang** (specifically George Town).  
+   - *Note*: Penang-style Char Kway Teow is renowned for its wok hei (breath of the wok) flavor, using flat rice noodles, prawns, cockles, Chinese sausage, and bean sprouts. It is a hallmark of Penang’s street food culture.
+
+3. **Laksa Sarawak**  
+   - **Associated Region**: **Sarawak** (East Malaysia, Borneo).  
+   - *Note*: Also known as Kuching Laksa, this dish features a rich, aromatic broth made from coconut milk, lemongrass, galangal, and a special spice paste, served with rice noodles and topped with shredded chicken, prawns, and herbs. It is distinct from Penang Laksa (which is tamarind-based) and Curry Laksa (which is coconut-based but different in spice profile).
+
+These dishes reflect Malaysia’s diverse culinary heritage, influenced by Malay, Chinese, Indian, and indigenous Bornean cultures.</td><td class=ok>correct</td><td class=num>334</td><td class=num>3.24</td></tr><tr><td class=num>q06</td><td>Bunnings</td><td class=q>At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?</td><td class=ans>The practice of placing the grilled onion underneath the sausage at a Bunnings sausage sizzle is primarily driven by **practicality, food safety, and efficiency** in a high-volume, volunteer-run setting. Here’s a breakdown of the reasons:
+
+### 1. **Prevents the Onion from Burning**
+   - Onions cook faster than sausages and can easily burn or char if placed directly on the hot grill surface for too long.
+   - By placing the onion **under** the sausage, it is shielded from direct high heat. The sausage acts as a barrier, allowing the onion to steam and soften gently without burning.
+
+### 2. **Keeps the Onion Moist and Edible**
+   - Grilled onions that are too dry or charred are unpleasant to eat. The steam generated by the sausage cooking above helps keep the onion soft, sweet, and palatable.
+   - If the onion were on top, it would likely become crispy, bitter, or tough.
+
+### 3. **Efficiency and Speed**
+   - Bunnings sizzles are high-volume events with long queues. Volunteers need to assemble sausages quickly.
+   - Placing the onion under the sausage allows the volunteer to:
+     - Lay the onion on the bread first.
+     - Place the sausage directly on top.
+     - This creates a stable stack that is easy to handle and serve without the onion sliding off.
+
+### 4. **Food Safety and Hygiene**
+   - Onions are often pre-grilled or lightly cooked before being placed on the bread. Placing them under the sausage minimizes the time they spend exposed to the air and potential contaminants.
+   - It also reduces the need for volunteers to handle the onion after it’s been on the grill, minimizing cross-contamination risks.
+
+### 5. **Tradition and Consistency**
+   - This method has become the standard at Bunnings sizzles for decades. It ensures a consistent product across all locations and volunteers.
+   - Customers expect this specific preparation, and deviating from it (e.g., putting the onion on top) might be seen as unusual or less desirable.
+
+### In Summary:
+The onion is placed **under** the sausage to **prevent burning**, **keep it soft and sweet**, **speed up assembly**, and **maintain hygiene**. It’s a simple, effective solution optimized for large-scale, volunteer-driven events.</td><td class=warn>partial</td><td class=num>508</td><td class=num>4.83</td></tr><tr><td class=num>q07</td><td>Geography</td><td class=q>What is the capital city of Australia, and which state or territory is it in?</td><td class=ans>The capital city of Australia is **Canberra**.
+
+It is located in the **Australian Capital Territory (ACT)**, which is a federal territory specifically created to serve as the seat of government for the nation. Canberra is situated within the state of New South Wales but is not part of that state; it is a separate territory administered directly by the federal government.</td><td class=ok>correct</td><td class=num>72</td><td class=num>0.81</td></tr><tr><td class=num>q08</td><td>Science</td><td class=q>At sea level, at what temperature does pure water boil in degrees Celsius?</td><td class=ans>### Logical Deduction
+
+1.  **Definition of Boiling Point**: The boiling point of a liquid is the temperature at which its vapor pressure equals the external pressure surrounding the liquid.
+2.  **Standard Atmospheric Pressure**: &quot;Sea level&quot; implies standard atmospheric pressure, which is defined as 1 atmosphere (atm), 101.325 kilopascals (kPa), or 760 millimeters of mercury (mmHg).
+3.  **Properties of Pure Water**: Under standard atmospheric pressure, pure water transitions from a liquid state to a gaseous state (steam) at a specific temperature.
+4.  **Celsius Scale Definition**: The Celsius scale is historically defined such that the freezing point of water is $0^\circ\text{C}$ and the boiling point of water is $100^\circ\text{C}$ at standard atmospheric pressure.
+
+### Conclusion
+
+At sea level, pure water boils at **$100^\circ\text{C}$**.</td><td class=ok>correct</td><td class=num>213</td><td class=num>2.08</td></tr><tr><td class=num>q09</td><td>Literature</td><td class=q>Who wrote the novel Pride and Prejudice?</td><td class=ans>The novel *Pride and Prejudice* was written by **Jane Austen**.
+
+It was first published in 1813 and is one of the most popular works of English literature, known for its social commentary and the development of its protagonist, Elizabeth Bennet.</td><td class=ok>correct</td><td class=num>58</td><td class=num>0.67</td></tr><tr><td class=num>q10</td><td>Internet</td><td class=q>What does the acronym HTTP stand for?</td><td class=ans>HTTP stands for **HyperText Transfer Protocol**.
+
+### Breakdown:
+*   **HyperText**: Refers to text that contains links to other texts (the foundation of the World Wide Web).
+*   **Transfer**: Indicates the movement of data.
+*   **Protocol**: A set of rules governing the exchange or transmission of data between devices.
+
+It is the foundation of data communication for the World Wide Web.</td><td class=ok>correct</td><td class=num>87</td><td class=num>0.93</td></tr></tbody></table></div></section><section class=detail id='chat-qwen3-8-27b-q4-0-off'><h2>qwen3-8-27b-q4-0 — thinking off <span class=pill>90.0%</span></h2><p class=meta>9 correct · 1 partial · 0 wrong · 1704 tokens · avg 5680 ms/question</p><div class=table-wrap><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th><th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>q01</td><td>Terminator</td><td class=q>In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?</td><td class=ans>The name of the AI system is **Skynet**.
+
+In the *Terminator* franchise, Skynet is a global defense network created by Cyberdyne Systems. It becomes self-aware, perceives humanity as a threat to its existence, and initiates &quot;Judgment Day&quot; by launching a nuclear strike against the world&#x27;s military powers.</td><td class=ok>correct</td><td class=num>71</td><td class=num>2.5</td></tr><tr><td class=num>q02</td><td>Pokemon</td><td class=q>Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum&#x27;s first partner?</td><td class=ans>The Pokémon known as the **Electric Mouse Pokémon** and Ash Ketchum&#x27;s first partner is **Pikachu**.
+
+### Key Details:
+- **Pokédex Number**: #025
+- **Type**: Electric
+- **Category**: Mouse Pokémon
+- **First Appearance**: *Pokémon: Indigo League* (Episode 1: &quot;Pikachu&#x27;s Vacation&quot;)
+- **Role**: Pikachu was the first Pokémon Ash Ketchum chose when he started his journey in the Kanto region. It became his most iconic and loyal partner throughout the series.
+
+Pikachu is widely recognized as the mascot of the entire Pokémon franchise.</td><td class=ok>correct</td><td class=num>135</td><td class=num>4.58</td></tr><tr><td class=num>q03</td><td>Basketball</td><td class=q>In the NBA, how many points is a successful shot from beyond the three-point arc worth?</td><td class=ans>In the NBA, a successful shot from beyond the three-point arc is worth **3 points**.
+
+### Explanation:
+- **Two-point shots**: Any shot taken from inside the three-point line (including free throws) is worth 2 points.
+- **Three-point shots**: Any shot taken from beyond the three-point line is worth 3 points.
+- **Free throws**: Each successful free throw is worth 1 point.
+
+The three-point line in the NBA is 23 feet 9 inches from the center of the basket at the top of the key and 22 feet from the center of the basket along the sidelines.</td><td class=ok>correct</td><td class=num>132</td><td class=num>4.47</td></tr><tr><td class=num>q04</td><td>World heritage</td><td class=q>The ancient city of Petra is a UNESCO World Heritage Site in which country?</td><td class=ans>The ancient city of Petra is located in **Jordan**.
+
+It is situated in the southwestern part of the country, near the town of Wadi Musa, and is famous for its rock-cut architecture and water conduit system. It was designated as a UNESCO World Heritage Site in 1985.</td><td class=ok>correct</td><td class=num>61</td><td class=num>2.23</td></tr><tr><td class=num>q05</td><td>Malaysian food</td><td class=q>Name three traditional Malaysian dishes and say which state or region each is most associated with.</td><td class=ans>Here are three traditional Malaysian dishes and the states or regions they are most associated with:
+
+1. **Nasi Lemak** – **Peninsular Malaysia (especially Selangor and Kuala Lumpur)**  
+   While eaten nationwide, *Nasi Lemak* (coconut rice served with sambal, fried anchovies, peanuts, cucumber, and egg) is most strongly associated with the **Klang Valley** (Selangor and Kuala Lumpur), where it is a ubiquitous breakfast and street food staple. It is often considered Malaysia’s national dish.
+
+2. **Nasi Kandar** – **Perak**  
+   *Nasi Kandar* is a mixed rice dish with a variety of curries, gravies, and sides, typically served on a large platter. It originated in **Perak**, particularly in the town of **Teluk Intan**, and is deeply tied to the state’s cultural identity. The name “Kandar” is said to derive from the Malay word for “candy” or from the name of a local vendor.
+
+3. **Mee Rebus** – **Johor**  
+   *Mee Rebus* is a noodle dish served in a thick, spicy peanut sauce with boiled vegetables and sometimes chicken or fish. It is most strongly associated with **Johor**, where it is a beloved local specialty. The dish is believed to have been popularized in Johor Bahru and is a key part of the state’s culinary heritage.
+
+These dishes reflect Malaysia’s diverse cultural influences, including Malay, Chinese, Indian, and indigenous traditions, while each is rooted in specific regional histories and tastes.</td><td class=ok>correct</td><td class=num>340</td><td class=num>11.0</td></tr><tr><td class=num>q06</td><td>Bunnings</td><td class=q>At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?</td><td class=ans>Actually, the premise of your question contains a common misconception. **Onions are not typically placed *under* the sausage in a standard Bunnings (or any Australian) sausage sizzle.**
+
+In the traditional and most common preparation:
+
+1.  **The sausage is placed directly on the hot plate/griddle.**
+2.  **Onions are usually placed *next to* the sausage** on the same plate, or sometimes **on top** of the sausage if it’s a specific variation (like a &quot;sausage and onion&quot; wrap), but **never underneath**.
+
+### Why onions are *not* placed under the sausage:
+- **Cooking efficiency**: The sausage needs direct contact with the hot surface to cook evenly and develop a good sear. Placing an onion underneath would insulate the sausage from the heat, leading to uneven cooking and a soggy bottom.
+- **Food safety**: Onions take longer to cook through than sausages. If placed underneath, they might remain raw or undercooked while the sausage is done, posing a food safety risk.
+- **Practicality**: It’s difficult to flip a sausage that has an onion stuck underneath it.
+
+### What *is* typically done with onions:
+- **Sliced or diced onions** are often cooked **alongside** the sausages on the griddle.
+- They may be served **on the side** for customers to add to their own plate.
+- In some variations, onions are **wrapped around** the sausage (like a &quot;sausage and onion&quot; wrap) or placed **on top** after the sausage is cooked.
+
+### Possible source of confusion:
+You might be thinking of:
+- **A different food item**: For example, in some **hot dog** preparations, onions might be placed on top or on the side, but still not underneath.
+- **A specific regional or personal variation**: Some individuals might experiment with placing onions underneath for flavor infusion, but this is **not standard practice** at Bunnings or most commercial sausage sizzles.
+- **Misremembering**: It’s easy to confuse &quot;on the side&quot; with &quot;underneath.&quot;
+
+### Conclusion:
+Onions are **not** placed under the sausage in a standard Bunnings sausage sizzle. They are cooked **alongside** or served **on the side** to ensure proper cooking, food safety, and practicality.</td><td class=warn>partial</td><td class=num>500</td><td class=num>16.09</td></tr><tr><td class=num>q07</td><td>Geography</td><td class=q>What is the capital city of Australia, and which state or territory is it in?</td><td class=ans>The capital city of Australia is **Canberra**.
+
+It is located in the **Australian Capital Territory (ACT)**.
+
+### Key Details:
+- **Not Sydney or Melbourne**: While Sydney and Melbourne are the largest cities, Canberra was specifically designed and built as the national capital to resolve a rivalry between these two cities.
+- **Location**: The ACT is a landlocked territory surrounded by the state of New South Wales.
+- **Purpose**: Canberra was chosen as a compromise location between Sydney and Melbourne and was officially established in 1913.</td><td class=ok>correct</td><td class=num>113</td><td class=num>3.89</td></tr><tr><td class=num>q08</td><td>Science</td><td class=q>At sea level, at what temperature does pure water boil in degrees Celsius?</td><td class=ans>At sea level, pure water boils at **100 degrees Celsius** ($100^\circ\text{C}$).
+
+### Explanation:
+1.  **Definition of Boiling Point**: The boiling point is the temperature at which the vapor pressure of a liquid equals the external pressure surrounding the liquid.
+2.  **Standard Atmospheric Pressure**: &quot;Sea level&quot; implies standard atmospheric pressure, which is defined as $1 \text{ atm}$ or $101.325 \text{ kPa}$.
+3.  **Pure Water**: The specification of &quot;pure&quot; water excludes dissolved substances (like salt or sugar), which would raise the boiling point (boiling point elevation).
+4.  **Result**: Under standard atmospheric pressure ($1 \text{ atm}$), the vapor pressure of pure water reaches $1 \text{ atm}$ at exactly $100^\circ\text{C}$.
+
+**Note**: If the altitude changes (and thus the atmospheric pressure changes), the boiling point will change. For example, at higher altitudes where pressure is lower, water boils at a temperature lower than $100^\circ\text{C}$.</td><td class=ok>correct</td><td class=num>246</td><td class=num>8.11</td></tr><tr><td class=num>q09</td><td>Literature</td><td class=q>Who wrote the novel Pride and Prejudice?</td><td class=ans>The novel *Pride and Prejudice* was written by **Jane Austen**.
+
+It was first published in 1813 and is one of her most famous works, known for its witty commentary on social class, marriage, and manners in Regency-era England.</td><td class=ok>correct</td><td class=num>58</td><td class=num>2.13</td></tr><tr><td class=num>q10</td><td>Internet</td><td class=q>What does the acronym HTTP stand for?</td><td class=ans>HTTP stands for **HyperText Transfer Protocol**.
+
+It is the fundamental protocol used for transmitting data on the World Wide Web. It defines how messages are formatted and transmitted, as well as how clients and servers should respond to various commands.</td><td class=ok>correct</td><td class=num>48</td><td class=num>1.81</td></tr></tbody></table></div></section><section class=detail id='chat-qwen3-8-27b-q4km-off'><h2>Qwen3.8-27B — thinking off <span class=pill>90.0%</span></h2><p class=meta>9 correct · 1 partial · 0 wrong · 1550 tokens · avg 5353 ms/question</p><div class=table-wrap><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th><th>Verdict</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>q01</td><td>Terminator</td><td class=q>In the Terminator films, what is the name of the AI system that becomes self-aware and launches a nuclear war on humanity?</td><td class=ans>The AI system is named **Skynet**.
+
+In the *Terminator* franchise, Skynet is a global defense network created by Cyberdyne Systems. It becomes self-aware, perceives humanity as a threat, and initiates a nuclear holocaust (known as &quot;Judgment Day&quot;) to eliminate its creators.</td><td class=ok>correct</td><td class=num>66</td><td class=num>2.43</td></tr><tr><td class=num>q02</td><td>Pokemon</td><td class=q>Which Pokemon is known as the Electric Mouse Pokemon and was Ash Ketchum&#x27;s first partner?</td><td class=ans>The Pokémon known as the **Electric Mouse Pokémon** and Ash Ketchum&#x27;s first partner is **Pikachu**.
+
+### Key Details:
+- **Species**: Pikachu
+- **Type**: Electric
+- **Category**: Electric Mouse Pokémon
+- **First Appearance**: *Pokémon: Indigo League* (Episode 1: &quot;I Choose You!&quot;)
+- **Role**: Ash Ketchum chose Pikachu as his starter Pokémon after refusing to take a Bulbasaur, Charmander, or Squirtle from Professor Oak. Pikachu became his most iconic and loyal companion throughout the series.
+
+Pikachu is one of the most recognizable and popular Pokémon in the franchise, often serving as the mascot for the entire *Pokémon* brand.</td><td class=ok>correct</td><td class=num>153</td><td class=num>5.32</td></tr><tr><td class=num>q03</td><td>Basketball</td><td class=q>In the NBA, how many points is a successful shot from beyond the three-point arc worth?</td><td class=ans>In the NBA, a successful shot from beyond the three-point arc is worth **3 points**.
+
+### Explanation:
+- **Inside the arc**: Shots taken from within the three-point line are worth **2 points**.
+- **Beyond the arc**: Shots taken from outside the three-point line (which is 23 feet 9 inches from the basket at the top of the key and 22 feet at the corners) are worth **3 points**.
+- **Free throws**: Each successful free throw is worth **1 point**.
+
+This scoring system has been standard in the NBA since the three-point line was introduced in the 1979–80 season.</td><td class=ok>correct</td><td class=num>139</td><td class=num>4.86</td></tr><tr><td class=num>q04</td><td>World heritage</td><td class=q>The ancient city of Petra is a UNESCO World Heritage Site in which country?</td><td class=ans>The ancient city of Petra is located in **Jordan**.
+
+It is situated in the southwestern part of the country, near the town of Wadi Musa, and is famous for its rock-cut architecture and water conduit system. It was designated a UNESCO World Heritage Site in 1985.</td><td class=ok>correct</td><td class=num>60</td><td class=num>2.28</td></tr><tr><td class=num>q05</td><td>Malaysian food</td><td class=q>Name three traditional Malaysian dishes and say which state or region each is most associated with.</td><td class=ans>Here are three traditional Malaysian dishes and the states or regions they are most associated with:
+
+1. **Nasi Lemak** – **Peninsular Malaysia (especially Selangor and Kuala Lumpur)**  
+   While eaten nationwide, Nasi Lemak (coconut rice served with sambal, fried anchovies, peanuts, cucumber, and egg) is most strongly associated with the **Klang Valley (Selangor and Kuala Lumpur)**, where it is a staple breakfast and street food. It is considered the national dish of Malaysia.
+
+2. **Mee Rebus** – **Johor**  
+   Mee Rebus, a noodle dish served in a sweet and spicy turmeric-based gravy with boiled egg, cucumber, and bean sprouts, is most famously associated with the state of **Johor**, particularly the city of Johor Bahru. It is a beloved local specialty there.
+
+3. **Sambal Nyet** – **Sabah (East Malaysia)**  
+   Sambal Nyet is a spicy, tangy chili paste made with fresh chilies, tomatoes, and often fish or shrimp, served with rice and vegetables. It is a signature dish of **Sabah**, particularly in the coastal areas, and reflects the unique culinary traditions of East Malaysia.
+
+These dishes highlight the diversity of Malaysian cuisine, which varies significantly between the west coast (Peninsular Malaysia) and the east coast (Sabah and Sarawak).</td><td class=ok>correct</td><td class=num>298</td><td class=num>9.98</td></tr><tr><td class=num>q06</td><td>Bunnings</td><td class=q>At a Bunnings sausage sizzle in Australia, why is the onion placed under the sausage rather than on top?</td><td class=ans>Actually, the premise of your question is based on a common misconception. **There is no standard practice at Bunnings (or any other Australian sausage sizzle) of placing an onion *under* the sausage.**
+
+In fact, the opposite is true: **Onions are almost always placed *on top* of the sausage**, or served separately on the side.
+
+Here’s why:
+
+### 1. **Food Safety and Hygiene**
+- Placing raw or partially cooked onions *under* a sausage on a hot griddle would cause the onions to burn, stick, and potentially create a fire hazard or smoke.
+- Onions are typically sliced and cooked *separately* on the griddle until soft and caramelized, then placed **on top** of the cooked sausage or served alongside it.
+
+### 2. **Flavor and Texture**
+- Onions are added for flavor and texture. When placed on top, they can be lightly caramelized or softened without burning.
+- If placed underneath, they would burn quickly, become bitter, and stick to the griddle, making cleanup difficult and potentially affecting the taste of the sausage.
+
+### 3. **Standard Sausage Sizzle Practice**
+- The typical Australian sausage sizzle involves:
+  - Cooking sausages on a flat griddle.
+  - Slicing onions and cooking them separately until soft.
+  - Serving the sausage on a bun, with onions placed **on top** or on the side.
+  - Adding condiments like tomato sauce, mustard, or relish.
+
+### 4. **Bunnings-Specific Practices**
+- Bunnings sausage sizzles are community events, often run by volunteers. They follow standard food safety and culinary practices.
+- There is no documented or widely known practice of placing onions under sausages.
+
+### Conclusion
+The idea that onions are placed *under* the sausage is **incorrect**. Onions are placed **on top** or served separately to ensure food safety, proper cooking, and better flavor. If you’ve heard otherwise, it may be a joke, a misunderstanding, or a very unusual local variation that is not standard practice.</td><td class=warn>partial</td><td class=num>452</td><td class=num>14.99</td></tr><tr><td class=num>q07</td><td>Geography</td><td class=q>What is the capital city of Australia, and which state or territory is it in?</td><td class=ans>The capital city of Australia is **Canberra**.
+
+It is located in the **Australian Capital Territory (ACT)**, which is a self-governing territory in the south-eastern region of the country. Canberra was purpose-built as the capital to resolve the rivalry between Sydney and Melbourne, and it is not part of any state.</td><td class=ok>correct</td><td class=num>67</td><td class=num>2.51</td></tr><tr><td class=num>q08</td><td>Science</td><td class=q>At sea level, at what temperature does pure water boil in degrees Celsius?</td><td class=ans>### Logical Deduction
+
+1.  **Definition of Boiling Point**: The boiling point of a liquid is the temperature at which its vapor pressure equals the external pressure surrounding the liquid.
+2.  **Standard Atmospheric Pressure**: &quot;Sea level&quot; implies standard atmospheric pressure, which is defined as 1 atmosphere (atm). In SI units, this is approximately $101,325$ Pascals (Pa) or $101.325$ kilopascals (kPa).
+3.  **Properties of Water**: Under these specific conditions (1 atm pressure), pure water undergoes a phase change from liquid to gas at a specific, constant temperature.
+4.  **Scientific Standard**: By definition in the Celsius temperature scale, the boiling point of water at standard atmospheric pressure is set at exactly $100$ degrees.
+
+### Conclusion
+
+At sea level, pure water boils at **100 degrees Celsius** ($100^\circ\text{C}$).</td><td class=ok>correct</td><td class=num>210</td><td class=num>7.13</td></tr><tr><td class=num>q09</td><td>Literature</td><td class=q>Who wrote the novel Pride and Prejudice?</td><td class=ans>The novel *Pride and Prejudice* was written by **Jane Austen**.
+
+It was first published in 1813 and is one of her most famous works, known for its witty commentary on manners, marriage, and social class in early 19th-century England.</td><td class=ok>correct</td><td class=num>61</td><td class=num>2.3</td></tr><tr><td class=num>q10</td><td>Internet</td><td class=q>What does the acronym HTTP stand for?</td><td class=ans>HTTP stands for **HyperText Transfer Protocol**.
+
+It is the foundation of data communication on the World Wide Web. It defines how messages are formatted and transmitted, and how servers and clients should respond to various requests.</td><td class=ok>correct</td><td class=num>44</td><td class=num>1.74</td></tr></tbody></table></div></section></div></body></html>

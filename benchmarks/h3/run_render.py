@@ -5,7 +5,8 @@ Sampling loop runs on the gateway, polling /queue + /system_stats (torch_vram_*)
 """
 import json, subprocess, sys, time, datetime
 
-MSI = "fen@192.168.1.117"
+import os
+MSI = os.environ.get("RENDER_HOST", "")  # set to user@host of the render box before running
 def sh(cmd, timeout=60):
     return subprocess.run(["ssh", "-o", "ConnectTimeout=8", MSI, cmd],
                           capture_output=True, text=True, timeout=timeout)

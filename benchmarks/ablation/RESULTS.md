@@ -1,8 +1,8 @@
 # Accelerator ablation on ONE fixed model — Qwen3.8-27B-Q4_K_M (R9700, llama.cpp Vulkan b11517)
 
-Date: 2026-11-03. Host: `ubuntu@192.168.1.148` (AMD R9700, 32624 MiB, RADV), `llama-server`
+Date: 2026-11-03. Host: one AMD Radeon AI PRO R9700 (32 GiB, RADV), `llama-server`
 **b11517-8a1a9b512**, systemd user unit `qwen-longctx.service` on `:8080`.
-Model: `/home/ubuntu/models/Qwen3.8-27B-Q4_K_M.gguf` (arch `qwen35`, 65 blocks, `nextn_predict_layers=1`,
+Model: `Qwen3.8-27B-Q4_K_M.gguf` (arch `qwen35`, 65 blocks, `nextn_predict_layers=1`,
 mmproj `mmproj-Qwen3.8-27B-F16.gguf`) for **every** arm. Only the accelerator flags change.
 
 Question: what does each accelerator actually buy on this one model, everything else identical —
@@ -56,7 +56,7 @@ the 30k request. Full detail + exact argv in `arm-<id>.json`.
 Server shape shared by every arm (identical to `switch-model.sh stock38` except the listed delta):
 
 ```
--m /home/ubuntu/models/active.gguf  --mmproj /home/ubuntu/models/active-mmproj.gguf
+-m <model.gguf>  --mmproj <mmproj.gguf>
 --host 0.0.0.0 --port 8080  -c 131072  -ngl 99  --jinja  -b 16384  -ub 2048
 --cache-type-k q8_0  --cache-type-v q4_0  --cache-reuse 256  --metrics  --reasoning off
 ```
@@ -65,7 +65,7 @@ Server shape shared by every arm (identical to `switch-model.sh stock38` except 
   (`qwen-longctx.service.d/z-ablation.conf`) that overrides the preset drop-in, then
   `systemctl --user daemon-reload && restart`. `systemctl show ... ExecStart` is recorded per arm so
   the argv in the JSON is what systemd actually ran, not what the script intended.
-  Long jobs ran inside `screen` on `.148` (local exec kills children).
+  Long jobs ran inside a detached `screen` session (local exec kills children).
 * **Warm-up** request discarded (graph capture) before any measurement; every measured request is
   `cache_prompt:false`, `cache_n:0`, `cached_tokens:0` → genuinely cold prefill.
 * **Decode** uses `/completion` on the chat-template-rendered prompt (`/apply-template`) with
@@ -200,13 +200,13 @@ Control on the ablation model (Qwen3.8-27B, 126,822-token prompt, three runs):
 | `arm-1-baseline.json` … `arm-6-dflash-fa-off.json` | per-arm: argv, ExecStart as parsed by systemd, KV type, n_ctx/slots, VRAM idle/peak, decode/prefill timings, 6 answers, journal lines (spec init, acceptance) |
 | `arm-4b-dflash-nm3.json`, `arm-5a-mtp-ngram.json`, `arm-5b-dflash.json` | the extra configs needed for the DFlash n_max sweep and the MTP+DFlash substitution |
 | `cachecheck.json` | all seven long-context probes (incl. argv) and the prompt metadata |
-| `ablate2.py`, `cachecheck.py`, `run3.sh` | harnesses exactly as run on `.148` |
+| `ablate2.py`, `cachecheck.py`, `run3.sh` | harnesses exactly as run on the GPU host |
 | `raw/round1-*.json` | round-1 runs kept only as evidence for the defects in §2 |
 
 **Restored at end:** preset `stock38mtp` (`Qwen3.8-27B-Q4_K_M` + mmproj + `--spec-type
 draft-mtp,ngram-cache --spec-draft-n-max 4 --spec-draft-n-min 1 --image-min-tokens 1024`, ctx 131072).
-`z-ablation.conf` removed, `z-active-model.conf` restored, `active.gguf`/`active-mmproj.gguf` repointed.
-Verified after restore: unit `active`, `NRestarts=0`, `/v1/models` serves `active.gguf`, chat reply
+`z-ablation.conf` removed, `z-active-model.conf` restored, the serving model link repointed.
+Verified after restore: unit `active`, `NRestarts=0`, `/v1/models` serves the production model, chat reply
 `"OK"` with `finish_reason: stop`, journal shows `creating MTP draft context` + `model loaded`.
 
 Not published to the website; nothing committed (per task).

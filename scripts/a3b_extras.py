@@ -44,6 +44,13 @@ def _base_row(rec):
     ctx = mo.get("native_ctx")
     vram = env.get("peak_vram_mib")
     row = {
+        "speed_flags": ("-ngl 99 --jinja -fa on -b 16384 -ub 2048 --cache-type-k q8_0 "
+                        "--cache-type-v q4_0 --cache-reuse 256 --metrics -c %d" % ctx) if ctx else None,
+        "kv_cache": "k q8_0 / v q4_0 (reuse 256)",
+        "engine_build": "b11517-8a1a9b512",
+        "speed_measured_at": env.get("run_finished"),
+        "speed_method": "live serving shape: cold request, temp 0, cache_prompt false, "
+                        "server prompt_per_second / predicted_per_second",
         "slug": rec["slug"],
         "name": mo.get("name"),
         "params_total": mo.get("params_total"),
@@ -68,9 +75,13 @@ def _base_row(rec):
         "speed": {
             "standard": ({
                 "tokens": std.get("prompt_tokens"),
+                "prompt_tokens": std.get("prompt_tokens"),
                 "prefill_tps": std.get("pp512_tps"),
                 "decode_tps": std.get("tg128_tps"),
                 "pending": False,
+                "measured_at": (env.get("run_finished") or _date(env.get("run_started"))),
+                "method": "live serving shape: cold request, temp 0, cache_prompt false, "
+                          "server prompt_per_second / predicted_per_second",
             } if std else {"pending": True}),
             "deep": [{
                 "tokens": d.get("prompt_tokens"),
@@ -90,6 +101,10 @@ def _base_row(rec):
         "wall_s": d.get("wall_s"),
     } for d in deep_all]
     return row
+
+
+def _date(v):
+    return str(v)[:10] if v else None
 
 
 def speed_rows():

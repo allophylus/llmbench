@@ -1,0 +1,55 @@
+{
+ "campaign": "llmbench gap-close",
+ "updated": "2026-11-03T18:47+08:00",
+ "registry_task": "llmbench-gapclose (in-progress)",
+ "launcher": "~/bin/srv.sh <preset>; lfm3 -> ~/bin/srv_lfm3.sh (b11874 :8091)",
+ "steps": {
+  "0-inventory": {
+   "status": "done",
+   "artifact": "INVENTORY.md",
+   "runnable": 7,
+   "not_remeasurable": 12
+  },
+  "1-a3b-256k-standard": {
+   "status": "DONE+VERIFIED",
+   "record": "benchmarks/a3b-260k/records/qwen3-6-35b-a3b-ud-q4km-ctx256k.json",
+   "numbers": {
+    "prefill_tps": 2480.1,
+    "decode_tps": 98.19,
+    "prompt_tokens": 29963,
+    "pending": false
+   },
+   "verify": "scripts/a3b_extras.py rebuild vs copy -> pending:false"
+  },
+  "2-error-bars": {
+   "status": "done",
+   "spread_all_under_5pct": true
+  },
+  "3-chat": {
+   "status": "done",
+   "artifacts": "data/chat/*.json (7 models, all 90%)"
+  },
+  "4-thinking": {
+   "status": "RUNNING",
+   "screen": "think (3021617)",
+   "models": [
+    "stock38",
+    "huihui",
+    "davidau",
+    "q4_0",
+    "ornith"
+   ],
+   "off_mode_done": "0/5",
+   "note": "A3B already measured (a3b-thinking: off 22/25 > on 18/25)"
+  },
+  "5-ablation": {
+   "status": "queued",
+   "harness": "benchmarks/gapclose/ablate_a3b.py deployed ~/bench-work/ablate_a3b.py",
+   "note": "A3B=MoE no MTP tensors; MTP arms fail server-side; FA/DFlash/ngram relevant"
+  },
+  "6-games": {
+   "status": "queued"
+  }
+ },
+ "next_concrete_action": "wait for think screen ALLDONE (~/gapclose-out/thinking/ALLDONE); then run ablate_a3b.py arm matrix; then games"
+}

@@ -1,0 +1,24 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>raw chat data</title><style>
+:root{--bg:#0f141b;--panel:#151c26;--line:#243040;--fg:#e8eef8;--dim:#9fb0c6;--faint:#6f8296;--gold:#f5c542;--blue:#8cc8ff;--bad:#ff7b72;--ok:#7ee787}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:24px;margin:0 0 4px}h2{font-size:16px;margin:30px 0 8px;color:var(--fg)}h2::before{content:"§ ";color:var(--faint)}
+.sub{color:var(--dim);margin:0 0 16px;max-width:80ch}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.tabs a{padding:6px 12px;border:1px solid var(--line);border-radius:8px;color:var(--dim);text-decoration:none;font-size:13px}
+.tabs a.on{background:#1b2431;color:var(--fg);border-color:#33506b}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:8px 0 14px}
+table{width:100%;min-width:560px;border-collapse:collapse;background:var(--panel)}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:13px}
+thead th{background:#1b2431;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text-align:right;white-space:nowrap}
+code{font:12px/1.45 ui-monospace,monospace;color:var(--fg);background:#111821;padding:1px 4px;border-radius:4px}
+p,li{color:var(--dim);max-width:88ch}
+ul{padding-left:1.2rem}
+.pill{display:inline-block;padding:1px 7px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--dim)}
+.note{border:1px solid var(--line);border-left:3px solid #1f6b4c;background:var(--panel);border-radius:8px;padding:.7rem .9rem;margin:10px 0}
+.dl{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.dl a{border:1px solid var(--line);border-radius:8px;padding:6px 11px;color:var(--blue);text-decoration:none;font:12.5px ui-monospace,monospace}
+.dl a:hover{border-color:var(--blue)}
+@media(max-width:640px){.wrap{padding:20px 12px 48px}h1{font-size:20px}th,td{padding:7px 7px;font-size:12.5px}}
+</style></head><body><div class=wrap><nav class="tabs"><a href="../">overview</a><a href="../games/">games</a><a href="../chat/">chat</a><a href="../thinking/">thinking</a><a href="../ablation/">ablation</a><a href="." class="on">method</a></nav><h1>raw chat data</h1><h2>Chat JSONs</h2><p>One file per model: every question, expected answer, model answer, verdict, tokens, milliseconds and decode rate.</p><div class=table-wrap><table><thead><tr><th>File</th></tr></thead><tbody><tr><td><a href="27b.json">27b.json</a></td></tr><tr><td><a href="davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json">davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json</a></td></tr><tr><td><a href="huihui-abl-q4-k-m.json">huihui-abl-q4-k-m.json</a></td></tr><tr><td><a href="lfm3-1-7b-q4-k-m.json">lfm3-1-7b-q4-k-m.json</a></td></tr><tr><td><a href="ornith-1-5-35b-a3b-q4-k-m.json">ornith-1-5-35b-a3b-q4-k-m.json</a></td></tr><tr><td><a href="qwen3-6-35b-a3b-ud-q4km.json">qwen3-6-35b-a3b-ud-q4km.json</a></td></tr><tr><td><a href="qwen3-8-27b-q4-0.json">qwen3-8-27b-q4-0.json</a></td></tr><tr><td><a href="qwen3-8-27b-q4km.json">qwen3-8-27b-q4km.json</a></td></tr></tbody></table></div><p class="note">Copied from <code>data/chat/</code> by <code>scripts/build_pages_method.py</code> on every build.</p></div></body></html>
