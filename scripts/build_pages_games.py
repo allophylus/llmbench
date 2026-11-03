@@ -14,12 +14,15 @@ Mobile: wide table scrolls horizontally; the details block under it gives each c
 its screenshot, links and a compact stats list, so nothing is only reachable by
 sideways scrolling.
 """
-import glob
+import glob, sys
 import html
 import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from site_nav import render_nav  # noqa: E402  single source of truth for the nav
 GAMES = os.path.join(ROOT, "games")
 
 MODEL_LABEL = {
@@ -82,12 +85,7 @@ a{color:var(--blue)}
 }
 """
 
-NAV = ("<nav class=tabs><a href='../'>overview</a>"
-       "<a href='../games/' class=on>games</a>"
-       "<a href='../thinking/'>thinking on/off</a>"
-       "<a href='../chat/'>chat</a>"
-       "<a href='../ablation/'>ablation</a>"
-       "<a href='../method/'>method</a></nav>")
+NAV = render_nav("../", "games")
 
 
 def rel(slug):

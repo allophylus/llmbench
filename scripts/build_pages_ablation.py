@@ -11,13 +11,16 @@ Only public-safe fields are published: no host names, no paths, no service unit
 names. The arm display names live in the ARMS table below; everything numeric is
 read from the JSON.
 """
-import glob
+import glob, sys
 import html
 import json
 import os
 import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from site_nav import render_nav  # noqa: E402  single source of truth for the nav
 ABL = os.path.join(ROOT, "benchmarks", "ablation")
 OUT = os.path.join(ROOT, "ablation", "index.html")
 
@@ -67,13 +70,7 @@ code{font-family:ui-monospace,monospace;font-size:12px;color:var(--blue)}
 @media(max-width:640px){.wrap{padding:18px 12px 48px}th,td{padding:7px 7px;font-size:12px}table{min-width:820px}td.arm{min-width:120px}td.arm b{white-space:nowrap}td.arm span{display:none}#mob{display:block}.tabs a{font-size:12px;padding:6px 10px}}#mob{display:none;color:var(--faint);font-size:12px;margin:6px 0 0}
 """
 
-NAV = ("<nav class=tabs><a href='../'>overview</a>"
-       "<a href='../games/'>games</a>"
-       "<a href='../thinking/'>thinking on/off</a>"
-       "<a href='../chat/'>chat</a>"
-       "<a href='../logic/'>logic traps</a>"
-       "<a href='../ablation/' class=on>ablation</a>"
-       "<a href='../method/'>method</a></nav>")
+NAV = render_nav("../", "ablation")
 
 
 def esc(s):

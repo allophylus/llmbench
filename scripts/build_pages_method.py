@@ -10,14 +10,17 @@ is summarised into fixed sections. Re-run after any data refresh:
 
 Visitor-facing text only: no hostnames, no IPs, no local paths, no internal model symlinks.
 """
-import glob
+import glob, sys
 import json
 import os
 import shutil
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-NAV = """<nav class="tabs"><a href="../">overview</a><a href="../games/">games</a><a href="../chat/">chat</a><a href="../thinking/">thinking</a><a href="../ablation/">ablation</a><a href="." class="on">method</a></nav>"""
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from site_nav import render_nav  # noqa: E402  single source of truth for the nav
+
+NAV = render_nav("../", "method")
 
 CSS = """
 :root{--bg:#0f141b;--panel:#151c26;--line:#243040;--fg:#e8eef8;--dim:#9fb0c6;--faint:#6f8296;--gold:#f5c542;--blue:#8cc8ff;--bad:#ff7b72;--ok:#7ee787}
@@ -255,8 +258,10 @@ def build():
     idx.append("</tbody></table></div>")
     idx.append('<p class="note">Copied from <code>data/chat/</code> by '
                '<code>scripts/build_pages_method.py</code> on every build.</p>')
+    raw_page = page("raw chat data", "".join(idx)).replace(
+        NAV, render_nav("../", "raw"), 1)
     with open(os.path.join(dst, "index.html"), "w", encoding="utf-8") as f:
-        f.write(page("raw chat data", "".join(idx)))
+        f.write(raw_page)
 
     print("method page + %d raw chat file(s)" % len(names))
 

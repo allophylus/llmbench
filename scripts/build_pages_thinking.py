@@ -6,11 +6,14 @@ data/results.json: per max-token cap, the same 25-question set (temperature 0, s
 run once with the model's thinking channel enabled and once disabled. Writes
 thinking/index.html. Times are seconds (never ms).
 """
-import html
+import html, sys
 import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from site_nav import render_nav  # noqa: E402  single source of truth for the nav
 OUT = os.path.join(ROOT, "thinking", "index.html")
 
 CSS = """
@@ -38,13 +41,7 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 @media(max-width:640px){.wrap{padding:18px 12px 48px}th,td{padding:7px 7px;font-size:12px}table{min-width:540px}}
 """
 
-NAV = ("<nav class=tabs><a href='../'>overview</a>"
-       "<a href='../games/'>games</a>"
-       "<a href='../thinking/' class=on>thinking on/off</a>"
-       "<a href='../chat/'>chat</a>"
-       "<a href='../logic/'>logic traps</a>"
-       "<a href='../ablation/'>ablation</a>"
-       "<a href='../method/'>method</a></nav>")
+NAV = render_nav("../", "thinking")
 
 
 def esc(s):

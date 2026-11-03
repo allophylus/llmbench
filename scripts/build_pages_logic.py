@@ -9,12 +9,15 @@ arm is shown as "not run" rather than scored.
 
 Columns: off score, on score, delta, tokens off/on, wall off/on, per-question matrix.
 """
-import glob
+import glob, sys
 import html
 import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from site_nav import render_nav  # noqa: E402  single source of truth for the nav
 SRC = os.path.join(ROOT, "benchmarks", "logic10")
 QFILE = os.path.join(SRC, "questions.json")
 RESDIR = os.path.join(SRC, "results")
@@ -73,10 +76,7 @@ pre{white-space:pre-wrap;word-break:break-word;font:12px/1.45 ui-monospace,monos
 }
 """
 
-NAV = ("<nav class=tabs><a href='../'>overview</a><a href='../games/'>games</a>"
-       "<a href='../games/sidebyside/'>side-by-side</a><a href='../thinking/'>thinking on/off</a>"
-       "<a href='../chat/'>chat</a><a href='../logic/' class=on>logic traps</a>"
-       "<a href='../ablation/'>ablation</a><a href='../method/'>method</a></nav>")
+NAV = render_nav("../", "logic")
 
 SHORT = {"wash": "car wash", "race": "race", "batball": "bat+ball", "widgets": "widgets",
          "lilypad": "lily pads", "pills": "pills", "months": "months", "ladder": "ladder",
