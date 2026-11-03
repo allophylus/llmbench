@@ -670,3 +670,7 @@ body.show-scores #tbl td.sc { display: table-cell; }
   margin: 1.9rem 0 .5rem; color: #e9eff7; }
 .wrap > p.sub { margin: 0 0 1.5rem; max-width: 78ch; color: var(--fg-dim); font-size: 14px; line-height: 1.55; }
 .site-head { padding: 1.7rem 0 1.2rem; }
+
+/* the brand header must not inherit page-content .wrap padding: on sub-pages that
+   added 28px top + 60px bottom, which is why their nav sat 60px lower than the overview */
+.site-head > .wrap, .site-head .wrap { padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; }
