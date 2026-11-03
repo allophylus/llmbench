@@ -353,8 +353,8 @@
 
   function rowHTML(r, rank) {
     var c = r.cells || {};
-    var cls = "";   /* podium removed: rank tints were unreadable and misordered */
-    var badge = "";
+    var cls = rank ? "rank rank-" + rank : "";
+    var badge = rank ? '<span class="rank-badge" title="top three by the sorted column">' + rank + "</span>" : "";
     var pAct = r.params_active && r.params_active !== r.params_total
       ? ' <span class="act">/ ' + esc(r.params_active) + "</span>" : "";
     var sp = speed(r);
@@ -534,7 +534,15 @@
     var shown = state.rows.filter(function (r) { return matches(r, q, arch, onlyVid); });
     sortView();
     var order = state.view.filter(function (r) { return shown.indexOf(r) !== -1; });
-    var ranks = topRanks(order);
+    /* ranks follow READING ORDER: the first visible row with a value in the sorted column is 1,
+       the next is 2, the next is 3. Anything else (ranking by value then drawing in a different
+       order) produced 2 above 1 and a missing 3. */
+    var _rk = rankKey(), _left = 3, ranks = [];
+    order.forEach(function (r) {
+      if (r._repeat) return;
+      var v = value(r, _rk);
+      if (v !== null && isFinite(v) && _left > 0) { ranks.push([r, 4 - _left]); _left -= 1; }
+    });
 
     /* A model measured at several server contexts (…-ctx32k / …-ctx256k) is ONE model with
        several probes, not several models. Key on the model, not on the neighbouring row —
@@ -564,7 +572,8 @@
     var note = document.getElementById("ranknote");
     if (note) {
       note.textContent = state.sortKey
-        ? "Sorted by " + (LABELS[state.sortKey] || state.sortKey) + (state.dir === 1 ? " ↑" : " ↓")
+        ? "Sorted by " + (LABELS[state.sortKey] || state.sortKey) + (state.dir === 1 ? " ↑" : " ↓") +
+          " — badges 1–3 = top three in the order shown"
         : "";
     }
     document.getElementById("empty").hidden = order.length > 0;
