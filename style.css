@@ -389,6 +389,20 @@ td.c-name .dep-note { display: block; font: 11px/1.35 var(--mono); color: var(--
   #tbl thead tr { display: flex; }
   #tbl tbody tr { display: grid; }
   #tbl tbody td, #tbl thead th { display: block; width: auto; }
+  /* the mobile sort bar has its own labels; the card's data-label pseudo-elements must not
+     print the same labels again inside each cell (the cells sit mid-grid, so the value
+     otherwise reads as belonging to the column above it) */
+  #tbl tbody td::before { display: none; content: none; }
+  #tbl tbody td.c-name::before { display: none; }
+  /* one small caption per score, so a number is never read as the wrong metric */
+  #tbl tbody td.sc::before, #tbl tbody td.sv::before {
+    content: attr(data-label);
+    display: block;
+    font: 600 9px/1.3 var(--mono);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
   .ctl-legend .hint { display: block; }
   /* keep the deep-context depth line visible inside the card view */
   td .dep { display: inline; margin-left: .25rem; }

@@ -325,18 +325,18 @@
       '<td class="c-quant" data-label="Quant"><span class="pill">' + esc(r.quant || "—") + "</span></td>" +
       '<td class="c-arch" data-label="Arch">' + esc(r.arch || "—") + "</td>" +
       speedCells(r) +
-      '<td class="num" data-label="GPQA">' + scoreCell(r, "gpqa", c.gpqa) + "</td>" +
-      '<td class="num" data-label="AIME">' + scoreCell(r, "aime", c.aime) + "</td>" +
-      '<td class="num" data-label="LiveBench">' + scoreCell(r, "livebench", c.livebench) + "</td>" +
-      '<td class="num" data-label="ctx30k">' + scoreCell(r, "ctx30k", c.ctx30k) + "</td>" +
-      '<td class="num" data-label="ctx110k">' + scoreCell(r, "ctx110k", c.ctx110k) + "</td>" +
-      '<td class="num" data-label="tau2">' + scoreCell(r, "tau2", c.tau2) + "</td>" +
-      '<td class="num" data-label="Shell">' + scoreCell(r, "shell", c.shell) + "</td>" +
-      '<td class="num" data-label="TermBench">' + scoreCell(r, "termbench", c.termbench) + "</td>" +
-      '<td class="num" data-label="Decode t/s">' + fmtNum(num(r.decode_tps), 1) + "</td>" +
-      '<td class="num" data-label="Prefill t/s">' + fmtNum(num(r.prefill_tps), 0) + "</td>" +
-      '<td class="num" data-label="Ctx">' + fmtCtx(num(r.context_window)) + "</td>" +
-      '<td class="num" data-label="VRAM">' +
+      '<td class="num sc" data-label="GPQA">' + scoreCell(r, "gpqa", c.gpqa) + "</td>" +
+      '<td class="num sc" data-label="AIME">' + scoreCell(r, "aime", c.aime) + "</td>" +
+      '<td class="num sc" data-label="LiveBench">' + scoreCell(r, "livebench", c.livebench) + "</td>" +
+      '<td class="num sc" data-label="ctx30k">' + scoreCell(r, "ctx30k", c.ctx30k) + "</td>" +
+      '<td class="num sc" data-label="ctx110k">' + scoreCell(r, "ctx110k", c.ctx110k) + "</td>" +
+      '<td class="num sc" data-label="tau2">' + scoreCell(r, "tau2", c.tau2) + "</td>" +
+      '<td class="num sc" data-label="Shell">' + scoreCell(r, "shell", c.shell) + "</td>" +
+      '<td class="num sc" data-label="TermBench">' + scoreCell(r, "termbench", c.termbench) + "</td>" +
+      '<td class="num sv" data-label="Decode t/s">' + fmtNum(num(r.decode_tps), 1) + "</td>" +
+      '<td class="num sv" data-label="Prefill t/s">' + fmtNum(num(r.prefill_tps), 0) + "</td>" +
+      '<td class="num sv" data-label="Ctx">' + fmtCtx(num(r.context_window)) + "</td>" +
+      '<td class="num sv" data-label="VRAM">' +
         (num(r.vram_mib) !== null ? (r.vram_mib / 1024).toFixed(1) : '<span class="dash">—</span>') + "</td>" +
       '<td class="num c-date" data-label="Date">' + esc(r.date || "—") + "</td>" +
       evidenceCell(r) +
