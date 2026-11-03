@@ -22,7 +22,7 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav, render_topbar, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
+from site_nav import render_nav, render_topbar, render_brand, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 GAMES = os.path.join(ROOT, "games")
 
 MODEL_LABEL = {
@@ -321,7 +321,7 @@ def build():
     out = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
            "<meta name=viewport content='width=device-width,initial-scale=1'>"
            "<title>games — model-written browser games</title><style>" + CSS + TOPBAR_CSS + "</style>"
-           "</head><body>" + TOPBAR
+           "</head><body>" + render_brand() + TOPBAR
            + "<div class=wrap><h1>games — model-written browser games</h1>" + body + "</div></body></html>")
     open(os.path.join(GAMES, "index.html"), "w", encoding="utf-8").write(out)
     print("games rows:", len(rows),

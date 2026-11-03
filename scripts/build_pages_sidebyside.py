@@ -24,7 +24,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav, render_topbar, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
+from site_nav import render_nav, render_topbar, render_brand, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 GAMES = os.path.join(ROOT, "games")
 OUT = os.path.join(GAMES, "suite", "out")
 DEST = os.path.join(GAMES, "sidebyside")
@@ -236,7 +236,7 @@ def main():
     page = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
             "<title>games side by side — same four games, every model</title>"
-            f"<style>{CSS}{TOPBAR_CSS}</style></head><body>{nav}<div class=wrap>"
+            f"<style>{CSS}{TOPBAR_CSS}</style></head><body>{render_brand()}{nav}<div class=wrap>"
             "<h1>games, side by side</h1>" + body + "</div></body></html>")
     open(os.path.join(DEST, "index.html"), "w").write(page)
     print("wrote", os.path.join(DEST, "index.html"), "models:", len(slugs))

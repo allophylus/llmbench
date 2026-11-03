@@ -18,7 +18,7 @@ import shutil
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav, render_topbar, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
+from site_nav import render_nav, render_topbar, render_brand, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 
 TOPBAR = render_topbar("../", "method")
 
@@ -56,7 +56,7 @@ def esc(s):
 def page(title, body):
     return ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            f"<title>{esc(title)}</title><style>{CSS}{TOPBAR_CSS}</style></head><body>" + TOPBAR +
+            f"<title>{esc(title)}</title><style>{CSS}{TOPBAR_CSS}</style></head><body>" + render_brand() + TOPBAR +
             f"<div class=wrap><h1>{esc(title)}</h1>{body}</div></body></html>")
 
 
