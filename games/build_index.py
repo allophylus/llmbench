@@ -42,7 +42,7 @@ for slug in slugs:
 
 # Robot videos follow the repo rule (.gitignore: videos via CloudFront, never committed)
 # and are uploaded to the same bucket/prefix as the benchmark clips.
-ROBOT_VIDEO_BASE = "https://www.lowtechplace.com/llmbench/videos/"
+ROBOT_VIDEO_BASE = "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/"
 
 VER = lambda ok: f'<b class="ok">PASS</b>' if ok else f'<b class="bad">FAIL</b>'
 

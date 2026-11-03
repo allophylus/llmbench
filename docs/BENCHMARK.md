@@ -220,7 +220,7 @@ are `…/llmbench/videos/<slug>__<cell>.mp4`.
 
 - Site: GitHub Pages (`allophylus/llmbench`), needs `.nojekyll`. Pages can take 1–2 min to rebuild;
   a 404 immediately after a push is normal.
-- Videos: S3 + CloudFront (`www.lowtechplace.com/llmbench/videos/`). **CloudFront caches 24 h
+- Videos: S3 + CloudFront (`d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/`). **CloudFront caches 24 h
   and the deployer cannot invalidate.** To change a clip, publish it under a new filename
   (e.g. `…__cell-dark.mp4`) and point the link at that; re-uploading the same key serves
   the old bytes all day.

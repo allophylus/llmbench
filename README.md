@@ -61,7 +61,7 @@ Videos are **not** hosted in this repo. A link is emitted only when the rendered
 exists in the local videos directory, and it points at the CloudFront copy:
 
 ```
-https://www.lowtechplace.com/llmbench/videos/<slug>__<cell>.mp4
+https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/<slug>__<cell>.mp4
 ```
 
 ## Updating the data

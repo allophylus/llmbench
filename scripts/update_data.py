@@ -15,7 +15,7 @@ Usage (plain stdlib, no deps):
 Output shape (data/results.json):
 {
   "generated": "2026-11-01T21:30:00+08:00",
-  "video_base": "https://www.lowtechplace.com/llmbench/videos/",
+  "video_base": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/",
   "rows": [
     {"slug": "...", "name": "...", "params_total": "27B", "params_active": "27B",
      "quant": "Q4_K_M", "arch": "...", "decode_tps": 31.6, "prefill_tps": 962.0,
@@ -51,7 +51,7 @@ DEFAULT_RESULTS = os.path.join(HOME, ".openclaw", "workspace", "llmbench", "resu
 DEFAULT_VIDEOS = os.path.join(HOME, ".openclaw", "workspace", "llmbench", "site", "videos")
 DEFAULT_RAW = os.path.join(HOME, ".openclaw", "workspace", "llmbench")
 DEFAULT_OUT = os.path.join(REPO, "data", "results.json")
-VIDEO_BASE = "https://www.lowtechplace.com/llmbench/videos/"
+VIDEO_BASE = "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/"
 
 # ---------------------------------------------------------------- merge rules
 

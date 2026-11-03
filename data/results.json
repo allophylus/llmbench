@@ -1,6 +1,6 @@
 {
  "generated": "2026-11-02T20:55:06+08:00",
- "video_base": "https://www.lowtechplace.com/llmbench/videos/",
+ "video_base": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/",
  "rows": [
   {
    "slug": "davidau-qwen3-8-27b-neo-max-mtp-q4-k-m",
@@ -34,23 +34,23 @@
     "tetris_play": null
    },
    "videos": {
-    "c0-ppextended": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c0-ppextended.mp4",
-    "c1-fa-off": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c1-fa-off.mp4",
-    "c1-fa-on": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c1-fa-on.mp4",
-    "c4-kv-f16": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c4-kv-f16.mp4",
-    "c4-kv-q8q4": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c4-kv-q8q4.mp4",
-    "c5-ctx-131072-niah": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-131072-niah.mp4",
-    "c5-ctx-131072-ttft": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-131072-ttft.mp4",
-    "c5-ctx-196608-niah": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-196608-niah.mp4",
-    "c5-ctx-196608-ttft": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-196608-ttft.mp4",
-    "c5-ctx-262144-niah": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-262144-niah.mp4",
-    "c5-ctx-262144-ttft": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-262144-ttft.mp4",
-    "np1": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__np1.mp4",
-    "np4": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__np4.mp4",
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__rebench-ppextended.mp4",
-    "spec-dflash": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__spec-dflash.mp4",
-    "spec-mtp": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__spec-mtp.mp4",
-    "spec-none": "https://www.lowtechplace.com/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__spec-none.mp4"
+    "c0-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c0-ppextended.mp4",
+    "c1-fa-off": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c1-fa-off.mp4",
+    "c1-fa-on": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c1-fa-on.mp4",
+    "c4-kv-f16": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c4-kv-f16.mp4",
+    "c4-kv-q8q4": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c4-kv-q8q4.mp4",
+    "c5-ctx-131072-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-131072-niah.mp4",
+    "c5-ctx-131072-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-131072-ttft.mp4",
+    "c5-ctx-196608-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-196608-niah.mp4",
+    "c5-ctx-196608-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-196608-ttft.mp4",
+    "c5-ctx-262144-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-262144-niah.mp4",
+    "c5-ctx-262144-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__c5-ctx-262144-ttft.mp4",
+    "np1": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__np1.mp4",
+    "np4": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__np4.mp4",
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__rebench-ppextended.mp4",
+    "spec-dflash": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__spec-dflash.mp4",
+    "spec-mtp": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__spec-mtp.mp4",
+    "spec-none": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m__spec-none.mp4"
    },
    "sources": [
     "results/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json",
@@ -138,7 +138,7 @@
     "tetris_play": null
    },
    "videos": {
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/huihui-abl-q4-k-m__rebench-ppextended.mp4"
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/huihui-abl-q4-k-m__rebench-ppextended.mp4"
    },
    "sources": [
     "results/huihui-abl-q4-k-m.json",
@@ -182,7 +182,7 @@
     "tetris_play": null
    },
    "videos": {
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-24b-a2b-q4-k-m__rebench-ppextended.mp4"
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-24b-a2b-q4-k-m__rebench-ppextended.mp4"
    },
    "sources": [
     "results/lfm2-5-24b-a2b-q4-k-m.json",
@@ -226,26 +226,26 @@
     "tetris_play": null
    },
    "videos": {
-    "agent-shell10": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__agent-shell10.mp4",
-    "agent-tau2-telecom20": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__agent-tau2-telecom20.mp4",
-    "c0-ppextended": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__c0-ppextended.mp4",
-    "c1-fa-off": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__c1-fa-off.mp4",
-    "c1-fa-on": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__c1-fa-on.mp4",
-    "c4-kv-f16": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__c4-kv-f16.mp4",
-    "c4-kv-q8q4": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__c4-kv-q8q4.mp4",
-    "c5-ctx-65536-niah": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__c5-ctx-65536-niah.mp4",
-    "c5-ctx-65536-ttft": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__c5-ctx-65536-ttft.mp4",
-    "c7-power-220W": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__c7-power-220W.mp4",
-    "c7-power-250W": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__c7-power-250W.mp4",
-    "c7-power-300W": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__c7-power-300W.mp4",
-    "ctx-gpqa110k": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__ctx-gpqa110k.mp4",
-    "ctx-gpqa30k": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__ctx-gpqa30k.mp4",
-    "np1": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__np1.mp4",
-    "np4": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__np4.mp4",
-    "pub-aime10x3": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__pub-aime10x3.mp4",
-    "pub-gpqa25": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__pub-gpqa25.mp4",
-    "pub-livebench25": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__pub-livebench25.mp4",
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/lfm2-5-8b-a1b-q6-k__rebench-ppextended.mp4"
+    "agent-shell10": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__agent-shell10.mp4",
+    "agent-tau2-telecom20": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__agent-tau2-telecom20.mp4",
+    "c0-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__c0-ppextended.mp4",
+    "c1-fa-off": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__c1-fa-off.mp4",
+    "c1-fa-on": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__c1-fa-on.mp4",
+    "c4-kv-f16": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__c4-kv-f16.mp4",
+    "c4-kv-q8q4": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__c4-kv-q8q4.mp4",
+    "c5-ctx-65536-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__c5-ctx-65536-niah.mp4",
+    "c5-ctx-65536-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__c5-ctx-65536-ttft.mp4",
+    "c7-power-220W": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__c7-power-220W.mp4",
+    "c7-power-250W": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__c7-power-250W.mp4",
+    "c7-power-300W": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__c7-power-300W.mp4",
+    "ctx-gpqa110k": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__ctx-gpqa110k.mp4",
+    "ctx-gpqa30k": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__ctx-gpqa30k.mp4",
+    "np1": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__np1.mp4",
+    "np4": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__np4.mp4",
+    "pub-aime10x3": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__pub-aime10x3.mp4",
+    "pub-gpqa25": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__pub-gpqa25.mp4",
+    "pub-livebench25": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__pub-livebench25.mp4",
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/lfm2-5-8b-a1b-q6-k__rebench-ppextended.mp4"
    },
    "sources": [
     "results/c7_lfm2-5-8b-a1b-q6-k.json",
@@ -332,7 +332,7 @@
     "tetris_play": null
    },
    "videos": {
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/minicpm5-2b-q8-0__rebench-ppextended.mp4"
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/minicpm5-2b-q8-0__rebench-ppextended.mp4"
    },
    "sources": [
     "results/minicpm5-2b-q8-0.json",
@@ -376,7 +376,7 @@
     "tetris_play": null
    },
    "videos": {
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/muse-glimmer-30b-q4-k-m__rebench-ppextended.mp4"
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/muse-glimmer-30b-q4-k-m__rebench-ppextended.mp4"
    },
    "sources": [
     "results/muse-glimmer-30b-q4-k-m.json",
@@ -420,7 +420,7 @@
     "tetris_play": null
    },
    "videos": {
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/nemotron-3-5-lightning-30b-a3b-q4-0__rebench-ppextended.mp4"
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/nemotron-3-5-lightning-30b-a3b-q4-0__rebench-ppextended.mp4"
    },
    "sources": [
     "results/nemotron-3-5-lightning-30b-a3b-q4-0.json",
@@ -464,7 +464,7 @@
     "tetris_play": null
    },
    "videos": {
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/ornith-1-5-35b-a3b-q4-k-m__rebench-ppextended.mp4"
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/ornith-1-5-35b-a3b-q4-k-m__rebench-ppextended.mp4"
    },
    "sources": [
     "results/ornith-1-5-35b-a3b-q4-k-m.json",
@@ -508,7 +508,7 @@
     "tetris_play": null
    },
    "videos": {
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/ornith-1-5-9b-q8-0__rebench-ppextended.mp4"
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/ornith-1-5-9b-q8-0__rebench-ppextended.mp4"
    },
    "sources": [
     "results/ornith-1-5-9b-q8-0.json",
@@ -552,12 +552,12 @@
     "tetris_play": null
    },
    "videos": {
-    "galaga": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__galaga.mp4",
-    "galaga-dark": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__galaga-dark.mp4",
-    "gta": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__gta.mp4",
-    "gta-dark": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__gta-dark.mp4",
-    "physics": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__physics.mp4",
-    "physics-dark": "https://www.lowtechplace.com/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__physics-dark.mp4"
+    "galaga": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__galaga.mp4",
+    "galaga-dark": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__galaga-dark.mp4",
+    "gta": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__gta.mp4",
+    "gta-dark": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__gta-dark.mp4",
+    "physics": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__physics.mp4",
+    "physics-dark": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-6-35b-a3b-ud-q4km__physics-dark.mp4"
    },
    "sources": [
     "results/qwen3-6-35b-a3b-ud-q4km.json"
@@ -613,25 +613,25 @@
     "tetris_play": null
    },
    "videos": {
-    "c0-ppextended": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c0-ppextended.mp4",
-    "c1-fa-off": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c1-fa-off.mp4",
-    "c1-fa-on": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c1-fa-on.mp4",
-    "c4-kv-f16": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c4-kv-f16.mp4",
-    "c4-kv-q8q4": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c4-kv-q8q4.mp4",
-    "c5-ctx-131072-niah": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-131072-niah.mp4",
-    "c5-ctx-131072-ttft": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-131072-ttft.mp4",
-    "c5-ctx-196608-niah": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-196608-niah.mp4",
-    "c5-ctx-196608-ttft": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-196608-ttft.mp4",
-    "c5-ctx-262144-niah": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-262144-niah.mp4",
-    "c5-ctx-262144-ttft": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-262144-ttft.mp4",
-    "fa-off": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__fa-off.mp4",
-    "fa-on": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__fa-on.mp4",
-    "np1": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__np1.mp4",
-    "np4": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__np4.mp4",
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__rebench-ppextended.mp4",
-    "spec-dflash": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__spec-dflash.mp4",
-    "spec-mtp": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__spec-mtp.mp4",
-    "spec-none": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-0__spec-none.mp4"
+    "c0-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c0-ppextended.mp4",
+    "c1-fa-off": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c1-fa-off.mp4",
+    "c1-fa-on": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c1-fa-on.mp4",
+    "c4-kv-f16": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c4-kv-f16.mp4",
+    "c4-kv-q8q4": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c4-kv-q8q4.mp4",
+    "c5-ctx-131072-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-131072-niah.mp4",
+    "c5-ctx-131072-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-131072-ttft.mp4",
+    "c5-ctx-196608-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-196608-niah.mp4",
+    "c5-ctx-196608-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-196608-ttft.mp4",
+    "c5-ctx-262144-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-262144-niah.mp4",
+    "c5-ctx-262144-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__c5-ctx-262144-ttft.mp4",
+    "fa-off": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__fa-off.mp4",
+    "fa-on": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__fa-on.mp4",
+    "np1": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__np1.mp4",
+    "np4": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__np4.mp4",
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__rebench-ppextended.mp4",
+    "spec-dflash": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__spec-dflash.mp4",
+    "spec-mtp": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__spec-mtp.mp4",
+    "spec-none": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-0__spec-none.mp4"
    },
    "sources": [
     "results/qwen3-8-27b-q4-0.json",
@@ -676,37 +676,37 @@
     "tetris_play": null
    },
    "videos": {
-    "c0-pp131072": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp131072.mp4",
-    "c0-pp16384": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp16384.mp4",
-    "c0-pp32768": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp32768.mp4",
-    "c0-pp4096": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp4096.mp4",
-    "c0-pp512": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp512.mp4",
-    "c0-pp65536": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp65536.mp4",
-    "c0-pp8192": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp8192.mp4",
-    "c0-ppextended": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c0-ppextended.mp4",
-    "c1-fa-off": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c1-fa-off.mp4",
-    "c1-fa-on": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c1-fa-on.mp4",
-    "c4-kv-f16": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c4-kv-f16.mp4",
-    "c4-kv-q8q4": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c4-kv-q8q4.mp4",
-    "c5-ctx-131072-niah": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-131072-niah.mp4",
-    "c5-ctx-131072-ttft": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-131072-ttft.mp4",
-    "c5-ctx-196608-niah": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-196608-niah.mp4",
-    "c5-ctx-196608-ttft": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-196608-ttft.mp4",
-    "c5-ctx-262144-niah": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-262144-niah.mp4",
-    "c5-ctx-262144-ttft": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-262144-ttft.mp4",
-    "c7-power-220W": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c7-power-220W.mp4",
-    "c7-power-250W": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c7-power-250W.mp4",
-    "c7-power-300W": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__c7-power-300W.mp4",
-    "fa-off": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__fa-off.mp4",
-    "fa-on": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__fa-on.mp4",
-    "np1": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__np1.mp4",
-    "np4": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__np4.mp4",
-    "pub-gpqa25": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__pub-gpqa25.mp4",
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__rebench-ppextended.mp4",
-    "spec-dflash": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__spec-dflash.mp4",
-    "spec-mtp": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__spec-mtp.mp4",
-    "spec-none": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__spec-none.mp4",
-    "tetris_qwen3-8-27b-q4-k-m": "https://www.lowtechplace.com/llmbench/videos/qwen3-8-27b-q4-k-m__tetris_qwen3-8-27b-q4-k-m.mp4"
+    "c0-pp131072": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp131072.mp4",
+    "c0-pp16384": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp16384.mp4",
+    "c0-pp32768": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp32768.mp4",
+    "c0-pp4096": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp4096.mp4",
+    "c0-pp512": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp512.mp4",
+    "c0-pp65536": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp65536.mp4",
+    "c0-pp8192": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c0-pp8192.mp4",
+    "c0-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c0-ppextended.mp4",
+    "c1-fa-off": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c1-fa-off.mp4",
+    "c1-fa-on": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c1-fa-on.mp4",
+    "c4-kv-f16": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c4-kv-f16.mp4",
+    "c4-kv-q8q4": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c4-kv-q8q4.mp4",
+    "c5-ctx-131072-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-131072-niah.mp4",
+    "c5-ctx-131072-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-131072-ttft.mp4",
+    "c5-ctx-196608-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-196608-niah.mp4",
+    "c5-ctx-196608-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-196608-ttft.mp4",
+    "c5-ctx-262144-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-262144-niah.mp4",
+    "c5-ctx-262144-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c5-ctx-262144-ttft.mp4",
+    "c7-power-220W": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c7-power-220W.mp4",
+    "c7-power-250W": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c7-power-250W.mp4",
+    "c7-power-300W": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__c7-power-300W.mp4",
+    "fa-off": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__fa-off.mp4",
+    "fa-on": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__fa-on.mp4",
+    "np1": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__np1.mp4",
+    "np4": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__np4.mp4",
+    "pub-gpqa25": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__pub-gpqa25.mp4",
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__rebench-ppextended.mp4",
+    "spec-dflash": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__spec-dflash.mp4",
+    "spec-mtp": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__spec-mtp.mp4",
+    "spec-none": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__spec-none.mp4",
+    "tetris_qwen3-8-27b-q4-k-m": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/qwen3-8-27b-q4-k-m__tetris_qwen3-8-27b-q4-k-m.mp4"
    },
    "sources": [
     "results/c7_qwen3-8-27b-q4-k-m.json",
@@ -856,26 +856,26 @@
     "tetris_play": null
    },
    "videos": {
-    "c0-ppextended": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c0-ppextended.mp4",
-    "c1-fa-off": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c1-fa-off.mp4",
-    "c1-fa-on": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c1-fa-on.mp4",
-    "c4-kv-f16": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c4-kv-f16.mp4",
-    "c4-kv-q8q4": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c4-kv-q8q4.mp4",
-    "c5-ctx-131072-niah": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-131072-niah.mp4",
-    "c5-ctx-131072-ttft": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-131072-ttft.mp4",
-    "c5-ctx-196608-niah": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-196608-niah.mp4",
-    "c5-ctx-196608-ttft": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-196608-ttft.mp4",
-    "c5-ctx-262144-niah": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-262144-niah.mp4",
-    "c5-ctx-262144-ttft": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-262144-ttft.mp4",
-    "c7-power-220W": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c7-power-220W.mp4",
-    "c7-power-250W": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c7-power-250W.mp4",
-    "c7-power-300W": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__c7-power-300W.mp4",
-    "np1": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__np1.mp4",
-    "np4": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__np4.mp4",
-    "rebench-ppextended": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__rebench-ppextended.mp4",
-    "spec-dflash": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__spec-dflash.mp4",
-    "spec-none": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__spec-none.mp4",
-    "tetris": "https://www.lowtechplace.com/llmbench/videos/underdog-saluki-27b-iq2__tetris.mp4"
+    "c0-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c0-ppextended.mp4",
+    "c1-fa-off": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c1-fa-off.mp4",
+    "c1-fa-on": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c1-fa-on.mp4",
+    "c4-kv-f16": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c4-kv-f16.mp4",
+    "c4-kv-q8q4": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c4-kv-q8q4.mp4",
+    "c5-ctx-131072-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-131072-niah.mp4",
+    "c5-ctx-131072-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-131072-ttft.mp4",
+    "c5-ctx-196608-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-196608-niah.mp4",
+    "c5-ctx-196608-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-196608-ttft.mp4",
+    "c5-ctx-262144-niah": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-262144-niah.mp4",
+    "c5-ctx-262144-ttft": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c5-ctx-262144-ttft.mp4",
+    "c7-power-220W": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c7-power-220W.mp4",
+    "c7-power-250W": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c7-power-250W.mp4",
+    "c7-power-300W": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__c7-power-300W.mp4",
+    "np1": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__np1.mp4",
+    "np4": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__np4.mp4",
+    "rebench-ppextended": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__rebench-ppextended.mp4",
+    "spec-dflash": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__spec-dflash.mp4",
+    "spec-none": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__spec-none.mp4",
+    "tetris": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/underdog-saluki-27b-iq2__tetris.mp4"
    },
    "sources": [
     "results/c7_underdog-saluki-27b-iq2.json",

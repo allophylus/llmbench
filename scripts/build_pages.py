@@ -137,7 +137,7 @@ def robot_block(r):
         return ""
     score = m.get("final_score")
     verdict = m.get("verdict") or ""
-    vid = "https://www.lowtechplace.com/llmbench/videos/game__%s__robot.mp4" % r["slug"]
+    vid = "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/game__%s__robot.mp4" % r["slug"]
     return (f"<p class=meta>robot play: <b>{'' if score is None else score}</b> points · {esc(verdict)} · "
             f"<a href='{vid}'>watch the robot run →</a></p>")
 
