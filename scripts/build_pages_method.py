@@ -41,7 +41,7 @@ table{width:100%;min-width:560px;border-collapse:collapse;background:var(--panel
 .method-tbl thead{display:table-header-group}.method-tbl tbody{display:table-row-group}
 .method-tbl tr{display:table-row}
 .method-tbl th,.method-tbl td{display:table-cell;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:13px}
-.method-tbl td.num{white-space:nowrap}
+.method-tbl td.num,.method-tbl td.mode{white-space:nowrap}
 thead th{background:#1b2431;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
 td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text-align:right;white-space:nowrap}
 code{font:12px/1.45 ui-monospace,monospace;color:var(--fg);background:#111821;padding:1px 4px;border-radius:4px}
@@ -55,7 +55,6 @@ ul{padding-left:1.2rem}
 h3.rawh{font-size:14px;margin:20px 0 6px;color:var(--fg)}
 @media(max-width:640px){.wrap{padding:20px 12px 48px}h1{font-size:20px}
 .method-tbl table{min-width:0;font-size:12px}
-.method-tbl td.num{white-space:nowrap}
 .method-tbl th,.method-tbl td{display:table-cell;padding:6px 6px;font-size:12px;overflow-wrap:anywhere}
 td.num{word-break:keep-all}}
 """
@@ -169,7 +168,7 @@ def raw_files_html():
             n, think = None, "—"
         rows.append('<tr><td><a href="%s" download>%s</a></td><td>%s</td><td>%s</td>'
                     '<td class=num>%s</td></tr>'
-                    % (esc(b), esc(b), esc(LABEL.get(slug, slug)), esc(think),
+                    % (esc(b), esc(b), esc(LABEL.get(slug, slug)), "<span class=mode>" + esc(think) + "</span>",
                        "—" if n is None else n))
     return ('<h3 id=raw-files class=rawh>Chat JSONs — one file per model</h3>'
             "<p>Each file holds every question, the expected answer, the model's answer, "
