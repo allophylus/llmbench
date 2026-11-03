@@ -185,8 +185,6 @@ thead th:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: -
 #tbl td.num, #tbl th.num { white-space: nowrap; }
 #tbl td.c-evidence, #tbl th.c-evidence { white-space: nowrap; }
 /* keep the model name anchored while the wide grid scrolls sideways */
-#tbl th:first-child, #tbl td:first-child { position: sticky; left: 0; z-index: 2; background: var(--bg); }
-#tbl thead th:first-child { z-index: 4; }
 #tbl th[data-key="name"]   { width: 112px; }
 #tbl th[data-key="params"] { width: 72px; }
 #tbl th[data-key="quant"]  { width: 56px; }
@@ -651,3 +649,6 @@ body.show-scores #tbl td.sc { display: table-cell; }
 
 /* no row highlighting: alternating tint + hover only, nothing that implies rank */
 #tbl tbody tr:hover td { background: rgba(255,255,255,.03); }
+
+/* the sticky first column painted a darker band than its row and read as 'this row is
+   highlighted'. The table fits without it now, so no sticky column, no band. */
