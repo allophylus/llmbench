@@ -162,6 +162,7 @@ def main():
             r = sh([PY, os.path.join(HERE, "suite_run.py"), "--base", MODELS[slug]["base"],
                     "--model-slug", slug, "--spec", spec, "--out", out], timeout=6 * 3600)
             note("%s/%s: exit %d %s" % (slug, spec, r.returncode, r.stdout.strip().splitlines()[-1] if r.stdout.strip() else ""))
+            open(os.path.join(out, "matrix.log"), "a").write((r.stdout or "")[-6000:] + (r.stderr or "")[-3000:])
             if r.returncode:
                 open(os.path.join(out, slug, spec, "run.err"), "w").write((r.stderr or "")[-4000:])
         stop_extra(slug)
