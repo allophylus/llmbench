@@ -92,7 +92,7 @@
 
   var NATIVE_TIP = 'a single probe at this row&#39;s own server context (\u00b7n) \u2014 ' +
     'not the standardised 30K probe';
-  var NATIVE_MARK = '<sup class="nat" title="' + NATIVE_TIP + '">n</sup>';
+  var NATIVE_MARK = '<sup class="nat" title="' + NATIVE_TIP + '">&#8226;n</sup>';
 
   /** deepest deep-context probe: the one at the largest prompt size */
   function deepest(row) {
@@ -300,43 +300,46 @@
   }
 
   /* ---- the speed block of a row: one line per server context ----
-     group A (c-std): standardised 30K probe, server only (blank when the row has no speed block)
-     group B (c-nat): single probe at the row's own server ctx — used for every non-A3B row,
-                      shown with a superscript n so it is never read as a 30K number         */
+     Column pair A (c-std) is the standardised 30K probe. It is only measured on the
+     dedicated per-context server rows (the A3B 32K / 256K rows), so every other row
+     leaves it blank rather than filling it with a look-alike number.
+     Column pair B (c-nat) is the row's own measurement: the deepest depth probe for
+     server rows, and for llama-bench rows the single native-context probe, marked n —
+     the value itself is printed once, in group C.                                   */
   function speedCells(r) {
     var s = speed(r);
     var ctx = ctxText(r) || fmtCtx(num(r.context_window));
     var ctxCell = '<td class="num c-ctx" data-label="Server ctx">' + (ctx ? ctxMarkup(r) : "—") + "</td>";
     if (!s) {
       var n = nativeProbe(r);
-      /* the values themselves are printed once, in group C (llama-bench pp512 / tg128);
-         group B only certifies their provenance, so it stays narrow instead of repeating them */
-      var nP = n ? '<span class="natbox" title="' + NATIVE_TIP + '">' + NATIVE_MARK + "</span>"
+      var mark = n ? '<span class="natbox" title="' + NATIVE_TIP + '">' + NATIVE_MARK + "</span>"
         : '<span class="dash">—</span>';
-      var nD = nP;
       return ctxCell +
-        '<td class="num c-std" data-label="Prefill t/s at 30K"><span class="dash">—</span></td>' +
-        '<td class="num c-std" data-label="Decode t/s at 30K"><span class="dash">—</span></td>' +
-        '<td class="num c-nat" data-label="Prefill t/s native ctx">' + nP + "</td>" +
-        '<td class="num c-nat" data-label="Decode t/s native ctx">' + nD + "</td>";
+        '<td class="num c-std" data-label="Prefill t/s @ 30K"><span class="dash">—</span></td>' +
+        '<td class="num c-std" data-label="Decode t/s @ 30K"><span class="dash">—</span></td>' +
+        '<td class="num c-nat" data-label="Prefill · decode t/s @ native ctx">' + mark + "</td>";
     }
     var std = s.standard || {};
-    var d = deepest(r);
     var stdP = std.pending
       ? '<span class="pending" title="not probed yet at this server context">pending</span>'
-      : '<span class="stdv">' + fmtNum(num(std.prefill_tps), 1) + "</span>";
+      : fmtNum(num(std.prefill_tps), 1);
     var stdD = std.pending
       ? '<span class="pending" title="not probed yet at this server context">pending</span>'
-      : '<span class="stdv">' + fmtNum(num(std.decode_tps), 2) + "</span>";
-    var deepP = d ? fmtNum(num(d.prefill_tps), 1) + '<span class="dep">@' + shortNum(d.tokens) + "</span>"
-      : '<span class="dash">—</span>';
-    var deepD = d ? fmtNum(num(d.decode_tps), 2) + '<span class="dep">@' + shortNum(d.tokens) + "</span>"
-      : '<span class="dash">—</span>';
+      : fmtNum(num(std.decode_tps), 2);
+    var d = deepest(r);
+    var bCell;
+    if (d) {
+      var tok = shortNum(d.tokens);
+      var dip = ' title="deepest probe: ' + esc(tok) + ' prompt tokens"';
+      bCell = '<span class="pair"' + dip + ">" + fmtNum(num(d.prefill_tps), 1) + "/" +
+        fmtNum(num(d.decode_tps), 2) + "</span>";
+    } else {
+      bCell = '<span class="dash">—</span>';
+    }
     return ctxCell +
-      '<td class="num c-std" data-label="Prefill t/s at 30K">' + stdP + "</td>" +
-      '<td class="num c-std" data-label="Decode t/s at 30K">' + stdD + "</td>" +
-      '<td class="num c-nat" data-label="Prefill · decode t/s at depth">' +
-        deepP + '<span class="pair">/</span>' + deepD + "</td>";
+      '<td class="num c-std" data-label="Prefill t/s @ 30K">' + stdP + "</td>" +
+      '<td class="num c-std" data-label="Decode t/s @ 30K">' + stdD + "</td>" +
+      '<td class="num c-nat" data-label="Prefill · decode t/s @ depth">' + bCell + "</td>";
   }
 
   function metaLine(r) {
@@ -404,17 +407,23 @@
     var when = r.speed_measured_at && coarseDate(r.speed_measured_at) !== String(r.date || "")
       ? shortDate(r.speed_measured_at) : "";
     var whenFull = r.speed_measured_at ? coarseDate(r.speed_measured_at) : "";
-    var prov = '<span class="prov" title="measured ' + esc(whenFull) + '">' +
-      [build, when].filter(Boolean).join(" · ") + "</span>";
+    var buildShort = build.length > 11 ? esc((r.engine_build || "").slice(0, 11)) + "…" : build;
+    var prov = '<span class="prov" title="build ' + esc(r.engine_build || "-") +
+      (whenFull ? ", measured " + esc(whenFull) : "") + '">' +
+      [buildShort, when].filter(Boolean).join(" · ") + "</span>";
     var badge = "";
     if (r.speed) {
       var st = r.speed.standard || {};
-      var tag = '<span class="probe-tag" title="cold request, standard prompt">30K probe' +
+      var tag = '<span class="probe-tag" title="standardised 30K probe: cold request">30K' +
         (st.pending ? " · pending" : "") + "</span>";
       var flags = r.speed_flags ? '<code class="ev-flags" title="' + esc(r.speed_flags) + '">' +
         esc(r.speed_flags) + "</code>" : "";
-      return '<td class="ev c-evidence" data-label="Speed evidence">' + tag + badge + prov +
-        flags + "</td>";
+      /* long build ids (b11517-8a1a9b512) leave no room for the 30K chip: drop it there and
+         carry the same fact in the build tooltip instead */
+      var tight = (r.engine_build || "").length > 12;
+      var tip = tight ? ' title="standardised 30K probe, cold request; built ' + esc(r.engine_build) + '"' : "";
+      return '<td class="ev c-evidence" data-label="Speed evidence"' + tip + ">" +
+        (tight ? "" : tag) + badge + prov + flags + "</td>";
     }
     if (build || when || badge) {
       return '<td class="ev c-evidence" data-label="Speed evidence">' + badge + prov + "</td>";
@@ -441,6 +450,79 @@
     return vals.slice(0, 3).map(function (o, i) { return [o.r, i + 1]; });
   }
 
+  /* ---- keep the fixed-layout table inside its scroll box ------------------
+     Column widths are set in CSS; a header or a cell that wants more can still
+     widen its column, which pushed the table past the viewport. Once the real
+     widths settle, write them back as explicit px (shrunk, never grown) so the
+     table always totals <= the available width. The wrap keeps scrolling on
+     narrow screens; nothing is clipped mid-word on desktop. */
+  /* score columns (accuracy %) all carry the same shape of number, and the table shows
+     two extra columns (llama-bench prefill/decode) that repeat values already in group C;
+     those are hidden on the phone card view only. Widths are budgeted, not guessed. */
+  var SCORE_KEYS = { gpqa: 1, aime: 1, livebench: 1, ctx30k: 1, ctx110k: 1, tau2: 1, shell: 1, termbench: 1 };
+  var SCORE_W = 46;                        /* "100.0" + play glyph + padding */
+
+  function fitColumns(dry) {
+    var tbl = document.getElementById("tbl");
+    if (!tbl) return;
+    var ths = tbl.querySelectorAll("thead th");
+    if (!ths.length) return;
+    if (window.matchMedia && window.matchMedia("(max-width: 760px)").matches) {
+      tbl.style.width = "";                 /* phone cards are not a table */
+      return;
+    }
+    var wrap = tbl.parentElement;
+    var avail = wrap.clientWidth;
+    if (!avail) return;
+    if (tbl.style.width !== avail + "px") tbl.style.width = avail + "px";
+
+    /* budget: every score column gets its label width, the text-ish columns split the rest
+       in proportion to the CSS hint, number columns keep at least their longest value */
+    var HINT = {};
+    ["name", "params", "quant", "arch", "ctx_label", "std_prefill", "std_decode",
+     "deep_prefill", "decode_tps", "prefill_tps", "context_window", "vram_mib",
+     "date", "speed_evidence"].forEach(function (k) { HINT[k] = 1; });
+    var plan = {}, fixed = 0, hintSum = 0, i, keys = [];
+    for (i = 0; i < ths.length; i++) {
+      var key = ths[i].dataset.key;
+      keys.push(key);
+      if (SCORE_KEYS[key]) { plan[key] = SCORE_W; fixed += plan[key]; }
+      else if (hiddenCol(key)) { plan[key] = 0; }
+      else hintSum += (SIZE_HINT[key] || 1);
+    }
+    /* spare may go negative on a narrow desktop viewport: every column keeps its hint-proportional
+       share and the table's own min-width makes the wrap scroll instead */
+    var spare = avail - 1 - fixed;
+    for (i = 0; i < keys.length; i++) {
+      var k = keys[i];
+      if (plan[k] !== undefined) continue;
+      plan[k] = spare * (SIZE_HINT[k] || 1) / hintSum;
+    }
+    if (!dry) {
+      for (i = 0; i < ths.length; i++) ths[i].style.width = Math.max(plan[keys[i]], 0).toFixed(2) + "px";
+    }
+    return true;
+  }
+
+  /* relative room each non-score column gets, before it is scaled to fit the viewport */
+  var SIZE_HINT = {
+    name: 15, params: 6.4, quant: 5.6, arch: 10, ctx_label: 5,
+    std_prefill: 9.2, std_decode: 9.2, deep_prefill: 9.2,
+    decode_tps: 6.2, prefill_tps: 6.2, context_window: 4, vram_mib: 4,
+    date: 8.4, speed_evidence: 10.4
+  };
+  function hiddenCol(key) { return key === "deep_decode"; }
+
+  /* re-fit after layout settles (fonts, sticky headers) and on resize */
+  var fitTimers = [];
+  function scheduleFit() {
+    fitTimers.forEach(clearTimeout);
+    fitTimers = [];
+    [0, 120, 400, 1200].forEach(function (ms) {
+      fitTimers.push(setTimeout(function () { fitColumns(false); }, ms));
+    });
+  }
+
   function paint() {
     var q = document.getElementById("q").value.trim();
     var arch = document.getElementById("arch").value;
@@ -460,6 +542,7 @@
       for (var i = 0; i < ranks.length; i++) { if (ranks[i][0] === r) { rank = ranks[i][1]; break; } }
       return rowHTML(r, rank);
     }).join("");
+    fitColumns(false);
     var rk = rankKey();
     var note = document.getElementById("ranknote");
     if (note) {
@@ -632,6 +715,8 @@
     host.hidden = false;
   }
 
+  window.addEventListener("resize", scheduleFit);
+
   function boot(doc) {
     state.rows = rowsOf(doc).filter(function (r) { return r && r.name; });
     if (doc && doc.generated) {
@@ -644,6 +729,7 @@
     errorBars(doc && doc.error_bars);
     wire();
     paint();
+    scheduleFit();
   }
 
   function fail(msg) {

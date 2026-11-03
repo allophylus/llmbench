@@ -167,20 +167,20 @@ thead th:focus-visible { outline: 2px solid var(--accent-dim); outline-offset: -
 /* Fixed layout with explicit pixel widths (they sum to exactly the 1400px min-width): padding and
    a header word can never push the table wider than planned, so no cell gets squeezed. */
 #tbl { table-layout: fixed; width: 100%; min-width: 1280px; }
-#tbl th[data-key="name"]   { width: 124px; }
-#tbl th[data-key="params"] { width: 62px; }
-#tbl th[data-key="quant"]  { width: 68px; }
-#tbl th[data-key="arch"]   { width: 104px; }
+#tbl th[data-key="name"]   { width: 112px; }
+#tbl th[data-key="params"] { width: 72px; }
+#tbl th[data-key="quant"]  { width: 56px; }
+#tbl th[data-key="arch"]   { width: 92px; }
 #tbl th[data-key="ctx_label"] { width: 54px; }
 #tbl th[data-key="std_prefill"], #tbl th[data-key="std_decode"] { width: 92px; }
-#tbl th[data-key="deep_prefill"] { width: 108px; }
+#tbl th[data-key="deep_prefill"] { width: 104px; }
 #tbl th[data-key="gpqa"], #tbl th[data-key="aime"], #tbl th[data-key="livebench"],
 #tbl th[data-key="ctx30k"], #tbl th[data-key="ctx110k"], #tbl th[data-key="tau2"],
-#tbl th[data-key="shell"], #tbl th[data-key="termbench"] { width: 31px; }
-#tbl th[data-key="decode_tps"], #tbl th[data-key="prefill_tps"] { width: 60px; }
-#tbl th[data-key="context_window"], #tbl th[data-key="vram_mib"] { width: 44px; }
-#tbl th[data-key="date"]   { width: 80px; }
-#tbl th[data-key="speed_evidence"] { width: 62px; }
+#tbl th[data-key="shell"], #tbl th[data-key="termbench"] { width: 36px; }
+#tbl th[data-key="decode_tps"], #tbl th[data-key="prefill_tps"] { width: 56px; }
+#tbl th[data-key="context_window"], #tbl th[data-key="vram_mib"] { width: 42px; }
+#tbl th[data-key="date"]   { width: 84px; }
+#tbl th[data-key="speed_evidence"] { width: 96px; }
 #tbl td.sc, #tbl td.sv, #tbl td.c-ctx, #tbl td.c-date { overflow: hidden; }
 #tbl td { overflow: hidden; }   /* an over-long cell clips instead of stretching a column */
 #tbl th, #tbl td { padding-left: .12rem; padding-right: .12rem; }
@@ -250,7 +250,9 @@ td.c-quant .pill { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .score-hi { color: #f2f6fa; font-weight: 600; }
 #tbl td.sc, #tbl th[data-key="gpqa"], #tbl th[data-key="aime"], #tbl th[data-key="livebench"],
 #tbl th[data-key="ctx30k"], #tbl th[data-key="ctx110k"], #tbl th[data-key="tau2"],
-#tbl th[data-key="shell"], #tbl th[data-key="termbench"] { font-size: 12.5px; }
+#tbl th[data-key="shell"], #tbl th[data-key="termbench"] { font-size: 12px; }
+#tbl td.c-evidence, #tbl td.c-params, #tbl td.sv { font-size: 12.5px; }
+#tbl td.c-params { font-size: 12px; }
 
 td.c-arch { color: var(--fg-dim); font-size: 12.5px; max-width: 34ch; }
 td.c-params .act { color: var(--fg-dim); }
@@ -477,6 +479,11 @@ td.c-name .dep-note { display: block; font: 11px/1.35 var(--mono); color: var(--
      otherwise reads as belonging to the column above it) */
   #tbl tbody td::before { display: none; content: none; }
   #tbl tbody td.c-name::before { display: none; }
+  /* small numeric cells get a two-column row; wide values (llama-bench labels, ctx
+     etc.) keep their own full-width line so nothing overflows the card */
+  #tbl tbody td.sv, #tbl tbody td.c-nat, #tbl tbody td.c-evidence { grid-column: span 3; }
+  #tbl tbody td.sv { display: flex; justify-content: space-between; align-items: baseline; }
+  #tbl tbody td.sv::before { flex: 1 1 auto; }
   /* one small caption per score, so a number is never read as the wrong metric */
   #tbl tbody td.sc::before, #tbl tbody td.sv::before, #tbl tbody td.c-nat::before {
     content: attr(data-label);
@@ -542,13 +549,16 @@ td.c-evidence { white-space: nowrap; text-align: left; font: 11.5px/1.5 var(--mo
 td.c-evidence code { font: 11px/1.4 var(--mono); color: var(--fg); word-break: break-word; }
 td.c-evidence .ev-meta { display: none; }
 /* over-long flag strings stay on the row: clamp the flag text, keep the whole thing in the tooltip */
+/* the llama-flags string is long and technical: one short chip, the full text in the tooltip */
 td.c-evidence .ev-flags {
-  display: inline-block; max-width: 9ch; overflow: hidden; text-overflow: ellipsis;
-  vertical-align: bottom; white-space: nowrap; color: var(--fg-dim); margin-left: .35rem;
+  display: inline-block; width: 18px; overflow: hidden; white-space: nowrap; text-overflow: clip;
+  font-size: 0; vertical-align: middle; margin-left: .3rem; color: var(--fg-dim);
 }
-td.c-evidence .probe-tag { margin: 0 .35rem 0 0; vertical-align: 1px; }
+td.c-evidence .ev-flags::after { content: "\2699"; font: 11px/1 var(--mono); color: var(--fg-faint); }
+td.c-evidence .probe-tag { margin: 0 .3rem 0 0; vertical-align: 1px; }
+#tbl td.c-evidence { padding-right: .25rem; padding-left: .25rem; }
 td.c-evidence .st { vertical-align: 1px; margin-right: .3rem; }
-td.c-evidence .prov { color: var(--fg-dim); }
+td.c-evidence .prov { color: var(--fg-dim); display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom; }
 td.c-evidence .st-hist { cursor: help; }
 #tbl tbody td { line-height: 1.45; }
 .probe .spread { color: var(--fg-faint); font-size: 11.5px; }

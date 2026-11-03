@@ -88,9 +88,9 @@
       server context — group <b class="grp-tag">B</b> shows the deepest depth probe (with
       <span class="dep">@tokens</span>), group <b class="grp-tag">C</b> the llama-bench
       pp512/tg128 pair at the row&#39;s own context. A row with no 30K probe shows
-      <span class="nat">n</span> in group B and its rate in group C: it is a different
-      measurement, not a restatement. A row whose 30K cell says
-      <span class="pending">pending</span> has the deep probes but no standard probe yet.
+      <sup class="nat">&#8226;n</sup> in group B and its rate in group C: it is a different
+      measurement, not a restatement. <span class="pending">pending</span> means the
+      standard probe is scheduled at that server context but has not been run yet.
     </p>
   </section>
 
@@ -99,14 +99,13 @@
       <thead>
         <tr>
           <th class="num" data-key="name"  data-type="text"   scope="col">Model</th>
-          <th class="num" data-key="params" data-type="params" scope="col">Params<br><span class="th-sub">total·active</span></th>
+          <th class="num" data-key="params" data-type="params" scope="col">Params<br><span class="th-sub">total/<br>active</span></th>
           <th class="num" data-key="quant" data-type="text"   scope="col">Quant</th>
           <th class="num" data-key="arch"  data-type="text"   scope="col">Arch</th>
           <th class="num" data-key="ctx_label" data-type="text" scope="col" title="server context window this row was served at">Server<br><span class="th-sub">ctx</span></th>
-          <th class="num grp grp-a" data-key="std_prefill" data-type="num" scope="col" title="group A, standardised probe: one cold request on a calibrated ~30K-token prompt"><span class="grp-tag">A</span>Prefill<br><span class="th-sub">@ 30K</span></th>
-          <th class="num grp grp-a" data-key="std_decode" data-type="num" scope="col" title="group A, standardised probe: one cold request on a calibrated ~30K-token prompt"><span class="grp-tag">A</span>Decode<br><span class="th-sub">@ 30K</span></th>
-          <th class="num grp grp-b" data-key="deep_prefill" data-type="num" scope="col" title="group B: deepest depth probe for server rows; a bare n means the row's single native-context probe (value in group C)"><span class="grp-tag">B</span>Prefill<br><span class="th-sub">@ depth</span></th>
-          <th class="num grp grp-b" data-key="deep_decode" data-type="num" scope="col" title="group B: deepest depth probe for server rows; a bare n means the row's single native-context probe (value in group C)"><span class="grp-tag">B</span>Decode<br><span class="th-sub">@ depth</span></th>
+          <th class="num grp grp-a" data-key="std_prefill" data-type="num" scope="col" title="standardised 30K probe (group A): one cold request on a calibrated ~30K-token prompt; measured only on the per-context server rows"><span class="grp-tag">A</span>Prefill<br><span class="th-sub">t/s @ 30K</span></th>
+          <th class="num grp grp-a" data-key="std_decode" data-type="num" scope="col" title="standardised 30K probe (group A): one cold request on a calibrated ~30K-token prompt; measured only on the per-context server rows"><span class="grp-tag">A</span>Decode<br><span class="th-sub">t/s @ 30K</span></th>
+          <th class="num grp grp-b" data-key="deep_prefill" data-type="num" scope="col" title="group B: the row's own measurement — deepest depth probe (prefill/decode + @tokens) for server rows; for llama-bench rows a bare n pointing at its value in group C"><span class="grp-tag">B</span>Native ctx<br><span class="th-sub">prefill /<br>decode t/s</span></th>
           <th class="num" data-key="gpqa"      data-type="num" scope="col">GPQA</th>
           <th class="num" data-key="aime"      data-type="num" scope="col">AIME</th>
           <th class="num" data-key="livebench" data-type="num" scope="col" title="LiveBench 2025"><span class="hw">LiveBench</span></th>
@@ -126,8 +125,8 @@
       <tbody id="rows"></tbody>
     </table>
     <p class="speedkey" id="speedkey" hidden>
-      <span class="sk"><b class="grp-tag">A</b> standardised probe: one cold request on a ~30K prompt (server rows only)</span>
-      <span class="sk"><b class="grp-tag">B</b> deepest depth probe at the row&#39;s own context; a lone <sup class="nat">n</sup> = single native-ctx probe, value in C</span>
+      <span class="sk"><b class="grp-tag">A</b> standardised 30K probe, measured only on the per-context server rows</span>
+      <span class="sk"><b class="grp-tag">B</b> the row&#39;s own measurement: deepest depth probe (prefill/decode @tokens), or <sup class="nat">&#8226;n</sup> = single native-ctx probe (value in C)</span>
       <span class="sk"><b class="grp-tag">C</b> llama-bench pp512 / tg128 at the row&#39;s own context</span>
     </p>
     <p class="empty" id="empty" hidden>No rows match that filter. <button type="button" id="reset" class="linkbtn">Reset filters</button></p>
