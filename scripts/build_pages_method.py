@@ -251,7 +251,8 @@ def build():
         b = os.path.basename(p)
         shutil.copyfile(p, os.path.join(dst, b))
         names.append(b)
-    idx = ["<h2>Chat JSONs</h2><p>One file per model: every question, expected answer, "
+    idx = ["<p class=sub>The raw chat records behind the Chat tab: one JSON per model, every question, expected answer, model answer, verdict and timing.</p>",
+           "<h2>Chat JSONs</h2><p>One file per model: every question, expected answer, "
            "model answer, verdict, tokens, milliseconds and decode rate.</p>",
            '<div class=table-wrap><table><thead><tr><th>File</th></tr></thead><tbody>']
     idx += [f'<tr><td><a href="{esc(b)}">{esc(b)}</a></td></tr>' for b in names]

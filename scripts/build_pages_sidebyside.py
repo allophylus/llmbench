@@ -232,7 +232,7 @@ def main():
         "Scores are recorded per attempt; the full attempt history of every cell is linked "
         "under its frame.</p>"
     )
-    nav = render_topbar("../../", None)
+    nav = render_topbar("../../", "games")
     page = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
             "<title>games side by side — same four games, every model</title>"
