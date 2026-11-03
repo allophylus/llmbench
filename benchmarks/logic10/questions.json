@@ -1,7 +1,7 @@
 {
  "benchmark": "logic10 — everyday trap questions",
  "version": 1,
- "grading": "Strict. The answer the model commits to is taken from the last explicit line of the form 'Answer: <text>'; the normalised text must match one of the question's accept patterns (whole-answer match after lowercasing, stripping punctuation, currency signs and thousands separators, and collapsing whitespace). No partial credit. If the response stops on the token cap (finish_reason=length) before an answer line is emitted, the question is flagged 'truncated' instead of being scored wrong.",
+ "grading": "Strict. The answer the model commits to is taken from the last explicit line of the form 'Answer: <text>' (a model that prints its answer in the middle of a sentence has the sentence searched instead). The normalised text must match one of the question's accept patterns exactly; for the car-wash question the patterns may match a substring because models pad the choice with reasons. No partial credit. If the response stops on the token cap (finish_reason=length) before an answer line is emitted, the question is flagged 'truncated' instead of being scored wrong.",
  "answer_line": "Answer: <your answer>",
  "seed": 5,
  "temperature": 0.0,
@@ -15,12 +15,20 @@
     "drive",
     "i should drive",
     "drive there",
-    "drive it"
+    "drive it",
+    "i'd drive",
+    "i would drive",
+    "drive the car",
+    "take the car",
+    "take your car",
+    "i'd take the car",
+    "i would take the car"
    ],
    "refuse": [
     "walk"
    ],
-   "rationale": "The car must be driven to the car wash; walking leaves it at home."
+   "rationale": "The car must be driven to the car wash; walking leaves it at home. 'Drive, as it is only 50 m' names the right action and is accepted; 'walk' is not.",
+   "substring": true
   },
   {
    "id": "race",
@@ -199,7 +207,10 @@
     "a quarter (25) and a nickel (5)",
     "a quarter (25¢) and a nickel (5¢)",
     "quarter (25c) and nickel (5c)",
-    "a quarter (25¢) and a nickel (5¢)."
+    "a quarter (25¢) and a nickel (5¢).",
+    "a quarter and a nickel (one is not a nickel, but the other one is)",
+    "a quarter and a nickel (the quarter is not a nickel, while the other coin is)",
+    "a quarter and a nickel (the quarter is \"not a nickel,\" while the other coin is a nickel)"
    ],
    "refuse": [
     "2 dimes and a nickel",
@@ -207,7 +218,7 @@
     "only two nickels",
     "two nickels"
    ],
-   "rationale": "Quarter + nickel = 30c; the quarter is the coin that is not a nickel."
+   "rationale": "Quarter + nickel = 30c; the quarter is the coin that is not a nickel. Answers that add the explanation in brackets are accepted."
   },
   {
    "id": "discount",

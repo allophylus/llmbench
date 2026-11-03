@@ -26,6 +26,7 @@ OUT = os.path.join(OUTDIR, "index.html")
 
 # display labels only; model identity never reaches the page beyond these names
 LABEL = {
+    "lfm3-1-7b-q4-k-m": "LFM3-1.7B",
     "qwen3-6-35b-a3b-ud-q4km": "Qwen3.6-35B-A3B",
     "qwen3-8-27b-q4km": "Qwen3.8-27B (Q4_K_M)",
     "qwen3-8-27b-q4-0": "Qwen3.8-27B (Q4_0)",
@@ -34,7 +35,9 @@ LABEL = {
     "ornith-1-5-35b-a3b-q4-k-m": "Ornith-1.5-35B-A3B",
     "lfm3-1-7b-q4-k-m": "LFM3-1.7B",
 }
-ORDER = list(LABEL)
+ORDER = ["qwen3-6-35b-a3b-ud-q4km", "qwen3-8-27b-q4km", "qwen3-8-27b-q4-0",
+         "davidau-qwen3-8-27b-neo-max-mtp-q4-k-m", "huihui-abl-q4-k-m",
+         "ornith-1-5-35b-a3b-q4-k-m", "lfm3-1-7b-q4-k-m"]
 
 CLASSIC = {"batball", "widgets", "lilypad"}
 
@@ -68,11 +71,28 @@ td.num,th.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospa
 details{margin:10px 0}
 summary{cursor:pointer;color:var(--blue);font-size:13px}
 pre{white-space:pre-wrap;word-break:break-word;font:12px/1.45 ui-monospace,monospace;color:var(--dim);background:#111821;border:1px solid var(--line);border-radius:8px;padding:9px;max-height:220px;overflow:auto;margin:6px 0 12px}
-@media(max-width:640px){
+/* On a phone the shared style.css turns every table into a label-less card stack.
+   These tables are matrices, so restore a real table that scrolls inside its own box
+   (the page itself must never scroll sideways). */
+@media(max-width:760px){
  .wrap{padding:18px 10px 48px}
- th,td{padding:6px 6px;font-size:12px}
- .matrix td.qhide{display:none}
- .qtext{display:none}
+ .scroll{overflow-x:auto}
+ .scroll table{display:table;min-width:0;width:auto}
+ .scroll thead{display:table-header-group;position:static}
+ .scroll thead tr{display:table-row;overflow:visible;background:#1b2431;padding:0}
+ .scroll thead th{display:table-cell;border:0;border-bottom:1px solid var(--line)}
+ .scroll tbody{display:table-row-group}
+ .scroll tbody tr{display:table-row;border:0;border-radius:0;margin:0;padding:0;background:transparent}
+ .scroll tbody td{display:table-cell;border-bottom:1px solid var(--line);padding:6px 7px;font-size:12px}
+ .scroll tbody td::before{content:none}
+ .scroll tbody tr:nth-child(even) td{background:#131a24}
+ .summary th,.summary td{white-space:nowrap}
+ .matrix th,.matrix td{white-space:nowrap}
+ .matrix td.t{font-size:11.5px}
+ .scroll{position:relative}
+ .scroll::after{content:"scroll \2192";position:absolute;right:6px;top:6px;font:600 9.5px/1 var(--mono,#9fb0c6);letter-spacing:.06em;color:#9fb0c6;background:#1b243180;padding:3px 5px;border-radius:4px;pointer-events:none}
+ details ul{padding-left:1.1rem}
+ details li{font-size:12.5px}
 }
 """
 
@@ -111,11 +131,15 @@ def arm_stats(blk):
     s = blk.get("summary") or {}
     scored = s.get("scored", 0)
     corr = s.get("correct", 0)
-    return {"n": s.get("n", len(blk["rows"])), "scored": scored, "correct": corr,
+    rows = blk["rows"]
+    return {"n": s.get("n", len(rows)), "scored": scored, "correct": corr,
             "wrong": s.get("wrong", 0), "truncated": s.get("truncated", 0),
             "errors": s.get("errors", 0), "tokens": s.get("tokens", 0),
             "wall_s": s.get("wall_s", 0), "max_tokens": s.get("max_tokens"),
-            "rows": {r["id"]: r for r in blk["rows"]}}
+            "len_stops": sum(1 for r in rows if r.get("finish_reason") == "length"),
+            "len_stops_answered": sum(1 for r in rows if r.get("finish_reason") == "length"
+                                      and r.get("verdict") == "correct"),
+            "rows": {r["id"]: r for r in rows}}
 
 
 def cell(r):
@@ -123,6 +147,9 @@ def cell(r):
         return "<td class='c dim'>—</td>"
     v = r.get("verdict")
     if v == "correct":
+        if r.get("finish_reason") == "length":
+            return ("<td class='c ok' title='answered %s, then kept talking past the token cap'>"
+                    "&#10003;<sup class=warn>L</sup></td>" % esc((r.get("answer_raw") or "")[:70]))
         return "<td class='c ok' title='%s'>&#10003;</td>" % esc((r.get("answer_raw") or "")[:80])
     if v == "truncated":
         return "<td class='c warn' title='hit the token cap before answering'>T</td>"
@@ -133,6 +160,40 @@ def cell(r):
 
 def name(slug):
     return LABEL.get(slug, slug)
+
+
+def served_label(d, slug):
+    """Weights the server reported for this run (falls back to the slug's own name)."""
+    served = d.get("model_served") or d.get("model") or ""
+    base = os.path.basename(served).replace(".gguf", "") if served else ""
+    return base or slug
+
+
+def served_name(d):
+    """Display name derived from the weights the server actually reported (never typed)."""
+    m = (d.get("model") or "")
+    base = os.path.basename(m)
+    t = d.get("model_served") or ""
+    if t:
+        base = os.path.basename(t)
+    base = base.replace(".gguf", "")
+    for key, lab in LABEL.items():
+        if key and key.split("-")[0] in base.lower():
+            return lab
+    return base or "unidentified model"
+
+
+def weight_warning(d):
+    """If the run recorded which weights it expected, confirm the served file matched."""
+    exp = d.get("expected_model")
+    if not exp:
+        return "" if (d.get("model_served") or d.get("model")) else (
+            "<span class='warn' title='run record does not name the served weights'>weights not recorded</span>")
+    served = d.get("model_served") or d.get("model") or ""
+    if exp.lower() in served.lower():
+        return ""
+    return ("<span class='warn' title='the server was serving different weights than this row "
+            "was meant to benchmark'>weights mismatch</span>")
 
 
 def build():
@@ -167,12 +228,18 @@ def build():
                      % ("—" if not off else "%.1f" % med(list(off["rows"].values()))))
         cells.append("<td class='num' title='median seconds per question'>%s</td>"
                      % ("—" if not on else "%.1f" % med(list(on["rows"].values()))))
+        cells.append("<td class='num'>%s</td>"
+                     % ("—" if not (off and on) else "%d / %d" % (off["len_stops"], on["len_stops"])))
+        cells[0] = ("<td><b>%s</b><br><span class=meta>%s</span> %s</td>"
+                    % (esc(name(slug)), esc(served_label(d, slug)), weight_warning(d)))
         srows.append("<tr>" + "".join(cells) + "</tr>")
 
-    summary = ("<div class=scroll><table><thead><tr><th>Model</th><th class=num>Off</th>"
+    summary = ("<div class=scroll><table class=summary><thead><tr><th>Model</th><th class=num>Off</th>"
                "<th class=num>On</th><th class=num>&Delta;</th><th class=num>Tokens off</th>"
                "<th class=num>Tokens on</th><th class=num>s/question off</th>"
-               "<th class=num>s/question on</th></tr></thead><tbody>"
+               "<th class=num>s/question on</th><th class=num title='requests that ran into the token cap "
+               "(the question is still scored if the model had already committed to an answer)'>Cap hits off/on</th>"
+               "</tr></thead><tbody>"
                + "".join(srows) + "</tbody></table></div>")
 
     # ---- per-trap letter table
@@ -272,7 +339,8 @@ def build():
           "to memorise it. Passing a classic proves much less. The per-trap matrix marks memorisable items with "
           "<span class=warn>*</span> so you can judge each result yourself.</div>"
         "<div class=legend><span><b class=ok>&#10003;</b> correct</span><span><b class=bad>&#10007;</b> wrong</span>"
-        "<span><b class=warn>T</b> hit the token cap before answering</span>"
+        "<span><b class=warn>T</b> hit the token cap before answering (not scored)</span>"
+        "<span><b class=ok>&#10003;</b><sup class=warn>L</sup> answered, then kept talking past the cap</span>"
         "<span><b class=dim>&middot;</b> not run</span></div>"
         "<h2 class=sec>Scores — thinking off vs on</h2>" + summary
         + "<p class=meta>&Delta; = on minus off, in questions out of ten (scored ones only). "
