@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""build_pages_ablation.py -- the "accelerator ablation" tab.
+"""build_pages_ablation.py -- the accelerator-ablation fragment for the overview's #ablation block.
+
+There is no /ablation/ page: the arm table and its findings are printed here and spliced into
+index.html by scripts/build_pages_overview.py.
 
 Reads benchmarks/ablation/arm-*.json and benchmarks/ablation/cachecheck.json (the
 per-arm harness output: argv, KV type, VRAM idle/peak, decode/prefill timings on a
 1.6k and a 27.7k-token prompt, and the six fixed answers) and writes
-ablation/index.html. Nothing here is typed by hand: every number in the table comes
+nothing here is typed by hand: every number in the table comes
 from a JSON field, so a re-run only needs a rebuild.
 
 Only public-safe fields are published: no host names, no paths, no service unit
@@ -20,9 +23,7 @@ import re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav, render_topbar, render_brand, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 ABL = os.path.join(ROOT, "benchmarks", "ablation")
-OUT = os.path.join(ROOT, "ablation", "index.html")
 
 # arm order + visitor-facing label. 5b is identical to 4b (repeat run) and is kept
 # in the JSON set but not shown as its own row.
@@ -70,7 +71,6 @@ code{font-family:ui-monospace,monospace;font-size:12px;color:var(--blue)}
 @media(max-width:640px){.wrap{padding:18px 12px 48px}th,td{padding:7px 7px;font-size:12px}table{min-width:820px}td.arm{min-width:120px}td.arm b{white-space:nowrap}td.arm span{display:none}#mob{display:block}.tabs a{font-size:12px;padding:6px 10px}}#mob{display:none;color:var(--faint);font-size:12px;margin:6px 0 0}
 """
 
-TOPBAR = render_topbar("../", "ablation")
 
 
 def esc(s):
@@ -125,7 +125,7 @@ def load_arms():
     return out
 
 
-def build():
+def build_html():
     arms = load_arms()
     cc = json.load(open(os.path.join(ABL, "cachecheck.json"), encoding="utf-8"))
     a = cc["arms"]
@@ -261,14 +261,27 @@ def build():
             + "<h2 class=sec>Limits of this comparison</h2>" + limits
             + "<h2 class=sec>How it was measured</h2>" + method)
 
-    page = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
-            "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            "<title>ablation — llmbench</title><style>" + CSS + TOPBAR_CSS + "</style></head>"
-            "<body>" + render_brand() + TOPBAR + "<div class=wrap>" + body + "</div></body></html>")
-    os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    open(OUT, "w", encoding="utf-8").write(page)
-    print("ablation page:", OUT, "| arms:", len(arms))
+    return body, len(arms)
+
+
+def fragment():
+    """The whole ablation section, for the overview's #ablation block."""
+    body, n = build_html()
+    # keep the section's own title but demote it to the block heading
+    frag = body.replace("<h1>Accelerator ablation</h1>",
+                              "<h2 class=abl-h>Accelerator ablation — FA, MTP, DFlash</h2>")
+    frag = frag.replace("<h2 class=sec>Headline</h2>", '<h3 class=abl-t>Headline</h3>')
+    for t in ("Long-context prefill and the cache", "Limits of this comparison", "How it was measured"):
+        frag = frag.replace('<h2 class=sec>%s</h2>' % t, '<h3 class=abl-t>%s</h3>' % t)
+    return frag, n
+
+
+def main():
+    frag, n = fragment()
+    print(frag)
+    print("ablation arms:", n)
+    return 0
 
 
 if __name__ == "__main__":
-    build()
+    raise SystemExit(main())

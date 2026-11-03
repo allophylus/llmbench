@@ -6,8 +6,8 @@ Fails (exit 1) if, on any page:
     entries, wrong labels, wrong order, wrong active marker count), or
   * a nav (or any internal) href points at a path that does not exist, or
   * an internal link (nav or body) still points at a retired section
-    (/sweep/, /logic/, /raw-chat/ — folded into /#speed-sweep,
-    /thinking/#logic and /method/#raw).
+    (/sweep/, /logic/, /raw-chat/, /ablation/, /method/ — folded into
+    /#speed-sweep, /thinking/#logic, /#raw, /#ablation and /#method).
 
 The canonical set is exactly the seven items in scripts/site_nav.py. This checker
 fails if a page ships more (a new tab was invented) or fewer (an item was dropped).
@@ -27,8 +27,6 @@ PAGES = [
     ("/games/", "games/index.html"),
     ("/chat/", "chat/index.html"),
     ("/thinking/", "thinking/index.html"),
-    ("/ablation/", "ablation/index.html"),
-    ("/method/", "method/index.html"),
     ("/games/sidebyside/", "games/sidebyside/index.html"),
 ]
 
@@ -135,7 +133,7 @@ def check_page(url_path, rel_file):
     return errors
 
 
-CANON = ["Overview", "Games", "Chat", "Thinking", "Ablation", "Method"]
+CANON = ["Overview", "Games", "Chat", "Thinking"]
 
 
 def check_canonical():
@@ -155,7 +153,7 @@ def check_retired(url_path, rel_file):
         href = m.group(1)
         if href.startswith(("http://", "https://", "mailto:", "data:")):
             continue
-        if re.search(r'(^|/)(sweep|logic|raw-chat)(/|$|#|\?)', href, re.I):
+        if re.search(r'(^|/)(sweep|logic|raw-chat|ablation|method)(/|$|\?|#raw)', href, re.I):
             errs.append(f"{url_path}: link to retired section {href!r}")
     return errs
 
@@ -179,7 +177,7 @@ def main():
         print(f"\nNAV CHECK FAILED on {failures} page(s)")
         return 1
     # the retired output directories must not ship
-    for d in ("sweep", "logic", "raw-chat"):
+    for d in ("sweep", "logic", "raw-chat", "ablation", "method"):
         if os.path.isdir(os.path.join(ROOT, d)):
             print(f"FAIL retired output directory still present: {d}/")
             failures += 1

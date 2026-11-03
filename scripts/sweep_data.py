@@ -260,7 +260,6 @@ def section_html():
         "ratios within a row are the reliable signal. Decode degrades with context on every model, "
         "but the size of the drop is a property of the model and its cache settings.</li>"
         "</ul>"
-        "</ul>"
         "<p class=meta>Source: <code>benchmarks/ctx-sweep/</code> in the source repo — one JSON per "
         "model plus a combined sweep file, all cells checked in. "
         + (("Measured " + gen + ". ") if gen else "")

@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
-"""build_pages_method.py -- generate the /method/ page and the raw-data download copies.
+"""build_pages_method.py -- the methodology fragment that the overview publishes at #method.
+
+There is no /method/ page: the text, the model set, the error bars and the raw-download links
+are printed here and spliced into index.html by scripts/build_pages_overview.py.
 
 Nothing here is hand-written HTML: the model list, the prompt sizes, the error-bar points and
 the chat counts are read from data/results.json and the benchmark protocol (docs/BENCHMARK.md)
 is summarised into fixed sections. Re-run after any data refresh:
 
     python3 scripts/update_data.py && python3 scripts/a3b_extras.py \
-      && python3 scripts/gapclose_extras.py && python3 scripts/build_pages_method.py
+      && python3 scripts/gapclose_extras.py && python3 scripts/build_pages_overview.py
 
 Visitor-facing text only: no hostnames, no IPs, no local paths, no internal model symlinks.
 """
-import glob, sys
+import glob
+import sys
 import json
 import os
-import shutil
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from site_nav import render_nav, render_topbar, render_brand, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
-
-TOPBAR = render_topbar("../", "method")
 
 
 CSS = """
@@ -63,13 +63,6 @@ td.num{word-break:keep-all}}
 def esc(s):
     return (str(s or "").replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;").replace('"', "&quot;"))
-
-
-def page(title, body):
-    return ("<!doctype html><html lang=en><head><meta charset=utf-8>"
-            "<meta name=viewport content='width=device-width,initial-scale=1'>"
-            f"<title>{esc(title)}</title><style>{CSS}{TOPBAR_CSS}</style></head><body>" + render_brand() + TOPBAR +
-            f"<div class=wrap><h1>{esc(title)}</h1>{body}</div></body></html>")
 
 
 def load():
@@ -166,7 +159,7 @@ def raw_files_html():
             think = "thinking on" if d.get("thinking") else "thinking off"
         except Exception:
             n, think = None, "—"
-        rows.append('<tr><td><a href="%s" download>%s</a></td><td>%s</td><td>%s</td>'
+        rows.append('<tr><td><a href="data/chat/%s" download>%s</a></td><td>%s</td><td>%s</td>'
                     '<td class=num>%s</td></tr>'
                     % (esc(b), esc(b), esc(LABEL.get(slug, slug)), "<span class=mode>" + esc(think) + "</span>",
                        "—" if n is None else n))
@@ -178,7 +171,8 @@ def raw_files_html():
             "<th>Mode</th><th>Questions</th></tr></thead><tbody>"
             + "".join(rows) + "</tbody></table></div>")
 
-def build():
+def body_html():
+    """The methodology content, headed for H2s, ready to drop into the overview's #method section."""
     doc = load()
     eb = doc.get("error_bars") or {}
     chat_body, ch = chat_table(doc)
@@ -207,7 +201,7 @@ def build():
         "<code>-b 16384 -ub 2048</code> on the serving-shaped probes. <code>-np 1</code> means one "
         "sequence slot: no batching, no concurrency.</li>",
         "<li><strong>KV cache types:</strong> keys q8_0, values q4_0 on most suite runs; a few "
-        "earlier runs used f16, and the ablation tab measures what changing the KV type does. "
+        "earlier runs used f16; the <a href=\"#ablation\">ablation block</a> measures what changing the KV type does. "
         "The per-row value is in the evidence column.</li>",
         "<li><strong>Reasoning/thinking</strong> is off unless a tab says otherwise "
         "(<code>enable_thinking:false</code> via the chat template); the thinking tab is the "
@@ -272,39 +266,42 @@ def build():
         "is no nightly re-run tracking drift, so a row from October is not a statement about "
         "today's speed on newer builds.</li>",
         "<li><strong>Memory over long sessions</strong>, thermal throttling at sustained load, "
-        "and power-cap effects are only explored in the ablation tab, not per model.</li>",
+        "and power-cap effects are only explored in the <a href=\"#ablation\">ablation block</a>, "
+        "not per model.</li>",
         "</ul>",
 
         "<h2 id=raw>Download the raw records</h2>",
         "<p>The machine-readable dataset is the same file this page renders. The per-question chat "
         "JSONs contain every prompt, answer, verdict, token count and timing, one file per model.</p>",
-        '<div class=dl><a href="../data/results.json" download>results.json — every row</a>',
+        '<div class=dl><a href="data/results.json" download>results.json — every row</a>',
         '<a href="#raw-files">chat JSONs — per question</a>',
-        '<a href="../benchmarks/gapclose/RESULTS.md">gap-close results (markdown)</a></div>',
+        '<a href="benchmarks/gapclose/RESULTS.md">gap-close results (markdown)</a></div>',
         '<p class="note">results.json and the chat JSONs are built into this page\'s own directory by '
         '<code>scripts/build_pages_method.py</code> from <code>data/results.json</code> and '
         '<code>data/chat/</code>; regenerated with the data, never hand-edited.</p>',
         raw_files_html(),
     ])
 
-    os.makedirs(os.path.join(ROOT, "method"), exist_ok=True)
-    with open(os.path.join(ROOT, "method", "index.html"), "w", encoding="utf-8") as f:
-        f.write(page("method — how each number was measured", body))
+    return body
 
-    # raw chats: copied into this page's directory so the links are same-origin and stable
-    dst = os.path.join(ROOT, "method")
+
+def copy_raw():
+    """Publish the raw records beside the data they describe: /data/results.json and
+    /data/chat/<model>.json. These are the URL targets of the #method download section."""
+    dst = os.path.join(ROOT, "data", "chat")
     os.makedirs(dst, exist_ok=True)
     names = []
     for p in sorted(glob.glob(os.path.join(ROOT, "data", "chat", "*.json"))):
-        b = os.path.basename(p)
-        shutil.copyfile(p, os.path.join(dst, b))
-        names.append(b)
-    # results.json is published beside the page too, so /method/ is self-contained
-    shutil.copyfile(os.path.join(ROOT, "data", "results.json"),
-                    os.path.join(dst, "results.json"))
+        names.append(os.path.basename(p))
+    return names
 
-    print("method page + %d raw chat file(s)" % len(names))
+
+def build():
+    """Print the methodology fragment. The overview splices it in at #method."""
+    body = body_html()
+    print(body)
+    return 0
 
 
 if __name__ == "__main__":
-    build()
+    raise SystemExit(build())
