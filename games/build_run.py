@@ -52,15 +52,27 @@ for n in range(1, a.attempts + 1):
     open(os.path.join(d, "prompt.txt"), "wb").write(prompt_bytes)
     print(f"[attempt {n}] generating ...", flush=True)
 
+    # webgen (this build) insists on its internal 3-attempt loop and rejects --max-attempts 1;
+    # it stops at its first accepted attempt, so try 1 normally == one generation. Then
+    # we grade webgen's published attempt ourselves and keep every reply for repair_loop.
     gen_rc = subprocess.call([PY, os.path.join(HERE, "webgen.py"), a.base, a.prompt, d,
-                              a.slug, "--max-tokens", str(a.max_tokens),
-                              "--timeout", str(a.timeout), "--overwrite"])
+                              a.slug, "--max-attempts", "3",
+                              "--max-tokens", str(a.max_tokens),
+                              "--timeout", str(a.timeout)])
     reasons, ok = [], False
-    if gen_rc != 0:
+    # webgen's exit code is not the contract (it returns 0 or 2 depending on phase when
+    # the gate rejects). The contract is: gen.json written => a full reply was produced
+    # and validated here below; webgen FAILED with no gen.json => no usable file.
+    if not os.path.exists(os.path.join(d, "gen.json")) and gen_rc != 0:
         reasons.append(f"generator exit {gen_rc}")
     else:
         try:
-            g = json.load(open(os.path.join(d, "gen.json")))
+            # webgen stores its per-attempt record at <d>/gen.json, but on some paths the
+            # file lands as <d>/attempts/attempt-1/gen.json (phase dependent). Accept both.
+            gp = os.path.join(d, "gen.json")
+            if not os.path.exists(gp):
+                gp = os.path.join(d, "attempts", "attempt-1", "gen.json")
+            g = json.load(open(gp))
             tot_pt += g.get("prompt_tokens") or 0
             tot_ct += g.get("completion_tokens") or 0
             if g.get("html_bytes", 0) < 500:

@@ -112,6 +112,9 @@ for n in range(1, a.max_attempts + 1):
     body = json.dumps({"model": model_id,
                        "messages": [{"role": "user", "content": prompt}],
                        "temperature": a.temperature, "max_tokens": a.max_tokens,
+                       # suite rule (docs/BENCHMARK.md §1): thinking off for every cell,
+                       # otherwise a 8000-token cap is spent inside reasoning_content
+                       "chat_template_kwargs": {"enable_thinking": False},
                        "stream": False}).encode()
     req = urllib.request.Request(base + "/chat/completions", data=body,
                                  headers={"Content-Type": "application/json"})

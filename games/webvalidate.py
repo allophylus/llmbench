@@ -85,7 +85,7 @@ def probe(page, url, tag, out_dir):
             if (m.type == "error" and "favicon" not in m.text.lower()
                 and not (m.text.startswith("Failed to load resource") and not bad_resources))
             else None)
-    page.on("pageerror", lambda e: pageerrors.append(str(e)))
+    page.on("pageerror", lambda e: pageerrors.append(str(e) + ((" @ " + e.stack.splitlines()[1].strip()) if getattr(e, "stack", None) else "")))
     try:
         page.goto(url, wait_until="networkidle", timeout=45000)
         rec["load_ok"] = True
