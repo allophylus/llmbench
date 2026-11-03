@@ -441,8 +441,12 @@
   }
 
   function topRanks(order) {
-    var key = rankKey(), vals = [];
+    var key = rankKey(), vals = [], _seen = {};
     order.forEach(function (r) {
+      /* rank models, not probes: a second context row must not take a second podium slot */
+      var _mk = String(r.slug || r.name || "").replace(/-ctx\d+k$/i, "");
+      if (_seen[_mk]) return;
+      _seen[_mk] = 1;
       var v = value(r, key);
       if (v !== null && isFinite(v)) vals.push({ r: r, v: v });
     });
@@ -532,11 +536,24 @@
     var order = state.view.filter(function (r) { return shown.indexOf(r) !== -1; });
     var ranks = topRanks(order);
 
-    state.rows.forEach(function (r, i) {
-      var prev = i ? state.rows[i - 1] : null;
-      r._prevRow = prev;
-      r._repeat = !!(prev && prev.name === r.name);
+    /* A model measured at several server contexts (…-ctx32k / …-ctx256k) is ONE model with
+       several probes, not several models. Key on the model, not on the neighbouring row —
+       otherwise sorting separates the variants and each renders as its own model. */
+    function modelKey(r) { return String(r.slug || r.name || "").replace(/-ctx\d+k$/i, ""); }
+    state.rows.forEach(function (r) { r._repeat = false; });
+    var _seenKey = {};
+    order.forEach(function (r) {
+      var k = modelKey(r);
+      if (_seenKey[k]) { r._repeat = true; } else { _seenKey[k] = true; }
     });
+    /* cluster the variants directly under their model so the grouping is visible */
+    var _groups = {}, _keyOrder = [];
+    order.forEach(function (r) {
+      var k = modelKey(r);
+      if (!_groups[k]) { _groups[k] = []; _keyOrder.push(k); }
+      _groups[k].push(r);
+    });
+    order = _keyOrder.reduce(function (acc, k) { return acc.concat(_groups[k]); }, []);
     document.getElementById("rows").innerHTML = order.map(function (r) {
       var rank = 0;
       for (var i = 0; i < ranks.length; i++) { if (ranks[i][0] === r) { rank = ranks[i][1]; break; } }
