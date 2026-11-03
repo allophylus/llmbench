@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-03T18:57:05+08:00",
+ "generated": "2026-11-03T19:05:23+08:00",
  "video_base": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/",
  "rows": [
   {
@@ -67,51 +67,6 @@
    "kv_cache": null,
    "engine_build": "b11517",
    "status": "done"
-  },
-  {
-   "slug": "flint-q4-k-m",
-   "name": "Flint",
-   "params_total": "40B",
-   "params_active": "2.5B",
-   "quant": "Q4_K_M",
-   "arch": "RecursiveSI MoE 40B total / 2.5B active",
-   "engine": "Vulkan",
-   "decode_tps": null,
-   "prefill_tps": null,
-   "context_window": null,
-   "vram_mib": null,
-   "size_gb": null,
-   "date": "2026-10-31",
-   "cells": {
-    "gpqa": 64.0,
-    "aime": 40.0,
-    "livebench": 12.0,
-    "ctx30k": 52.0,
-    "ctx110k": 48.0,
-    "tau2": 55.0,
-    "shell": null,
-    "termbench": 62.5,
-    "mmlupro": null,
-    "arc": null,
-    "math": null,
-    "logic": null,
-    "code": null,
-    "tetris_gen": null,
-    "tetris_play": null
-   },
-   "videos": {},
-   "sources": [
-    "results/flint-q4-k-m.json"
-   ],
-   "speed_measured_at": null,
-   "filename": null,
-   "features": {},
-   "speed_method": null,
-   "speed_flags": "-ngl 99 -fa on -c 131072 --jinja -np 1 -ctk q8_0 -ctv q4_0",
-   "kv_cache": "q8_0/q4_0",
-   "engine_build": "b11874",
-   "status": "done",
-   "measurement_status": "no speed probe recorded (accuracy cells still valid)"
   },
   {
    "slug": "huihui-abl-q4-k-m",
@@ -205,7 +160,8 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "measurement_status": "not re-measurable on this host (weights deleted; historical numbers)"
   },
   {
    "slug": "lfm2-5-8b-a1b-q6-k",
@@ -273,7 +229,8 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "measurement_status": "not re-measurable on this host (weights deleted; historical numbers)"
   },
   {
    "slug": "lfm3-1-7b-q4-k-m",
@@ -365,7 +322,8 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "measurement_status": "not re-measurable on this host (weights deleted; historical numbers)"
   },
   {
    "slug": "muse-glimmer-30b-q4-k-m",
@@ -412,7 +370,8 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "measurement_status": "not re-measurable on this host (weights deleted; historical numbers)"
   },
   {
    "slug": "nemotron-3-5-lightning-30b-a3b-q4-0",
@@ -459,7 +418,8 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "measurement_status": "not re-measurable on this host (weights deleted; historical numbers)"
   },
   {
    "slug": "ornith-1-5-35b-a3b-q4-k-m",
@@ -553,7 +513,8 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "measurement_status": "not re-measurable on this host (weights deleted; historical numbers)"
   },
   {
    "slug": "qwen3-6-35b-a3b-ud-q4km",
@@ -2179,7 +2140,7 @@
    "kv_cache": "f16 (bench default)",
    "engine_build": "b11517",
    "status": "failed",
-   "measurement_status": "failed — no speed measured"
+   "measurement_status": "not re-measurable on this host (weights deleted; historical numbers)"
   },
   {
    "slug": "qwen3-8-27b-mxfp4",
@@ -2228,7 +2189,7 @@
    "kv_cache": "f16",
    "engine_build": "b11517",
    "status": "done",
-   "measurement_status": "no speed probe recorded (accuracy cells still valid)"
+   "measurement_status": "not re-measurable on this host (weights deleted; historical numbers)"
   },
   {
    "slug": "underdog-saluki-27b-iq2",
@@ -2297,7 +2258,8 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "measurement_status": "not re-measurable on this host (weights deleted; historical numbers)"
   },
   {
    "slug": "xing4-0-29b-q5-0",
@@ -2343,213 +2305,7 @@
    "kv_cache": null,
    "engine_build": "b11517",
    "status": "failed",
-   "measurement_status": "failed — no speed measured"
+   "measurement_status": "not re-measurable on this host (weights deleted; historical numbers)"
   }
- ],
- "error_bars": {
-  "measured_at": "2026-11-03",
-  "policy": "3 cold reps per point (temp 0, cache_prompt false, calibrated 29,953-token prompt); spread = (max-min)/mean over those reps",
-  "all_under_5pct": true,
-  "max_spread_pct": 1.62,
-  "a3b_32k": {
-   "n_ctx": 32768,
-   "prompt_tokens": 29963,
-   "calibrated_tokens": 29953,
-   "measured_at": "2026-11-03T10:04:56+0000",
-   "n": 3,
-   "prefill": {
-    "mean": 2480.7,
-    "min": 2470.9,
-    "max": 2488.2,
-    "spread_pct": 0.7
-   },
-   "decode": {
-    "mean": 98.01,
-    "min": 97.04,
-    "max": 98.63,
-    "spread_pct": 1.62
-   },
-   "wall_s": {
-    "mean": 12.73,
-    "min": 12.7,
-    "max": 12.8,
-    "spread_pct": 0.79
-   }
-  },
-  "a3b_256k": {
-   "n_ctx": 262144,
-   "prompt_tokens": 29963,
-   "calibrated_tokens": 29953,
-   "measured_at": "2026-11-03T10:06:48+0000",
-   "n": 3,
-   "prefill": {
-    "mean": 2477.1,
-    "min": 2468.4,
-    "max": 2490.0,
-    "spread_pct": 0.87
-   },
-   "decode": {
-    "mean": 98.2,
-    "min": 98.12,
-    "max": 98.33,
-    "spread_pct": 0.21
-   },
-   "wall_s": {
-    "mean": 12.77,
-    "min": 12.7,
-    "max": 12.8,
-    "spread_pct": 0.78
-   }
-  },
-  "qwen38_27b_32k": {
-   "n_ctx": 131072,
-   "prompt_tokens": 29965,
-   "calibrated_tokens": 29953,
-   "measured_at": "2026-11-03T10:14:02+0000",
-   "n": 3,
-   "prefill": {
-    "mean": 687.63,
-    "min": 685.7,
-    "max": 690.3,
-    "spread_pct": 0.67
-   },
-   "decode": {
-    "mean": 28.61,
-    "n": 1,
-    "spread_pct": null,
-    "min": 28.61,
-    "max": 28.61,
-    "method": "/completion ignore_eos n_predict=400 (ablate2 method), 30k calibrated prompt",
-    "note": "1 valid rep; reps 2-3 hung on /completion. Chat-probe 'decode' (25.9 at predicted_n=2) is EOS noise, not a decode measurement."
-   },
-   "wall_s": {
-    "mean": 43.67,
-    "min": 43.5,
-    "max": 43.8,
-    "spread_pct": 0.69
-   },
-   "note": "server window 131072; prompt 29,965 tokens"
-  }
- },
- "chat": {
-  "suite": "10 fixed general-knowledge questions, temperature 0, thinking off, scored strictly (correct / partial / wrong) against a fixed expected answer",
-  "measured_at": "2026-11-03T10:41:24+0000",
-  "n_models": 7,
-  "saturated": true,
-  "excluded": [
-   {
-    "slug": "27b",
-    "reason": "legacy single run (older prompt set and pipeline, not re-run on this suite)",
-    "accuracy": 80.0
-   }
-  ],
-  "statement": "Every model measured scores 90.0% (9/10 correct plus 1 partial). The suite is SATURATED and cannot discriminate between these models — the order below is by decode speed, not by quality.",
-  "models": [
-   {
-    "slug": "lfm3-1-7b-q4-k-m",
-    "n": 10,
-    "correct": 9,
-    "partial": 1,
-    "wrong": 0,
-    "accuracy": 90.0,
-    "decode_tps": 251.2,
-    "decode_tps_kind": "mean of per-question server decode rates (short answers, includes warm-up)",
-    "total_tokens": 1377,
-    "wall_s": 5.8,
-    "ran_at": "2026-11-03T10:41:24+0000",
-    "source": "data/chat/lfm3-1-7b-q4-k-m.json",
-    "decode_tps_median": 256.4
-   },
-   {
-    "slug": "ornith-1-5-35b-a3b-q4-k-m",
-    "n": 10,
-    "correct": 9,
-    "partial": 1,
-    "wrong": 0,
-    "accuracy": 90.0,
-    "decode_tps": 117.5,
-    "decode_tps_kind": "mean of per-question server decode rates (short answers, includes warm-up)",
-    "total_tokens": 1235,
-    "wall_s": 12.0,
-    "ran_at": "2026-11-03T10:39:20+0000",
-    "source": "data/chat/ornith-1-5-35b-a3b-q4-k-m.json",
-    "decode_tps_median": 119.0
-   },
-   {
-    "slug": "qwen3-6-35b-a3b-ud-q4km",
-    "n": 10,
-    "correct": 9,
-    "partial": 1,
-    "wrong": 0,
-    "accuracy": 90.0,
-    "decode_tps": 107.7,
-    "decode_tps_kind": "mean of per-question server decode rates (short answers, includes warm-up)",
-    "total_tokens": 1684,
-    "wall_s": 17.1,
-    "ran_at": "2026-11-03T10:40:47+0000",
-    "source": "data/chat/qwen3-6-35b-a3b-ud-q4km.json",
-    "decode_tps_median": 109.0
-   },
-   {
-    "slug": "qwen3-8-27b-q4-0",
-    "n": 10,
-    "correct": 9,
-    "partial": 1,
-    "wrong": 0,
-    "accuracy": 90.0,
-    "decode_tps": 31.7,
-    "decode_tps_kind": "mean of per-question server decode rates (short answers, includes warm-up)",
-    "total_tokens": 1704,
-    "wall_s": 56.8,
-    "ran_at": "2026-11-03T10:35:45+0000",
-    "source": "data/chat/qwen3-8-27b-q4-0.json",
-    "decode_tps_median": 31.7
-   },
-   {
-    "slug": "qwen3-8-27b-q4km",
-    "n": 10,
-    "correct": 9,
-    "partial": 1,
-    "wrong": 0,
-    "accuracy": 90.0,
-    "decode_tps": 30.9,
-    "decode_tps_kind": "mean of per-question server decode rates (short answers, includes warm-up)",
-    "total_tokens": 1550,
-    "wall_s": 53.5,
-    "ran_at": "2026-11-03T10:39:43+0000",
-    "source": "data/chat/qwen3-8-27b-q4km.json",
-    "decode_tps_median": 30.9
-   },
-   {
-    "slug": "huihui-abl-q4-k-m",
-    "n": 10,
-    "correct": 9,
-    "partial": 1,
-    "wrong": 0,
-    "accuracy": 90.0,
-    "decode_tps": 30.8,
-    "decode_tps_kind": "mean of per-question server decode rates (short answers, includes warm-up)",
-    "total_tokens": 1841,
-    "wall_s": 63.1,
-    "ran_at": "2026-11-03T10:38:07+0000",
-    "source": "data/chat/huihui-abl-q4-k-m.json",
-    "decode_tps_median": 30.8
-   },
-   {
-    "slug": "davidau-qwen3-8-27b-neo-max-mtp-q4-k-m",
-    "n": 10,
-    "correct": 9,
-    "partial": 1,
-    "wrong": 0,
-    "accuracy": 90.0,
-    "decode_tps": 28.7,
-    "decode_tps_kind": "mean of per-question server decode rates (short answers, includes warm-up)",
-    "total_tokens": 1728,
-    "wall_s": 63.5,
-    "ran_at": "2026-11-03T10:36:53+0000",
-    "source": "data/chat/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json",
-    "decode_tps_median": 28.7
-   }
-  ]
- }
+ ]
 }

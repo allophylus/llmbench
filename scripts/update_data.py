@@ -396,6 +396,13 @@ def build(records, vidx, base=VIDEO_BASE, raw_dir=DEFAULT_RAW):
         }
         if _meas:
             row["measurement_status"] = _meas
+        # authoritative override: rows whose weights are not on the card (see data/measurement-status.json)
+        try:
+            _ms = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "measurement-status.json")))
+            if slug in (_ms.get("slugs") or []):
+                row["measurement_status"] = _ms.get("status")
+        except Exception:
+            pass
         if not row.get("features"):
             hay = " ".join(str(x or "") for x in
                            (row.get("name"), row.get("arch"), row.get("quant"), row.get("slug"))).lower()

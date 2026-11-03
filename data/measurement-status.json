@@ -1,0 +1,16 @@
+{
+  "_note": "Rows whose weights are not on the measurement host (disk-bound, 97% full). Numbers are historical and cannot be reproduced there without a fresh multi-GB download. Source: benchmarks/gapclose/INVENTORY.md",
+  "status": "not re-measurable on this host (weights deleted; historical numbers)",
+  "slugs": [
+    "lfm2-5-24b-a2b-q4-k-m",
+    "lfm2-5-8b-a1b-q6-k",
+    "minicpm5-2b-q8-0",
+    "muse-glimmer-30b-q4-k-m",
+    "nemotron-3-5-lightning-30b-a3b-q4-0",
+    "ornith-1-5-9b-q8-0",
+    "qwen3-8-27b-dflash2-q4-k-m",
+    "qwen3-8-27b-mxfp4",
+    "underdog-saluki-27b-iq2",
+    "xing4-0-29b-q5-0"
+  ]
+}
