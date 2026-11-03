@@ -1,0 +1,41 @@
+{
+ "base": "<gate-server>",
+ "when": "2026-11-03T03:52:57+0000",
+ "n_ctx": 32768,
+ "model_path": "models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+ "build_info": "b11517-8a1a9b512",
+ "vram_idle_gib": 21.09,
+ "runs": [
+  {
+   "label": "prefill-probe",
+   "wall_s": 2.8,
+   "prompt_n": 621,
+   "predicted_n": 256,
+   "prefill_ms": 342.6,
+   "prefill_tps": 1812.4,
+   "decode_ms": 2502.9,
+   "decode_tps": 101.88,
+   "usage": {
+    "completion_tokens": 256,
+    "prompt_tokens": 621,
+    "total_tokens": 877,
+    "prompt_tokens_details": {
+     "cached_tokens": 0
+    }
+   },
+   "vram_peak_gib": 21.14,
+   "vram_samples": 3,
+   "tokens_calibrated": 611
+  },
+  {
+   "label": "ctx-131k",
+   "tokens_calibrated": 130549,
+   "error": "HTTP Error 400: Bad Request"
+  },
+  {
+   "label": "ctx-262k",
+   "tokens_calibrated": 261089,
+   "error": "HTTP Error 400: Bad Request"
+  }
+ ]
+}

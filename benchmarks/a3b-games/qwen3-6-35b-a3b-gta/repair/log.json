@@ -1,0 +1,66 @@
+{
+ "slug": "gta",
+ "status": "stalled-no-progress",
+ "turns": [
+  {
+   "turn": 1,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok",
+    "contract_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok, contract_ok; contract (http): window.__game missing; console (http): Cannot set properties of undefined (setting 'reset') @ at http://<gate-server>/index.html:425:21; contract (file): window.__game missing; console (file): Cannot set properties of undefined (setting 'reset') @ at file://<work-dir>/index.html:425:21"
+  },
+  {
+   "turn": 2,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok",
+    "contract_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok, contract_ok; window.__game.ready is false (http): the game does not start on its own; contract (http): reset() not callable; window.__game.ready is false (file): the game does not start on its own; contract (file): reset() not callable"
+  },
+  {
+   "turn": 3,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok",
+    "contract_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok, contract_ok; contract (http): window.__game missing; console (http): Cannot set properties of undefined (setting 'reset') @ at http://<gate-server>/index.html:400:21; contract (file): window.__game missing; console (file): Cannot set properties of undefined (setting 'reset') @ at file://<work-dir>/index.html:400:21"
+  },
+  {
+   "turn": 4,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok",
+    "contract_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok, contract_ok; window.__game.ready is false (http): the game does not start on its own; contract (http): reset() not callable; window.__game.ready is false (file): the game does not start on its own; contract (file): reset() not callable"
+  },
+  {
+   "turn": 5,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok",
+    "contract_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok, contract_ok; window.__game.ready is false (http): the game does not start on its own; contract (http): reset() not callable; window.__game.ready is false (file): the game does not start on its own; contract (file): reset() not callable"
+  },
+  {
+   "turn": 6,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok",
+    "contract_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok, contract_ok; window.__game.ready is false (http): the game does not start on its own; contract (http): reset() not callable; window.__game.ready is false (file): the game does not start on its own; contract (file): reset() not callable"
+  }
+ ]
+}

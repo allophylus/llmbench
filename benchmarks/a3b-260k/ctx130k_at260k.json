@@ -1,0 +1,26 @@
+{
+ "label": "ctx130k-260k-server",
+ "target_tokens": 130000,
+ "tokens_calibrated": 93648,
+ "when": "2026-11-03T03:53:54+0000",
+ "n_ctx": 262144,
+ "vram_idle_gib": 23.75,
+ "wall_s": 70.7,
+ "prompt_n": 93658,
+ "predicted_n": 49,
+ "prefill_ms": 70019.7,
+ "prefill_tps": 1337.6,
+ "decode_ms": 571.2,
+ "decode_tps": 84.03,
+ "usage": {
+  "completion_tokens": 49,
+  "prompt_tokens": 93658,
+  "total_tokens": 93707,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "content_head": "DONE",
+ "vram_peak_gib": 23.82,
+ "vram_samples": 71
+}

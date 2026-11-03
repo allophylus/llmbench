@@ -1,0 +1,50 @@
+[
+ {
+  "run": "cap4096",
+  "mode": "off",
+  "cap": 4096,
+  "correct": 19,
+  "n": 25,
+  "tokens": 61409,
+  "wall_s": 584.0,
+  "length_stops": 6,
+  "avg_tokens_per_q": 2456.4,
+  "tps": 105.15
+ },
+ {
+  "run": "cap4096",
+  "mode": "on",
+  "cap": 4096,
+  "correct": 17,
+  "n": 25,
+  "tokens": 96097,
+  "wall_s": 1004.3,
+  "length_stops": 20,
+  "avg_tokens_per_q": 3843.9,
+  "tps": 95.69
+ },
+ {
+  "run": "cap16384",
+  "mode": "off",
+  "cap": 16384,
+  "correct": 22,
+  "n": 25,
+  "tokens": 91075,
+  "wall_s": 1244.9,
+  "length_stops": 0,
+  "avg_tokens_per_q": 3643.0,
+  "tps": 73.16
+ },
+ {
+  "run": "cap16384",
+  "mode": "on",
+  "cap": 16384,
+  "correct": 18,
+  "n": 25,
+  "tokens": 300352,
+  "wall_s": 4338.8,
+  "length_stops": 12,
+  "avg_tokens_per_q": 12014.1,
+  "tps": 69.22
+ }
+]

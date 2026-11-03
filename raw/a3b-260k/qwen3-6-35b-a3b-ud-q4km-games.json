@@ -1,0 +1,61 @@
+{
+ "schema": 1,
+ "kind": "bench",
+ "slug": "qwen3-6-35b-a3b-ud-q4km-games",
+ "model": {
+  "slug": "qwen3-6-35b-a3b-ud-q4km",
+  "name": "Qwen3.6-35B-A3B",
+  "file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "quant": "Q4_K_M",
+  "params_total": "35B",
+  "params_active": "3B",
+  "arch": "qwen3.6 MoE (A3B) hybrid",
+  "engine": "Vulkan",
+  "native_ctx": 32768
+ },
+ "env": {
+  "run_finished": "2026-11-03",
+  "backend": "Vulkan",
+  "temperature": 0.0
+ },
+ "tests": [
+  {
+   "id": "games-galaga-3d",
+   "metrics": {
+    "attempts": 3,
+    "completion_tokens": 12645,
+    "wall_s": 331.9,
+    "repair_turns": 10,
+    "repair_tokens": 41264,
+    "repair_wall_s": 597.0,
+    "pass": 0
+   }
+  },
+  {
+   "id": "games-gta-3d",
+   "metrics": {
+    "attempts": 3,
+    "completion_tokens": 13184,
+    "wall_s": 339.7,
+    "repair_turns": 5,
+    "repair_tokens": 22897,
+    "repair_wall_s": 332.1,
+    "pass": 0
+   }
+  },
+  {
+   "id": "games-physics-3d",
+   "metrics": {
+    "attempts": 3,
+    "completion_tokens": 10650,
+    "wall_s": 320.1,
+    "repair_turns": 1,
+    "repair_tokens": 2492,
+    "repair_wall_s": 35.7,
+    "pass": 1
+   }
+  }
+ ],
+ "status": "done",
+ "note": "browser-game cells: up to 3 generation attempts at max_tokens 8000, thinking disabled per request, then gate-driven repair turns (max 10). A pass means the gate's 8 checks are green with 0 console errors."
+}

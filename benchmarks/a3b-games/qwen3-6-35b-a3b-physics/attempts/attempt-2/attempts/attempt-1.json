@@ -1,0 +1,60 @@
+{
+ "gen": {
+  "slug": "qwen3-6-35b-a3b-physics",
+  "attempt": 1,
+  "base_url": "<gate-server>/v1",
+  "model_requested": "models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "server_model": "models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "server_fingerprint": "b11517-8a1a9b512",
+  "prompt_file": "WEBGAME_PHYSICS.md",
+  "prompt_sha256": "56bd1a7eefbf79542c7cd9f27e658b0645e150568a3cc620101097ff0dfa2c47",
+  "temperature": 0.0,
+  "max_tokens": 8000,
+  "finish_reason": "stop",
+  "extraction": "```fence```",
+  "response_chars": 10616,
+  "html_bytes": 10611,
+  "html_lines": 349,
+  "prompt_tokens": 533,
+  "completion_tokens": 3449,
+  "total_tokens": 3982,
+  "wall_s": 78.49,
+  "decode_tps": 56.93,
+  "timings": {
+   "cache_n": 529,
+   "prompt_n": 4,
+   "prompt_ms": 515.559,
+   "prompt_per_token_ms": 128.88975,
+   "prompt_per_second": 7.75856885438912,
+   "predicted_n": 3449,
+   "predicted_ms": 60565.236,
+   "predicted_per_token_ms": 17.56532366589327,
+   "predicted_per_second": 56.930348624415494
+  },
+  "generated_at": "2026-11-03T05:49:21+0000"
+ },
+ "validation_summary": {
+  "http_load_ok": true,
+  "file_load_ok": true,
+  "canvas_ok": true,
+  "webgl_ok": true,
+  "uses_three": true,
+  "animation_ok": false,
+  "input_ok": false,
+  "console_error_count": 0,
+  "contract_ok": true,
+  "contract_reasons": [],
+  "cdn_reachable": false,
+  "overlays_cover_geometry": true,
+  "player_centre_onscreen": null,
+  "player_visible": null,
+  "player_fully_onscreen": null,
+  "player_bbox_px": null,
+  "pass": false,
+  "accept": false
+ },
+ "reasons": [
+  "animation_ok failed",
+  "input_ok failed"
+ ]
+}

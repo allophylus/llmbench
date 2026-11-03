@@ -1,0 +1,33 @@
+{
+ "label": "ctx131k",
+ "target_tokens": 131072,
+ "tokens_calibrated": 131185,
+ "calibration": {
+  "units": 17,
+  "tail_chars": 26176,
+  "unit_tokens": 7340,
+  "unit_chars": 30000,
+  "err": 0.00086
+ },
+ "when": "2026-11-03T03:57:06+0000",
+ "n_ctx": 262144,
+ "vram_idle_gib": 23.82,
+ "wall_s": 129.0,
+ "prompt_n": 131195,
+ "predicted_n": 70,
+ "prefill_ms": 127562.7,
+ "prefill_tps": 1028.5,
+ "decode_ms": 878.2,
+ "decode_tps": 78.57,
+ "usage": {
+  "completion_tokens": 70,
+  "prompt_tokens": 131195,
+  "total_tokens": 131265,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "content_head": "DONE",
+ "vram_peak_gib": 23.82,
+ "vram_tail_gib": 23.82
+}

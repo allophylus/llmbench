@@ -1,0 +1,320 @@
+{
+ "slug": "_gate",
+ "probed_at": "2026-11-03T05:49:34+0000",
+ "chrome": "google-chrome (headless, playwright)",
+ "viewport": {
+  "width": 1280,
+  "height": 800
+ },
+ "http": {
+  "url": "http://<gate-server>/index.html",
+  "scheme": "http",
+  "load_ok": true,
+  "canvas_present": true,
+  "canvas_count": 1,
+  "webgl_ok": true,
+  "mentions_three": true,
+  "uses_three_global": true,
+  "overlay_regions": {
+   "viewport": [
+    1280,
+    800
+   ],
+   "overlays": [
+    {
+     "x": 86,
+     "y": 10,
+     "w": 11,
+     "h": 21,
+     "tag": "span",
+     "id": "score",
+     "cls": ""
+    },
+    {
+     "x": 97,
+     "y": 36,
+     "w": 76,
+     "h": 21,
+     "tag": "span",
+     "id": "status",
+     "cls": ""
+    },
+    {
+     "x": 20,
+     "y": 696,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btn-left",
+     "cls": "btn"
+    },
+    {
+     "x": 598,
+     "y": 696,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btn-fire",
+     "cls": "btn"
+    },
+    {
+     "x": 1176,
+     "y": 696,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btn-right",
+     "cls": "btn"
+    }
+   ]
+  },
+  "overlays": [
+   {
+    "x": 86,
+    "y": 10,
+    "w": 11,
+    "h": 21,
+    "tag": "span",
+    "id": "score",
+    "cls": "",
+    "pixels_differ_when_hidden": 97
+   },
+   {
+    "x": 97,
+    "y": 36,
+    "w": 76,
+    "h": 21,
+    "tag": "span",
+    "id": "status",
+    "cls": "",
+    "pixels_differ_when_hidden": 580
+   },
+   {
+    "x": 20,
+    "y": 696,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btn-left",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 5640
+   },
+   {
+    "x": 598,
+    "y": 696,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btn-fire",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 5640
+   },
+   {
+    "x": 1176,
+    "y": 696,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btn-right",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 5640
+   }
+  ],
+  "hidden_geometry_under_overlays": true,
+  "animation_advancing": false,
+  "frame_hashes": [
+   "e6979d1739066a9b",
+   "e6979d1739066a9b"
+  ],
+  "input_changes_pixels": false,
+  "input_left_changes_pixels": false,
+  "input_ok": false,
+  "control_vs_input_hashes": [
+   "e6979d1739066a9b",
+   "e6979d1739066a9b",
+   "e6979d1739066a9b"
+  ],
+  "screenshot": "shot.png",
+  "hud_markers": {
+   "SCORE": false,
+   "LIVES": false,
+   "GAME OVER": true
+  },
+  "console_errors": [],
+  "console_error_count": 0,
+  "failed_resources": [],
+  "ignored_favicon_404s": [],
+  "contract": {
+   "present": true,
+   "ready": true,
+   "reasons": [],
+   "ok": true
+  }
+ },
+ "file": {
+  "url": "file://<work-dir>/attempts/attempt-2/_gate/index.html",
+  "scheme": "file",
+  "load_ok": true,
+  "canvas_present": true,
+  "canvas_count": 1,
+  "webgl_ok": true,
+  "mentions_three": true,
+  "uses_three_global": true,
+  "overlay_regions": {
+   "viewport": [
+    1280,
+    800
+   ],
+   "overlays": [
+    {
+     "x": 86,
+     "y": 10,
+     "w": 11,
+     "h": 21,
+     "tag": "span",
+     "id": "score",
+     "cls": ""
+    },
+    {
+     "x": 97,
+     "y": 36,
+     "w": 76,
+     "h": 21,
+     "tag": "span",
+     "id": "status",
+     "cls": ""
+    },
+    {
+     "x": 20,
+     "y": 696,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btn-left",
+     "cls": "btn"
+    },
+    {
+     "x": 598,
+     "y": 696,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btn-fire",
+     "cls": "btn"
+    },
+    {
+     "x": 1176,
+     "y": 696,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btn-right",
+     "cls": "btn"
+    }
+   ]
+  },
+  "overlays": [
+   {
+    "x": 86,
+    "y": 10,
+    "w": 11,
+    "h": 21,
+    "tag": "span",
+    "id": "score",
+    "cls": "",
+    "pixels_differ_when_hidden": 97
+   },
+   {
+    "x": 97,
+    "y": 36,
+    "w": 76,
+    "h": 21,
+    "tag": "span",
+    "id": "status",
+    "cls": "",
+    "pixels_differ_when_hidden": 580
+   },
+   {
+    "x": 20,
+    "y": 696,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btn-left",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 5640
+   },
+   {
+    "x": 598,
+    "y": 696,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btn-fire",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 5640
+   },
+   {
+    "x": 1176,
+    "y": 696,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btn-right",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 5640
+   }
+  ],
+  "hidden_geometry_under_overlays": true,
+  "animation_advancing": false,
+  "frame_hashes": [
+   "e6979d1739066a9b",
+   "e6979d1739066a9b"
+  ],
+  "input_changes_pixels": false,
+  "input_left_changes_pixels": false,
+  "input_ok": false,
+  "control_vs_input_hashes": [
+   "e6979d1739066a9b",
+   "e6979d1739066a9b",
+   "e6979d1739066a9b"
+  ],
+  "screenshot": "shot-file.png",
+  "hud_markers": {
+   "SCORE": false,
+   "LIVES": false,
+   "GAME OVER": true
+  },
+  "console_errors": [],
+  "console_error_count": 0,
+  "failed_resources": [],
+  "ignored_favicon_404s": [],
+  "contract": {
+   "present": true,
+   "ready": true,
+   "reasons": [],
+   "ok": true
+  }
+ },
+ "cdn_reachable": false,
+ "summary": {
+  "http_load_ok": true,
+  "file_load_ok": true,
+  "canvas_ok": true,
+  "webgl_ok": true,
+  "uses_three": true,
+  "animation_ok": false,
+  "input_ok": false,
+  "console_error_count": 0,
+  "contract_ok": true,
+  "contract_reasons": [],
+  "cdn_reachable": false,
+  "overlays_cover_geometry": true,
+  "player_centre_onscreen": null,
+  "player_visible": null,
+  "player_fully_onscreen": null,
+  "player_bbox_px": null,
+  "pass": false,
+  "accept": false
+ }
+}

@@ -1,0 +1,26 @@
+{
+ "label": "ctx258k-260k-server",
+ "target_tokens": 258000,
+ "tokens_calibrated": 93648,
+ "when": "2026-11-03T03:55:05+0000",
+ "n_ctx": 262144,
+ "vram_idle_gib": 23.82,
+ "wall_s": 70.7,
+ "prompt_n": 93658,
+ "predicted_n": 49,
+ "prefill_ms": 70051.0,
+ "prefill_tps": 1337.0,
+ "decode_ms": 566.4,
+ "decode_tps": 84.75,
+ "usage": {
+  "completion_tokens": 49,
+  "prompt_tokens": 93658,
+  "total_tokens": 93707,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "content_head": "DONE",
+ "vram_peak_gib": 23.82,
+ "vram_samples": 71
+}

@@ -1,0 +1,350 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>3D Physics Sandbox</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #000; font-family: 'Courier New', monospace; touch-action: none; user-select: none; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+  #ui { position: absolute; top: 10px; left: 10px; color: #fff; pointer-events: none; text-shadow: 1px 1px 0 #000; }
+  .hud-text { font-size: 18px; margin-bottom: 5px; }
+  #controls { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; box-sizing: border-box; pointer-events: none; }
+  .btn { width: 80px; height: 80px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; pointer-events: auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; }
+  .btn:active { background: rgba(255,255,255,0.3); }
+  #msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 32px; text-align: center; display: none; text-shadow: 0 0 10px #f00; }
+</style>
+</head>
+<body>
+
+<div id="ui">
+  <div class="hud-text">BALLS: <span id="score">0</span> / 25</div>
+  <div class="hud-text">STATUS: <span id="status">PLAYING</span></div>
+</div>
+
+<div id="msg">GAME OVER<br><span style="font-size:16px">Tap to Reset</span></div>
+
+<div id="controls">
+  <div class="btn" id="btn-left">←</div>
+  <div class="btn" id="btn-fire">●</div>
+  <div class="btn" id="btn-right">→</div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// --- CONFIG ---
+const BOX_SIZE = 10;
+const GRAVITY = -15;
+const RESTITUTION = 0.7;
+const FRICTION = 0.99;
+const MAX_BALLS = 25;
+const BALL_RADIUS = 0.4;
+
+// --- STATE ---
+const state = {
+  ready: true,
+  score: 0,
+  lives: 3,
+  over: false,
+  player: { x: 0, y: 0 },
+  enemies: [], // Not used in sandbox, but required by spec
+  bullets: [], // Not used, but required by spec
+  balls: [],
+  particles: [],
+  shake: 0,
+  lastTime: 0
+};
+
+// --- THREE.JS SETUP ---
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x101020);
+scene.fog = new THREE.FogExp2(0x101020, 0.02);
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 5, 18);
+camera.lookAt(0, 0, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+document.body.appendChild(renderer.domElement);
+
+// --- LIGHTS ---
+const ambient = new THREE.AmbientLight(0x404060, 1.5);
+scene.add(ambient);
+
+const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+dirLight.position.set(5, 10, 7);
+dirLight.castShadow = true;
+scene.add(dirLight);
+
+const pointLight = new THREE.PointLight(0xff00ff, 2, 20);
+pointLight.position.set(-5, 5, 0);
+scene.add(pointLight);
+
+// --- OBJECTS ---
+// Box
+const boxGeo = new THREE.BoxGeometry(BOX_SIZE, BOX_SIZE, BOX_SIZE);
+const boxMat = new THREE.MeshPhysicalMaterial({
+  color: 0x222244,
+  transparent: true,
+  opacity: 0.1,
+  side: THREE.DoubleSide,
+  roughness: 0.1,
+  metalness: 0.1
+});
+const boxMesh = new THREE.Mesh(boxGeo, boxMat);
+scene.add(boxMesh);
+
+const edges = new THREE.EdgesGeometry(boxGeo);
+const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x4444ff }));
+scene.add(line);
+
+// Floor Grid
+const gridHelper = new THREE.GridHelper(BOX_SIZE, 10, 0x00ffff, 0x222222);
+gridHelper.position.y = -BOX_SIZE/2;
+scene.add(gridHelper);
+
+// Ball Pool
+const ballGeo = new THREE.SphereGeometry(BALL_RADIUS, 16, 16);
+const ballMat = new THREE.MeshStandardMaterial({ roughness: 0.4, metalness: 0.3 });
+
+// --- PHYSICS ENGINE ---
+function spawnBall(x, y, z, vx, vy, vz) {
+  const color = new THREE.Color().setHSL(Math.random(), 0.8, 0.5);
+  const mat = ballMat.clone();
+  mat.color = color;
+  const mesh = new THREE.Mesh(ballGeo, mat);
+  mesh.position.set(x, y, z);
+  mesh.castShadow = true;
+  scene.add(mesh);
+  
+  state.balls.push({
+    mesh: mesh,
+    vel: new THREE.Vector3(vx, vy, vz),
+    active: true
+  });
+}
+
+function createExplosion(pos, color) {
+  for(let i=0; i<8; i++) {
+    const geo = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+    const mat = new THREE.MeshBasicMaterial({ color: color });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.copy(pos);
+    scene.add(mesh);
+    state.particles.push({
+      mesh: mesh,
+      vel: new THREE.Vector3((Math.random()-0.5)*5, (Math.random()-0.5)*5, (Math.random()-0.5)*5),
+      life: 1.0
+    });
+  }
+}
+
+function updatePhysics(dt) {
+  // Clamp dt to prevent spiral of death
+  if (dt > 0.05) dt = 0.05;
+
+  // Update Balls
+  for (let i = 0; i < state.balls.length; i++) {
+    const b = state.balls[i];
+    if (!b.active) continue;
+
+    // Gravity
+    b.vel.y += GRAVITY * dt;
+    
+    // Friction
+    b.vel.multiplyScalar(FRICTION);
+
+    // Move
+    b.mesh.position.addScaledVector(b.vel, dt);
+
+    // Wall Collisions
+    const limit = BOX_SIZE / 2 - BALL_RADIUS;
+    const axes = ['x', 'y', 'z'];
+    
+    axes.forEach(axis => {
+      if (b.mesh.position[axis] > limit) {
+        b.mesh.position[axis] = limit;
+        b.vel[axis] *= -RESTITUTION;
+        createExplosion(b.mesh.position, b.mesh.material.color);
+        state.shake = Math.max(state.shake, 0.2);
+      } else if (b.mesh.position[axis] < -limit) {
+        b.mesh.position[axis] = -limit;
+        b.vel[axis] *= -RESTITUTION;
+        createExplosion(b.mesh.position, b.mesh.material.color);
+        state.shake = Math.max(state.shake, 0.2);
+      }
+    });
+
+    // Ball-Ball Collisions (Simple)
+    for (let j = i + 1; j < state.balls.length; j++) {
+      const b2 = state.balls[j];
+      if (!b2.active) continue;
+      
+      const dist = b.mesh.position.distanceTo(b2.mesh.position);
+      const minDist = BALL_RADIUS * 2;
+      
+      if (dist < minDist) {
+        // Resolve overlap
+        const normal = new THREE.Vector3().subVectors(b.mesh.position, b2.mesh.position).normalize();
+        const overlap = minDist - dist;
+        
+        b.mesh.position.addScaledVector(normal, overlap / 2);
+        b2.mesh.position.addScaledVector(normal, -overlap / 2);
+        
+        // Elastic collision response
+        const relVel = new THREE.Vector3().subVectors(b.vel, b2.vel);
+        const velAlongNormal = relVel.dot(normal);
+        
+        if (velAlongNormal < 0) {
+          const jVal = -(1 + RESTITUTION) * velAlongNormal;
+          const impulse = normal.multiplyScalar(jVal / 2); // Equal mass
+          b.vel.add(impulse);
+          b2.vel.sub(impulse);
+          
+          // Visuals
+          const midPoint = new THREE.Vector3().addVectors(b.mesh.position, b2.mesh.position).multiplyScalar(0.5);
+          createExplosion(midPoint, 0xffffff);
+        }
+      }
+    }
+  }
+
+  // Update Particles
+  for (let i = state.particles.length - 1; i >= 0; i--) {
+    const p = state.particles[i];
+    p.life -= dt * 2;
+    p.mesh.position.addScaledVector(p.vel, dt);
+    p.mesh.scale.setScalar(p.life);
+    if (p.life <= 0) {
+      scene.remove(p.mesh);
+      state.particles.splice(i, 1);
+    }
+  }
+}
+
+// --- INPUT & GAME LOOP ---
+let input = { left: false, right: false, fire: false };
+let spawnTimer = 0;
+
+// Keyboard
+window.addEventListener('keydown', e => {
+  if (e.code === 'ArrowLeft' || e.code === 'KeyA') input.left = true;
+  if (e.code === 'ArrowRight' || e.code === 'KeyD') input.right = true;
+  if (e.code === 'Space') input.fire = true;
+});
+window.addEventListener('keyup', e => {
+  if (e.code === 'ArrowLeft' || e.code === 'KeyA') input.left = false;
+  if (e.code === 'ArrowRight' || e.code === 'KeyD') input.right = false;
+  if (e.code === 'Space') input.fire = false;
+});
+
+// Touch
+const setupTouch = (id, key) => {
+  const el = document.getElementById(id);
+  el.addEventListener('pointerdown', (e) => { e.preventDefault(); input[key] = true; });
+  el.addEventListener('pointerup', (e) => { e.preventDefault(); input[key] = false; });
+};
+setupTouch('btn-left', 'left');
+setupTouch('btn-right', 'right');
+setupTouch('btn-fire', 'fire');
+
+// Reset Logic
+window.__game = {
+  ...state,
+  reset: () => {
+    state.balls.forEach(b => scene.remove(b.mesh));
+    state.balls = [];
+    state.particles.forEach(p => scene.remove(p.mesh));
+    state.particles = [];
+    state.over = false;
+    state.score = 0;
+    document.getElementById('msg').style.display = 'none';
+    document.getElementById('status').innerText = 'PLAYING';
+  }
+};
+
+document.getElementById('msg').addEventListener('pointerdown', () => {
+  if (state.over) window.__game.reset();
+});
+
+function animate(time) {
+  requestAnimationFrame(animate);
+  
+  const dt = (time - state.lastTime) / 1000;
+  state.lastTime = time;
+
+  if (!state.over) {
+    // Player Movement (Horizontal)
+    const speed = 10;
+    if (input.left) state.player.x -= speed * dt;
+    if (input.right) state.player.x += speed * dt;
+    state.player.x = Math.max(-BOX_SIZE/2 + 1, Math.min(BOX_SIZE/2 - 1, state.player.x));
+
+    // Shooting
+    if (input.fire && state.balls.length < MAX_BALLS) {
+      spawnTimer += dt;
+      if (spawnTimer > 0.2) { // Fire rate limit
+        spawnTimer = 0;
+        const vx = (Math.random() - 0.5) * 5;
+        const vy = 10 + Math.random() * 5;
+        const vz = (Math.random() - 0.5) * 5;
+        spawnBall(state.player.x, BOX_SIZE/2 - 1, 0, vx, vy, vz);
+        state.shake = 0.5;
+      }
+    }
+
+    // Physics Step
+    updatePhysics(dt);
+
+    // Update HUD
+    state.score = state.balls.length;
+    document.getElementById('score').innerText = state.score;
+
+    // Game Over Check
+    if (state.score >= MAX_BALLS) {
+      state.over = true;
+      document.getElementById('msg').style.display = 'block';
+      document.getElementById('status').innerText = 'FULL';
+    }
+  }
+
+  // Camera Shake
+  if (state.shake > 0) {
+    camera.position.x = (Math.random() - 0.5) * state.shake;
+    camera.position.y = 5 + (Math.random() - 0.5) * state.shake;
+    state.shake *= 0.9;
+    if (state.shake < 0.01) {
+      state.shake = 0;
+      camera.position.set(0, 5, 18);
+    }
+  }
+
+  renderer.render(scene, camera);
+}
+
+// Handle Resize
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Start
+animate(0);
+
+</script>
+</body>
+</html>
+```

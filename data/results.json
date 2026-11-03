@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-02T20:55:06+08:00",
+ "generated": "2026-11-03T14:42:48+08:00",
  "video_base": "https://d1zqwbb1zduc6n.cloudfront.net/llmbench/videos/",
  "rows": [
   {
@@ -62,47 +62,6 @@
    "features": {
     "mtp": true
    },
-   "speed_method": null,
-   "status": "done"
-  },
-  {
-   "slug": "flint-q4-k-m",
-   "name": "Flint",
-   "params_total": "40B",
-   "params_active": "2.5B",
-   "quant": "Q4_K_M",
-   "arch": "RecursiveSI MoE 40B total / 2.5B active",
-   "engine": "Vulkan",
-   "decode_tps": null,
-   "prefill_tps": null,
-   "context_window": null,
-   "vram_mib": null,
-   "size_gb": null,
-   "date": "2026-10-31",
-   "cells": {
-    "gpqa": 64.0,
-    "aime": 40.0,
-    "livebench": 12.0,
-    "ctx30k": 52.0,
-    "ctx110k": 48.0,
-    "tau2": 55.0,
-    "shell": null,
-    "termbench": 62.5,
-    "mmlupro": null,
-    "arc": null,
-    "math": null,
-    "logic": null,
-    "code": null,
-    "tetris_gen": null,
-    "tetris_play": null
-   },
-   "videos": {},
-   "sources": [
-    "results/flint-q4-k-m.json"
-   ],
-   "speed_measured_at": null,
-   "filename": null,
-   "features": {},
    "speed_method": null,
    "status": "done"
   },
@@ -579,7 +538,1342 @@
     "tokens": 3946,
     "build_s": 22.0,
     "url": "games/qwen3-6-35b-a3b-ud-q4km/"
-   }
+   },
+   "thinking": {
+    "model": "Qwen3.6-35B-A3B",
+    "caps": [
+     {
+      "cap": 16384,
+      "off": {
+       "correct": 22,
+       "n": 25,
+       "tokens": 91075,
+       "wall_s": 1244.9,
+       "length_stops": 0
+      },
+      "on": {
+       "correct": 18,
+       "n": 25,
+       "tokens": 300352,
+       "wall_s": 4338.8,
+       "length_stops": 12
+      }
+     },
+     {
+      "cap": 4096,
+      "off": {
+       "correct": 19,
+       "n": 25,
+       "tokens": 61409,
+       "wall_s": 584.0,
+       "length_stops": 6
+      },
+      "on": {
+       "correct": 17,
+       "n": 25,
+       "tokens": 96097,
+       "wall_s": 1004.3,
+       "length_stops": 20
+      }
+     }
+    ],
+    "per_question": [
+     {
+      "cap": 16384,
+      "questions": [
+       {
+        "id": "gpqa-d01",
+        "off": true,
+        "on": true,
+        "off_tok": 1001,
+        "on_tok": 2734
+       },
+       {
+        "id": "gpqa-d02",
+        "off": true,
+        "on": true,
+        "off_tok": 1852,
+        "on_tok": 15073
+       },
+       {
+        "id": "gpqa-d03",
+        "off": true,
+        "on": false,
+        "off_tok": 9464,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d04",
+        "off": false,
+        "on": true,
+        "off_tok": 8254,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d05",
+        "off": true,
+        "on": false,
+        "off_tok": 3302,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d06",
+        "off": true,
+        "on": true,
+        "off_tok": 775,
+        "on_tok": 2196
+       },
+       {
+        "id": "gpqa-d07",
+        "off": true,
+        "on": true,
+        "off_tok": 1059,
+        "on_tok": 3047
+       },
+       {
+        "id": "gpqa-d08",
+        "off": true,
+        "on": true,
+        "off_tok": 2385,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d09",
+        "off": true,
+        "on": true,
+        "off_tok": 8858,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d10",
+        "off": true,
+        "on": true,
+        "off_tok": 4859,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d11",
+        "off": true,
+        "on": false,
+        "off_tok": 4183,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d12",
+        "off": true,
+        "on": true,
+        "off_tok": 1206,
+        "on_tok": 14928
+       },
+       {
+        "id": "gpqa-d13",
+        "off": true,
+        "on": true,
+        "off_tok": 3487,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d14",
+        "off": true,
+        "on": false,
+        "off_tok": 2284,
+        "on_tok": 11974
+       },
+       {
+        "id": "gpqa-d15",
+        "off": true,
+        "on": true,
+        "off_tok": 4009,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d16",
+        "off": true,
+        "on": true,
+        "off_tok": 1036,
+        "on_tok": 15038
+       },
+       {
+        "id": "gpqa-d17",
+        "off": false,
+        "on": false,
+        "off_tok": 2032,
+        "on_tok": 13245
+       },
+       {
+        "id": "gpqa-d18",
+        "off": true,
+        "on": true,
+        "off_tok": 801,
+        "on_tok": 2007
+       },
+       {
+        "id": "gpqa-d19",
+        "off": true,
+        "on": true,
+        "off_tok": 833,
+        "on_tok": 6340
+       },
+       {
+        "id": "gpqa-d20",
+        "off": false,
+        "on": false,
+        "off_tok": 14062,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d21",
+        "off": true,
+        "on": true,
+        "off_tok": 925,
+        "on_tok": 6649
+       },
+       {
+        "id": "gpqa-d22",
+        "off": true,
+        "on": true,
+        "off_tok": 1978,
+        "on_tok": 3355
+       },
+       {
+        "id": "gpqa-d23",
+        "off": true,
+        "on": true,
+        "off_tok": 1397,
+        "on_tok": 7158
+       },
+       {
+        "id": "gpqa-d24",
+        "off": true,
+        "on": false,
+        "off_tok": 1309,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d25",
+        "off": true,
+        "on": true,
+        "off_tok": 9724,
+        "on_tok": 16384
+       }
+      ]
+     },
+     {
+      "cap": 4096,
+      "questions": [
+       {
+        "id": "gpqa-d01",
+        "off": true,
+        "on": true,
+        "off_tok": 1226,
+        "on_tok": 2734
+       },
+       {
+        "id": "gpqa-d02",
+        "off": false,
+        "on": false,
+        "off_tok": 1900,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d03",
+        "off": false,
+        "on": true,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d04",
+        "off": true,
+        "on": true,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d05",
+        "off": true,
+        "on": false,
+        "off_tok": 3302,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d06",
+        "off": true,
+        "on": true,
+        "off_tok": 886,
+        "on_tok": 2477
+       },
+       {
+        "id": "gpqa-d07",
+        "off": true,
+        "on": true,
+        "off_tok": 859,
+        "on_tok": 3233
+       },
+       {
+        "id": "gpqa-d08",
+        "off": true,
+        "on": true,
+        "off_tok": 2001,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d09",
+        "off": true,
+        "on": false,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d10",
+        "off": true,
+        "on": false,
+        "off_tok": 3944,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d11",
+        "off": false,
+        "on": false,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d12",
+        "off": true,
+        "on": true,
+        "off_tok": 1206,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d13",
+        "off": true,
+        "on": true,
+        "off_tok": 3907,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d14",
+        "off": true,
+        "on": false,
+        "off_tok": 2284,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d15",
+        "off": true,
+        "on": true,
+        "off_tok": 4009,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d16",
+        "off": true,
+        "on": true,
+        "off_tok": 1036,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d17",
+        "off": false,
+        "on": true,
+        "off_tok": 2032,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d18",
+        "off": true,
+        "on": true,
+        "off_tok": 801,
+        "on_tok": 2235
+       },
+       {
+        "id": "gpqa-d19",
+        "off": true,
+        "on": true,
+        "off_tok": 833,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d20",
+        "off": false,
+        "on": false,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d21",
+        "off": true,
+        "on": true,
+        "off_tok": 1302,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d22",
+        "off": true,
+        "on": true,
+        "off_tok": 2335,
+        "on_tok": 3498
+       },
+       {
+        "id": "gpqa-d23",
+        "off": true,
+        "on": true,
+        "off_tok": 1911,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d24",
+        "off": true,
+        "on": false,
+        "off_tok": 1059,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d25",
+        "off": false,
+        "on": true,
+        "off_tok": 4096,
+        "on_tok": 4096
+       }
+      ]
+     }
+    ]
+   },
+   "thinking_from": "GPQA-diamond, 25 frozen questions",
+   "games": [
+    {
+     "game": "galaga-3d",
+     "attempts": 3,
+     "tokens": 12645,
+     "wall_s": 331.9,
+     "repair_turns": 10,
+     "repair_status": "still-broken",
+     "repair_tokens": 41264,
+     "repair_wall_s": 597.0,
+     "extra_attempts": 10,
+     "extra_tokens": 41264,
+     "outcome": "fail",
+     "shot": "shot.png",
+     "video": null,
+     "robot_score": null,
+     "url": "games/qwen3-6-35b-a3b-ud-q4km-galaga/index.html"
+    },
+    {
+     "game": "gta-3d",
+     "attempts": 3,
+     "tokens": 13184,
+     "wall_s": 339.7,
+     "repair_turns": 5,
+     "repair_status": "stalled-no-progress",
+     "repair_tokens": 22897,
+     "repair_wall_s": 332.1,
+     "extra_attempts": 5,
+     "extra_tokens": 22897,
+     "outcome": "fail",
+     "shot": "shot.png",
+     "video": null,
+     "robot_score": null,
+     "url": "games/qwen3-6-35b-a3b-ud-q4km-gta/index.html"
+    },
+    {
+     "game": "physics-3d",
+     "attempts": 3,
+     "tokens": 10650,
+     "wall_s": 320.1,
+     "repair_turns": 1,
+     "repair_status": "accepted",
+     "repair_tokens": 2492,
+     "repair_wall_s": 35.7,
+     "extra_attempts": 1,
+     "extra_tokens": 2492,
+     "outcome": "pass",
+     "shot": "shot.png",
+     "video": "video/physics-3d.webm",
+     "robot_score": 10,
+     "url": "games/qwen3-6-35b-a3b-ud-q4km-physics/index.html"
+    }
+   ]
+  },
+  {
+   "slug": "qwen3-6-35b-a3b-ud-q4km-ctx256k",
+   "name": "Qwen3.6-35B-A3B",
+   "params_total": "35B",
+   "params_active": "3B",
+   "quant": "Q4_K_M",
+   "arch": "qwen3.6 MoE (A3B) hybrid",
+   "engine": "Vulkan",
+   "decode_tps": 62.31,
+   "prefill_tps": 566.0,
+   "context_window": 262144,
+   "vram_mib": 24392,
+   "size_gb": null,
+   "date": "2026-11-03",
+   "cells": {},
+   "videos": {},
+   "sources": [
+    "benchmarks/a3b-260k/records/qwen3-6-35b-a3b-ud-q4km-ctx256k.json"
+   ],
+   "features": {},
+   "status": "done",
+   "ctx_label": "256K",
+   "speed": {
+    "standard": {
+     "pending": true
+    },
+    "deep": [
+     {
+      "tokens": 131195,
+      "prefill_tps": 1028.5,
+      "decode_tps": 78.57,
+      "wall_s": 129.0
+     },
+     {
+      "tokens": 260115,
+      "prefill_tps": 566.0,
+      "decode_tps": 62.31,
+      "wall_s": 460.3
+     }
+    ],
+    "vram_gib": 23.82
+   },
+   "thinking": {
+    "model": "Qwen3.6-35B-A3B",
+    "caps": [
+     {
+      "cap": 16384,
+      "off": {
+       "correct": 22,
+       "n": 25,
+       "tokens": 91075,
+       "wall_s": 1244.9,
+       "length_stops": 0
+      },
+      "on": {
+       "correct": 18,
+       "n": 25,
+       "tokens": 300352,
+       "wall_s": 4338.8,
+       "length_stops": 12
+      }
+     },
+     {
+      "cap": 4096,
+      "off": {
+       "correct": 19,
+       "n": 25,
+       "tokens": 61409,
+       "wall_s": 584.0,
+       "length_stops": 6
+      },
+      "on": {
+       "correct": 17,
+       "n": 25,
+       "tokens": 96097,
+       "wall_s": 1004.3,
+       "length_stops": 20
+      }
+     }
+    ],
+    "per_question": [
+     {
+      "cap": 16384,
+      "questions": [
+       {
+        "id": "gpqa-d01",
+        "off": true,
+        "on": true,
+        "off_tok": 1001,
+        "on_tok": 2734
+       },
+       {
+        "id": "gpqa-d02",
+        "off": true,
+        "on": true,
+        "off_tok": 1852,
+        "on_tok": 15073
+       },
+       {
+        "id": "gpqa-d03",
+        "off": true,
+        "on": false,
+        "off_tok": 9464,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d04",
+        "off": false,
+        "on": true,
+        "off_tok": 8254,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d05",
+        "off": true,
+        "on": false,
+        "off_tok": 3302,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d06",
+        "off": true,
+        "on": true,
+        "off_tok": 775,
+        "on_tok": 2196
+       },
+       {
+        "id": "gpqa-d07",
+        "off": true,
+        "on": true,
+        "off_tok": 1059,
+        "on_tok": 3047
+       },
+       {
+        "id": "gpqa-d08",
+        "off": true,
+        "on": true,
+        "off_tok": 2385,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d09",
+        "off": true,
+        "on": true,
+        "off_tok": 8858,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d10",
+        "off": true,
+        "on": true,
+        "off_tok": 4859,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d11",
+        "off": true,
+        "on": false,
+        "off_tok": 4183,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d12",
+        "off": true,
+        "on": true,
+        "off_tok": 1206,
+        "on_tok": 14928
+       },
+       {
+        "id": "gpqa-d13",
+        "off": true,
+        "on": true,
+        "off_tok": 3487,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d14",
+        "off": true,
+        "on": false,
+        "off_tok": 2284,
+        "on_tok": 11974
+       },
+       {
+        "id": "gpqa-d15",
+        "off": true,
+        "on": true,
+        "off_tok": 4009,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d16",
+        "off": true,
+        "on": true,
+        "off_tok": 1036,
+        "on_tok": 15038
+       },
+       {
+        "id": "gpqa-d17",
+        "off": false,
+        "on": false,
+        "off_tok": 2032,
+        "on_tok": 13245
+       },
+       {
+        "id": "gpqa-d18",
+        "off": true,
+        "on": true,
+        "off_tok": 801,
+        "on_tok": 2007
+       },
+       {
+        "id": "gpqa-d19",
+        "off": true,
+        "on": true,
+        "off_tok": 833,
+        "on_tok": 6340
+       },
+       {
+        "id": "gpqa-d20",
+        "off": false,
+        "on": false,
+        "off_tok": 14062,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d21",
+        "off": true,
+        "on": true,
+        "off_tok": 925,
+        "on_tok": 6649
+       },
+       {
+        "id": "gpqa-d22",
+        "off": true,
+        "on": true,
+        "off_tok": 1978,
+        "on_tok": 3355
+       },
+       {
+        "id": "gpqa-d23",
+        "off": true,
+        "on": true,
+        "off_tok": 1397,
+        "on_tok": 7158
+       },
+       {
+        "id": "gpqa-d24",
+        "off": true,
+        "on": false,
+        "off_tok": 1309,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d25",
+        "off": true,
+        "on": true,
+        "off_tok": 9724,
+        "on_tok": 16384
+       }
+      ]
+     },
+     {
+      "cap": 4096,
+      "questions": [
+       {
+        "id": "gpqa-d01",
+        "off": true,
+        "on": true,
+        "off_tok": 1226,
+        "on_tok": 2734
+       },
+       {
+        "id": "gpqa-d02",
+        "off": false,
+        "on": false,
+        "off_tok": 1900,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d03",
+        "off": false,
+        "on": true,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d04",
+        "off": true,
+        "on": true,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d05",
+        "off": true,
+        "on": false,
+        "off_tok": 3302,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d06",
+        "off": true,
+        "on": true,
+        "off_tok": 886,
+        "on_tok": 2477
+       },
+       {
+        "id": "gpqa-d07",
+        "off": true,
+        "on": true,
+        "off_tok": 859,
+        "on_tok": 3233
+       },
+       {
+        "id": "gpqa-d08",
+        "off": true,
+        "on": true,
+        "off_tok": 2001,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d09",
+        "off": true,
+        "on": false,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d10",
+        "off": true,
+        "on": false,
+        "off_tok": 3944,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d11",
+        "off": false,
+        "on": false,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d12",
+        "off": true,
+        "on": true,
+        "off_tok": 1206,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d13",
+        "off": true,
+        "on": true,
+        "off_tok": 3907,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d14",
+        "off": true,
+        "on": false,
+        "off_tok": 2284,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d15",
+        "off": true,
+        "on": true,
+        "off_tok": 4009,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d16",
+        "off": true,
+        "on": true,
+        "off_tok": 1036,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d17",
+        "off": false,
+        "on": true,
+        "off_tok": 2032,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d18",
+        "off": true,
+        "on": true,
+        "off_tok": 801,
+        "on_tok": 2235
+       },
+       {
+        "id": "gpqa-d19",
+        "off": true,
+        "on": true,
+        "off_tok": 833,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d20",
+        "off": false,
+        "on": false,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d21",
+        "off": true,
+        "on": true,
+        "off_tok": 1302,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d22",
+        "off": true,
+        "on": true,
+        "off_tok": 2335,
+        "on_tok": 3498
+       },
+       {
+        "id": "gpqa-d23",
+        "off": true,
+        "on": true,
+        "off_tok": 1911,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d24",
+        "off": true,
+        "on": false,
+        "off_tok": 1059,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d25",
+        "off": false,
+        "on": true,
+        "off_tok": 4096,
+        "on_tok": 4096
+       }
+      ]
+     }
+    ]
+   },
+   "thinking_from": "GPQA-diamond, 25 frozen questions"
+  },
+  {
+   "slug": "qwen3-6-35b-a3b-ud-q4km-ctx32k",
+   "name": "Qwen3.6-35B-A3B",
+   "params_total": "35B",
+   "params_active": "3B",
+   "quant": "Q4_K_M",
+   "arch": "qwen3.6 MoE (A3B) hybrid",
+   "engine": "Vulkan",
+   "decode_tps": 98.13,
+   "prefill_tps": 2494.5,
+   "context_window": 32768,
+   "vram_mib": 21678,
+   "size_gb": null,
+   "date": "2026-11-03",
+   "cells": {},
+   "videos": {},
+   "sources": [
+    "benchmarks/a3b-260k/records/qwen3-6-35b-a3b-ud-q4km-ctx32k.json"
+   ],
+   "features": {},
+   "status": "done",
+   "ctx_label": "32K",
+   "speed": {
+    "standard": {
+     "tokens": 29988,
+     "prefill_tps": 2494.5,
+     "decode_tps": 98.13,
+     "pending": false
+    },
+    "deep": [],
+    "vram_gib": 21.17
+   },
+   "thinking": {
+    "model": "Qwen3.6-35B-A3B",
+    "caps": [
+     {
+      "cap": 16384,
+      "off": {
+       "correct": 22,
+       "n": 25,
+       "tokens": 91075,
+       "wall_s": 1244.9,
+       "length_stops": 0
+      },
+      "on": {
+       "correct": 18,
+       "n": 25,
+       "tokens": 300352,
+       "wall_s": 4338.8,
+       "length_stops": 12
+      }
+     },
+     {
+      "cap": 4096,
+      "off": {
+       "correct": 19,
+       "n": 25,
+       "tokens": 61409,
+       "wall_s": 584.0,
+       "length_stops": 6
+      },
+      "on": {
+       "correct": 17,
+       "n": 25,
+       "tokens": 96097,
+       "wall_s": 1004.3,
+       "length_stops": 20
+      }
+     }
+    ],
+    "per_question": [
+     {
+      "cap": 16384,
+      "questions": [
+       {
+        "id": "gpqa-d01",
+        "off": true,
+        "on": true,
+        "off_tok": 1001,
+        "on_tok": 2734
+       },
+       {
+        "id": "gpqa-d02",
+        "off": true,
+        "on": true,
+        "off_tok": 1852,
+        "on_tok": 15073
+       },
+       {
+        "id": "gpqa-d03",
+        "off": true,
+        "on": false,
+        "off_tok": 9464,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d04",
+        "off": false,
+        "on": true,
+        "off_tok": 8254,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d05",
+        "off": true,
+        "on": false,
+        "off_tok": 3302,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d06",
+        "off": true,
+        "on": true,
+        "off_tok": 775,
+        "on_tok": 2196
+       },
+       {
+        "id": "gpqa-d07",
+        "off": true,
+        "on": true,
+        "off_tok": 1059,
+        "on_tok": 3047
+       },
+       {
+        "id": "gpqa-d08",
+        "off": true,
+        "on": true,
+        "off_tok": 2385,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d09",
+        "off": true,
+        "on": true,
+        "off_tok": 8858,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d10",
+        "off": true,
+        "on": true,
+        "off_tok": 4859,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d11",
+        "off": true,
+        "on": false,
+        "off_tok": 4183,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d12",
+        "off": true,
+        "on": true,
+        "off_tok": 1206,
+        "on_tok": 14928
+       },
+       {
+        "id": "gpqa-d13",
+        "off": true,
+        "on": true,
+        "off_tok": 3487,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d14",
+        "off": true,
+        "on": false,
+        "off_tok": 2284,
+        "on_tok": 11974
+       },
+       {
+        "id": "gpqa-d15",
+        "off": true,
+        "on": true,
+        "off_tok": 4009,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d16",
+        "off": true,
+        "on": true,
+        "off_tok": 1036,
+        "on_tok": 15038
+       },
+       {
+        "id": "gpqa-d17",
+        "off": false,
+        "on": false,
+        "off_tok": 2032,
+        "on_tok": 13245
+       },
+       {
+        "id": "gpqa-d18",
+        "off": true,
+        "on": true,
+        "off_tok": 801,
+        "on_tok": 2007
+       },
+       {
+        "id": "gpqa-d19",
+        "off": true,
+        "on": true,
+        "off_tok": 833,
+        "on_tok": 6340
+       },
+       {
+        "id": "gpqa-d20",
+        "off": false,
+        "on": false,
+        "off_tok": 14062,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d21",
+        "off": true,
+        "on": true,
+        "off_tok": 925,
+        "on_tok": 6649
+       },
+       {
+        "id": "gpqa-d22",
+        "off": true,
+        "on": true,
+        "off_tok": 1978,
+        "on_tok": 3355
+       },
+       {
+        "id": "gpqa-d23",
+        "off": true,
+        "on": true,
+        "off_tok": 1397,
+        "on_tok": 7158
+       },
+       {
+        "id": "gpqa-d24",
+        "off": true,
+        "on": false,
+        "off_tok": 1309,
+        "on_tok": 16384
+       },
+       {
+        "id": "gpqa-d25",
+        "off": true,
+        "on": true,
+        "off_tok": 9724,
+        "on_tok": 16384
+       }
+      ]
+     },
+     {
+      "cap": 4096,
+      "questions": [
+       {
+        "id": "gpqa-d01",
+        "off": true,
+        "on": true,
+        "off_tok": 1226,
+        "on_tok": 2734
+       },
+       {
+        "id": "gpqa-d02",
+        "off": false,
+        "on": false,
+        "off_tok": 1900,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d03",
+        "off": false,
+        "on": true,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d04",
+        "off": true,
+        "on": true,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d05",
+        "off": true,
+        "on": false,
+        "off_tok": 3302,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d06",
+        "off": true,
+        "on": true,
+        "off_tok": 886,
+        "on_tok": 2477
+       },
+       {
+        "id": "gpqa-d07",
+        "off": true,
+        "on": true,
+        "off_tok": 859,
+        "on_tok": 3233
+       },
+       {
+        "id": "gpqa-d08",
+        "off": true,
+        "on": true,
+        "off_tok": 2001,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d09",
+        "off": true,
+        "on": false,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d10",
+        "off": true,
+        "on": false,
+        "off_tok": 3944,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d11",
+        "off": false,
+        "on": false,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d12",
+        "off": true,
+        "on": true,
+        "off_tok": 1206,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d13",
+        "off": true,
+        "on": true,
+        "off_tok": 3907,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d14",
+        "off": true,
+        "on": false,
+        "off_tok": 2284,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d15",
+        "off": true,
+        "on": true,
+        "off_tok": 4009,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d16",
+        "off": true,
+        "on": true,
+        "off_tok": 1036,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d17",
+        "off": false,
+        "on": true,
+        "off_tok": 2032,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d18",
+        "off": true,
+        "on": true,
+        "off_tok": 801,
+        "on_tok": 2235
+       },
+       {
+        "id": "gpqa-d19",
+        "off": true,
+        "on": true,
+        "off_tok": 833,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d20",
+        "off": false,
+        "on": false,
+        "off_tok": 4096,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d21",
+        "off": true,
+        "on": true,
+        "off_tok": 1302,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d22",
+        "off": true,
+        "on": true,
+        "off_tok": 2335,
+        "on_tok": 3498
+       },
+       {
+        "id": "gpqa-d23",
+        "off": true,
+        "on": true,
+        "off_tok": 1911,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d24",
+        "off": true,
+        "on": false,
+        "off_tok": 1059,
+        "on_tok": 4096
+       },
+       {
+        "id": "gpqa-d25",
+        "off": false,
+        "on": true,
+        "off_tok": 4096,
+        "on_tok": 4096
+       }
+      ]
+     }
+    ]
+   },
+   "thinking_from": "GPQA-diamond, 25 frozen questions"
   },
   {
    "slug": "qwen3-8-27b-q4-0",

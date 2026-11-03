@@ -1,0 +1,106 @@
+{
+ "slug": "qwen3-6-35b-a3b-physics",
+ "generated_at": "2026-11-03T05:51:40+0000",
+ "prompt_file": "WEBGAME_PHYSICS.md",
+ "max_attempts": 3,
+ "attempts_used": 3,
+ "accepted_attempt": null,
+ "status": "rejected",
+ "per_attempt": [
+  {
+   "attempt": 1,
+   "webgen_rc": 2,
+   "completion_tokens": 3696,
+   "prompt_tokens": 533,
+   "wall_s": 74.41,
+   "decode_tps": 55.07,
+   "html_lines": 364,
+   "html_bytes": 11008,
+   "finish_reason": "stop",
+   "extraction": "```fence```",
+   "ok": false,
+   "gate_rc": 0,
+   "checks": {
+    "http_load_ok": true,
+    "file_load_ok": true,
+    "canvas_ok": true,
+    "webgl_ok": true,
+    "uses_three": true,
+    "animation_ok": false,
+    "input_ok": true,
+    "contract_ok": true,
+    "console_error_count": 0
+   },
+   "contract_reasons": [],
+   "reasons": [
+    "animation_ok",
+    "console_error_count"
+   ]
+  },
+  {
+   "attempt": 2,
+   "webgen_rc": 2,
+   "completion_tokens": 3449,
+   "prompt_tokens": 533,
+   "wall_s": 78.49,
+   "decode_tps": 56.93,
+   "html_lines": 349,
+   "html_bytes": 10611,
+   "finish_reason": "stop",
+   "extraction": "```fence```",
+   "ok": false,
+   "gate_rc": 0,
+   "checks": {
+    "http_load_ok": true,
+    "file_load_ok": true,
+    "canvas_ok": true,
+    "webgl_ok": true,
+    "uses_three": true,
+    "animation_ok": false,
+    "input_ok": false,
+    "contract_ok": true,
+    "console_error_count": 0
+   },
+   "contract_reasons": [],
+   "reasons": [
+    "animation_ok",
+    "input_ok",
+    "console_error_count"
+   ]
+  },
+  {
+   "attempt": 3,
+   "webgen_rc": 2,
+   "completion_tokens": 3505,
+   "prompt_tokens": 533,
+   "wall_s": 82.52,
+   "decode_tps": 55.67,
+   "html_lines": 331,
+   "html_bytes": 10556,
+   "finish_reason": "stop",
+   "extraction": "```fence```",
+   "ok": false,
+   "gate_rc": 0,
+   "checks": {
+    "http_load_ok": true,
+    "file_load_ok": true,
+    "canvas_ok": true,
+    "webgl_ok": true,
+    "uses_three": true,
+    "animation_ok": false,
+    "input_ok": false,
+    "contract_ok": true,
+    "console_error_count": 0
+   },
+   "contract_reasons": [],
+   "reasons": [
+    "animation_ok",
+    "input_ok",
+    "console_error_count"
+   ]
+  }
+ ],
+ "total_wall_s": 320.1,
+ "total_completion_tokens": 10650,
+ "total_prompt_tokens": 1599
+}

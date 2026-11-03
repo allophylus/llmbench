@@ -1,0 +1,4 @@
+[physics] turn 1: reject ['animation_ok', 'input_ok'] :: failed checks: animation_ok, input_ok
+turn 1: 7560 bytes, 2492 tok, 36s
+ 
+[physics] turn 2: ACCEPT

@@ -1,0 +1,95 @@
+{
+ "slug": "galaga",
+ "status": "still-broken",
+ "turns": [
+  {
+   "turn": 1,
+   "accept": false,
+   "failed": [
+    "contract_ok"
+   ],
+   "why": "failed checks: contract_ok; window.__game.ready is false (http): the game does not start on its own; window.__game.ready is false (file): the game does not start on its own"
+  },
+  {
+   "turn": 2,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:295:16); console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:244:57; console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:244:57; console (file): Cannot read properties of undefined (reading 'position') @ at animate (file://<work-dir>/index.html:295:16); console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:244:57; console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:244:57"
+  },
+  {
+   "turn": 3,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at animate (file://<work-dir>/index.html:293:16); console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57"
+  },
+  {
+   "turn": 4,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at animate (file://<work-dir>/index.html:293:16); console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57"
+  },
+  {
+   "turn": 5,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at animate (file://<work-dir>/index.html:293:16); console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57"
+  },
+  {
+   "turn": 6,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at animate (file://<work-dir>/index.html:293:16); console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57"
+  },
+  {
+   "turn": 7,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at animate (file://<work-dir>/index.html:293:16); console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57"
+  },
+  {
+   "turn": 8,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at animate (file://<work-dir>/index.html:293:16); console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57"
+  },
+  {
+   "turn": 9,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at animate (file://<work-dir>/index.html:293:16); console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57"
+  },
+  {
+   "turn": 10,
+   "accept": false,
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ],
+   "why": "failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (http): Cannot read properties of undefined (reading 'position') @ at http://<gate-server>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at animate (file://<work-dir>/index.html:293:16); console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57; console (file): Cannot read properties of undefined (reading 'position') @ at file://<work-dir>/index.html:242:57"
+  }
+ ]
+}

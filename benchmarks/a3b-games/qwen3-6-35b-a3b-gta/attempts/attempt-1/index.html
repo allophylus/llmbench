@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Grid Racer</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #050510; font-family: 'Courier New', Courier, monospace; user-select: none; -webkit-user-select: none; }
+        canvas { display: block; }
+        #ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; }
+        #hud { padding: 20px; color: #00ffcc; text-shadow: 0 0 5px #00ffcc; font-size: 20px; font-weight: bold; display: flex; justify-content: space-between; }
+        #controls { pointer-events: auto; display: flex; justify-content: space-between; padding: 20px; padding-bottom: 40px; }
+        .btn { width: 80px; height: 80px; background: rgba(255, 255, 255, 0.1); border: 2px solid #00ffcc; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; touch-action: none; }
+        .btn:active { background: rgba(0, 255, 204, 0.4); }
+        #d-pad { display: flex; gap: 10px; }
+        #msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 30px; text-align: center; text-shadow: 0 0 10px black; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+        #msg.show { opacity: 1; }
+    </style>
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    </script>
+</head>
+<body>
+    <div id="ui">
+        <div id="hud">
+            <span id="scoreEl">SCORE: 0</span>
+            <span id="timeEl">TIME: 60</span>
+            <span id="livesEl">LIVES: 3</span>
+        </div>
+        <div id="msg">GAME OVER<br><span style="font-size:16px">Tap to Restart</span></div>
+        <div id="controls">
+            <div id="d-pad">
+                <div class="btn" id="btn-left">◄</div>
+                <div class="btn" id="btn-right">►</div>
+            </div>
+            <div id="action-pad">
+                <div class="btn" id="btn-brake">▼</div>
+                <div class="btn" id="btn-gas">▲</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- CONFIG ---
+        const GRID_SIZE = 10;
+        const CELL = 40;
+        const MAP_SIZE = GRID_SIZE * CELL;
+        const COLORS = {
+            bg: 0x050510,
+            road: 0x1a1a2e,
+            building: 0x16213e,
+            buildingTop: 0x0f3460,
+            player: 0xe94560,
+            waypoint: 0x00ffcc,
+            enemy: 0xffaa00
+        };
+
+        // --- STATE ---
+        const state = {
+            ready: true,
+            score: 0,
+            lives: 3,
+            over: false,
+            time: 60,
+            player: { x: 0, y: 0 },
+            enemies: [],
+            bullets: [],
+            waypoints: [],
+            particles: []
+        };
+
+        window.__game = state;
+        window.__game.reset = () => {
+            state.score = 0;
+            state.lives = 3;
+            state.time = 60;
+            state.over = false;
+            state.player.x = 0;
+            state.player.y = 0;
+            state.enemies = [];
+            state.waypoints = [];
+            initGame();
+            document.getElementById('msg').classList.remove('show');
+        };
+
+        // --- SETUP ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(COLORS.bg);
+        scene.fog = new THREE.FogExp2(COLORS.bg, 0.008);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 120, 80);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        // Lights
+        const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+        scene.add(ambient);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(50, 100, 50);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 1024;
+        dirLight.shadow.mapSize.height = 1024;
+        scene.add(dirLight);
+
+        // --- ASSETS (Procedural) ---
+        const buildingGeo = new THREE.BoxGeometry(CELL - 4, 30, CELL - 4);
+        const buildingMat = new THREE.MeshStandardMaterial({ color: COLORS.building, roughness: 0.2 });
+        const roofGeo = new THREE.BoxGeometry(CELL - 6, 1, CELL - 6);
+        const roofMat = new THREE.MeshStandardMaterial({ color: COLORS.buildingTop, emissive: 0x000022 });
+        
+        const buildings = [];
+        const roadGeo = new THREE.PlaneGeometry(MAP_SIZE, MAP_SIZE);
+        const roadMat = new THREE.MeshStandardMaterial({ color: COLORS.road, roughness: 0.8 });
+        const road = new THREE.Mesh(roadGeo, roadMat);
+        road.rotation.x = -Math.PI / 2;
+        road.receiveShadow = true;
+        scene.add(road);
+
+        // Grid lines
+        const gridHelper = new THREE.GridHelper(MAP_SIZE, GRID_SIZE, 0x333355, 0x222244);
+        scene.add(gridHelper);
+
+        // Player
+        const playerGroup = new THREE.Group();
+        const carBody = new THREE.Mesh(new THREE.BoxGeometry(10, 4, 18), new THREE.MeshStandardMaterial({ color: COLORS.player }));
+        carBody.position.y = 2;
+        carBody.castShadow = true;
+        const carLight = new THREE.PointLight(COLORS.player, 1, 50);
+        carLight.position.set(0, 5, 0);
+        playerGroup.add(carBody);
+        playerGroup.add(carLight);
+        scene.add(playerGroup);
+
+        // --- GAME LOGIC ---
+
+        function createBuilding(x, z) {
+            const b = new THREE.Mesh(buildingGeo, buildingMat);
+            b.position.set(x, 15, z);
+            b.castShadow = true;
+            b.receiveShadow = true;
+            const r = new THREE.Mesh(roofGeo, roofMat);
+            r.position.y = 15;
+            b.add(r);
+            scene.add(b);
+            buildings.push({ mesh: b, x: x, z: z, w: CELL - 4, h: CELL - 4 });
+        }
+
+        function initGame() {
+            // Clear old
+            buildings.forEach(b => scene.remove(b.mesh));
+            buildings.length = 0;
+            state.waypoints.forEach(w => scene.remove(w.mesh));
+            state.waypoints.length = 0;
+            state.enemies.forEach(e => scene.remove(e.mesh));
+            state.enemies.length = 0;
+
+            // Generate City
+            for(let x=-MAP_SIZE/2; x<MAP_SIZE/2; x+=CELL) {
+                for(let z=-MAP_SIZE/2; z<MAP_SIZE/2; z+=CELL) {
+                    if (Math.abs(x) < 20 && Math.abs(z) < 20) continue; // Safe zone
+                    if (Math.random() > 0.3) createBuilding(x, z);
+                }
+            }
+
+            // Waypoints
+            for(let i=0; i<5; i++) {
+                const wp = new THREE.Mesh(new THREE.OctahedronGeometry(4), new THREE.MeshStandardMaterial({ color: COLORS.waypoint, emissive: COLORS.waypoint, emissiveIntensity: 0.5 }));
+                let valid = false;
+                while(!valid) {
+                    wp.position.set((Math.random()-0.5)*MAP_SIZE*0.8, 5, (Math.random()-0.5)*MAP_SIZE*0.8);
+                    valid = true;
+                    // Simple check against buildings
+                    for(let b of buildings) {
+                        if(Math.abs(wp.position.x - b.x) < CELL/2 && Math.abs(wp.position.z - b.z) < CELL/2) valid = false;
+                    }
+                }
+                scene.add(wp);
+                state.waypoints.push({ mesh: wp, active: true });
+            }
+
+            // Enemies
+            for(let i=0; i<8; i++) {
+                const e = new THREE.Mesh(new THREE.BoxGeometry(8, 3, 14), new THREE.MeshStandardMaterial({ color: COLORS.enemy }));
+                e.position.set((Math.random()-0.5)*MAP_SIZE*0.8, 1.5, (Math.random()-0.5)*MAP_SIZE*0.8);
+                e.castShadow = true;
+                scene.add(e);
+                state.enemies.push({ mesh: e, vx: (Math.random()-0.5)*0.5, vz: (Math.random()-0.5)*0.5 });
+            }
+        }
+
+        // --- INPUT ---
+        const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false, w: false, s: false, a: false, d: false, " ": false };
+        window.addEventListener('keydown', e => keys[e.key] = true);
+        window.addEventListener('keyup', e => keys[e.key] = false);
+
+        const setupBtn = (id, key) => {
+            const el = document.getElementById(id);
+            const set = (v) => { keys[key] = v; };
+            el.addEventListener('pointerdown', (e) => { e.preventDefault(); set(true); });
+            el.addEventListener('pointerup', (e) => { e.preventDefault(); set(false); });
+            el.addEventListener('pointerleave', (e) => { e.preventDefault(); set(false); });
+        };
+        setupBtn('btn-gas', 'ArrowUp');
+        setupBtn('btn-brake', 'ArrowDown');
+        setupBtn('btn-left', 'ArrowLeft');
+        setupBtn('btn-right', 'ArrowRight');
+
+        // --- PARTICLES ---
+        const particleGeo = new THREE.BufferGeometry();
+        const pCount = 200;
+        const pPos = new Float32Array(pCount * 3);
+        const pVel = [];
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+        const pMat = new THREE.PointsMaterial({ color: 0xffaa00, size: 2, transparent: true });
+        const particles = new THREE.Points(particleGeo, pMat);
+        scene.add(particles);
+
+        function spawnParticles(x, y, z, color) {
+            for(let i=0; i<10; i++) {
+                pPos[i*3] = x; pPos[i*3+1] = y; pPos[i*3+2] = z;
+                pVel[i] = { x: (Math.random()-0.5)*2, y: Math.random()*2, z: (Math.random()-0.5)*2, life: 1.0 };
+            }
+            pMat.color.setHex(color);
+        }
+
+        // --- MAIN LOOP ---
+        let shake = 0;
+        const clock = new THREE.Clock();
+
+        function update() {
+            requestAnimationFrame(update);
+            const dt = Math.min(clock.getDelta(), 0.1);
+
+            if (state.over) {
+                if (keys[" "] || keys["ArrowUp"]) window.__game.reset();
+                renderer.render(scene, camera);
+                return;
+            }
+
+            // Timer
+            state.time -= dt;
+            if (state.time <= 0) {
+                state.over = true;
+                document.getElementById('msg').classList.add('show');
+            }
+
+            // Player Physics
+            const speed = 0.8;
+            const turnSpeed = 0.06;
+            let moving = false;
+
+            if (keys.ArrowUp || keys.w) { playerGroup.position.z -= speed; moving = true; }
+            if (keys.ArrowDown || keys.s) { playerGroup.position.z += speed * 0.5; moving = true; }
+            if (keys.ArrowLeft || keys.a) { playerGroup.rotation.y += turnSpeed; moving = true; }
+            if (keys.ArrowRight || keys.d) { playerGroup.rotation.y -= turnSpeed; moving = true; }
+
+            // Collision with Buildings
+            const pBox = new THREE.Box3().setFromObject(playerGroup);
+            let hit = false;
+            for(let b of buildings) {
+                const bBox = new THREE.Box3().setFromObject(b.mesh);
+                if(pBox.intersectsBox(bBox)) {
+                    hit = true;
+                    // Push back
+                    playerGroup.position.z += (playerGroup.position.z > b.mesh.position.z ? -2 : 2);
+                    playerGroup.position.x += (playerGroup.position.x > b.mesh.position.x ? -2 : 2);
+                    shake = 10;
+                    state.lives--;
+                    spawnParticles(playerGroup.position.x, 2, playerGroup.position.z, 0xff0000);
+                    if(state.lives <= 0) {
+                        state.over = true;
+                        document.getElementById('msg').classList.add('show');
+                    }
+                    break;
+                }
+            }
+
+            // Waypoints
+            state.waypoints.forEach(wp => {
+                if(!wp.active) return;
+                wp.mesh.rotation.y += 2 * dt;
+                if(playerGroup.position.distanceTo(wp.mesh.position) < 10) {
+                    wp.active = false;
+                    wp.mesh.visible = false;
+                    state.score += 100;
+                    state.time += 10;
+                    spawnParticles(wp.mesh.position.x, 5, wp.mesh.position.z, COLORS.waypoint);
+                    // Respawn one elsewhere
+                    const newWp = state.waypoints.find(w => !w.active);
+                    if(newWp) {
+                        newWp.mesh.position.set((Math.random()-0.5)*MAP_SIZE, 5, (Math.random()-0.5)*MAP_SIZE);
+                        newWp.active = true;
+                        newWp.mesh.visible = true;
+                    }
+                }
+            });
+
+            // Enemies
+            state.enemies.forEach(e => {
+                e.mesh.position.x += e.vx;
+                e.mesh.position.z += e.vz;
+                // Bounce
+                if(Math.abs(e.mesh.position.x) > MAP_SIZE/2) e.vx *= -1;
+                if(Math.abs(e.mesh.position.z) > MAP_SIZE/2) e.vz *= -1;
+                
+                if(playerGroup.position.distanceTo(e.mesh.position) < 12) {
+                    hit = true;
+                    shake = 15;
+                    state.lives--;
+                    spawnParticles(playerGroup.position.x, 2, playerGroup.position.z, COLORS.enemy);
+                    if(state.lives <= 0) {
+                        state.over = true;
+                        document.getElementById('msg').classList.add('show');
+                    }
+                }
+            });
+
+            // Camera Follow
+            const targetPos = playerGroup.position.clone();
+            targetPos.y = 120;
+            targetPos.z += 80;
+            camera.position.lerp(targetPos, 0.1);
+            camera.lookAt(playerGroup.position);
+
+            // Shake
+            if(shake > 0) {
+                camera.position.x += (Math.random()-0.5) * shake * 0.1;
+                camera.position.y += (Math.random()-0.5) * shake * 0.1;
+                shake *= 0.9;
+                if(shake < 0.5) shake = 0;
+            }
+
+            // Particles
+            for(let i=0; i<pCount; i++) {
+                if(pVel[i] && pVel[i].life > 0) {
+                    pPos[i*3] += pVel[i].x;
+                    pPos[i*3+1] += pVel[i].y;
+                    pPos[i*3+2] += pVel[i].z;
+                    pVel[i].life -= 0.05;
+                    pVel[i].y -= 0.1; // gravity
+                } else {
+                    pPos[i*3+1] = -100; // hide
+                }
+            }
+            particleGeo.attributes.position.needsUpdate = true;
+
+            // Update State for Grader
+            state.player.x = playerGroup.position.x;
+            state.player.y = playerGroup.position.z;
+            state.enemies = state.enemies.map(e => ({ x: e.mesh.position.x, y: e.mesh.position.z }));
+            state.bullets = []; // No bullets in this mode, but required by spec
+
+            // UI
+            document.getElementById('scoreEl').innerText = `SCORE: ${state.score}`;
+            document.getElementById('timeEl').innerText = `TIME: ${Math.ceil(state.time)}`;
+            document.getElementById('livesEl').innerText = `LIVES: ${state.lives}`;
+
+            renderer.render(scene, camera);
+        }
+
+        initGame();
+        update();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+<script src="../touch.js"></script>
+</body>
+</html>

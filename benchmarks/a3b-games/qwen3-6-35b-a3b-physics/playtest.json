@@ -1,0 +1,14 @@
+{
+ "game_after_input": {
+  "score": 10,
+  "lives": 3,
+  "over": false,
+  "player": {
+   "x": 0,
+   "y": 0
+  },
+  "enemies": 2,
+  "bullets": 0,
+  "ready": true
+ }
+}

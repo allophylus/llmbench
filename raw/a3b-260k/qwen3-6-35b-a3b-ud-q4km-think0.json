@@ -1,0 +1,47 @@
+{
+ "schema": 1,
+ "kind": "suite",
+ "slug": "qwen3-6-35b-a3b-ud-q4km-think0",
+ "model": {
+  "slug": "qwen3-6-35b-a3b-ud-q4km",
+  "name": "Qwen3.6-35B-A3B",
+  "file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "quant": "Q4_K_M",
+  "params_total": "35B",
+  "params_active": "3B",
+  "arch": "qwen3.6 MoE (A3B) hybrid",
+  "engine": "Vulkan",
+  "native_ctx": 32768
+ },
+ "env": {
+  "run_finished": "2026-11-03",
+  "backend": "Vulkan"
+ },
+ "tests": [
+  {
+   "id": "gpqa-thinking-cap4096",
+   "n": 1,
+   "metrics": {
+    "correct": 19,
+    "total": 25,
+    "completion_tokens": 61409,
+    "wall_s": 584.0,
+    "length_stops": 6,
+    "max_tokens": 4096
+   }
+  },
+  {
+   "id": "gpqa-thinking-cap16384",
+   "n": 1,
+   "metrics": {
+    "correct": 22,
+    "total": 25,
+    "completion_tokens": 91075,
+    "wall_s": 1244.9,
+    "length_stops": 0,
+    "max_tokens": 16384
+   }
+  }
+ ],
+ "status": "done"
+}

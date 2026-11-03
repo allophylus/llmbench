@@ -1,0 +1,47 @@
+{
+ "schema": 1,
+ "kind": "bench",
+ "model": {
+  "slug": "qwen3-6-35b-a3b-ud-q4km",
+  "name": "Qwen3.6-35B-A3B",
+  "file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "quant": "Q4_K_M",
+  "params_total": "35B",
+  "params_active": "3B",
+  "arch": "qwen3.6 MoE (A3B) hybrid",
+  "engine": "Vulkan",
+  "native_ctx": 262144
+ },
+ "slug": "qwen3-6-35b-a3b-ud-q4km-ctx256k",
+ "env": {
+  "run_finished": "2026-11-03",
+  "backend": "Vulkan",
+  "peak_vram_mib": 24392
+ },
+ "tests": [
+  {
+   "id": "ctx-long-probe",
+   "metrics": {
+    "server_ctx": 262144,
+    "prompt_tokens": 131195,
+    "predicted_n": 70,
+    "prefill_tps": 1028.5,
+    "decode_tps": 78.57,
+    "wall_s": 129.0
+   }
+  },
+  {
+   "id": "ctx-long-probe",
+   "metrics": {
+    "server_ctx": 262144,
+    "prompt_tokens": 260115,
+    "predicted_n": 30,
+    "prefill_tps": 566.0,
+    "decode_tps": 62.31,
+    "wall_s": 460.3
+   }
+  }
+ ],
+ "status": "done",
+ "note": "no standard 30K probe at this server ctx yet"
+}

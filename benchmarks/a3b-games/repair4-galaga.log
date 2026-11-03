@@ -1,0 +1,30 @@
+[galaga] turn 1: reject ['contract_ok'] :: failed checks: contract_ok; window.__game.ready is false (http): the game does not start on its own; window.__game.ready is false (file): the game does not start on its own
+turn 1: 13602 bytes, 4139 tok, 57s
+ 
+[galaga] turn 2: reject ['animation_ok', 'input_ok'] :: failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:295:16); console (http): Cannot read properties of undefined
+turn 2: 13545 bytes, 4125 tok, 59s
+ 
+[galaga] turn 3: reject ['animation_ok', 'input_ok'] :: failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined
+turn 3: 13545 bytes, 4125 tok, 60s
+ 
+[galaga] turn 4: reject ['animation_ok', 'input_ok'] :: failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined
+turn 4: 13545 bytes, 4125 tok, 58s
+ 
+[galaga] turn 5: reject ['animation_ok', 'input_ok'] :: failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined
+turn 5: 13545 bytes, 4125 tok, 64s
+ 
+[galaga] turn 6: reject ['animation_ok', 'input_ok'] :: failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined
+turn 6: 13545 bytes, 4125 tok, 57s
+ 
+[galaga] turn 7: reject ['animation_ok', 'input_ok'] :: failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined
+turn 7: 13545 bytes, 4125 tok, 58s
+ 
+[galaga] turn 8: reject ['animation_ok', 'input_ok'] :: failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined
+turn 8: 13545 bytes, 4125 tok, 65s
+ 
+[galaga] turn 9: reject ['animation_ok', 'input_ok'] :: failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined
+turn 9: 13545 bytes, 4125 tok, 61s
+ 
+[galaga] turn 10: reject ['animation_ok', 'input_ok'] :: failed checks: animation_ok, input_ok; console (http): Cannot read properties of undefined (reading 'position') @ at animate (http://<gate-server>/index.html:293:16); console (http): Cannot read properties of undefined
+turn 10: 13545 bytes, 4125 tok, 58s
+ 

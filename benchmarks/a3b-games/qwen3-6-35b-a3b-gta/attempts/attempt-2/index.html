@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Grid Racer</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #050510; font-family: 'Courier New', Courier, monospace; user-select: none; -webkit-user-select: none; }
+        #hud { position: absolute; top: 10px; left: 10px; color: #00ffcc; font-size: 18px; text-shadow: 0 0 5px #00ffcc; pointer-events: none; z-index: 10; }
+        #controls { position: absolute; bottom: 20px; width: 100%; height: 150px; pointer-events: none; display: flex; justify-content: space-between; padding: 0 20px; box-sizing: border-box; }
+        .btn { pointer-events: auto; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(0, 255, 204, 0.3); border-radius: 50%; width: 70px; height: 70px; margin: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; touch-action: none; }
+        .btn:active { background: rgba(0, 255, 204, 0.4); }
+        #dpad { display: flex; gap: 10px; align-items: flex-end; }
+        #actions { display: flex; gap: 10px; align-items: flex-end; }
+        #msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 32px; text-align: center; display: none; text-shadow: 0 0 10px black; pointer-events: none; }
+    </style>
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    </script>
+</head>
+<body>
+    <div id="hud">SCORE: <span id="scoreVal">0</span> | TIME: <span id="timeVal">60</span></div>
+    <div id="msg">MISSION COMPLETE<br><span style="font-size:16px">Tap to Restart</span></div>
+    <div id="controls">
+        <div id="dpad">
+            <div class="btn" id="btnLeft">◄</div>
+            <div class="btn" id="btnRight">►</div>
+        </div>
+        <div id="actions">
+            <div class="btn" id="btnBrake">S</div>
+            <div class="btn" id="btnGas">W</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- CONFIG ---
+        const GRID_SIZE = 10; // 10x10 blocks
+        const BLOCK_SIZE = 40;
+        const ROAD_WIDTH = 15;
+        const TOTAL_SIZE = GRID_SIZE * BLOCK_SIZE;
+        const COLORS = {
+            bg: 0x050510,
+            road: 0x1a1a24,
+            building: 0x2a2a35,
+            buildingTop: 0x3a3a45,
+            player: 0x00ffcc,
+            enemy: 0xff3366,
+            waypoint: 0xffcc00,
+            grid: 0x111111
+        };
+
+        // --- STATE ---
+        const state = {
+            ready: true,
+            score: 0,
+            lives: 3,
+            over: false,
+            time: 60,
+            player: { x: 0, y: 0, angle: 0, speed: 0 },
+            enemies: [],
+            bullets: [],
+            waypoints: [],
+            particles: []
+        };
+
+        window.__game = state;
+        window.__game.reset = () => location.reload();
+
+        // --- SETUP ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(COLORS.bg);
+        scene.fog = new THREE.FogExp2(COLORS.bg, 0.008);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        // Lights
+        const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+        scene.add(ambient);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(100, 200, 100);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        scene.add(dirLight);
+
+        // --- WORLD GENERATION ---
+        const buildings = [];
+        const roadGeo = new THREE.PlaneGeometry(TOTAL_SIZE, TOTAL_SIZE);
+        const roadMat = new THREE.MeshStandardMaterial({ color: COLORS.road, roughness: 0.8 });
+        const road = new THREE.Mesh(roadGeo, roadMat);
+        road.rotation.x = -Math.PI / 2;
+        road.receiveShadow = true;
+        scene.add(road);
+
+        // Grid helper for visual style
+        const gridHelper = new THREE.GridHelper(TOTAL_SIZE, GRID_SIZE, COLORS.player, COLORS.grid);
+        gridHelper.position.y = 0.1;
+        scene.add(gridHelper);
+
+        const boxGeo = new THREE.BoxGeometry(BLOCK_SIZE - ROAD_WIDTH, 0, BLOCK_SIZE - ROAD_WIDTH);
+        const boxMat = new THREE.MeshStandardMaterial({ color: COLORS.building });
+        const topGeo = new THREE.BoxGeometry(BLOCK_SIZE - ROAD_WIDTH, 2, BLOCK_SIZE - ROAD_WIDTH);
+        const topMat = new THREE.MeshStandardMaterial({ color: COLORS.buildingTop });
+
+        for (let x = 0; x < GRID_SIZE; x++) {
+            for (let z = 0; z < GRID_SIZE; z++) {
+                // Random buildings, leave center clear
+                if (Math.random() > 0.3 && (x > 2 || x < GRID_SIZE - 3 || z > 2 || z < GRID_SIZE - 3)) {
+                    const h = 10 + Math.random() * 30;
+                    const b = new THREE.Mesh(boxGeo, boxMat);
+                    b.position.set(
+                        (x - GRID_SIZE / 2) * BLOCK_SIZE + BLOCK_SIZE / 2,
+                        h / 2,
+                        (z - GRID_SIZE / 2) * BLOCK_SIZE + BLOCK_SIZE / 2
+                    );
+                    b.scale.y = h;
+                    b.castShadow = true;
+                    b.receiveShadow = true;
+                    scene.add(b);
+                    buildings.push(b);
+
+                    // Roof detail
+                    const t = new THREE.Mesh(topGeo, topMat);
+                    t.position.copy(b.position);
+                    t.position.y = h + 1;
+                    scene.add(t);
+                }
+            }
+        }
+
+        // --- ENTITIES ---
+        // Player
+        const playerGeo = new THREE.BoxGeometry(4, 2, 8);
+        const playerMat = new THREE.MeshStandardMaterial({ color: COLORS.player, emissive: 0x004433 });
+        const playerMesh = new THREE.Mesh(playerGeo, playerMat);
+        playerMesh.castShadow = true;
+        scene.add(playerMesh);
+
+        // Waypoints
+        const wpGeo = new THREE.CylinderGeometry(2, 2, 1, 16);
+        const wpMat = new THREE.MeshStandardMaterial({ color: COLORS.waypoint, emissive: 0xaa6600 });
+        for(let i=0; i<5; i++) {
+            const wp = new THREE.Mesh(wpGeo, wpMat);
+            // Snap to road center
+            const gx = Math.floor(Math.random() * GRID_SIZE);
+            const gz = Math.floor(Math.random() * GRID_SIZE);
+            wp.position.set(
+                (gx - GRID_SIZE / 2) * BLOCK_SIZE + BLOCK_SIZE / 2,
+                2,
+                (gz - GRID_SIZE / 2) * BLOCK_SIZE + BLOCK_SIZE / 2
+            );
+            scene.add(wp);
+            state.waypoints.push({ mesh: wp, active: true });
+        }
+
+        // Enemies
+        const enemyGeo = new THREE.BoxGeometry(4, 2, 8);
+        const enemyMat = new THREE.MeshStandardMaterial({ color: COLORS.enemy });
+        for(let i=0; i<8; i++) {
+            const e = new THREE.Mesh(enemyGeo, enemyMat);
+            const gx = Math.floor(Math.random() * GRID_SIZE);
+            const gz = Math.floor(Math.random() * GRID_SIZE);
+            e.position.set(
+                (gx - GRID_SIZE / 2) * BLOCK_SIZE + BLOCK_SIZE / 2,
+                1,
+                (gz - GRID_SIZE / 2) * BLOCK_SIZE + BLOCK_SIZE / 2
+            );
+            e.castShadow = true;
+            scene.add(e);
+            state.enemies.push({ mesh: e, dir: Math.random() > 0.5 ? 1 : -1, speed: 0.2 + Math.random() * 0.3 });
+        }
+
+        // --- INPUT ---
+        const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false, w: false, s: false, a: false, d: false, " ": false };
+        window.addEventListener('keydown', e => keys[e.key] = true);
+        window.addEventListener('keyup', e => keys[e.key] = false);
+
+        const bindTouch = (id, key) => {
+            const el = document.getElementById(id);
+            el.addEventListener('pointerdown', (e) => { e.preventDefault(); keys[key] = true; });
+            el.addEventListener('pointerup', (e) => { e.preventDefault(); keys[key] = false; });
+            el.addEventListener('pointerleave', (e) => { keys[key] = false; });
+        };
+        bindTouch('btnGas', 'ArrowUp');
+        bindTouch('btnBrake', 'ArrowDown');
+        bindTouch('btnLeft', 'ArrowLeft');
+        bindTouch('btnRight', 'ArrowRight');
+
+        // --- GAME LOGIC ---
+        let shake = 0;
+        const clock = new THREE.Clock();
+
+        function spawnParticles(pos, color) {
+            const count = 10;
+            const geo = new THREE.BufferGeometry();
+            const posArr = new Float32Array(count * 3);
+            const velArr = [];
+            for(let i=0; i<count; i++) {
+                posArr[i*3] = pos.x; posArr[i*3+1] = pos.y; posArr[i*3+2] = pos.z;
+                velArr.push({ x: (Math.random()-0.5)*2, y: Math.random()*2, z: (Math.random()-0.5)*2 });
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+            const mat = new THREE.PointsMaterial({ color: color, size: 1.5, transparent: true });
+            const pts = new THREE.Points(geo, mat);
+            scene.add(pts);
+            state.particles.push({ mesh: pts, vel: velArr, life: 1.0 });
+        }
+
+        function updatePhysics(dt) {
+            if (state.over) return;
+
+            // Player Movement
+            const p = state.player;
+            const accel = 0.05;
+            const friction = 0.96;
+            const turnSpeed = 0.04;
+
+            if (keys.ArrowUp || keys.w) p.speed += accel;
+            if (keys.ArrowDown || keys.s) p.speed -= accel;
+            
+            p.speed *= friction;
+            if (Math.abs(p.speed) > 0.1) {
+                if (keys.ArrowLeft || keys.a) p.angle += turnSpeed * Math.sign(p.speed);
+                if (keys.ArrowRight || keys.d) p.angle -= turnSpeed * Math.sign(p.speed);
+            }
+
+            const vx = Math.sin(p.angle) * p.speed;
+            const vz = Math.cos(p.angle) * p.speed;
+
+            // Collision Check (Simple Box)
+            const nextX = p.x + vx;
+            const nextZ = p.z + vz;
+            let hit = false;
+            
+            // Building Collision
+            for (const b of buildings) {
+                const dx = Math.abs(nextX - b.position.x);
+                const dz = Math.abs(nextZ - b.position.z);
+                if (dx < (BLOCK_SIZE - ROAD_WIDTH)/2 + 2 && dz < (BLOCK_SIZE - ROAD_WIDTH)/2 + 2) {
+                    hit = true;
+                    break;
+                }
+            }
+
+            if (!hit) {
+                p.x = nextX;
+                p.z = nextZ;
+            } else {
+                p.speed *= -0.5; // Bounce
+                shake = 1.0;
+                spawnParticles(playerMesh.position, 0xffffff);
+            }
+
+            playerMesh.position.set(p.x, 1, p.z);
+            playerMesh.rotation.y = p.angle;
+
+            // Waypoints
+            state.waypoints.forEach(wp => {
+                if (!wp.active) return;
+                const d = Math.hypot(p.x - wp.mesh.position.x, p.z - wp.mesh.position.z);
+                if (d < 5) {
+                    wp.active = false;
+                    wp.mesh.visible = false;
+                    state.score += 100;
+                    state.time += 10;
+                    shake = 0.5;
+                    spawnParticles(wp.mesh.position, COLORS.waypoint);
+                    // Check win
+                    if (state.waypoints.every(w => !w.active)) {
+                        state.over = true;
+                        document.getElementById('msg').style.display = 'block';
+                    }
+                }
+            });
+
+            // Enemies
+            state.enemies.forEach(e => {
+                e.mesh.position.z += e.dir * e.speed;
+                // Wrap around
+                const limit = (GRID_SIZE/2) * BLOCK_SIZE;
+                if (e.mesh.position.z > limit || e.mesh.position.z < -limit) e.dir *= -1;
+                
+                // Collision with player
+                const dist = Math.hypot(p.x - e.mesh.position.x, p.z - e.mesh.position.z);
+                if (dist < 5) {
+                    state.time -= 5;
+                    shake = 2.0;
+                    spawnParticles(playerMesh.position, COLORS.enemy);
+                    // Push back
+                    p.speed = -2;
+                }
+            });
+
+            // Timer
+            state.time -= dt;
+            if (state.time <= 0) {
+                state.over = true;
+                document.getElementById('msg').innerHTML = "TIME'S UP<br><span style='font-size:16px'>Tap to Restart</span>";
+                document.getElementById('msg').style.display = 'block';
+            }
+        }
+
+        function updateParticles(dt) {
+            for (let i = state.particles.length - 1; i >= 0; i--) {
+                const p = state.particles[i];
+                p.life -= dt * 2;
+                const pos = p.mesh.geometry.attributes.position.array;
+                for(let j=0; j<p.vel.length; j++) {
+                    pos[j*3] += p.vel[j].x;
+                    pos[j*3+1] += p.vel[j].y;
+                    pos[j*3+2] += p.vel[j].z;
+                    p.vel[j].y -= 0.1; // gravity
+                }
+                p.mesh.geometry.attributes.position.needsUpdate = true;
+                p.mesh.material.opacity = p.life;
+                if (p.life <= 0) {
+                    scene.remove(p.mesh);
+                    state.particles.splice(i, 1);
+                }
+            }
+        }
+
+        function updateCamera() {
+            const p = state.player;
+            const targetX = p.x - Math.sin(p.angle) * 30;
+            const targetZ = p.z - Math.cos(p.angle) * 30;
+            
+            // Smooth follow
+            camera.position.x += (targetX - camera.position.x) * 0.1;
+            camera.position.z += (targetZ - camera.position.z) * 0.1;
+            camera.position.y = 60;
+            camera.lookAt(p.x, 0, p.z);
+
+            // Shake
+            if (shake > 0) {
+                camera.position.x += (Math.random() - 0.5) * shake;
+                camera.position.y += (Math.random() - 0.5) * shake;
+                shake *= 0.9;
+                if (shake < 0.05) shake = 0;
+            }
+        }
+
+        function loop() {
+            requestAnimationFrame(loop);
+            const dt = clock.getDelta();
+            
+            updatePhysics(dt);
+            updateParticles(dt);
+            updateCamera();
+
+            // HUD
+            document.getElementById('scoreVal').innerText = state.score;
+            document.getElementById('timeVal').innerText = Math.ceil(state.time);
+            
+            // Update State for grader
+            state.player.x = Math.round(state.player.x);
+            state.player.y = Math.round(state.player.z); // Map Z to Y for 2D array representation
+            state.enemies.forEach((e, i) => {
+                state.enemies[i] = { x: Math.round(e.mesh.position.x), y: Math.round(e.mesh.position.z) };
+            });
+            state.bullets = []; // No bullets in this version, but required by spec
+
+            renderer.render(scene, camera);
+        }
+
+        // Start
+        loop();
+        
+        // Restart handler
+        document.addEventListener('pointerdown', () => {
+            if (state.over) window.__game.reset();
+        });
+
+        // Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+<script src="../touch.js"></script>
+</body>
+</html>

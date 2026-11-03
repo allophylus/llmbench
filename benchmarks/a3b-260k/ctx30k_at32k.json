@@ -1,0 +1,26 @@
+{
+ "label": "ctx30k-32k-server",
+ "target_tokens": 30000,
+ "tokens_calibrated": 29978,
+ "when": "2026-11-03T03:53:24+0000",
+ "n_ctx": 32768,
+ "vram_idle_gib": 21.17,
+ "wall_s": 12.7,
+ "prompt_n": 29988,
+ "predicted_n": 64,
+ "prefill_ms": 12021.8,
+ "prefill_tps": 2494.5,
+ "decode_ms": 642.0,
+ "decode_tps": 98.13,
+ "usage": {
+  "completion_tokens": 64,
+  "prompt_tokens": 29988,
+  "total_tokens": 30052,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "content_head": "",
+ "vram_peak_gib": 21.17,
+ "vram_samples": 13
+}

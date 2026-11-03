@@ -1,0 +1,78 @@
+off 0 gpqa-d01 OK 1001 9.43 stop
+off 1 gpqa-d02 OK 1852 17.23 stop
+off 2 gpqa-d03 OK 9464 88.54 stop
+off 3 gpqa-d04 wrong 8254 77.2 stop
+off 4 gpqa-d05 OK 3302 38.31 stop
+off 5 gpqa-d06 OK 775 13.68 stop
+off 6 gpqa-d07 OK 1059 18.79 stop
+off 7 gpqa-d08 OK 2385 41.91 stop
+off 8 gpqa-d09 OK 8858 190.03 stop
+off 9 gpqa-d10 OK 4859 69.47 stop
+off 10 gpqa-d11 OK 4183 54.02 stop
+off 11 gpqa-d12 OK 1206 11.25 stop
+off 12 gpqa-d13 OK 3487 32.3 stop
+off 13 gpqa-d14 OK 2284 21.26 stop
+off 14 gpqa-d15 OK 4009 37.08 stop
+off 15 gpqa-d16 OK 1036 9.69 stop
+off 16 gpqa-d17 wrong 2032 18.88 stop
+off 17 gpqa-d18 OK 801 7.56 stop
+off 18 gpqa-d19 OK 833 7.85 stop
+off 19 gpqa-d20 wrong 14062 251.7 stop
+off 20 gpqa-d21 OK 925 25.96 stop
+off 21 gpqa-d22 OK 1978 52.17 stop
+off 22 gpqa-d23 OK 1397 35.39 stop
+off 23 gpqa-d24 OK 1309 18.38 stop
+off 24 gpqa-d25 OK 9724 96.77 stop
+on 0 gpqa-d01 OK 2734 32.15 stop
+on 1 gpqa-d02 OK 15073 148.05 stop
+on 2 gpqa-d03 wrong 16384 220.13 length
+on 3 gpqa-d04 OK 16384 262.04 length
+on 4 gpqa-d05 wrong 16384 364.46 length
+on 5 gpqa-d06 OK 2196 59.35 stop
+on 6 gpqa-d07 OK 3047 61.03 stop
+on 7 gpqa-d08 OK 16384 353.75 length
+on 8 gpqa-d09 OK 16384 316.01 length
+on 9 gpqa-d10 OK 16384 338.75 length
+on 10 gpqa-d11 wrong 16384 180.64 length
+on 11 gpqa-d12 OK 14928 145.33 stop
+on 12 gpqa-d13 OK 16384 201.7 length
+on 13 gpqa-d14 wrong 11974 152.6 stop
+on 14 gpqa-d15 OK 16384 206.98 length
+on 15 gpqa-d16 OK 15038 204.94 stop
+on 16 gpqa-d17 wrong 13245 178.38 stop
+on 17 gpqa-d18 OK 2007 29.44 stop
+on 18 gpqa-d19 OK 6340 81.27 stop
+on 19 gpqa-d20 wrong 16384 225.09 length
+on 20 gpqa-d21 OK 6649 91.46 stop
+on 21 gpqa-d22 OK 3355 50.86 stop
+on 22 gpqa-d23 OK 7158 88.12 stop
+on 23 gpqa-d24 wrong 16384 185.61 length
+on 24 gpqa-d25 OK 16384 160.68 length
+{
+ "base": "<gate-server>",
+ "pack": "llmbench/suite/packs/gpqa25.jsonl",
+ "seed": 5,
+ "temperature": 0.0,
+ "settings": {
+  "max_tokens_off": 16384,
+  "max_tokens_on": 16384
+ },
+ "when": "2026-11-03T04:55:19+0000",
+ "model": "models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+ "off": {
+  "mode": "off",
+  "n": 25,
+  "correct": 22,
+  "tokens": 91075,
+  "wall_s": 1244.9,
+  "length_stops": 0
+ },
+ "on": {
+  "mode": "on",
+  "n": 25,
+  "correct": 18,
+  "tokens": 300352,
+  "wall_s": 4338.8,
+  "length_stops": 12
+ }
+}

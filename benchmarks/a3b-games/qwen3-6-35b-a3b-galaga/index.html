@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Neon Void Shooter</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #050510; font-family: 'Courier New', Courier, monospace; touch-action: none; user-select: none; }
+        canvas { display: block; }
+        #ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; }
+        .hud { padding: 20px; color: #fff; text-shadow: 0 0 10px #0ff; font-size: 20px; font-weight: bold; display: flex; justify-content: space-between; }
+        #overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: auto; transition: opacity 0.3s; }
+        #overlay.hidden { opacity: 0; pointer-events: none; }
+        h1 { color: #f0f; font-size: 40px; margin: 0 0 20px 0; text-shadow: 0 0 20px #f0f; text-align: center; }
+        p { color: #fff; font-size: 18px; margin-bottom: 30px; text-align: center; max-width: 80%; }
+        button { background: transparent; border: 2px solid #0ff; color: #0ff; padding: 15px 40px; font-size: 24px; font-family: inherit; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 15px #0ff; transition: 0.2s; }
+        button:hover { background: #0ff; color: #000; }
+        #controls { position: absolute; bottom: 20px; width: 100%; height: 150px; display: flex; justify-content: space-between; padding: 0 20px; box-sizing: border-box; pointer-events: none; }
+        .touch-btn { width: 80px; height: 80px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; pointer-events: auto; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.5); font-size: 24px; }
+        .touch-btn:active { background: rgba(0,255,255,0.3); border-color: #0ff; }
+        .d-pad { display: flex; gap: 10px; }
+        .action-pad { display: flex; align-items: flex-end; }
+    </style>
+</head>
+<body>
+
+<div id="ui">
+    <div class="hud">
+        <span id="scoreEl">SCORE: 0</span>
+        <span id="livesEl">LIVES: 3</span>
+    </div>
+    <div id="controls">
+        <div class="d-pad">
+            <div class="touch-btn" id="btnLeft">←</div>
+            <div class="touch-btn" id="btnRight">→</div>
+        </div>
+        <div class="action-pad">
+            <div class="touch-btn" id="btnFire" style="border-color: #f0f; color: #f0f;">●</div>
+        </div>
+    </div>
+</div>
+
+<div id="overlay" class="hidden">
+    <h1>GAME OVER</h1>
+    <p id="finalScore">Score: 0</p>
+    <button id="startBtn">RETRY</button>
+</div>
+
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+    }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// --- CONFIGURATION ---
+const COLORS = {
+    bg: 0x050510,
+    player: 0x00ffff,
+    enemy: 0xff00ff,
+    bullet: 0xffff00,
+    particle: 0xffaa00
+};
+
+// --- STATE MANAGEMENT ---
+const state = {
+    ready: false,
+    score: 0,
+    lives: 3,
+    over: false,
+    player: { x: 0, y: 0 },
+    enemies: [],
+    bullets: [],
+    lastShot: 0,
+    spawnTimer: 0,
+    difficulty: 1
+};
+
+// Expose state for grader
+window.__game = state;
+
+window.__game.reset = () => {
+    state.score = 0;
+    state.lives = 3;
+    state.over = false;
+    state.enemies = [];
+    state.bullets = [];
+    state.difficulty = 1;
+    state.ready = true;
+    
+    // Clear scene objects
+    playerMesh.position.set(0, -4, 0);
+    
+    // Remove existing enemies
+    state.enemies.forEach(e => scene.remove(e.mesh));
+    state.enemies = [];
+    
+    // Remove existing bullets
+    state.bullets.forEach(b => scene.remove(b.mesh));
+    state.bullets = [];
+
+    updateHUD();
+    document.getElementById('overlay').classList.add('hidden');
+};
+
+// --- THREE.JS SETUP ---
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(COLORS.bg);
+scene.fog = new THREE.FogExp2(COLORS.bg, 0.02);
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 10);
+camera.lookAt(0, 0, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+document.body.appendChild(renderer.domElement);
+
+// --- LIGHTING ---
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+dirLight.position.set(5, 10, 7);
+scene.add(dirLight);
+
+// --- OBJECTS ---
+// Player
+const playerGeo = new THREE.ConeGeometry(0.5, 1.5, 4);
+playerGeo.rotateX(Math.PI / 2);
+const playerMat = new THREE.MeshStandardMaterial({ color: COLORS.player, emissive: COLORS.player, emissiveIntensity: 0.5, roughness: 0.2 });
+const playerMesh = new THREE.Mesh(playerGeo, playerMat);
+playerMesh.position.set(0, -4, 0);
+scene.add(playerMesh);
+
+// Enemies
+const enemyGeo = new THREE.DodecahedronGeometry(0.6);
+const enemyMat = new THREE.MeshStandardMaterial({ color: COLORS.enemy, emissive: COLORS.enemy, emissiveIntensity: 0.8, wireframe: true });
+
+// Bullets
+const bulletGeo = new THREE.BoxGeometry(0.2, 0.8, 0.2);
+const bulletMat = new THREE.MeshBasicMaterial({ color: COLORS.bullet });
+
+// Particles
+const particleGeo = new THREE.BufferGeometry();
+const particleCount = 100;
+const pPos = new Float32Array(particleCount * 3);
+particleGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+const particleMat = new THREE.PointsMaterial({ color: COLORS.particle, size: 0.2, transparent: true, opacity: 0.8 });
+const particleSystem = new THREE.Points(particleGeo, particleMat);
+scene.add(particleSystem);
+let particles = []; // Logic array
+
+// Background Stars
+const starGeo = new THREE.BufferGeometry();
+const starCount = 500;
+const starPos = new Float32Array(starCount * 3);
+for(let i=0; i<starCount*3; i++) starPos[i] = (Math.random() - 0.5) * 40;
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 });
+const stars = new THREE.Points(starGeo, starMat);
+scene.add(stars);
+
+// --- INPUT HANDLING ---
+const keys = { left: false, right: false, fire: false };
+
+window.addEventListener('keydown', (e) => {
+    if(e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
+    if(e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
+    if(e.code === 'Space') keys.fire = true;
+});
+window.addEventListener('keyup', (e) => {
+    if(e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+    if(e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+    if(e.code === 'Space') keys.fire = false;
+});
+
+// Touch Controls
+const setupTouch = (id, key) => {
+    const el = document.getElementById(id);
+    el.addEventListener('pointerdown', (e) => { e.preventDefault(); keys[key] = true; });
+    el.addEventListener('pointerup', (e) => { e.preventDefault(); keys[key] = false; });
+    el.addEventListener('pointerleave', (e) => { e.preventDefault(); keys[key] = false; });
+};
+setupTouch('btnLeft', 'left');
+setupTouch('btnRight', 'right');
+setupTouch('btnFire', 'fire');
+
+document.getElementById('startBtn').addEventListener('click', () => {
+    window.__game.reset();
+});
+
+// --- GAME LOGIC ---
+let shakeIntensity = 0;
+
+function spawnEnemy() {
+    const mesh = new THREE.Mesh(enemyGeo, enemyMat);
+    mesh.position.set((Math.random() - 0.5) * 10, 8, 0);
+    scene.add(mesh);
+    state.enemies.push({ mesh, speed: 0.05 + (state.difficulty * 0.01) });
+}
+
+function createExplosion(pos) {
+    for(let i=0; i<10; i++) {
+        particles.push({
+            pos: pos.clone(),
+            vel: new THREE.Vector3((Math.random()-0.5)*0.5, (Math.random()-0.5)*0.5, (Math.random()-0.5)*0.5),
+            life: 1.0
+        });
+    }
+}
+
+function updateHUD() {
+    document.getElementById('scoreEl').innerText = `SCORE: ${state.score}`;
+    document.getElementById('livesEl').innerText = `LIVES: ${state.lives}`;
+}
+
+function gameOver() {
+    state.over = true;
+    state.ready = false;
+    document.querySelector('#overlay h1').innerText = "GAME OVER";
+    document.getElementById('finalScore').innerText = `Final Score: ${state.score}`;
+    document.getElementById('startBtn').innerText = "RETRY";
+    document.getElementById('overlay').classList.remove('hidden');
+}
+
+// --- MAIN LOOP ---
+const clock = new THREE.Clock();
+
+function animate() {
+    requestAnimationFrame(animate);
+    const dt = clock.getDelta();
+    const time = clock.getElapsedTime();
+
+    // Update State for Grader
+    state.player.x = playerMesh.position.x;
+    state.player.y = playerMesh.position.y;
+    state.enemies = state.enemies.map(e => ({ x: e.mesh.position.x, y: e.mesh.position.y }));
+    state.bullets = state.bullets.map(b => ({ x: b.mesh.position.x, y: b.mesh.position.y }));
+
+    if (!state.ready) {
+        // Idle animation
+        playerMesh.rotation.z = Math.sin(time * 2) * 0.1;
+        stars.rotation.z = time * 0.05;
+        renderer.render(scene, camera);
+        return;
+    }
+
+    // Player Movement (Eased)
+    const speed = 10 * dt;
+    if (keys.left) playerMesh.position.x -= speed;
+    if (keys.right) playerMesh.position.x += speed;
+    playerMesh.position.x = Math.max(-5, Math.min(5, playerMesh.position.x));
+    
+    // Tilt effect
+    playerMesh.rotation.z = THREE.MathUtils.lerp(playerMesh.rotation.z, (keys.left ? 0.5 : 0) + (keys.right ? -0.5 : 0), 0.1);
+    playerMesh.rotation.z = Math.max(-0.5, Math.min(0.5, playerMesh.rotation.z));
+
+    // Shooting
+    if (keys.fire && time - state.lastShot > 0.3) {
+        const b = new THREE.Mesh(bulletGeo, bulletMat);
+        b.position.copy(playerMesh.position);
+        b.position.y += 1;
+        scene.add(b);
+        state.bullets.push({ mesh: b, speed: 15 });
+        state.lastShot = time;
+    }
+
+    // Bullets Logic
+    for (let i = state.bullets.length - 1; i >= 0; i--) {
+        const b = state.bullets[i];
+        b.mesh.position.y += b.speed * dt;
+        if (b.mesh.position.y > 10) {
+            scene.remove(b.mesh);
+            state.bullets.splice(i, 1);
+        }
+    }
+
+    // Enemy Spawning
+    state.spawnTimer -= dt;
+    if (state.spawnTimer <= 0) {
+        spawnEnemy();
+        state.spawnTimer = Math.max(0.5, 2.0 - (state.difficulty * 0.1));
+    }
+
+    // Enemies Logic & Collision
+    for (let i = state.enemies.length - 1; i >= 0; i--) {
+        const e = state.enemies[i];
+        e.mesh.position.y -= e.speed * 60 * dt;
+        e.mesh.rotation.x += dt;
+        e.mesh.rotation.y += dt;
+
+        // Collision with Player
+        if (e.mesh.position.distanceTo(playerMesh.position) < 1.2) {
+            createExplosion(e.mesh.position);
+            scene.remove(e.mesh);
+            state.enemies.splice(i, 1);
+            state.lives--;
+            shakeIntensity = 0.5;
+            updateHUD();
+            if (state.lives <= 0) gameOver();
+            continue;
+        }
+
+        // Collision with Bullets
+        let hit = false;
+        for (let j = state.bullets.length - 1; j >= 0; j--) {
+            const b = state.bullets[j];
+            if (e.mesh.position.distanceTo(b.mesh.position) < 1.0) {
+                createExplosion(e.mesh.position);
+                scene.remove(e.mesh);
+                scene.remove(b.mesh);
+                state.enemies.splice(i, 1);
+                state.bullets.splice(j, 1);
+                hit = true;
+                state.score += 100;
+                state.difficulty += 0.05;
+                updateHUD();
+                break;
+            }
+        }
+        if (hit) continue;
+
+        // Passed bottom
+        if (e.mesh.position.y < -6) {
+            scene.remove(e.mesh);
+            state.enemies.splice(i, 1);
+            state.lives--;
+            shakeIntensity = 0.3;
+            updateHUD();
+            if (state.lives <= 0) gameOver();
+        }
+    }
+
+    // Particles Logic
+    const positions = particleSystem.geometry.attributes.position.array;
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.pos.add(p.vel);
+        p.life -= dt * 2;
+        if (p.life <= 0) {
+            particles.splice(i, 1);
+            continue;
+        }
+        // Map particle to buffer (simple round robin for visual effect)
+        const idx = (particles.length - i) % particleCount;
+        positions[idx * 3] = p.pos.x;
+        positions[idx * 3 + 1] = p.pos.y;
+        positions[idx * 3 + 2] = p.pos.z;
+    }
+    particleSystem.geometry.attributes.position.needsUpdate = true;
+
+    // Screen Shake
+    if (shakeIntensity > 0) {
+        camera.position.x = (Math.random() - 0.5) * shakeIntensity;
+        camera.position.y = (Math.random() - 0.5) * shakeIntensity;
+        shakeIntensity -= dt * 2;
+        if (shakeIntensity < 0) shakeIntensity = 0;
+    } else {
+        camera.position.set(0, 0, 10);
+    }
+
+    // Background Animation
+    stars.rotation.z += dt * 0.02;
+
+    renderer.render(scene, camera);
+}
+
+// Handle Resize
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Start Game Immediately
+window.__game.reset();
+animate();
+</script>
+</body>
+</html>

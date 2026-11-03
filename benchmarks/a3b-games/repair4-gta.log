@@ -1,0 +1,17 @@
+[gta] turn 1: reject ['animation_ok', 'input_ok', 'contract_ok'] :: failed checks: animation_ok, input_ok, contract_ok; contract (http): window.__game missing; console (http): Cannot set properties of undefined (setting 'reset') @ at http://<gate-server>/index.html:425:21; contract (fi
+turn 1: 14667 bytes, 4560 tok, 65s
+ 
+[gta] turn 2: reject ['animation_ok', 'input_ok', 'contract_ok'] :: failed checks: animation_ok, input_ok, contract_ok; window.__game.ready is false (http): the game does not start on its own; contract (http): reset() not callable; window.__game.ready is false (file): the game does not s
+turn 2: 14708 bytes, 4570 tok, 72s
+ 
+[gta] turn 3: reject ['animation_ok', 'input_ok', 'contract_ok'] :: failed checks: animation_ok, input_ok, contract_ok; contract (http): window.__game missing; console (http): Cannot set properties of undefined (setting 'reset') @ at http://<gate-server>/index.html:400:21; contract (fi
+turn 3: 14783 bytes, 4589 tok, 69s
+ 
+[gta] turn 4: reject ['animation_ok', 'input_ok', 'contract_ok'] :: failed checks: animation_ok, input_ok, contract_ok; window.__game.ready is false (http): the game does not start on its own; contract (http): reset() not callable; window.__game.ready is false (file): the game does not s
+turn 4: 14783 bytes, 4589 tok, 65s
+ 
+[gta] turn 5: reject ['animation_ok', 'input_ok', 'contract_ok'] :: failed checks: animation_ok, input_ok, contract_ok; window.__game.ready is false (http): the game does not start on its own; contract (http): reset() not callable; window.__game.ready is false (file): the game does not s
+turn 5: 14783 bytes, 4589 tok, 61s
+ 
+[gta] turn 6: reject ['animation_ok', 'input_ok', 'contract_ok'] :: failed checks: animation_ok, input_ok, contract_ok; window.__game.ready is false (http): the game does not start on its own; contract (http): reset() not callable; window.__game.ready is false (file): the game does not s
+[gta] stalled: identical failure twice, stopping at turn 6
