@@ -92,7 +92,7 @@ function init(){
 
 function buildBackground(){
   const g=new THREE.BufferGeometry();
-  const pos=new Float32Array(6), col=new Float32Array(6);
+  const pos=new Float32Array(18), col=new Float32Array(18);
   const c1=new THREE.Color(0x0a0e24), c2=new THREE.Color(0x1a0f2e), c3=new THREE.Color(0x04121f);
   g.setAttribute('position',new THREE.BufferAttribute(pos,3));
   g.setAttribute('color',new THREE.BufferAttribute(col,3));
@@ -326,7 +326,6 @@ function update(dt){
   shake=Math.max(0,shake-dt*3); flash=Math.max(0,flash-dt*2.5);
   const sx=(Math.random()*2-1)*shake*.4, sy=(Math.random()*2-1)*shake*.4;
   camera.position.x=sx; camera.position.y=sy;
-  bg.material.uniforms; // (no-op)
   if(flash>0){
     if(!window.__flash){const f=new THREE.Mesh(new THREE.PlaneGeometry(2,2),
       new THREE.MeshBasicMaterial({color:PAL.magenta,transparent:true,opacity:0,depthTest:false}));

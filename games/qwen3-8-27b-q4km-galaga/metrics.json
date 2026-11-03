@@ -1,16 +1,16 @@
 {
  "slug": "qwen3-8-27b-q4km-galaga",
- "probed_at": "2026-11-02T21:18:33+0800",
+ "probed_at": "2026-11-03T08:38:17+0800",
  "http": {
   "load_ok": true,
   "canvas_present": true,
+  "canvas_count": 1,
   "webgl_ok": true,
+  "uses_three": true,
   "animation_advancing": true,
-  "input_ok": false,
-  "console_errors": [
-   "offset is out of bounds"
-  ],
-  "console_error_count": 1
+  "input_ok": true,
+  "console_errors": [],
+  "console_error_count": 0
  },
  "summary": {
   "http_load_ok": true,
@@ -18,10 +18,11 @@
   "webgl_ok": true,
   "uses_three": true,
   "animation_ok": true,
-  "input_ok": false,
-  "console_error_count": 1,
-  "contract_ok": false,
-  "pass": false
+  "input_ok": true,
+  "console_error_count": 0,
+  "contract_ok": true,
+  "pass": true
  },
- "title": "NEBULA STRIKE"
+ "title": "NEBULA STRIKE",
+ "repaired": true
 }

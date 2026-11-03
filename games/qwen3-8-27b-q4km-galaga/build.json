@@ -1,0 +1,28 @@
+{
+ "slug": "qwen3-8-27b-q4km-galaga",
+ "turns_allowed": 10,
+ "turns_used": 2,
+ "status": "plays",
+ "per_turn": [
+  {
+   "attempt": 1,
+   "ok": false,
+   "canvas": 1,
+   "ready": false,
+   "errors": [
+    "pageerror: offset is out of bounds"
+   ],
+   "wall_s": 121.3,
+   "tokens": 6147,
+   "bytes": 16470
+  },
+  {
+   "attempt": 2,
+   "ok": true,
+   "canvas": 1,
+   "ready": true,
+   "errors": []
+  }
+ ],
+ "total_s": 128.1
+}

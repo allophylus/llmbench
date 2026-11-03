@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Solar System Mission</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#04060d;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#dfe8ff}
+#ui{position:fixed;inset:0;pointer-events:none;touch-action:none}
+#hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card{background:rgba(8,14,28,.55);border:1px solid rgba(120,160,255,.25);border-radius:12px;padding:10px 14px;backdrop-filter:blur(6px)}
+#phase{font-size:22px;font-weight:800;letter-spacing:2px;color:#8fd0ff}
+#dist{font-size:13px;margin-top:4px;color:#a9b8d8}
+#score{font-size:20px;font-weight:800;color:#ffd27a;text-align:right}
+#bar{position:absolute;left:12px;right:12px;bottom:96px;height:10px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden}
+#fill{height:100%;width:0;background:linear-gradient(90deg,#3aa0ff,#7fe0ff);transition:width .1s linear}
+#btn{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);pointer-events:auto;touch-action:none;background:linear-gradient(180deg,#ff7a3c,#e0491f);color:#fff;border:0;border-radius:14px;padding:16px 40px;font-size:18px;font-weight:800;letter-spacing:2px;box-shadow:0 6px 24px rgba(255,90,40,.45)}
+#btn:active{transform:translateX(-50%) scale(.96)}
+#hint{position:absolute;left:50%;bottom:74px;transform:translateX(-50%);font-size:12px;color:#8ea0c8;white-space:nowrap}
+#msg{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:34px;font-weight:900;letter-spacing:3px;color:#fff;text-shadow:0 0 24px #4aa0ff;opacity:0;transition:opacity .4s}
+</style>
+</head>
+<body>
+<div id="ui">
+  <div id="hud">
+    <div class="card"><div id="phase">EARTH</div><div id="dist">—</div></div>
+    <div class="card" id="score">SCORE 0</div>
+  </div>
+  <div id="bar"><div id="fill"></div></div>
+  <div id="hint">Arrows / drag: orbit · + − / pinch: zoom · Space / LAUNCH</div>
+  <button id="btn">LAUNCH</button>
+  <div id="msg"></div>
+</div>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const EARTH_R=14, MARS_R=26, EARTH_A=0.5, MARS_A=2.2, EARTH_SPD=0.12, MARS_SPD=0.075;
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,4000);
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+document.body.appendChild(renderer.domElement);
+const sun=new THREE.Mesh(new THREE.SphereGeometry(4,48,48),new THREE.MeshBasicMaterial({color:0xffd27a}));
+scene.add(sun);
+const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex(),color:0xffb347,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));
+glow.scale.set(26,26,1); scene.add(glow);
+const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex(),color:0xff7a2a,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:.5}));
+halo.scale.set(44,44,1); scene.add(halo);
+function glowTex(){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');const g=x.createRadialGradient(64,64,0,64,64,64);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.3,'rgba(255,220,150,.7)');g.addColorStop(1,'rgba(255,150,60,0)');x.fillStyle=g;x.fillRect(0,0,128,128);return new THREE.CanvasTexture(c);}
+function ring(r,col){const p=[];for(let i=0;i<=128;i++){const a=i/128*Math.PI*2;p.push(new THREE.Vector3(Math.cos(a)*r,0,Math.sin(a)*r));}return new THREE.Line(new THREE.BufferGeometry().setFromPoints(p),new THREE.LineBasicMaterial({color:col,transparent:true,opacity:.35}));}
+scene.add(ring(EARTH_R,0x3aa0ff)); scene.add(ring(MARS_R,0xff7a4a));
+const earth=new THREE.Mesh(new THREE.SphereGeometry(1.6,32,32),new THREE.MeshStandardMaterial({color:0x2f7fd6,emissive:0x0a2a55,emissiveIntensity:.4,roughness:.7}));
+const mars=new THREE.Mesh(new THREE.SphereGeometry(1.1,32,32),new THREE.MeshStandardMaterial({color:0xc1502e,emissive:0x3a1206,emissiveIntensity:.3,roughness:.9}));
+scene.add(earth,mars);
+const rocket=new THREE.Group();
+const body=new THREE.Mesh(new THREE.ConeGeometry(.35,1.4,16),new THREE.MeshStandardMaterial({color:0xe8eefc,emissive:0x223355,emissiveIntensity:.3,metalness:.4,roughness:.4}));
+body.position.y=.7; rocket.add(body);
+const nose=new THREE.Mesh(new THREE.ConeGeometry(.35,.5,16),new THREE.MeshStandardMaterial({color:0xff5a3c,emissive:0x551a0a,emissiveIntensity:.4}));
+nose.position.y=1.55; rocket.add(nose);
+const fin=new THREE.Mesh(new THREE.BoxGeometry(.05,.5,.4),new THREE.MeshStandardMaterial({color:0xff5a3c}));
+fin.position.set(0,.2,0); rocket.add(fin);
+const flame=new THREE.Mesh(new THREE.ConeGeometry(.28,.9,12),new THREE.MeshBasicMaterial({color:0xffd27a,transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false}));
+flame.position.y=-.5; flame.visible=false; rocket.add(flame);
+scene.add(rocket);
+const N=260, trail=new THREE.BufferGeometry();
+const tp=new Float32Array(N*3), tc=new Float32Array(N*3);
+trail.setAttribute('position',new THREE.BufferAttribute(tp,3));
+trail.setAttribute('color',new THREE.BufferAttribute(tc,3));
+const trailMat=new THREE.PointsMaterial({size:.5,vertexColors:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false});
+scene.add(new THREE.Points(trail,trailMat));
+let trailHead=0;
+const stars=(()=>{const n=1400,p=new Float32Array(n*3);for(let i=0;i<n;i++){const r=300+Math.random()*900,t=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1);p[i*3]=r*Math.sin(ph)*Math.cos(t);p[i*3+1]=r*Math.cos(ph);p[i*3+2]=r*Math.sin(ph)*Math.sin(t);}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));return new THREE.Points(g,new THREE.PointsMaterial({color:0xbfd0ff,size:1.4,sizeAttenuation:false,transparent:true,opacity:.9}));})();
+scene.add(stars);
+scene.add(new THREE.AmbientLight(0x334466,0.6));
+const sunLight=new THREE.PointLight(0xffd9a0,3,0,1.5); scene.add(sunLight);
+const G=window.__game={ready:false,phase:'earth',rocket:{x:0,y:0,z:0},earth:{x:0,y:0,z:0},mars:{x:0,y:0,z:0},distanceToTarget:0,score:0,over:false};
+let phase='earth', score=0, over=false, shake=0, t=0, msgT=0;
+let cam={az:0.6,pol:1.05,dist:70};
+let from=null,to=null,prog=0,traveling=false;
+const ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const el=id=>document.getElementById(id);
+function showMsg(s){const m=el('msg');m.textContent=s;m.style.opacity=1;msgT=1.6;}
+function setPhase(p){phase=p;G.phase=p;el('phase').textContent=p.toUpperCase();}
+function launch(){
+  if(over)return;
+  if(phase==='earth'){from=earth.position.clone();to=mars.position.clone();setPhase('transit');}
+  else if(phase==='mars'){from=earth.position.clone();to=mars.position.clone();setPhase('return');}
+  else return;
+  prog=0;traveling=true;shake=1;flame.visible=true;
+  showMsg(phase==='transit'?'TO MARS':'TO EARTH');
+}
+G.reset=function(){
+  score=0;over=false;G.score=0;G.over=false;
+  setPhase('earth');traveling=false;flame.visible=false;shake=0;
+  for(let i=0;i<N;i++){tp[i*3]=tp[i*3+1]=tp[i*3+2]=0;tc[i*3]=tc[i*3+1]=tc[i*3+2]=0;}
+  trail.attributes.position.needsUpdate=true;trail.attributes.color.needsUpdate=true;
+  el('score').textContent='SCORE 0';el('fill').style.width='0%';
+  el('msg').style.opacity=0;
+};
+function arrive(){
+  traveling=false;flame.visible=false;
+  if(phase==='transit'){setPhase('mars');score+=100;G.score=score;showMsg('MARS ORBIT');}
+  else if(phase==='return'){setPhase('earth');score+=100;G.score=score;showMsg('HOME!');}
+  el('score').textContent='SCORE '+score;
+  if(phase==='earth'&&score>=200){over=true;G.over=true;setPhase('done');showMsg('MISSION COMPLETE');}
+}
+function update(dt){
+  t+=dt;
+  earth.position.set(Math.cos(EARTH_A)*EARTH_R,0,Math.sin(EARTH_A)*EARTH_R);
+  mars.position.set(Math.cos(MARS_A)*MARS_R,0,Math.sin(MARS_A)*MARS_R);
+  EARTH_A+=EARTH_SPD*dt; MARS_A+=MARS_SPD*dt;
+  earth.rotation.y+=dt*.4; mars.rotation.y+=dt*.3;
+  sun.rotation.y+=dt*.05;
+  const pulse=1+Math.sin(t*2)*.06; glow.scale.set(26*pulse,26*pulse,1); halo.scale.set(44*pulse,44*pulse,1);
+  if(traveling){
+    prog+=dt/6;
+    if(prog>=1){prog=1;arrive();}
+    const e=ease(prog);
+    const mid=from.clone().add(to).multiplyScalar(.5);
+    const h=from.distanceTo(to)*.35;
+    const p0=from,p1=mid.clone().add(new THREE.Vector3(0,h,0)),p2=to;
+    const u=1-e;
+    const pos=new THREE.Vector3(
+      u*u*p0.x+2*u*e*p1.x+e*e*p2.x,
+      u*u*p0.y+2*u*e*p1.y+e*e*p2.y,
+      u*u*p0.z+2*u*e*p1.z+e*e*p2.z);
+    const tan=new THREE.Vector3(2*u*(p1.x-p0.x)+2*e*(p2.x-p1.x),2*u*(p1.y-p0.y)+2*e*(p2.y-p1.y),2*u*(p1.z-p0.z)+2*e*(p2.z-p1.z));
+    rocket.position.copy(pos);
+    rocket.lookAt(pos.clone().add(tan));
+    flame.scale.y=.8+Math.random()*.6;
+    for(let k=0;k<3;k++){
+      trailHead=(trailHead+1)%N;
+      const back=tan.clone().normalize().multiplyScalar(-.6-Math.random()*.4);
+      tp[trailHead*3]=pos.x+back.x+(Math.random()-.5)*.2;
+      tp[trailHead*3+1]=pos.y+back.y+(Math.random()-.5)*.2;
+      tp[trailHead*3+2]=pos.z+back.z+(Math.random()-.5)*.2;
+      const c=.6+Math.random()*.4;
+      tc[trailHead*3]=c;tc[trailHead*3+1]=c*.6;tc[trailHead*3+2]=c*.2;
+    }
+    trail.attributes.position.needsUpdate=true;trail.attributes.color.needsUpdate=true;
+  } else {
+    const base=phase==='mars'?mars.position:earth.position;
+    const a=t*1.2;
+    rocket.position.set(base.x+Math.cos(a)*3,base.y+1.5,base.z+Math.sin(a)*3);
+    rocket.lookAt(base);
+    for(let i=0;i<N;i++){tc[i*3]*=.9;tc[i*3+1]*=.9;tc[i*3+2]*=.9;}
+    trail.attributes.color.needsUpdate=true;
+  }
+  if(shake>0)shake=Math.max(0,shake-dt*1.5);
+  const target=phase==='transit'?mars.position:phase==='return'?earth.position:phase==='mars'?earth.position:earth.position;
+  const dist=rocket.position.distanceTo(target);
+  G.rocket.x=rocket.position.x;G.rocket.y=rocket.position.y;G.rocket.z=rocket.position.z;
+  G.earth.x=earth.position.x;G.earth.y=earth.position.y;G.earth.z=earth.position.z;
+  G.mars.x=mars.position.x;G.mars.y=mars.position.y;G.mars.z=mars.position.z;
+  G.distanceToTarget=dist;
+  el('dist').textContent='DIST '+dist.toFixed(1);
+  let frac=0;
+  if(traveling)frac=prog;
+  else if(phase==='mars')frac=1;
+  else if(phase==='return')frac=1;
+  el('fill').style.width=(frac*100).toFixed(0)+'%';
+  if(msgT>0){msgT-=dt;if(msgT<=0)el('msg').style.opacity=0;}
+  const sh=shake*shake*1.2;
+  const cx=Math.cos(cam.pol)*Math.sin(cam.az)*cam.dist+(Math.random()-.5)*sh;
+  const cy=Math.sin(cam.pol)*cam.dist+(Math.random()-.5)*sh;
+  const cz=Math.cos(cam.pol)*Math.cos(cam.az)*cam.dist+(Math.random()-.5)*sh;
+  camera.position.set(cx,cy,cz);
+  camera.lookAt(0,0,0);
+}
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  update(dt);
+  renderer.render(scene,camera);
+  requestAnimationFrame(loop);
+}
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+addEventListener('keydown',e=>{
+  if(e.code==='Space'){e.preventDefault();launch();}
+  else if(e.code==='ArrowLeft')cam.az+=.15;
+  else if(e.code==='ArrowRight')cam.az-=.15;
+  else if(e.code==='ArrowUp')cam.pol=Math.max(.2,cam.pol-.1);
+  else if(e.code==='ArrowDown')cam.pol=Math.min(1.5,cam.pol+.1);
+  else if(e.code==='Equal'||e.code==='NumpadAdd')cam.dist=Math.max(20,cam.dist-6);
+  else if(e.code==='Minus'||e.code==='NumpadSubtract')cam.dist=Math.min(200,cam.dist+6);
+});
+const el2=renderer.domElement;
+let dragging=false,px=0,py=0,pinch=0;
+el2.style.touchAction='none';
+el2.addEventListener('pointerdown',e=>{dragging=true;px=e.clientX;py=e.clientY;el2.setPointerCapture(e.pointerId);});
+el2.addEventListener('pointermove',e=>{if(!dragging)return;cam.az-=(e.clientX-px)*.005;cam.pol=Math.max(.2,Math.min(1.5,cam.pol-(e.clientY-py)*.005));px=e.clientX;py=e.clientY;});
+el2.addEventListener('pointerup',()=>dragging=false);
+el2.addEventListener('wheel',e=>{e.preventDefault();cam.dist=Math.max(20,Math.min(200,cam.dist+e.deltaY*.05));},{passive:false});
+const pts=new Map();
+el2.addEventListener('pointerdown',e=>pts.set(e.pointerId,{x:e.clientX,y:e.clientY}));
+el2.addEventListener('pointermove',e=>{if(pts.has(e.pointerId))pts.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pts.size===2){const a=[...pts.values()];const d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(pinch)cam.dist=Math.max(20,Math.min(200,cam.dist-(d-pinch)*.2));pinch=d;}});
+el2.addEventListener('pointerup',e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=0;});
+el2.addEventListener('pointercancel',e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=0;});
+const btn=el('btn');
+btn.addEventListener('pointerdown',e=>{e.preventDefault();launch();});
+G.ready=true;
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
