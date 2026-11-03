@@ -42,6 +42,7 @@ NAV = ("<nav class=tabs><a href='../'>overview</a>"
        "<a href='../games/'>games</a>"
        "<a href='../thinking/' class=on>thinking on/off</a>"
        "<a href='../chat/'>chat</a>"
+       "<a href='../logic/'>logic traps</a>"
        "<a href='../ablation/'>ablation</a>"
        "<a href='../method/'>method</a></nav>")
 

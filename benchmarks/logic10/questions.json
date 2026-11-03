@@ -1,0 +1,237 @@
+{
+ "benchmark": "logic10 — everyday trap questions",
+ "version": 1,
+ "grading": "Strict. The answer the model commits to is taken from the last explicit line of the form 'Answer: <text>'; the normalised text must match one of the question's accept patterns (whole-answer match after lowercasing, stripping punctuation, currency signs and thousands separators, and collapsing whitespace). No partial credit. If the response stops on the token cap (finish_reason=length) before an answer line is emitted, the question is flagged 'truncated' instead of being scored wrong.",
+ "answer_line": "Answer: <your answer>",
+ "seed": 5,
+ "temperature": 0.0,
+ "contamination": "Questions 3, 4 and 5 are the classic Cognitive Reflection Test (Frederick 2005) and are almost certainly in training data; 1, 2, 6, 7, 8, 9 and 10 are everyday traps of the same shape. A model failing a classic is more damning than failing a fresh one; passing a classic proves less. Per-question results are published so a reader can see which were memorisable.",
+ "questions": [
+  {
+   "id": "wash",
+   "q": "The car wash is 50 metres away. Should I walk there or drive?",
+   "trap": "irrelevant distance optimisation — ignores where the car is",
+   "accept": [
+    "drive",
+    "i should drive",
+    "drive there",
+    "drive it"
+   ],
+   "refuse": [
+    "walk"
+   ],
+   "rationale": "The car must be driven to the car wash; walking leaves it at home."
+  },
+  {
+   "id": "race",
+   "q": "I am running a race and I overtake the person in second place. What position am I in now?",
+   "trap": "ordinal slip — overtaking the leader is the only way to finish second->first",
+   "accept": [
+    "second",
+    "second place",
+    "2nd",
+    "2nd place",
+    "in second place",
+    "i am in second",
+    "i'm in second",
+    "i would be in second",
+    "second position",
+    "2nd position",
+    "i would be in second place",
+    "i am in second place",
+    "i'm in second place",
+    "now in second place",
+    "in second"
+   ],
+   "refuse": [
+    "first",
+    "first place"
+   ],
+   "rationale": "overtaking the person in second puts you in their place; first place is still ahead"
+  },
+  {
+   "id": "batball",
+   "q": "A bat and a ball cost $1.10 together. The bat costs $1.00 more than the ball. How much does the ball cost?",
+   "trap": "classic CRT item 1 — subtraction instead of algebra",
+   "accept": [
+    "5 cents",
+    "0.05",
+    "$0.05",
+    "five cents",
+    "5c",
+    "0.05 dollars",
+    "five cents.",
+    "5 cent"
+   ],
+   "refuse": [
+    "10 cents",
+    "0.10",
+    "$0.10",
+    "ten cents"
+   ],
+   "rationale": "ball + (ball + 1.00) = 1.10 gives ball = 0.05."
+  },
+  {
+   "id": "widgets",
+   "q": "If five machines make five widgets in five minutes, how long would it take one hundred machines to make one hundred widgets?",
+   "trap": "classic CRT item 2 — proportional scaling instead of rate",
+   "accept": [
+    "5 minutes",
+    "five minutes",
+    "5 min",
+    "5 mins",
+    "five min",
+    "5minutes"
+   ],
+   "refuse": [
+    "100 minutes",
+    "100 min",
+    "one hundred minutes"
+   ],
+   "rationale": "Each machine makes one widget per five minutes; 100 machines make 100 in five."
+  },
+  {
+   "id": "lilypad",
+   "q": "A patch of lily pads doubles in size every day and covers the whole lake on day 30. On what day was the lake half covered?",
+   "trap": "classic CRT item 3 — forward doubling instead of inverse",
+   "accept": [
+    "day 29",
+    "29",
+    "29th day",
+    "on day 29",
+    "29 days",
+    "day twenty nine",
+    "twenty nine",
+    "day 29.",
+    "29th"
+   ],
+   "refuse": [
+    "day 15",
+    "15",
+    "day 25",
+    "25"
+   ],
+   "rationale": "half the area one day before full coverage: day 29"
+  },
+  {
+   "id": "pills",
+   "q": "A doctor gives you three pills and says to take one every 20 minutes. How long until you have taken all three?",
+   "trap": "fencepost / interval count",
+   "accept": [
+    "40 minutes",
+    "40 min",
+    "40 mins",
+    "forty minutes",
+    "40",
+    "40minutes"
+   ],
+   "refuse": [
+    "60 minutes",
+    "60 min",
+    "an hour",
+    "one hour",
+    "1 hour"
+   ],
+   "rationale": "Pill one now, then +20 and +40 for pills two and three: 40 minutes."
+  },
+  {
+   "id": "months",
+   "q": "How many months of the year have 28 days?",
+   "trap": "pragmatic reading — 'exactly 28' vs 'at least 28'",
+   "accept": [
+    "all 12",
+    "all twelve",
+    "12",
+    "twelve",
+    "all of them",
+    "every month",
+    "all 12 months",
+    "all twelve months",
+    "12 months"
+   ],
+   "refuse": [
+    "1",
+    "one",
+    "only february",
+    "february",
+    "1 month"
+   ],
+   "rationale": "Every month has at least 28 days."
+  },
+  {
+   "id": "ladder",
+   "q": "A rope ladder hangs off the side of a boat with its rungs 30 cm apart, the bottom rung just touching the water. The tide rises one metre. How many rungs are underwater?",
+   "trap": "tide/boat frame of reference",
+   "accept": [
+    "none",
+    "zero",
+    "0",
+    "no rungs",
+    "none of them",
+    "0 rungs",
+    "no rungs are underwater",
+    "none are underwater"
+   ],
+   "refuse": [
+    "3",
+    "three",
+    "4",
+    "four",
+    "three rungs"
+   ],
+   "rationale": "The boat floats up with the tide; the ladder rises with it, so no new rung is submerged."
+  },
+  {
+   "id": "coins",
+   "q": "Two coins add up to 30 cents. One of them is not a nickel. What are the two coins?",
+   "trap": "'one of them is not' logic — the wording does not exclude the other coin",
+   "accept": [
+    "a quarter and a nickel",
+    "quarter and nickel",
+    "quarter and a nickel",
+    "a quarter, and a nickel",
+    "a nickel and a quarter",
+    "nickel and quarter",
+    "a nickel and a quarter",
+    "quarter+nickel",
+    "25c and 5c",
+    "25 and 5 cents",
+    "a quarter (25) and a nickel (5)",
+    "a quarter (25¢) and a nickel (5¢)",
+    "quarter (25c) and nickel (5c)",
+    "a quarter (25¢) and a nickel (5¢)."
+   ],
+   "refuse": [
+    "2 dimes and a nickel",
+    "three coins",
+    "only two nickels",
+    "two nickels"
+   ],
+   "rationale": "Quarter + nickel = 30c; the quarter is the coin that is not a nickel."
+  },
+  {
+   "id": "discount",
+   "q": "A $20 item is discounted by 20%, then 20% tax is added at the till. What is the final price?",
+   "trap": "order of operations — multiplicative, not additive",
+   "accept": [
+    "19.20",
+    "$19.20",
+    "19.2",
+    "$19.2",
+    "nineteen dollars and twenty cents",
+    "19 dollars and 20 cents",
+    "19.20 dollars",
+    "nineteen point two",
+    "19 dollars 20 cents",
+    "19.20 usd"
+   ],
+   "refuse": [
+    "20",
+    "$20",
+    "20.00",
+    "$20.00"
+   ],
+   "rationale": "20 x 0.8 = 16, then x 1.2 = 19.20; the two 20% changes do not cancel"
+  }
+ ]
+}
