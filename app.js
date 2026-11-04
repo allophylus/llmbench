@@ -234,11 +234,40 @@
     };
   }
 
+
+  /* ---- per-row extras: the context sweep and the logic traps live IN the row,
+     not on their own pages. Collapsed by default so the table stays scannable. ---- */
+  function rowExtras(r) {
+    var parts = [];
+    var RUNGS = [["4096","4K"],["32768","32K"],["65536","64K"],["131072","128K"],["262144","256K"]];
+    if (r.sweep) {
+      var rows = RUNGS.map(function (pair) {
+        var c = r.sweep[pair[0]];
+        if (!c || c.prefill == null) return "";
+        return "<tr><td>" + pair[1] + "</td><td class=num>" + Number(c.prefill).toFixed(1) +
+               "</td><td class=num>" + Number(c.decode).toFixed(2) +
+               "</td><td class=num>" + (c.vram == null ? "—" : Number(c.vram).toFixed(2)) + "</td></tr>";
+      }).join("");
+      if (rows) {
+        parts.push("<div class=rx-h>Context sweep — prefill / decode (t/s), server and prompt matched</div>" +
+          "<table class=rx><thead><tr><th>ctx</th><th>prefill</th><th>decode</th><th>VRAM GiB</th></tr></thead><tbody>" +
+          rows + "</tbody></table>");
+      }
+    }
+    if (r.logic) {
+      var fmt = function (x) { return (x && x.correct != null && x.n) ? (x.correct + "/" + x.n) : "invalid"; };
+      parts.push("<div class=rx-h>Logic traps (10 everyday questions)</div>" +
+        "<div class=rx-l>thinking off: <b>" + fmt(r.logic.off) + "</b> · thinking on: <b>" + fmt(r.logic.on) + "</b></div>");
+    }
+    if (!parts.length) return "";
+    return '<details class="rowextra"><summary>context sweep + logic</summary>' + parts.join("") + "</details>";
+  }
+
   function nameCell(r, grp) {
     var html = '<span class="name">' + esc(r.name) + "</span>" +
       (r.status === "failed" ? ' <span class="st st-failed" title="the run produced no measurement">failed</span>' : "") +
       '<span class="slug">' + esc(r.filename || r.slug) + "</span>" +
-      '<span class="meta">' + esc(metaLine(r)) + "</span>";
+      '<span class="meta">' + esc(metaLine(r)) + "</span>" + rowExtras(r);
     if (grp && grp.subs.length) {
       var open = !!state.expanded[grp.key];
       html += '<button type="button" class="disclosure" data-expand="' + esc(grp.key) + '" aria-expanded="' + (open ? "true" : "false") +

@@ -847,3 +847,20 @@ body.show-scores #tbl td.sc { display: table-cell; }
 @media (max-width: 760px) {
   #tbl th.c-name, #tbl td.c-name { width: auto; min-width: 0; max-width: none; }
 }
+
+/* ---- per-row extras: context sweep + logic traps live inside the model row ---- */
+.rowextra { margin-top: .4rem; }
+.rowextra > summary { cursor: pointer; color: var(--fg-faint); font: 11.5px var(--mono);
+  letter-spacing: .02em; list-style: none; }
+.rowextra > summary::-webkit-details-marker { display: none; }
+.rowextra > summary::before { content: "\25B8 "; }
+.rowextra[open] > summary::before { content: "\25BE "; }
+.rowextra > summary:hover { color: var(--fg); }
+.rx-h { margin: .6rem 0 .3rem; color: var(--fg-faint); font: 600 10.5px var(--mono);
+  text-transform: uppercase; letter-spacing: .07em; }
+table.rx { border-collapse: collapse; font: 11.5px/1.5 var(--mono); }
+table.rx th, table.rx td { padding: 1px 10px 1px 0; text-align: left; color: var(--fg-dim); }
+table.rx th { color: var(--fg-faint); font-weight: 600; }
+table.rx td.num { font-variant-numeric: tabular-nums; color: var(--fg); }
+.rx-l { color: var(--fg-dim); font: 12px var(--mono); margin-bottom: .3rem; }
+.rx-l b { color: var(--fg); }

@@ -66,7 +66,58 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "sweep": {
+    "4096": {
+     "prefill": 756.2,
+     "decode": 28.56,
+     "vram": 18.74,
+     "prompt": 3578,
+     "status": "ok"
+    },
+    "32768": {
+     "prefill": 632.5,
+     "decode": 26.63,
+     "vram": 19.56,
+     "prompt": 32241,
+     "status": "ok"
+    },
+    "65536": {
+     "prefill": 501.7,
+     "decode": 24.9,
+     "vram": 20.5,
+     "prompt": 65004,
+     "status": "ok"
+    },
+    "131072": {
+     "prefill": 353.1,
+     "decode": 22.02,
+     "vram": 22.37,
+     "prompt": 130541,
+     "status": "ok"
+    },
+    "262144": {
+     "prefill": 221.0,
+     "decode": 17.82,
+     "vram": 26.12,
+     "prompt": 261667,
+     "status": "ok"
+    }
+   },
+   "logic": {
+    "off": {
+     "correct": 9,
+     "n": 10,
+     "tokens": 1246,
+     "status": "ok"
+    },
+    "on": {
+     "correct": 9,
+     "n": 10,
+     "tokens": 1570,
+     "status": "ok"
+    }
+   }
   },
   {
    "slug": "huihui-abl-q4-k-m",
@@ -113,7 +164,58 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "sweep": {
+    "4096": {
+     "prefill": 815.0,
+     "decode": 30.45,
+     "vram": 17.02,
+     "prompt": 3578,
+     "status": "ok"
+    },
+    "32768": {
+     "prefill": 667.0,
+     "decode": 28.4,
+     "vram": 17.84,
+     "prompt": 32241,
+     "status": "ok"
+    },
+    "65536": {
+     "prefill": 523.0,
+     "decode": 26.48,
+     "vram": 18.78,
+     "prompt": 65004,
+     "status": "ok"
+    },
+    "131072": {
+     "prefill": 363.5,
+     "decode": 23.19,
+     "vram": 20.65,
+     "prompt": 130541,
+     "status": "ok"
+    },
+    "262144": {
+     "prefill": 225.0,
+     "decode": 18.59,
+     "vram": 24.4,
+     "prompt": 261667,
+     "status": "ok"
+    }
+   },
+   "logic": {
+    "off": {
+     "correct": 9,
+     "n": 10,
+     "tokens": 1083,
+     "status": "ok"
+    },
+    "on": {
+     "correct": 9,
+     "n": 10,
+     "tokens": 1133,
+     "status": "ok"
+    }
+   }
   },
   {
    "slug": "lfm3-1-7b-q4-k-m",
@@ -158,7 +260,58 @@
    "kv_cache": "q8_0/q4_0",
    "engine_build": "b11874",
    "status": "done",
-   "measurement_status": "no speed probe recorded (accuracy cells still valid)"
+   "measurement_status": "no speed probe recorded (accuracy cells still valid)",
+   "sweep": {
+    "4096": {
+     "prefill": 7720.9,
+     "decode": 270.13,
+     "vram": 1.38,
+     "prompt": 3580,
+     "status": "ok"
+    },
+    "32768": {
+     "prefill": 7480.2,
+     "decode": 255.01,
+     "vram": 1.67,
+     "prompt": 32256,
+     "status": "ok"
+    },
+    "65536": {
+     "prefill": 5296.5,
+     "decode": 223.59,
+     "vram": 1.95,
+     "prompt": 65037,
+     "status": "ok"
+    },
+    "131072": {
+     "prefill": 3281.4,
+     "decode": 176.39,
+     "vram": 2.5,
+     "prompt": 130570,
+     "status": "ok"
+    },
+    "262144": {
+     "prefill": 1992.2,
+     "decode": 127.92,
+     "vram": 3.61,
+     "prompt": 261675,
+     "status": "ok"
+    }
+   },
+   "logic": {
+    "off": {
+     "correct": 8,
+     "n": 10,
+     "tokens": 4887,
+     "status": "ok"
+    },
+    "on": {
+     "correct": 7,
+     "n": 10,
+     "tokens": 11015,
+     "status": "ok"
+    }
+   }
   },
   {
    "slug": "ornith-1-5-35b-a3b-q4-k-m",
@@ -205,7 +358,58 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "sweep": {
+    "4096": {
+     "prefill": 2976.1,
+     "decode": 115.3,
+     "vram": 20.17,
+     "prompt": 3578,
+     "status": "ok"
+    },
+    "32768": {
+     "prefill": 2321.4,
+     "decode": 103.38,
+     "vram": 20.5,
+     "prompt": 32241,
+     "status": "ok"
+    },
+    "65536": {
+     "prefill": 1627.4,
+     "decode": 96.88,
+     "vram": 20.88,
+     "prompt": 65004,
+     "status": "ok"
+    },
+    "131072": {
+     "prefill": 1002.1,
+     "decode": 82.62,
+     "vram": 21.64,
+     "prompt": 130541,
+     "status": "ok"
+    },
+    "262144": {
+     "prefill": 559.8,
+     "decode": 66.03,
+     "vram": 23.16,
+     "prompt": 261667,
+     "status": "ok"
+    }
+   },
+   "logic": {
+    "off": {
+     "correct": 8,
+     "n": 10,
+     "tokens": 270,
+     "status": "ok"
+    },
+    "on": {
+     "correct": 7,
+     "n": 10,
+     "tokens": 1561,
+     "status": "ok"
+    }
+   }
   },
   {
    "slug": "qwen3-6-35b-a3b-ud-q4km",
@@ -724,7 +928,58 @@
      "robot_score": 10,
      "url": "games/qwen3-6-35b-a3b-ud-q4km-physics/index.html"
     }
-   ]
+   ],
+   "sweep": {
+    "4096": {
+     "prefill": 3097.6,
+     "decode": 105.65,
+     "vram": 21.91,
+     "prompt": 3578,
+     "status": "ok"
+    },
+    "32768": {
+     "prefill": 2389.3,
+     "decode": 96.49,
+     "vram": 22.24,
+     "prompt": 32241,
+     "status": "ok"
+    },
+    "65536": {
+     "prefill": 1660.1,
+     "decode": 88.09,
+     "vram": 22.62,
+     "prompt": 65004,
+     "status": "ok"
+    },
+    "131072": {
+     "prefill": 1013.5,
+     "decode": 78.33,
+     "vram": 23.38,
+     "prompt": 130541,
+     "status": "ok"
+    },
+    "262144": {
+     "prefill": 563.5,
+     "decode": 62.23,
+     "vram": 24.89,
+     "prompt": 261667,
+     "status": "ok"
+    }
+   },
+   "logic": {
+    "off": {
+     "correct": 8,
+     "n": 10,
+     "tokens": 764,
+     "status": "ok"
+    },
+    "on": {
+     "correct": 9,
+     "n": 10,
+     "tokens": 18853,
+     "status": "ok"
+    }
+   }
   },
   {
    "speed_flags": "-ngl 99 --jinja -fa on -b 16384 -ub 2048 --cache-type-k q8_0 --cache-type-v q4_0 --cache-reuse 256 --metrics -c 262144",
@@ -1689,7 +1944,58 @@
    "speed_flags": null,
    "kv_cache": null,
    "engine_build": "b11517",
-   "status": "done"
+   "status": "done",
+   "sweep": {
+    "4096": {
+     "prefill": 992.3,
+     "decode": 31.09,
+     "vram": 16.64,
+     "prompt": 3578,
+     "status": "ok"
+    },
+    "32768": {
+     "prefill": 782.1,
+     "decode": 29.18,
+     "vram": 17.46,
+     "prompt": 32241,
+     "status": "ok"
+    },
+    "65536": {
+     "prefill": 590.8,
+     "decode": 27.15,
+     "vram": 18.39,
+     "prompt": 65004,
+     "status": "ok"
+    },
+    "131072": {
+     "prefill": 396.4,
+     "decode": 23.65,
+     "vram": 20.27,
+     "prompt": 130541,
+     "status": "ok"
+    },
+    "262144": {
+     "prefill": 236.7,
+     "decode": 18.92,
+     "vram": 24.02,
+     "prompt": 261667,
+     "status": "ok"
+    }
+   },
+   "logic": {
+    "off": {
+     "correct": 9,
+     "n": 10,
+     "tokens": 1224,
+     "status": "ok"
+    },
+    "on": {
+     "correct": 9,
+     "n": 10,
+     "tokens": 1137,
+     "status": "ok"
+    }
+   }
   },
   {
    "slug": "qwen3-8-27b-q4km",
@@ -1784,6 +2090,57 @@
     "build_s": 79.45,
     "url": "games/qwen3-8-27b-q4km/",
     "robot_score": 0
+   },
+   "sweep": {
+    "4096": {
+     "prefill": 846.8,
+     "decode": 30.61,
+     "vram": 16.94,
+     "prompt": 3578,
+     "status": "ok"
+    },
+    "32768": {
+     "prefill": 674.7,
+     "decode": 28.49,
+     "vram": 17.76,
+     "prompt": 32241,
+     "status": "ok"
+    },
+    "65536": {
+     "prefill": 528.1,
+     "decode": 26.55,
+     "vram": 18.7,
+     "prompt": 65004,
+     "status": "ok"
+    },
+    "131072": {
+     "prefill": 365.8,
+     "decode": 23.16,
+     "vram": 20.57,
+     "prompt": 130541,
+     "status": "ok"
+    },
+    "262144": {
+     "prefill": 225.9,
+     "decode": 18.62,
+     "vram": 24.32,
+     "prompt": 261667,
+     "status": "ok"
+    }
+   },
+   "logic": {
+    "off": {
+     "correct": 9,
+     "n": 10,
+     "tokens": 1004,
+     "status": "ok"
+    },
+    "on": {
+     "correct": 9,
+     "n": 10,
+     "tokens": 1812,
+     "status": "ok"
+    }
    }
   }
  ]
