@@ -1,0 +1,7 @@
+{
+ "model": "qwen3-6-35b-a3b-ud-q4km",
+ "arm": "D2-dflash-nm7",
+ "status": "not-applicable",
+ "reason": "not applicable (no drafter for this architecture: the only DFlash drafter on the box is a qwen35 model)",
+ "when": "2026-11-04T04:39:17+0000"
+}

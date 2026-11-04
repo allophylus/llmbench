@@ -1,0 +1,7 @@
+{
+ "model": "qwen3-6-35b-a3b-ud-q4km",
+ "arm": "C-draft-mtp",
+ "status": "not-applicable",
+ "reason": "not applicable (no drafter for this architecture: trunk has no nextn_predict_layers and no MTP drafter exists for this family)",
+ "when": "2026-11-04T04:39:17+0000"
+}

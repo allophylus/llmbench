@@ -1,0 +1,7 @@
+{
+ "model": "lfm3-1-7b-q4-k-m",
+ "arm": "C-draft-mtp",
+ "status": "not-applicable",
+ "reason": "not applicable (no drafter for this architecture: trunk has no nextn_predict_layers and no MTP drafter exists for this family)",
+ "when": "2026-11-04T04:55:36+0000"
+}

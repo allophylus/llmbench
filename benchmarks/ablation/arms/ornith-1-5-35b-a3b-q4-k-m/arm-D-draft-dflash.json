@@ -1,0 +1,7 @@
+{
+ "model": "ornith-1-5-35b-a3b-q4-k-m",
+ "arm": "D-draft-dflash",
+ "status": "not-applicable",
+ "reason": "not applicable (no drafter for this architecture: the only DFlash drafter on the box is a qwen35 model)",
+ "when": "2026-11-04T04:40:30+0000"
+}

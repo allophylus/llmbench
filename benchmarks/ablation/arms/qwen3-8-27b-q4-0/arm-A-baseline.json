@@ -1,0 +1,183 @@
+{
+ "model": "qwen3-8-27b-q4-0",
+ "model_path": "/home/ubuntu/models/Qwen3.8-27B-Q4_0.gguf",
+ "arm": "A-baseline",
+ "when": "2026-11-04T04:01:29+0000",
+ "fa": "on",
+ "extra_flags": [],
+ "kv_cache_type": "q8_0/q4_0",
+ "unit": "qwen-longctx.service",
+ "port": 8080,
+ "attempt": 0,
+ "argv": [
+  "/home/ubuntu/llama-vulkan/llama-b11517/llama-server",
+  "-m",
+  "/home/ubuntu/models/Qwen3.8-27B-Q4_0.gguf",
+  "--mmproj",
+  "/home/ubuntu/models/mmproj-Qwen3.8-27B-F16.gguf",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "8080",
+  "-c",
+  "131072",
+  "-ngl",
+  "99",
+  "--jinja",
+  "-b",
+  "16384",
+  "-ub",
+  "2048",
+  "--cache-type-k",
+  "q8_0",
+  "--cache-type-v",
+  "q4_0",
+  "--cache-reuse",
+  "256",
+  "--metrics",
+  "--reasoning",
+  "off",
+  "-fa",
+  "on"
+ ],
+ "systemd_execstart": "ExecStart={ path=/home/ubuntu/llama-vulkan/llama-b11517/llama-server ; argv[]=/home/ubuntu/llama-vulkan/llama-b11517/llama-server -m /home/ubuntu/models/Qwen3.8-27B-Q4_0.gguf --mmproj /home/ubuntu/models/mmproj-Qwen3.8-27B-F16.gguf --host 127.0.0.1 --port 8080 -c 131072 -ngl 99 --jinja -b 16384 -ub 2048 --cache-type-k q8_0 --cache-type-v q4_0 --cache-reuse 256 --metrics --reasoning off -fa on ; ignore_errors=no ; start_time=[Wed 2026-11-04 04:01:29 UTC] ; stop_time=[n/a] ; pid=3159868 ; code=(null) ; status=0/0 }",
+ "systemd_warnings": [],
+ "served_model_path": "/home/ubuntu/models/Qwen3.8-27B-Q4_0.gguf",
+ "n_ctx": 131072,
+ "warmup": null,
+ "restarts": "NRestarts=0",
+ "speculative_types": [
+  false,
+  false,
+  false,
+  false
+ ],
+ "decode_short": {
+  "wall_s": 14.34,
+  "prompt_n": 1603,
+  "predicted_n": 400,
+  "prefill_ms": 1606.0,
+  "prefill_tps": 998.1,
+  "decode_ms": 12633.1,
+  "decode_tps": 31.58,
+  "cache_n": 0,
+  "vram_peak_gib": 20.26,
+  "stop": true,
+  "truncated": false,
+  "stopping_word": "",
+  "content_head": "550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n550\n",
+  "spec_counters": {
+   "num_draft_tokens_total": 0.0,
+   "num_accepted_tokens_total": 0.0,
+   "num_drafts_total": 0.0
+  },
+  "prompt_tokens": 1603
+ },
+ "prefill_short_probe": 1,
+ "decode_30k": {
+  "wall_s": 47.09,
+  "prompt_n": 27487,
+  "predicted_n": 400,
+  "prefill_ms": 33380.3,
+  "prefill_tps": 823.4,
+  "decode_ms": 13504.0,
+  "decode_tps": 29.55,
+  "cache_n": 0,
+  "vram_peak_gib": 20.27,
+  "stop": true,
+  "truncated": false,
+  "stopping_word": "",
+  "content_head": "DONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDONE.\nDO",
+  "spec_delta": {
+   "num_draft_tokens_total": 0.0,
+   "num_accepted_tokens_total": 0.0,
+   "num_drafts_total": 0.0
+  },
+  "spec_counters": {
+   "num_draft_tokens_total": 0.0,
+   "num_accepted_tokens_total": 0.0,
+   "num_drafts_total": 0.0
+  },
+  "tokens_calibrated": 27475,
+  "calib_err": 0.00891
+ },
+ "spec_complete": [],
+ "answers": {
+  "answer-arith": {
+   "content": "53940",
+   "predicted_n": 6,
+   "decode_tps": 30.01,
+   "prefill_tps": 147.1,
+   "finish_reason": "stop",
+   "cached_tokens": 0
+  },
+  "answer-list": {
+   "content": "Tokyo, Paris, Nairobi",
+   "predicted_n": 7,
+   "decode_tps": 28.98,
+   "prefill_tps": 165.3,
+   "finish_reason": "stop",
+   "cached_tokens": 0
+  },
+  "answer-code": {
+   "content": "sum(c in 'aeiouAEIOU' for c in s)",
+   "predicted_n": 16,
+   "decode_tps": 31.02,
+   "prefill_tps": 136.9,
+   "finish_reason": "stop",
+   "cached_tokens": 0
+  },
+  "answer-prose": {
+   "content": "A KV cache stores the key and value vectors computed for all previously processed tokens in the attention layers of a transformer model. This storage allows the inference engine to avoid redundant recomputation of these values when generating new tokens, significantly accelerating the autoregressive decoding process.",
+   "predicted_n": 52,
+   "decode_tps": 31.54,
+   "prefill_tps": 168.1,
+   "finish_reason": "stop",
+   "cached_tokens": 0
+  },
+  "answer-para": {
+   "content": "Start your morning with confidence using this premium stainless steel travel mug, engineered to keep your favorite brew piping hot for up to eight hours. Crafted from durable, double-walled 18/8 stainless steel, it resists dents and corrosion while ensuring your beverage stays at the perfect temperature from your first sip at home to your last at the office. The sleek, powder-coated exterior feels comfortable in your hand and fits securely into most standard cup holders, making it an ideal companion for commuters and travelers alike. Its leak-proof lid features a secure locking mechanism, so you can toss it in your bag without worrying about spills. Whether you prefer a bold espresso or a smooth latte, this mug delivers consistent warmth and flavor. Designed for everyday durability and style, it is the ultimate solution for coffee lovers who refuse to compromise on quality or convenience.",
+   "predicted_n": 170,
+   "decode_tps": 31.55,
+   "prefill_tps": 196.6,
+   "finish_reason": "stop",
+   "cached_tokens": 0
+  },
+  "answer-para2": {
+   "content": "When you run a large language model on a GPU, the hardware is designed to perform thousands of arithmetic operations simultaneously, but it often sits idle waiting for data to move from memory to the processing cores. If you process requests one by one, the GPU spends a disproportionate amount of time fetching weights and handling small batches of data, leading to low arithmetic intensity where the compute units are underutilized. By batching multiple independent requests together, you increase the amount of data processed per memory access, which allows the GPU to keep its massive parallel cores busy with continuous matrix multiplications. This approach transforms the workload from being memory-bound, where speed is limited by data transfer rates, to compute-bound, where the actual calculation speed becomes the bottleneck. Consequently, the GPU achieves higher throughput because it is performing useful calculations for a larger number of users simultaneously rather than idling between individual, inefficient operations, effectively maximizing the return on your expensive hardware investment.",
+   "predicted_n": 187,
+   "decode_tps": 31.63,
+   "prefill_tps": 185.2,
+   "finish_reason": "stop",
+   "cached_tokens": 0
+  }
+ },
+ "vram_idle_gib": null,
+ "spec_acceptance_samples": [
+  "0.25564"
+ ],
+ "mean_len_samples": [
+  2.79
+ ],
+ "spec_expected": false,
+ "spec_lines": [
+  "1.51.253.839 I slot print_timing: id  3 | task 552 | draft acceptance = 0.25564 (  102 accepted /   399 generated), mean len =  2.79"
+ ],
+ "journal_startup": [
+  "1.51.253.835 I slot print_timing: id  3 | task 552 |    graphs reused =        185",
+  "0.07.328.235 W srv    load_model: cache_reuse is not supported by multimodal, it will be disabled",
+  "0.07.389.796 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 131072, kv_unified = 'true'",
+  "0.07.393.565 I srv  llama_server: model loaded",
+  "0.09.250.129 I slot print_timing: id  3 | task 0 |    graphs reused =          3",
+  "0.25.593.866 I slot print_timing: id  2 | task 7 |    graphs reused =        400",
+  "1.12.919.029 I slot print_timing: id  1 | task 411 |    graphs reused =        797",
+  "1.13.953.187 I slot print_timing: id  0 | task 816 |    graphs reused =        801",
+  "1.14.591.490 I slot print_timing: id  3 | task 824 |    graphs reused =        806",
+  "1.15.508.564 I slot print_timing: id  2 | task 833 |    graphs reused =        820",
+  "1.17.479.688 I slot print_timing: id  1 | task 851 |    graphs reused =        870",
+  "1.23.224.414 I slot print_timing: id  0 | task 905 |    graphs reused =       1038",
+  "1.29.500.484 I slot print_timing: id  3 | task 1077 |    graphs reused =       1223"
+ ],
+ "status": "ok",
+ "wall_s": 90.2
+}

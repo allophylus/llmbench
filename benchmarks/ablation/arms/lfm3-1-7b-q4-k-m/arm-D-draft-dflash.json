@@ -1,0 +1,7 @@
+{
+ "model": "lfm3-1-7b-q4-k-m",
+ "arm": "D-draft-dflash",
+ "status": "not-applicable",
+ "reason": "not applicable (no drafter for this architecture: the only DFlash drafter on the box is a qwen35 model)",
+ "when": "2026-11-04T04:55:36+0000"
+}

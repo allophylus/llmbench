@@ -1,0 +1,7 @@
+{
+ "model": "lfm3-1-7b-q4-k-m",
+ "arm": "E-mtp-ngram",
+ "status": "not-applicable",
+ "reason": "not applicable (no drafter for this architecture: composed of draft-mtp + ngram-cache, and no MTP head exists)",
+ "when": "2026-11-04T04:55:36+0000"
+}
