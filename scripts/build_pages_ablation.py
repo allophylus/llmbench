@@ -89,11 +89,12 @@ def public_build(s):
 
 
 def f1(x):
-    return "%.1f" % float(x)
+    # per-model arms record vram_idle_gib as None when it was not sampled
+    return "—" if x is None else "%.1f" % float(x)
 
 
 def f2(x):
-    return "%.2f" % float(x)
+    return "—" if x is None else "%.2f" % float(x)
 
 
 def load_arms():
@@ -127,8 +128,84 @@ def load_arms():
     return out
 
 
+
+# ---------------------------------------------------------------- per-model arms
+# The 2026-11-04 run measured every runnable model (benchmarks/ablation/arms/<slug>/arm-*.json).
+# The older single-model files (arm-1-baseline.json …) are kept for provenance but the page
+# prefers the per-model set whenever it exists, so the table covers all models.
+ARM_LABELS = {
+    "A-baseline": ("baseline", "no speculative decoding — the reference", "none"),
+    "B-fa-off": ("FA off", "no speculative decoding, f16 KV", "none"),
+    "C-draft-mtp": ("MTP", "draft-mtp", "draft-mtp"),
+    "D-draft-dflash": ("DFlash (default n-max)", "separate DFlash2 drafter, default n-max", "draft-dflash, n-max 3"),
+    "D2-dflash-nm7": ("DFlash (n-max 7)", "separate DFlash2 drafter, n-max 7", "draft-dflash, n-max 7"),
+    "E-mtp-ngram": ("MTP + ngram (production preset)", "the model's own MTP head plus ngram-cache", "draft-mtp + ngram-cache"),
+}
+
+
+def _model_names():
+    try:
+        doc = json.load(open(os.path.join(ROOT, "data", "results.json"), encoding="utf-8"))
+        return {r.get("slug"): r.get("name") for r in doc.get("rows", []) if r.get("slug")}
+    except OSError:
+        return {}
+
+
+MODEL_NAMES = _model_names()
+# disambiguate quants that share a display name
+QUANT_FIX = {"qwen3-8-27b-q4km": "Q4_K_M", "qwen3-8-27b-q4-0": "Q4_0"}
+
+
+def display_name(slug):
+    name = MODEL_NAMES.get(slug, slug)
+    q = QUANT_FIX.get(slug)
+    return f"{name} {q}" if q else name
+
+
+def load_arms_per_model():
+    root = os.path.join(ABL, "arms")
+    if not os.path.isdir(root):
+        return []
+    out = []
+    for slug in sorted(os.listdir(root)):
+        d_dir = os.path.join(root, slug)
+        if not os.path.isdir(d_dir):
+            continue
+        files = sorted(glob.glob(os.path.join(d_dir, "arm-*.json")))
+        if not files:
+            continue
+        base_answers = None
+        for f in files:
+            d = json.load(open(f, encoding="utf-8"))
+            arm = os.path.basename(f)[4:-5]
+            label, desc, method = ARM_LABELS.get(arm, (arm, "", arm))
+            short = d.get("decode_short") or {}
+            long_ = d.get("decode_30k") or {}
+            if d.get("status") != "ok" or not short.get("decode_tps") or not long_.get("decode_tps"):
+                continue          # void / not applicable — never rendered as a number
+            answers = d.get("answers") or {}
+            if base_answers is None:
+                base_answers, same, n = answers, None, len(answers)
+            else:
+                n = len(answers)
+                same = sum(1 for k in answers if base_answers.get(k, {}).get("content") == answers[k].get("content"))
+            argv = d.get("argv") or []
+            draft = argv[argv.index("--spec-draft-model") + 1] if "--spec-draft-model" in argv else None
+            out.append(dict(label=label, spec=desc, method=method, fa=d.get("fa", "on"),
+                            kv=d.get("kv_cache_type", "q8_0/q4_0"),
+                            dec_s=short["decode_tps"], dec_l=long_["decode_tps"],
+                            pre_s=short.get("prefill_tps"), pre_l=long_.get("prefill_tps"),
+                            vram_idle=d.get("vram_idle_gib"),
+                            vram_peak=max(short.get("vram_peak_gib") or 0, long_.get("vram_peak_gib") or 0) or None,
+                            same=same, n=n, ctx=d.get("n_ctx"), model=d.get("model"),
+                            draft=draft, build=d.get("server_build"),
+                            prompt_short=short.get("prompt_n"), prompt_long=long_.get("prompt_n"),
+                            predicted=short.get("predicted_n")))
+    return out
+
+
 def build_html():
-    arms = load_arms()
+    arms = load_arms_per_model() or load_arms()
     cc = json.load(open(os.path.join(ABL, "cachecheck.json"), encoding="utf-8"))
     a = cc["arms"]
     cached_tps = a["a3b_reuse256"]["probe"]["prefill_tps"]
@@ -141,6 +218,9 @@ def build_html():
     rows = []
     prev_model = None
     for i, r in enumerate(arms):
+        # each model's percentages must be against ITS OWN baseline, not the first model's
+        if prev_model is not None and r["model"] != prev_model:
+            base = r
         if r["same"] is None:
             ans = "<span class=dim>— (reference)</span>"
         else:
@@ -159,8 +239,9 @@ def build_html():
             "<td class=num>%s%s</td><td class=num>%s%s</td>"
             "<td class=num>%s%s</td><td class=num>%s%s</td>"
             "<td class=num>%s / %s</td><td class=num>%s</td></tr>" % (
-                ("" if public_model(r["model"]) == prev_model else
-                 "<b>" + esc(public_model(r["model"])) + "</b>"), esc(r["label"]), esc(r["spec"]),
+                ("" if display_name(r["model"]) == prev_model else
+                 "<b>" + esc(display_name(r["model"])) + "</b>"),
+                esc(r["label"]), esc(r["spec"]),
                 esc(public_model(r["draft"])) if r["draft"] else
                 ("Own MTP head" if r["method"].startswith("draft-mtp") else "None"),
                 "on" if r["fa"] == "on" else "<span class=bad>off</span>",
@@ -170,7 +251,7 @@ def build_html():
                 "%.0f" % r["pre_s"], "" if i == 0 else rel(r["pre_s"], base["pre_s"]),
                 "%.0f" % r["pre_l"], "" if i == 0 else rel(r["pre_l"], base["pre_l"]),
                 f2(r["vram_idle"]), f2(r["vram_peak"]), ans))
-        prev_model = public_model(r["model"])
+        prev_model = display_name(r["model"])
 
     table = ("<div class=table-wrap><table><thead><tr>"
              "<th>Tested model</th><th>Arm</th><th>Draft model / head</th><th>FA</th><th>Speculative method</th>"
@@ -179,25 +260,33 @@ def build_html():
              "<th>VRAM GiB<br>idle / peak</th><th>Answers =<br>baseline</th>"
              "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
 
-    fa_off = next(r for r in arms if r["label"] == "FA off")
-    mtp = next(r for r in arms if r["label"] == "MTP")
-    prod = next(r for r in arms if r["label"] == "MTP + ngram (production preset)")
-    df7 = next(r for r in arms if r["label"] == "DFlash (n-max 7)")
-    dfoff = next(r for r in arms if r["label"] == "DFlash, FA off")
+    _find = lambda lab: next((r for r in arms if r["label"] == lab), None)
+    fa_off = _find("FA off")
+    mtp = _find("MTP")
+    prod = _find("MTP + ngram (production preset)")
+    df7 = _find("DFlash (n-max 7)")
+    dfoff = _find("DFlash, FA off")
 
     def pct_of(x, b):
         return "%.0f%%" % (100.0 * x / b)
 
-    callouts = (
+    _n_models = len({r["model"] for r in arms})
+    if _n_models > 1 or not all((fa_off, mtp, prod, df7)):
+        callouts = ("<div class=callout><b>Per-arm commentary applies to the single-model run.</b> "
+                    "The table above now covers every runnable model; the narrative comparisons "
+                    "below were derived from one model and are deliberately not restated for the rest.</div>",)
+    else:
+        callouts = (
         "<div class=callout><b>Flash attention is a prefill multiplier and a memory saver — "
         "not a decode accelerator.</b> With FA off, decode is within noise at 1.6k "
         "(%s vs %s t/s) and a little slower at 27.7k (%s vs %s t/s), while prefill at 27.7k "
         "falls from %.0f to <span class=bad>%.0f t/s</span> (%s of the FA-on rate). "
         "FA also allows the quantized KV cache: turning it off forces f16 KV, which is why that "
-        "arm needs %.1f GiB idle and peaks at %.1f GiB instead of %.1f / %.1f.</div>"
+        "arm needs %s GiB idle and peaks at %s GiB instead of %s / %s.</div>"
         % (f1(fa_off["dec_s"]), f1(base["dec_s"]), f1(fa_off["dec_l"]), f1(base["dec_l"]),
            base["pre_l"], fa_off["pre_l"], pct_of(fa_off["pre_l"], base["pre_l"]),
-           fa_off["vram_idle"], fa_off["vram_peak"], base["vram_idle"], base["vram_peak"]),
+           f1(fa_off["vram_idle"]), f1(fa_off["vram_peak"]),
+           f1(base["vram_idle"]), f1(base["vram_peak"])),
         "<div class=callout><b>The production MTP + ngram preset is the slowest configuration "
         "at depth.</b> It decodes at %s t/s on the 27.7k-token prompt against %s t/s for "
         "plain MTP — a %.1f× collapse — and it is also slower at short context (%s vs %s t/s). "
@@ -232,7 +321,7 @@ def build_html():
         "<li><b>MTP and DFlash together.</b> Not buildable on this engine build: the two draft "
         "types cannot share one speculative slot, and MTP alone does not serve this model "
         "without ngram-cache alongside it. No combined number exists, so none is shown.</li>"
-        "</ul></div>" % (dfoff["vram_peak"], 31.86)
+        "</ul></div>" % ((dfoff or {}).get("vram_peak") or 0.0, 31.86)
     )
 
     method = (
@@ -257,11 +346,11 @@ def build_html():
             "{:,}".format(base["prompt_long"]))
     )
 
-    sub = ("Tested model: <b>%s</b>. These results cover this model only, not every model "
-           "in the Speed table. Flash attention, "
+    sub = ("All <b>%s</b> runnable models, one group per model, arms as sub-rows; every "
+           "percentage is against that model's own baseline. Flash attention, "
            "speculative decoding (MTP and DFlash) and their combinations, measured back to back "
-           "with only the flags changing. Higher is better; percentages are against the baseline."
-           % esc(public_model(base["model"])))
+           "with only the flags changing. Higher is better."
+           % len({r["model"] for r in arms}))
 
     body = ("<h1>Accelerator ablation</h1>" + "<p class=sub>%s</p>" % sub
             + "<h2 class=sec>Headline</h2>" + table
