@@ -228,7 +228,7 @@ def build_html():
     )
 
     method = (
-        "<div class=detail><h2>Method</h2>"
+        "<details class=detail><summary>How it was measured</summary>"
         "<p>One model, one engine build, every arm identical except the accelerator flags: "
         "<code>%s</code> on <code>%s</code>. Context window %s tokens; KV cache %s for the "
         "FA-on arms and %s for the FA-off arms. Decode = %d generated tokens per request on a "
@@ -242,7 +242,7 @@ def build_html():
         "(a one-word answer repeated), which is the best case for a speculative decoder: read "
         "the speculative arms' long-context decode as an upper bound. The two non-speculative "
         "arms are unaffected. VRAM is idle-after-load and peak-during-request, sampled during "
-        "the measurement.</p></div>" % (
+        "the measurement.</p></details>" % (
             esc(public_model(base["model"])), esc(public_build(base["build"])),
             "{:,}".format(base["ctx"]), esc(base["kv"]), esc(fa_off["kv"]),
             base["predicted"], "{:,}".format(base["prompt_short"]),
@@ -259,7 +259,7 @@ def build_html():
               "&ldquo;FA off&rdquo; / &ldquo;f16 KV&rdquo; note which arms cannot use the quantized cache.</p>"
             + "".join(callouts) + "<h2 class=sec>Long-context prefill and the cache</h2>" + verdict
             + "<h2 class=sec>Limits of this comparison</h2>" + limits
-            + "<h2 class=sec>How it was measured</h2>" + method)
+            + method)
 
     return body, len(arms)
 
@@ -271,7 +271,7 @@ def fragment():
     frag = body.replace("<h1>Accelerator ablation</h1>",
                               "<h2 class=abl-h>Accelerator ablation — FA, MTP, DFlash</h2>")
     frag = frag.replace("<h2 class=sec>Headline</h2>", '<h3 class=abl-t>Headline</h3>')
-    for t in ("Long-context prefill and the cache", "Limits of this comparison", "How it was measured"):
+    for t in ("Long-context prefill and the cache", "Limits of this comparison"):
         frag = frag.replace('<h2 class=sec>%s</h2>' % t, '<h3 class=abl-t>%s</h3>' % t)
     return frag, n
 
