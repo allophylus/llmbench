@@ -655,8 +655,7 @@
     document.getElementById("viewsub").textContent = view.sub;
     document.getElementById("viewhint").innerHTML = view.hint;
     document.getElementById("legend").innerHTML = view.legend;
-    document.getElementById("tablepanel").setAttribute("aria-labelledby", "tab-" + v);
-    var tabs = document.querySelectorAll(".viewtab");
+    var tabs = [];
     Array.prototype.forEach.call(tabs, function (t) {
       var on = t.dataset.view === v;
       t.setAttribute("aria-selected", on ? "true" : "false");
