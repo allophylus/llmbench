@@ -139,6 +139,7 @@ def build_html():
 
     base = arms[0]
     rows = []
+    prev_model = None
     for i, r in enumerate(arms):
         if r["same"] is None:
             ans = "<span class=dim>— (reference)</span>"
@@ -152,13 +153,14 @@ def build_html():
             good = (pct < 0) if invert else (pct > 0)
             return " <span class=%s>%+.0f%%</span>" % ("ok" if good else "bad", pct)
         rows.append(
-            "<tr><td>%s</td><td class=arm><b>%s</b><span>%s</span></td>"
+            "<tr><td class=mdl>%s</td><td class=arm><b>%s</b><span>%s</span></td>"
             "<td>%s</td>"
             "<td class=num>%s</td><td>%s</td>"
             "<td class=num>%s%s</td><td class=num>%s%s</td>"
             "<td class=num>%s%s</td><td class=num>%s%s</td>"
             "<td class=num>%s / %s</td><td class=num>%s</td></tr>" % (
-                esc(public_model(r["model"])), esc(r["label"]), esc(r["spec"]),
+                ("" if public_model(r["model"]) == prev_model else
+                 "<b>" + esc(public_model(r["model"])) + "</b>"), esc(r["label"]), esc(r["spec"]),
                 esc(public_model(r["draft"])) if r["draft"] else
                 ("Own MTP head" if r["method"].startswith("draft-mtp") else "None"),
                 "on" if r["fa"] == "on" else "<span class=bad>off</span>",
@@ -168,8 +170,9 @@ def build_html():
                 "%.0f" % r["pre_s"], "" if i == 0 else rel(r["pre_s"], base["pre_s"]),
                 "%.0f" % r["pre_l"], "" if i == 0 else rel(r["pre_l"], base["pre_l"]),
                 f2(r["vram_idle"]), f2(r["vram_peak"]), ans))
+        prev_model = public_model(r["model"])
 
-    table = ("<div class=scroll><table><thead><tr>"
+    table = ("<div class=table-wrap><table><thead><tr>"
              "<th>Tested model</th><th>Arm</th><th>Draft model / head</th><th>FA</th><th>Speculative method</th>"
              "<th>Decode t/s<br>1.6k ctx</th><th>Decode t/s<br>27.7k ctx</th>"
              "<th>Prefill t/s<br>1.6k ctx</th><th>Prefill t/s<br>27.7k ctx</th>"
