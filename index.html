@@ -48,6 +48,11 @@
 
   <p class="legend" id="legend"></p>
 
+  <div class="viewtabs" role="tablist" aria-label="Table views">
+    <button type="button" role="tab" id="tab-speed" class="viewtab" data-view="speed" aria-selected="true" aria-controls="tablepanel">Speed</button>
+    <button type="button" role="tab" id="tab-accuracy" class="viewtab" data-view="accuracy" aria-selected="false" aria-controls="tablepanel" tabindex="-1">Accuracy</button>
+    <button type="button" role="tab" id="tab-games" class="viewtab" data-view="games" aria-selected="false" aria-controls="tablepanel" tabindex="-1">Games</button>
+  </div>
   <div class="table-wrap" id="tablepanel" role="tabpanel" aria-labelledby="tab-speed" tabindex="0">
     <table id="tbl" aria-describedby="viewhint">
       <thead>

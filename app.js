@@ -652,10 +652,11 @@
     state.sortKey = null;
     state.dir = 0;
     var view = VIEWS[v];
+    document.getElementById("tablepanel").setAttribute("aria-labelledby", "tab-" + v);
     document.getElementById("viewsub").textContent = view.sub;
     document.getElementById("viewhint").innerHTML = view.hint;
     document.getElementById("legend").innerHTML = view.legend;
-    var tabs = [];
+    var tabs = document.querySelectorAll(".viewtab");
     Array.prototype.forEach.call(tabs, function (t) {
       var on = t.dataset.view === v;
       t.setAttribute("aria-selected", on ? "true" : "false");
