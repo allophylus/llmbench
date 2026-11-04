@@ -23,6 +23,7 @@
     q: "",
     arch: "",
     vid: false,
+    sweepMetrics: { prefill: true, decode: true, vram: true, prompt: true },
     allCols: {},          /* per view, restored from localStorage */
     expanded: {}          /* model key -> true when its ctx sub-rows are open */
   };
@@ -149,6 +150,15 @@
     if (key === "speed_evidence") return evidenceText(r);
     if (key === "sp_prefill") return ownSpeed(r, "prefill");
     if (key === "sp_decode") return ownSpeed(r, "decode");
+    if (key.indexOf("sweep_") === 0) {
+      var sweep = r.sweep && r.sweep[key.slice(6)];
+      return sweep && sweep.status === "ok" ? num(sweep.decode) : null;
+    }
+    if (key === "logic_off" || key === "logic_on") {
+      var logic = r.logic && r.logic[key.slice(6)];
+      return logic && logic.status === "ok" && num(logic.correct) !== null && num(logic.n) > 0
+        ? logic.correct / logic.n : null;
+    }
     if (key === "std_prefill") { var s = r.speed; return s && s.standard && !s.standard.pending ? num(s.standard.prefill_tps) : null; }
     if (key === "std_decode") { var s2 = r.speed; return s2 && s2.standard && !s2.standard.pending ? num(s2.standard.decode_tps) : null; }
     if (key === "native_prefill") { var n = nativeProbe(r); return n ? n.prefill_tps : null; }
@@ -235,13 +245,11 @@
   }
 
 
-  /* ---- per-row extras: the context sweep and the logic traps live IN the row,
-     not on their own pages. Collapsed by default so the table stays scannable. ---- */
+  /* Other views keep the supplementary context and logic details collapsed. */
   function rowExtras(r) {
     var parts = [];
-    var RUNGS = [["4096","4K"],["32768","32K"],["65536","64K"],["131072","128K"],["262144","256K"]];
     if (r.sweep) {
-      var rows = RUNGS.map(function (pair) {
+      var rows = SWEEP_RUNGS.map(function (pair) {
         var c = r.sweep[pair[0]];
         if (!c || c.prefill == null) return "";
         return "<tr><td>" + pair[1] + "</td><td class=num>" + Number(c.prefill).toFixed(1) +
@@ -267,7 +275,7 @@
     var html = '<span class="name">' + esc(r.name) + "</span>" +
       (r.status === "failed" ? ' <span class="st st-failed" title="the run produced no measurement">failed</span>' : "") +
       '<span class="slug">' + esc(r.filename || r.slug) + "</span>" +
-      '<span class="meta">' + esc(metaLine(r)) + "</span>" + rowExtras(r);
+      '<span class="meta">' + esc(metaLine(r)) + "</span>" + (state.view === "speed" ? "" : rowExtras(r));
     if (grp && grp.subs.length) {
       var open = !!state.expanded[grp.key];
       html += '<button type="button" class="disclosure" data-expand="' + esc(grp.key) + '" aria-expanded="' + (open ? "true" : "false") +
@@ -305,6 +313,35 @@
     var v = ownSpeed(r, which);
     if (v === null) return '<span class="dash">—</span>';
     return fmtNum(v, which === "decode" ? 2 : 1) + speedSourceMark(r);
+  }
+
+  var SWEEP_RUNGS = [
+    ["4096", "4K"], ["32768", "32K"], ["65536", "64K"],
+    ["131072", "128K"], ["262144", "256K"]
+  ];
+
+  function sweepCell(r, context) {
+    var c = r.sweep && r.sweep[context];
+    if (!c) return '<span class="dash">—</span>';
+    if (c.status !== "ok") return '<span class="st st-failed">' + esc(c.status || "invalid") + "</span>";
+    var metrics = [
+      ["prefill", "Prefill", 1], ["decode", "Decode", 2],
+      ["vram", "VRAM", 2], ["prompt", "Prompt", 0]
+    ];
+    var html = metrics.filter(function (m) { return state.sweepMetrics[m[0]]; }).map(function (m) {
+      return '<span class="metric"><span>' + m[1] + "</span> " + fmtNum(num(c[m[0]]), m[2]) + "</span>";
+    }).join("");
+    return html || '<span class="dash">No metrics selected</span>';
+  }
+
+  function logicCell(r, which) {
+    var c = r.logic && r.logic[which];
+    if (!c) return '<span class="dash">—</span>';
+    if (c.status !== "ok" || num(c.correct) === null || !(num(c.n) > 0)) {
+      return '<span class="st st-failed">' + esc(c.status && c.status !== "ok" ? c.status : "invalid") + "</span>";
+    }
+    return '<span class="logic-score">' + esc(c.correct) + "/" + esc(c.n) + "</span>" +
+      '<span class="metric"><span>Tokens</span> ' + fmtNum(num(c.tokens), 0) + "</span>";
   }
 
   function bucketCell(r, key) {
@@ -368,55 +405,31 @@
   var DEEP_TIP = "the deepest depth probe for that server context (largest prompt)";
   var NAT_TIP = "one probe at this row’s own server context (llama-bench pp512/tg128) — a different measurement, not a restatement";
 
-  /* Column order is significant: groups must be contiguous — the header renderer
-     coalesces neighbouring columns that share a group label. */
   var VIEWS = {
     speed: {
       title: "Speed — prefill and decode rates as measured",
-      sub: "One row per model, then the matched-context matrix: every model at 4K, 32K, 64K, 128K and 256K. A model served at several context windows keeps its probes as collapsible sub-rows instead of pretending to be several models.",
-      hint: "Prefill (prompt processing) and decode (token generation) are tokens per second. <b>30K</b> marks the standardised probe; <b>·n</b> marks a single probe at the row’s own server context. Click a header to sort, again to reverse, a third time to clear. — means not measured, never guessed.",
-      legend: "<b>How to read:</b> every number here came from a live server on the R9700, not a vendor sheet. Rows with several context windows show their standardised 30K probe in the sub-rows. VRAM is the GPU’s used-memory peak during the request.",
+      sub: "One row per model: five matched-context sweep points. Prefill, decode, VRAM and prompt counts appear only inside their context sweep cells.",
+      hint: "Each sweep column is a separate server-context measurement. Prefill and decode are tokens per second; VRAM is peak GiB; prompt is the actual token count. Click a context header to sort by decode rate, again to reverse, a third time to clear. — means not measured.",
+      legend: "<b>Context sweep:</b> compare models within the same 4K, 32K, 64K, 128K or 256K column. Scroll the table sideways on smaller screens.",
       cols: [
         C("name", "Model", { type: "text", group: "Model", cls: "c-name", cell: nameCell, title: "click to sort by model" }),
         C("params", "Params", { type: "params", group: "Model", sub: "total/active", cls: "c-params", cell: function (r) {
           return esc(r.params_total || "—") + (r.params_active && r.params_active !== r.params_total ? ' <span class="act">/ ' + esc(r.params_active) + "</span>" : "");
         } }),
         C("quant", "Quant", { type: "text", group: "Model", cls: "c-quant", all: true, cell: function (r) { return '<span class="pill">' + esc(r.quant || "—") + "</span>"; } }),
-        C("arch", "Arch", { type: "text", group: "Model", cls: "c-arch", all: true, cell: function (r) { return esc(r.arch || "—"); } }),
-        C("ctx_label", "Server ctx", { type: "text", group: "Server", cls: "c-ctx", cell: ctxCell }),
-        C("context_window", "Ctx tokens", { group: "Server", cls: "sv", all: true, cell: function (r) { return fmtCtxNum(num(r.context_window)) || '<span class="dash">—</span>'; } }),
-        C("sp_prefill", "Prefill", { group: "Speed", sub: "t/s", cls: "c-sp", title: "the row’s own measurement: standardised 30K probe, else its native-ctx probe", cell: function (r) { return spCell(r, "prefill"); } }),
-        C("sp_decode", "Decode", { group: "Speed", sub: "t/s", cls: "c-sp", title: "the row’s own measurement: standardised 30K probe, else its native-ctx probe", cell: function (r) { return spCell(r, "decode"); } }),
-        C("std_prefill", "Prefill t/s", { group: "Standardised 30K probe", sub: "@ 30K", all: true, cls: "c-std", title: STD_TIP, cell: function (r) {
-          var s = r.speed && r.speed.standard;
-          if (!s) return '<span class="dash">—</span>';
-          if (s.pending) return '<span class="pending">pending</span>';
-          return fmtNum(num(s.prefill_tps), 1);
-        } }),
-        C("std_decode", "Decode t/s", { group: "Standardised 30K probe", sub: "@ 30K", all: true, cls: "c-std", title: STD_TIP, cell: function (r) {
-          var s = r.speed && r.speed.standard;
-          if (!s) return '<span class="dash">—</span>';
-          if (s.pending) return '<span class="pending">pending</span>';
-          return fmtNum(num(s.decode_tps), 2);
-        } }),
-        C("native_prefill", "Prefill t/s", { group: "llama-bench (native ctx)", sub: "pp512", all: true, cls: "c-nat", title: NAT_TIP, cell: function (r) {
-          var n = nativeProbe(r); return n && n.prefill_tps !== null ? fmtNum(n.prefill_tps, 1) : '<span class="dash">—</span>';
-        } }),
-        C("native_decode", "Decode t/s", { group: "llama-bench (native ctx)", sub: "tg128", all: true, cls: "c-nat", title: NAT_TIP, cell: function (r) {
-          var n = nativeProbe(r); return n && n.decode_tps !== null ? fmtNum(n.decode_tps, 2) : '<span class="dash">—</span>';
-        } }),
-        C("deep_prefill", "Prefill t/s", { group: "Deepest probe", sub: "largest prompt", all: true, cls: "c-deep", title: DEEP_TIP, cell: function (r) {
-          var d = deepest(r); return d ? fmtNum(num(d.prefill_tps), 1) : '<span class="dash">—</span>';
-        } }),
-        C("deep_decode", "Decode t/s", { group: "Deepest probe", sub: "largest prompt", all: true, cls: "c-deep", title: DEEP_TIP, cell: function (r) {
-          var d = deepest(r); return d ? fmtNum(num(d.decode_tps), 2) : '<span class="dash">—</span>';
-        } }),
-        C("vram_mib", "VRAM GiB", { group: "Memory", cls: "sv", cell: vramCell }),
+        C("arch", "Arch", { type: "text", group: "Model", cls: "c-arch", all: true, cell: function (r) { return esc(r.arch || "—"); } })
+      ].concat(SWEEP_RUNGS.map(function (pair) {
+        return C("sweep_" + pair[0], pair[1] + " sweep", {
+          cls: "c-sweep", sub: "t/s / GiB",
+          title: pair[1] + " matched-context sweep; click to sort by decode t/s",
+          cell: function (r) { return sweepCell(r, pair[0]); }
+        });
+      }), [
         C("date", "Date", { type: "text", group: "Provenance", cls: "c-date", all: true, cell: function (r) { return esc(r.date || "—"); } }),
         C("speed_evidence", "Evidence", { type: "text", group: "Provenance", cls: "c-evidence", all: true, cell: function (r) {
           var t = evidenceText(r); return t ? '<span class="prov">' + esc(t) + "</span>" : '<span class="dash">—</span>';
         } })
-      ]
+      ])
     },
 
     accuracy: {
@@ -524,7 +537,7 @@
     /* only show sub-rows that carry something in the current view */
     var view = state.view;
     return grp.subs.filter(function (r) {
-      if (view === "speed") return hasSpeed(r) || nativeProbe(r) || r.speed;
+      if (view === "speed") return false;
       if (view === "accuracy") return Object.keys(r.cells || {}).some(function (k) { return num(r.cells[k]) !== null; });
       if (view === "games") return !!r.game;
       return true;
@@ -540,21 +553,8 @@
   }
 
   function renderHead(cols) {
-    var grp = document.getElementById("grprow"), row = document.getElementById("colrow");
-    grp.innerHTML = ""; row.innerHTML = "";
-    var i = 0;
-    while (i < cols.length) {
-      var g = cols[i].group || "";
-      var span = 1;
-      while (i + span < cols.length && (cols[i + span].group || "") === g) span++;
-      var th = document.createElement("th");
-      th.colSpan = span;
-      th.className = "gcell" + (g ? "" : " gcell-empty");
-      th.scope = "colgroup";
-      th.textContent = g;
-      grp.appendChild(th);
-      i += span;
-    }
+    var row = document.getElementById("colrow");
+    row.innerHTML = "";
     cols.forEach(function (c) {
       var th = document.createElement("th");
       th.scope = "col";
@@ -600,25 +600,14 @@
       });
     }
 
-    /* archive: rows whose weights are gone stay visible, collapsed, and never mix with
-       reproducible rows. Rendered only when the data actually marks some. */
-    var arch = groups.filter(function (g) { return g.parent.measurement_status; });
-    var live = groups.filter(function (g) { return !g.parent.measurement_status; });
-
     var html = "";
-    live.forEach(function (g) {
+    groups.forEach(function (g) {
       html += rowHTML(g.parent, cols, g, false);
       if (state.expanded[g.key]) {
         g.subs.forEach(function (r) { html += rowHTML(r, cols, g, true); });
       }
     });
-    var archiveHTML = "";
-    if (arch.length) {
-      archiveHTML = '<tr class="archhead"><td colspan="' + cols.length + '">Archive — weights no longer on this machine (' + arch.length + ")" +
-        '</td></tr>';
-      arch.forEach(function (g) { archiveHTML += rowHTML(g.parent, cols, g, false); });
-    }
-    document.getElementById("rows").innerHTML = html + archiveHTML;
+    document.getElementById("rows").innerHTML = html;
 
     document.getElementById("empty").hidden = groups.length > 0;
     document.getElementById("count").textContent =
@@ -653,6 +642,8 @@
     state.dir = 0;
     var view = VIEWS[v];
     document.getElementById("tablepanel").setAttribute("aria-labelledby", "tab-" + v);
+    document.getElementById("tablepanel").dataset.view = v;
+    document.getElementById("sweepmetrics").hidden = v !== "speed";
     document.getElementById("viewsub").textContent = view.sub;
     document.getElementById("viewhint").innerHTML = view.hint;
     document.getElementById("legend").innerHTML = view.legend;
@@ -687,6 +678,12 @@
     document.getElementById("q").addEventListener("input", function (e) { state.q = e.target.value.trim(); paint(); });
     document.getElementById("arch").addEventListener("change", function (e) { state.arch = e.target.value; paint(); });
     document.getElementById("vid").addEventListener("change", function (e) { state.vid = e.target.checked; paint(); });
+    Array.prototype.forEach.call(document.querySelectorAll("#sweepmetrics input"), function (input) {
+      input.addEventListener("change", function () {
+        state.sweepMetrics[input.value] = input.checked;
+        paint();
+      });
+    });
     document.getElementById("allcols").addEventListener("click", function () {
       state.allCols[state.view] = !state.allCols[state.view];
       try { localStorage.setItem(LS + state.view, state.allCols[state.view] ? "1" : "0"); } catch (e) {}

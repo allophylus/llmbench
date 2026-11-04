@@ -724,27 +724,11 @@ body.show-scores #tbl td.sc { display: table-cell; }
 .legend { margin: .1rem 0 .9rem; color: var(--fg-faint); font-size: 12.5px; max-width: 95ch; }
 .legend b { color: var(--fg-dim); font-weight: 600; }
 
-/* ---- two-row header: group band above individual column labels ---- */
+/* ---- sortable column headers ---- */
 @media (min-width: 761px) {
   #tbl { table-layout: auto; width: max-content; min-width: 100%; }
 }
-#tbl thead tr.grprow th {
-  position: sticky;
-  top: 0;
-  z-index: 4;
-  cursor: default;
-  text-align: center;
-  font: 700 9.5px/1.2 var(--mono);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--fg-faint);
-  background: #111925;
-  border-bottom: 1px solid var(--line-soft);
-  padding: .4rem .45rem .3rem;
-  user-select: none;
-}
-#tbl thead tr.grprow th.gcell-empty { background: #111925; }
-#tbl thead tr.colrow th { top: 27px; }
+#tbl thead tr.colrow th { top: 0; }
 #tbl thead tr.colrow th.num { text-align: right; }
 #tbl thead tr.colrow th.c-name { text-align: left; }
 
@@ -826,7 +810,6 @@ body.show-scores #tbl td.sc { display: table-cell; }
   .viewtabs::-webkit-scrollbar { display: none; }
   .viewtab { flex: none; padding: .5rem .85rem; font-size: 11px; }
   .viewsub { font-size: 12.5px; }
-  #tbl thead tr.grprow { display: none; }
   #tbl thead tr.colrow th { top: var(--thead-stick); }
   #tbl thead tr.colrow th.c-name,
   #tbl tbody td.c-name { position: static; box-shadow: none; }
@@ -864,6 +847,118 @@ table.rx th { color: var(--fg-faint); font-weight: 600; }
 table.rx td.num { font-variant-numeric: tabular-nums; color: var(--fg); }
 .rx-l { color: var(--fg-dim); font: 12px var(--mono); margin-bottom: .3rem; }
 .rx-l b { color: var(--fg); }
+
+.sweep-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  margin: 0 0 .75rem;
+  padding: .5rem .75rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--fg-dim);
+  font-size: 13px;
+}
+.sweep-metrics[hidden] { display: none; }
+.sweep-metrics legend { padding: 0 .25rem; font-weight: 600; }
+.sweep-metrics label { display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; }
+.sweep-metrics input { accent-color: var(--accent); }
+
+/* Visible per-model sweep and logic cells in the Speed view. */
+#tbl th.c-sweep, #tbl td.c-sweep { min-width: 120px; }
+#tbl th.c-logic, #tbl td.c-logic { min-width: 100px; }
+#tbl td.c-sweep, #tbl td.c-logic { padding: .5rem .65rem; }
+#tbl .metric {
+  display: flex;
+  justify-content: space-between;
+  gap: .6rem;
+  font: 11.5px/1.6 var(--mono);
+}
+#tbl .metric > span { color: var(--fg-faint); font-size: 10px; }
+#tbl .logic-score { display: block; font: 600 13px/1.6 var(--mono); }
+/* Speed stays a comparison table, including below the other views' card breakpoint. */
+#tablepanel[data-view="speed"] {
+  overflow: auto;
+  max-height: 75vh;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  scroll-margin-top: calc(var(--topbar-h) + 8px);
+}
+#tablepanel[data-view="speed"] #tbl {
+  display: table;
+  width: max-content;
+  min-width: 100%;
+  table-layout: auto;
+}
+#tablepanel[data-view="speed"] #tbl > thead {
+  display: table-header-group;
+  position: static;
+}
+#tablepanel[data-view="speed"] #tbl > tbody { display: table-row-group; width: auto; }
+#tablepanel[data-view="speed"] #tbl > thead > tr,
+#tablepanel[data-view="speed"] #tbl > tbody > tr {
+  display: table-row;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+#tablepanel[data-view="speed"] #tbl > thead > tr > th,
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td {
+  display: table-cell !important;
+  width: auto;
+  padding: .65rem .75rem;
+  border: 0;
+  border-right: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  vertical-align: top;
+  font-size: 13px;
+}
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td { text-align: right !important; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr.archhead > td { text-align: left !important; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td::before { display: none; content: none; }
+#tablepanel[data-view="speed"] #tbl > thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  font-size: 11px;
+}
+#tablepanel[data-view="speed"] #tbl th .th-sub { display: inline; }
+#tablepanel[data-view="speed"] #tbl td .meta { display: none; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr:nth-child(odd) > td { background: var(--bg); }
+#tablepanel[data-view="speed"] #tbl > tbody > tr:nth-child(even) > td { background: var(--bg-soft); }
+#tablepanel[data-view="speed"] #tbl > tbody > tr:hover > td { background: #192638; }
+#tablepanel[data-view="speed"] #tbl > thead > tr > th.c-name,
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td.c-name {
+  position: sticky;
+  left: 0;
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+  text-align: left !important;
+  box-shadow: 1px 0 0 var(--line);
+}
+#tablepanel[data-view="speed"] #tbl > thead > tr > th.c-name { z-index: 5; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td.c-name { z-index: 2; font-weight: 400; }
+#tablepanel[data-view="speed"] #tbl td.c-name .name {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  font-weight: 600;
+}
+#tablepanel[data-view="speed"] #tbl .metric { font-size: 12px; line-height: 1.65; }
+#tablepanel[data-view="speed"] #tbl .metric > span { font-size: 11px; }
+@media (max-width: 760px) {
+  #tablepanel[data-view="speed"] #tbl > thead > tr > th.c-name,
+  #tablepanel[data-view="speed"] #tbl > tbody > tr > td.c-name {
+    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
+  }
+}
 
 /* ---- overview ablation block ---- */
 .about#ablation { max-width: none; }

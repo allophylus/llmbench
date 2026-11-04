@@ -21,7 +21,28 @@ This page solves that with ~300 lines of plain JavaScript:
 | Numeric sort | Numeric columns compare as numbers; `8` sorts below `10`. One exception is deliberate: `Params` compares billions parsed from `"27B"`/`"2.4B"`, so it sorts numerically too. |
 | Missing data | Blank cells sort **last in both directions** and render as a dim `—`. Values are never filled in or guessed. |
 | Filter | Free-text box (name / slug / quant / arch), an architecture dropdown, and an "only rows with video" toggle. |
-| Phone | At ≤ 760 px the table becomes a card list; there is no horizontal page scroll. |
+| Phone | Speed stays a horizontally scrollable comparison table with a pinned model column; other views become cards at ≤ 760 px. There is no horizontal page scroll. |
+
+The Speed view shows each model's 4K, 32K, 64K, 128K and 256K context sweep
+directly in its row. Each sweep
+cell labels prefill/decode (tokens/s), peak VRAM (GiB), and actual prompt tokens;
+Logic off/on columns are not displayed in Speed. The older standalone speed,
+VRAM and server-context columns are not displayed, including under "Show all
+columns"; their raw measurements remain in the dataset. Sweep columns are visible
+without expanding details or selecting "Show all columns". Context headers sort
+by decode rate. At every screen width, Speed keeps
+models in compact table rows with aligned columns, a pinned model name, and sticky
+column headers. Scroll inside the table to compare all contexts and models.
+Use the Speed-only "Sweep metrics" checkboxes to show any combination of Prefill,
+Decode, VRAM and Prompt across all five contexts. All four start selected; selecting
+none shows "No metrics selected". Choices are retained while switching views
+but reset on reload. Context headers still sort by decode rate.
+
+Models with measurement-status notes stay in the normal sortable table without an
+Archive grouping; missing measurements remain blank. The accelerator-ablation
+table identifies the tested model and each configuration's draft model or MTP
+head directly from the arm records. These tests cover Qwen3.8-27B-Q4_K_M only,
+not every model in the Speed table.
 
 No framework, no build step, no CDN, no analytics. Just `index.html`, `style.css`, `app.js`
 and the generated data.

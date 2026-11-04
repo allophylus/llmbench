@@ -107,11 +107,13 @@ def load_arms():
             n = len(d["answers"])
             same = sum(1 for k in d["answers"]
                        if base["answers"][k]["content"] == d["answers"][k]["content"])
+        argv = d["argv"]
+        draft = argv[argv.index("--spec-draft-model") + 1] if "--spec-draft-model" in argv else None
         out.append(dict(label=label, spec=spec, method=method, fa=d["fa"], kv=d["kv_cache_type"],
                         dec_s=d["decode_short"]["decode_tps"], dec_l=d["decode_30k"]["decode_tps"],
                         pre_s=d["decode_short"]["prefill_tps"], pre_l=d["decode_30k"]["prefill_tps"],
                         vram_idle=d["vram_idle_gib"], vram_peak=d["vram_peak_overall_gib"],
-                        same=same, n=n, ctx=d["n_ctx"], model=d["model"],
+                        same=same, n=n, ctx=d["n_ctx"], model=d["model"], draft=draft,
                         build=d["server_build"], prompt_short=d["decode_short"]["prompt_n"],
                         prompt_long=d["decode_30k"]["prompt_n"],
                         predicted=d["decode_short"]["predicted_n"]))
@@ -150,12 +152,15 @@ def build_html():
             good = (pct < 0) if invert else (pct > 0)
             return " <span class=%s>%+.0f%%</span>" % ("ok" if good else "bad", pct)
         rows.append(
-            "<tr><td class=arm><b>%s</b><span>%s</span></td>"
+            "<tr><td>%s</td><td class=arm><b>%s</b><span>%s</span></td>"
+            "<td>%s</td>"
             "<td class=num>%s</td><td>%s</td>"
             "<td class=num>%s%s</td><td class=num>%s%s</td>"
             "<td class=num>%s%s</td><td class=num>%s%s</td>"
             "<td class=num>%s / %s</td><td class=num>%s</td></tr>" % (
-                esc(r["label"]), esc(r["spec"]),
+                esc(public_model(r["model"])), esc(r["label"]), esc(r["spec"]),
+                esc(public_model(r["draft"])) if r["draft"] else
+                ("Own MTP head" if r["method"].startswith("draft-mtp") else "None"),
                 "on" if r["fa"] == "on" else "<span class=bad>off</span>",
                 esc(r["method"]),
                 f1(r["dec_s"]), "" if i == 0 else rel(r["dec_s"], base["dec_s"]),
@@ -165,7 +170,7 @@ def build_html():
                 f2(r["vram_idle"]), f2(r["vram_peak"]), ans))
 
     table = ("<div class=scroll><table><thead><tr>"
-             "<th>Arm</th><th>FA</th><th>Speculative method</th>"
+             "<th>Tested model</th><th>Arm</th><th>Draft model / head</th><th>FA</th><th>Speculative method</th>"
              "<th>Decode t/s<br>1.6k ctx</th><th>Decode t/s<br>27.7k ctx</th>"
              "<th>Prefill t/s<br>1.6k ctx</th><th>Prefill t/s<br>27.7k ctx</th>"
              "<th>VRAM GiB<br>idle / peak</th><th>Answers =<br>baseline</th>"
@@ -249,9 +254,11 @@ def build_html():
             "{:,}".format(base["prompt_long"]))
     )
 
-    sub = ("How much each accelerator actually buys on one fixed model. Flash attention, "
+    sub = ("Tested model: <b>%s</b>. These results cover this model only, not every model "
+           "in the Speed table. Flash attention, "
            "speculative decoding (MTP and DFlash) and their combinations, measured back to back "
-           "with only the flags changing. Higher is better; percentages are against the baseline.")
+           "with only the flags changing. Higher is better; percentages are against the baseline."
+           % esc(public_model(base["model"])))
 
     body = ("<h1>Accelerator ablation</h1>" + "<p class=sub>%s</p>" % sub
             + "<h2 class=sec>Headline</h2>" + table
