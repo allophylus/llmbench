@@ -204,7 +204,43 @@ def load_arms_per_model():
     return out
 
 
+
+def load_rungs():
+    """Rung-matched arms: benchmarks/ablation/arms-rungs/<slug>/<arm>-<rung>.json"""
+    root = os.path.join(ABL, "arms-rungs")
+    cells = []
+    if not os.path.isdir(root):
+        return cells
+    for slug in sorted(os.listdir(root)):
+        d = os.path.join(root, slug)
+        if not os.path.isdir(d):
+            continue
+        for f in sorted(glob.glob(os.path.join(d, "*.json"))):
+            try:
+                j = json.load(open(f, encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            if j.get("status") != "ok" or not j.get("decode_tps"):
+                continue
+            cells.append(j)
+    return cells
+
+
 def build_html():
+    # Fen's rule (2026-11-04): the ablation table must use the SAME context rungs as the sweep.
+    # The old 1.6k / 27.7k grid is withdrawn — until rung data exists the section says so
+    # rather than showing numbers under a different definition of "context".
+    _rungs = load_rungs()
+    if not _rungs:
+        return ("<h1>Accelerator ablation</h1>"
+                "<p class=sub>FA, MTP and DFlash toggled one at a time on a fixed model.</p>"
+                "<div class=callout><b>Being re-measured at the sweep's context rungs.</b> "
+                "The earlier table used 1.6k and 27.7k prompts, which are not the rungs used by the "
+                "models table (4K, 32K, 64K, 128K, 256K), so the two could not be read against each "
+                "other. Those figures have been withdrawn rather than left on the page beside numbers "
+                "that mean something different by &ldquo;context&rdquo;. This section will show one row per "
+                "model with those five rungs as columns once the run finishes.</div>", 0)
+
     arms = load_arms_per_model() or load_arms()
     cc = json.load(open(os.path.join(ABL, "cachecheck.json"), encoding="utf-8"))
     a = cc["arms"]
