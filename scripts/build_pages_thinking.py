@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """build_pages_thinking.py -- the "thinking on/off" tab (the SITE's only thinking page).
 
-ONE page, ONE nav entry ("Thinking"), TWO sections, because both measure the same thing:
-one model, one question set, reasoning channel enabled vs disabled.
+ONE page, ONE nav entry ("Thinking"): one model, one question set, reasoning channel
+enabled vs disabled.
 
-  Section A  accuracy  — the 25 frozen GPQA-diamond questions, from the `thinking` block
-                         that scripts/a3b_extras.py puts on the model's row in
-                         data/results.json. Per max-token cap: off/on correct, tokens, seconds.
-  Section B  logic traps — the ten everyday questions in benchmarks/logic10/, from one
-                         result file per model (benchmarks/logic10/results/<slug>.json),
-                         written by benchmarks/logic10/logic10.py. Per model: off/on score,
-                         tokens, time, and a per-trap matrix that marks the memorisable
-                         classic CRT items.
+  Accuracy — the 25 frozen GPQA-diamond questions, from the `thinking` block that
+             scripts/a3b_extras.py puts on the model's row in data/results.json. Per
+             max-token cap: off/on correct, tokens, seconds.
+  Method   — how the two arms were run and graded.
+  Findings — what thinking bought and what it cost, computed from the same summary.
+
+(The logic-trap set is not published on the site. Its measurements remain in
+benchmarks/logic10/ for the record; they are simply not a section of any page.)
 
 Writes thinking/index.html. Times are seconds (never ms). Nothing is typed by hand: every
 number comes from a result file, and a run that is missing or incomplete is shown as
@@ -29,24 +29,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from site_nav import render_nav, render_topbar, render_brand, TOPBAR_CSS  # noqa: E402  single source of truth for the nav
 OUT = os.path.join(ROOT, "thinking", "index.html")
 
-
-# display labels only; never the host path or file name of the weights
-LOGIC_LABEL = {
-    "qwen3-6-35b-a3b-ud-q4km": "Qwen3.6-35B-A3B",
-    "qwen3-8-27b-q4km": "Qwen3.8-27B (Q4_K_M)",
-    "qwen3-8-27b-q4-0": "Qwen3.8-27B (Q4_0)",
-    "davidau-qwen3-8-27b-neo-max-mtp-q4-k-m": "DavidAU Qwen3.8-27B NEO-MAX",
-    "huihui-abl-q4-k-m": "Huihui abliterated 27B",
-    "ornith-1-5-35b-a3b-q4-k-m": "Ornith-1.5-35B-A3B",
-    "lfm3-1-7b-q4-k-m": "LFM3-1.7B",
-}
-LOGIC_ORDER = ["qwen3-6-35b-a3b-ud-q4km", "qwen3-8-27b-q4km", "qwen3-8-27b-q4-0",
-               "davidau-qwen3-8-27b-neo-max-mtp-q4-k-m", "huihui-abl-q4-k-m",
-               "ornith-1-5-35b-a3b-q4-k-m", "lfm3-1-7b-q4-k-m"]
-CLASSIC = {"batball", "widgets", "lilypad"}
-SHORT = {"wash": "car wash", "race": "race", "batball": "bat+ball", "widgets": "widgets",
-         "lilypad": "lily pads", "pills": "pills", "months": "months", "ladder": "ladder",
-         "coins": "coins", "discount": "discount"}
 
 CSS = """
 :root{--bg:#0f141b;--panel:#151c26;--line:#243040;--fg:#e8eef8;--dim:#9fb0c6;--faint:#6f8296;--gold:#f5c542;--blue:#8cc8ff;--bad:#ff7b72;--ok:#7ee787}
@@ -121,9 +103,65 @@ def med(rows):
 
 # ---------------------------------------------------------------- section A: accuracy
 
+PAIR_LABELS = {
+    "stock38": "Qwen3.8-27B Q4_K_M",
+    "q4_0": "Qwen3.8-27B Q4_0",
+    "davidau": "DavidAU NEO-MAX MTP 27B",
+    "huihui": "Huihui abliterated 27B",
+    "ornith": "Ornith-1.5-35B-A3B",
+    "qwen36": "Qwen3.6-35B-A3B",
+}
+
+
+def corrected_pairs_html():
+    """The re-measured pairs in benchmarks/thinking2/ (both arms genuinely ran)."""
+    rows = []
+    for f in sorted(glob.glob(os.path.join(ROOT, "benchmarks", "thinking2", "*pair*.json"))):
+        key = os.path.basename(f).replace("-pair.json", "")
+        label = PAIR_LABELS.get(key)
+        if not label:
+            continue
+        d = json.load(open(f, encoding="utf-8"))
+        off = d.get("off") or {}
+        on = d.get("on") or {}
+
+        def valid(x):
+            return (x.get("n") or 0) > 0 and (x.get("tokens") or 0) > 0
+
+        rows.append((label, d.get("max_tokens"), off, on, valid(off), valid(on)))
+    if not rows:
+        return "<p>No corrected thinking pairs found.</p>"
+    out = ["<div class=table-wrap><table class=probe><thead><tr>"
+           "<th>model</th><th>cap</th><th>thinking off</th><th>thinking on</th>"
+           "<th>tokens off</th><th>tokens on</th><th>verdict</th></tr></thead><tbody>"]
+    for label, cap, off, on, ov, nv in rows:
+        if ov and nv:
+            verdict = "on loses %d, costs +%d tokens" % (
+                off["correct"] - on["correct"], on["tokens"] - off["tokens"])
+            oc, nc = "%d/%d" % (off["correct"], off["n"]), "%d/%d" % (on["correct"], on["n"])
+        elif ov and not nv:
+            verdict, oc, nc = "on arm invalid — not measured", "%d/%d" % (off["correct"], off["n"]), "—"
+        else:
+            verdict, oc, nc = "invalid — not measured", "—", "—"
+        out.append("<tr><td>%s</td><td>%s</td><td class=num>%s</td><td class=num>%s</td>"
+                   "<td class=num>%s</td><td class=num>%s</td><td>%s</td></tr>" % (
+                       html.escape(label), cap or "—", oc, nc,
+                       "{:,}".format(off.get("tokens") or 0) if ov else "—",
+                       "{:,}".format(on.get("tokens") or 0) if nv else "—",
+                       html.escape(verdict)))
+    out.append("</tbody></table></div>")
+    out.append('<p class="note">Both arms share the same max-token cap; the only variable is the '
+               'thinking switch. Rows marked invalid had their run killed by a competing server on '
+               'the host, so they are not scored.</p>')
+    return "".join(out)
+
+
 def _style_findings(lines):
+    import re as _re
+    # callers already pass <li>…</li> items; re-wrapping nested them (<li><li>…)
+    clean = [_re.sub(r"^\s*<li>|</li>\s*$", "", str(x)).strip() for x in lines]
     return ("<h2 class=sec>Findings</h2><ul class=findings>"
-            + "".join("<li>%s</li>" % x for x in lines) + "</ul>")
+            + "".join("<li>%s</li>" % x for x in clean) + "</ul>")
 
 
 def thinking_p1_findings():

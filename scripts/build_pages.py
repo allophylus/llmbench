@@ -285,7 +285,7 @@ def build_chat():
     body = ("<p class=sub>Ten fixed knowledge questions, temperature 0, thinking off. "
             "Accuracy = strictly correct answers.</p>"
             + (f"<p class=warn><b>Saturated test.</b> All {len(camp)} models score "
-               f"{camp[0][1]}/{camp[0][3]} correct plus {camp[0][2]} partial "
+               f"{camp[0][1]}/{camp[0][1] + camp[0][2] + camp[0][3]} correct plus {camp[0][2]} partial "
                f"({camp[0][4]}%), so this suite cannot tell these models apart. "
                "The table is ordered by decode speed, not by quality — a tie is a tie.</p>"
                if saturated else "")
