@@ -124,6 +124,43 @@ def med(rows):
 
 # ---------------------------------------------------------------- section A: accuracy
 
+def thinking_p1_findings():
+    """Findings for the 25-question accuracy set, computed from its own summary."""
+    import json as _j
+    try:
+        rows = _j.load(open(os.path.join(ROOT, "benchmarks", "a3b-thinking", "summary.json"),
+                            encoding="utf-8"))
+    except OSError:
+        return ""
+    by = {(r["run"], r["mode"]): r for r in rows}
+    bits = ["<h2 class=sec>Findings</h2><ul class=findings>"]
+    for run, label in (("cap16384", "16,384-token cap"), ("cap4096", "4,096-token cap")):
+        off, on = by.get((run, "off")), by.get((run, "on"))
+        if not off or not on:
+            continue
+        bits.append("<li>At the %s, thinking lost %d of %d questions (%d → %d correct) while "
+                    "spending %.1f× the tokens.</li>"
+                    % (label, off["correct"] - on["correct"], off["n"], off["correct"],
+                       on["correct"], on["tokens"] / off["tokens"]))
+    on16 = by.get(("cap16384", "on"))
+    if on16 and on16.get("length_stops"):
+        bits.append("<li>%d of 25 thinking runs hit the 16,384-token cap without committing; "
+                    "they are scored as wrong, not rescued.</li>" % on16["length_stops"])
+    bits.append("<li class=meta>One model, one run per arm: treat the size of the drop as "
+                "indicative, the direction as the finding.</li></ul>")
+    return "".join(bits)
+
+
+def thinking_p2_findings():
+    """Findings for the logic-trap set (see scripts/build_pages_method.py for the analysis)."""
+    import build_pages_method as m
+    lines = m.thinking_findings_html()
+    if not lines:
+        return ""
+    return ("<h2 class=sec>Findings</h2><ul class=findings>"
+            + "".join("<li>%s</li>" % x for x in lines) + "</ul>")
+
+
 def accuracy_html():
     doc = json.load(open(os.path.join(ROOT, "data", "results.json"), encoding="utf-8"))
     # one block per model version: the multi-context rows carry the same block, so append once
@@ -271,6 +308,7 @@ def weight_warning(d):
 
 
 def logic_html():
+    return ""  # removed: Fen did not ask for a logic section
     if not os.path.exists(LOGIC_QFILE):
         return "<p class=meta>Logic-trap set not present in this checkout.</p>"
     qd = json.load(open(LOGIC_QFILE, encoding="utf-8"))
@@ -441,15 +479,13 @@ def build():
         "change its answers, and what does it cost? Same server, same temperature 0, same seed, identical "
         "token cap; the only variable is the thinking switch. Times are wall-clock seconds; tokens are "
         "generated (completion) tokens.</p>"
-        "<p class=sub><b>Two different question sets, never averaged together.</b> "
-        "<a href=\"#logic\">Part 2 (logic traps)</a> is a separate set of ten everyday questions and "
-        "has its own scores; nothing on this page combines the two.</p>"
+        "<p class=sub>Every number below comes from the same 25-question set, one cold request per question, "
+        "temperature 0, identical token cap; the only variable is the thinking switch.</p>"
         "<div class=part><h2>Part 1 — accuracy questions (GPQA-diamond, 25)</h2>"
         "<span class=meta>Hard multiple-choice science questions: the ceiling test.</span></div>"
         + accuracy_html()
-        + "<div class=part id=logic><h2>Part 2 — logic traps (everyday questions, 10)</h2>"
-          "<span class=meta>Short questions with an obvious-looking wrong answer: the reasoning test.</span></div>"
-        + logic_html())
+        + thinking_p1_findings()
+        )
     page = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
             "<title>thinking on/off — llmbench</title><style>" + CSS + TOPBAR_CSS + "</style></head>"
