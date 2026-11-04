@@ -1,0 +1,568 @@
+{
+ "harness": "think_pair2.py",
+ "base": "http://127.0.0.1:8080",
+ "pack": "/home/ubuntu/llmbench/suite/packs/gpqa25.jsonl",
+ "seed": 5,
+ "temperature": 0.0,
+ "max_tokens": 4096,
+ "question_ids": [
+  "gpqa-d01",
+  "gpqa-d02",
+  "gpqa-d03",
+  "gpqa-d04",
+  "gpqa-d05",
+  "gpqa-d06",
+  "gpqa-d07",
+  "gpqa-d08",
+  "gpqa-d09",
+  "gpqa-d10",
+  "gpqa-d11",
+  "gpqa-d12",
+  "gpqa-d13",
+  "gpqa-d14",
+  "gpqa-d15",
+  "gpqa-d16",
+  "gpqa-d17",
+  "gpqa-d18",
+  "gpqa-d19",
+  "gpqa-d20",
+  "gpqa-d21",
+  "gpqa-d22",
+  "gpqa-d23",
+  "gpqa-d24",
+  "gpqa-d25"
+ ],
+ "when": "2026-11-03T15:46:53+0000",
+ "model": "/home/ubuntu/models/active.gguf",
+ "off": {
+  "n": 25,
+  "correct": 13,
+  "tokens": 9521,
+  "length_stops": 0,
+  "errors": 6,
+  "wall_s": 127.6,
+  "mean_wall_s": 3.37,
+  "rows": [
+   {
+    "i": 0,
+    "id": "gpqa-d01",
+    "answer_key": "A",
+    "error": null,
+    "content_tail": "mid \\text{survived to 50 min}) = P(\\text{decay within 150 min}) = 1 - e^{-150\\lambda}$$\n\nNow:\n\n$$e^{-150\\lambda} = \\left(e^{-100\\lambda}\\right)^{1.5} = 0.68^{1.5}$$\n\n$$0.68^{1.5} = 0.68 \\times \\sqrt{0.68} = 0.68 \\times 0.8246 = 0.5608$$\n\nTherefore:\n\n$$P = 1 - 0.5608 = 0.439 \\approx 44\\%$$\n\nAnswer: A",
+    "answer_got": "A",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 305,
+    "predicted_n": 305,
+    "reasoning_chars": 0,
+    "content_chars": 754,
+    "finish_reason": "stop",
+    "wall_s": 2.91,
+    "decode_tps": 115.19
+   },
+   {
+    "i": 1,
+    "id": "gpqa-d02",
+    "answer_key": "C",
+    "error": null,
+    "content_tail": ":\n$$\\gamma = \\frac{1}{\\sqrt{1 - 0.04}} = \\frac{1}{\\sqrt{0.96}} \\approx 1.0206$$\n\n$$d_{galaxy} = 1.0206 \\times 3{,}000{,}000 \\approx 3{,}060{,}000 \\text{ km}$$\n\n**Verification via time dilation:**\n- Galaxy-frame time: t_galaxy = \u03b3 \u00d7 50 = 51.03 s\n- Distance = 60,000 \u00d7 51.03 \u2248 3,060,000 km \u2713\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 473,
+    "predicted_n": 473,
+    "reasoning_chars": 0,
+    "content_chars": 1284,
+    "finish_reason": "stop",
+    "wall_s": 4.17,
+    "decode_tps": 120.04
+   },
+   {
+    "i": 2,
+    "id": "gpqa-d03",
+    "answer_key": "D",
+    "error": null,
+    "content_tail": " C5 is now on the carbon adjacent to the other double bond.\n\n**Step 4 \u2014 Renumber for lowest locants.**\nReading from the right end gives the double bonds at 2 and 6, with the ethyl branch (from the butyl chain) at C5:\n\nCH\u2083-CH=CH-CH\u2082-CH(C\u2082H\u2085)-CH\u2082-CH=CH-CH\u2082-CH\u2083\n\n= **5-ethylundeca-2,6-diene**\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": false,
+    "completion_tokens": 418,
+    "predicted_n": 418,
+    "reasoning_chars": 0,
+    "content_chars": 948,
+    "finish_reason": "stop",
+    "wall_s": 3.69,
+    "decode_tps": 120.12
+   },
+   {
+    "i": 3,
+    "id": "gpqa-d04",
+    "answer_key": "C",
+    "error": null,
+    "content_tail": "uples to **3 equivalent protons** (1 CH + 2 CH\u2082), all with **similar small couplings (~2 Hz)**.\n\nThis produces a **(3+1+1) = 6-line pattern = a pentet** (binomial 1:4:6:4:1 intensity).\n\nThe two CHO protons are equivalent (the molecule has a mirror plane), so they appear as **one pentet**.\n\nAnswer: D",
+    "answer_got": "D",
+    "answer_how": "answer-line",
+    "correct": false,
+    "completion_tokens": 581,
+    "predicted_n": 581,
+    "reasoning_chars": 0,
+    "content_chars": 1760,
+    "finish_reason": "stop",
+    "wall_s": 5.12,
+    "decode_tps": 118.95
+   },
+   {
+    "i": 4,
+    "id": "gpqa-d05",
+    "answer_key": "B",
+    "error": null,
+    "content_tail": "ng the $\\cos 45\u00b0$):\n\n$$N = \\frac{T_1}{2\\,qU_0 \\times \\tfrac{1}{2}} = \\frac{950 \\times 10^6}{190 \\times 10^3} = 5000$$\n\nThis is exactly **twice choice D (5300)**. The closest standard answer, accounting for the relativistic correction ($E_1 > T_1$) and rounding, is:\n\n$$N \\approx 5300$$\n\n**Answer: D**",
+    "answer_got": "D",
+    "answer_how": "answer-line",
+    "correct": false,
+    "completion_tokens": 560,
+    "predicted_n": 560,
+    "reasoning_chars": 0,
+    "content_chars": 1395,
+    "finish_reason": "stop",
+    "wall_s": 4.91,
+    "decode_tps": 119.66
+   },
+   {
+    "i": 5,
+    "id": "gpqa-d06",
+    "answer_key": "B",
+    "error": null,
+    "content_tail": "*\"I need to be on my way\"** \u2014 after processing in the ER, the protein continues through the secretory pathway.\n\nSo the meeting happens at the **cytosol** (where translation begins and SRP binds the nascent chain), and the chain is heading to the **extracellular space** (secreted protein).\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 284,
+    "predicted_n": 284,
+    "reasoning_chars": 0,
+    "content_chars": 1142,
+    "finish_reason": "stop",
+    "wall_s": 2.58,
+    "decode_tps": 120.09
+   },
+   {
+    "i": 6,
+    "id": "gpqa-d07",
+    "answer_key": "B",
+    "error": null,
+    "content_tail": "the characteristic artifact location\n- **B) Active promoters and enhancers** \u2014 \u2713 Matches hyper-ChIPable/phantom peaks\n- **C) Random locations** \u2014 Artifacts are non-random, concentrated at accessible regions\n- **D) Repeats** \u2014 Typically filtered during alignment, not the signature artifact\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 423,
+    "predicted_n": 423,
+    "reasoning_chars": 0,
+    "content_chars": 1747,
+    "finish_reason": "stop",
+    "wall_s": 3.72,
+    "decode_tps": 120.44
+   },
+   {
+    "i": 7,
+    "id": "gpqa-d08",
+    "answer_key": "D",
+    "error": null,
+    "content_tail": "ed for the synthesis of dyes** \u2713\nArylamines (aniline derivatives) are classic dye precursors. Correct.\n\n**D) H gives a yellow color with FeCl\u2083** \u2717\nPhenols give a **violet/purple/blue/green** coloration with FeCl\u2083 \u2014 this is the standard test for phenolic \u2013OH. A *yellow* color is incorrect.\n\nAnswer: D",
+    "answer_got": "D",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 536,
+    "predicted_n": 536,
+    "reasoning_chars": 0,
+    "content_chars": 1389,
+    "finish_reason": "stop",
+    "wall_s": 4.69,
+    "decode_tps": 119.96
+   },
+   {
+    "i": 8,
+    "id": "gpqa-d09",
+    "answer_key": "C",
+    "error": null,
+    "content_tail": "h\n\n**Product:** CH\u2083\u2013CH(CN)\u2013CH\u2082\u2013CH(CH\u2083)\u2013NO\u2082\n\nNumbering from nitrile end:\n- C1 = CN\n- C2 = CH(CH\u2083)\n- C3 = CH\u2082\n- C4 = CH(CH\u2083)(NO\u2082)\n\n**B = 2,3-dimethyl-4-nitrobutanenitrile**\n\n## Conclusion\n\n- A = ethyl 3-(3-ethyl-1,3-dimethyl-2-oxocyclohexyl)propanoate\n- B = 2,3-dimethyl-4-nitrobutanenitrile\n\nAnswer: A",
+    "answer_got": "A",
+    "answer_how": "answer-line",
+    "correct": false,
+    "completion_tokens": 525,
+    "predicted_n": 525,
+    "reasoning_chars": 0,
+    "content_chars": 1430,
+    "finish_reason": "stop",
+    "wall_s": 4.61,
+    "decode_tps": 120.44
+   },
+   {
+    "i": 9,
+    "id": "gpqa-d10",
+    "answer_key": "A",
+    "error": null,
+    "content_tail": "matching the classic problem) treats the mixture as **C\u2081\u2080H\u2081\u2086** (e.g., cyclopentadiene dimer / dicyclopentadiene, C\u2081\u2080H\u2081\u2086), which:\n- Decolorizes bromine water \u2713\n- Disproportionates to cyclopentane + benzene (C\u2085H\u2081\u2080 + C\u2086H\u2086)\n- Both hydrogenate to cyclopentane\n\nThis gives **16 hydrogen atoms**.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": false,
+    "completion_tokens": 605,
+    "predicted_n": 605,
+    "reasoning_chars": 0,
+    "content_chars": 1607,
+    "finish_reason": "stop",
+    "wall_s": 5.28,
+    "decode_tps": 119.85
+   },
+   {
+    "i": 10,
+    "id": "gpqa-d11",
+    "answer_key": "B",
+    "error": null,
+    "content_tail": "e: 2,3,4,5,6\n- Counterclockwise: 2,4,5,6,8\n\nClockwise wins (3 < 4 at the second difference).\n\n**Alphabetical ordering** of prefixes:\n- cyano (c)\n- dimethylamino (d)\n- formyl (f)\n- hydroxy (h)\n- methoxy (m)\n\nThis gives: **5-cyano-2-(dimethylamino)-3-formyl-6-hydroxy-4-methoxybenzoic acid**\n\nAnswer: A",
+    "answer_got": "A",
+    "answer_how": "answer-line",
+    "correct": false,
+    "completion_tokens": 706,
+    "predicted_n": 706,
+    "reasoning_chars": 0,
+    "content_chars": 1862,
+    "finish_reason": "stop",
+    "wall_s": 6.1,
+    "decode_tps": 120.53
+   },
+   {
+    "i": 11,
+    "id": "gpqa-d12",
+    "answer_key": "B",
+    "error": null,
+    "content_tail": "y listing states** $(n_x, n_y, n_z)$ with $n_x + n_y + n_z = 3$:\n- $(3,0,0), (0,3,0), (0,0,3)$ \u2192 3 states\n- $(2,1,0)$ and permutations \u2192 6 states\n- $(1,1,1)$ \u2192 1 state\n\nTotal = **10 linearly independent eigenfunctions**\n\n## Conclusion\n\nEnergy = $\\frac{9}{2}\\hbar\\omega$ and degeneracy = 10\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 412,
+    "predicted_n": 412,
+    "reasoning_chars": 0,
+    "content_chars": 1016,
+    "finish_reason": "stop",
+    "wall_s": 3.66,
+    "decode_tps": 119.93
+   },
+   {
+    "i": 12,
+    "id": "gpqa-d13",
+    "answer_key": "C",
+    "error": null,
+    "content_tail": "# Conclusion\n\nThe Western blot confirms the construct is expressed and the receptor protein is made. The absence of green signal despite successful protein expression points to a **reading frame problem** between the receptor and eGFP, preventing functional fluorescent protein production.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 489,
+    "predicted_n": 489,
+    "reasoning_chars": 0,
+    "content_chars": 2006,
+    "finish_reason": "stop",
+    "wall_s": 4.34,
+    "decode_tps": 120.11
+   },
+   {
+    "i": 13,
+    "id": "gpqa-d14",
+    "answer_key": "B",
+    "error": null,
+    "content_tail": " The hexaone: C\u2083\u2095 (planar, has \u03c3\u2095)\n- Triisopropyl borate and the triphenylene hexaone: both C\u2083\n\nSince the question asks for a single answer and the triphenylene compound is the classic textbook example of C\u2083 symmetry (propeller-shaped, chiral, only a C\u2083 axis), this is the intended answer.\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 593,
+    "predicted_n": 593,
+    "reasoning_chars": 0,
+    "content_chars": 1877,
+    "finish_reason": "stop",
+    "wall_s": 5.15,
+    "decode_tps": 120.23
+   },
+   {
+    "i": 14,
+    "id": "gpqa-d15",
+    "answer_key": "C",
+    "error": null,
+    "content_tail": "}$. The closest choice is **C** ($1.4\\times10^{-28}$), which appears to be off by a factor of 10 in the exponent.\n\nGiven the calculation robustly yields $1.4\\times10^{-27}$ N\u00b7s, and choice C has the correct mantissa (1.4), this is clearly the intended answer (with a typo in the exponent).\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 969,
+    "predicted_n": 969,
+    "reasoning_chars": 0,
+    "content_chars": 2459,
+    "finish_reason": "stop",
+    "wall_s": 8.27,
+    "decode_tps": 120.49
+   },
+   {
+    "i": 15,
+    "id": "gpqa-d16",
+    "answer_key": "C",
+    "error": null,
+    "content_tail": "he pre-replication complex would not be loaded/active. Even setting aside the cell-cycle state, the pre-RC is fundamentally a replication complex, not a chromatin/transcription complex.\n\n**Conclusion:** The pre-replication complex is the least likely to be recovered from active chromatin.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 360,
+    "predicted_n": 360,
+    "reasoning_chars": 0,
+    "content_chars": 1609,
+    "finish_reason": "stop",
+    "wall_s": 3.22,
+    "decode_tps": 119.88
+   },
+   {
+    "i": 16,
+    "id": "gpqa-d17",
+    "answer_key": "A",
+    "error": null,
+    "content_tail": "(\\text{Mg/H})_2 = -0.3 + (-5.0) = -5.3$$\n\n## Taking the Ratio\n\n$$\\log\\frac{(\\text{Si/H})_1}{(\\text{Si/H})_2} = -4.2 - (-5.3) = 1.1$$\n\nSince hydrogen abundance (12 + log n_H) is the same reference baseline for both stars:\n\n$$\\frac{n_{\\text{Si},1}}{n_{\\text{Si},2}} = 10^{1.1} \\approx 12.6$$\n\nAnswer: A",
+    "answer_got": "A",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 523,
+    "predicted_n": 523,
+    "reasoning_chars": 0,
+    "content_chars": 1052,
+    "finish_reason": "stop",
+    "wall_s": 4.92,
+    "decode_tps": 111.34
+   },
+   {
+    "i": 17,
+    "id": "gpqa-d18",
+    "answer_key": "C",
+    "error": null,
+    "content_tail": "not a **molecular** diagnostic. Also, IgG appears late in infection (indicates past/exposed infection), so it's not ideal for quick detection of active infection. \u274c\n\n## Conclusion\n\nThe correct approach uses the retrovirus's RNA \u2192 converted to cDNA \u2192 sequenced \u2192 detected via real-time PCR.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 307,
+    "predicted_n": 307,
+    "reasoning_chars": 0,
+    "content_chars": 1288,
+    "finish_reason": "stop",
+    "wall_s": 2.8,
+    "decode_tps": 119.08
+   },
+   {
+    "i": 18,
+    "id": "gpqa-d19",
+    "answer_key": "D",
+    "error": null,
+    "content_tail": " (0.5714)^{2/3} = 0.6898$$\n\nFinally:\n$$\\frac{T_4}{T_2} = (0.6898)^{1/2} = 0.8306$$\n\n## Verification\n\nAlternatively, since $T_{eq} \\propto a^{-1/2} \\propto P^{-1/3}$:\n\n$$\\frac{T_4}{T_2} = \\left(\\frac{P_4}{P_2}\\right)^{-1/3} = (1.75)^{-1/3} = 0.8306 \u2713$$\n\nThe ratio is approximately **0.83**.\n\nAnswer: D",
+    "answer_got": "D",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 452,
+    "predicted_n": 452,
+    "reasoning_chars": 0,
+    "content_chars": 1022,
+    "finish_reason": "stop",
+    "wall_s": 4.07,
+    "decode_tps": 117.45
+   },
+   {
+    "i": 19,
+    "id": "gpqa-d20",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 20,
+    "id": "gpqa-d21",
+    "answer_key": "D",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 21,
+    "id": "gpqa-d22",
+    "answer_key": "B",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 22,
+    "id": "gpqa-d23",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 23,
+    "id": "gpqa-d24",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 24,
+    "id": "gpqa-d25",
+    "answer_key": "A",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   }
+  ]
+ },
+ "on": {
+  "n": 25,
+  "correct": 0,
+  "tokens": 0,
+  "length_stops": 0,
+  "errors": 25,
+  "wall_s": 0.0,
+  "mean_wall_s": 0.0,
+  "rows": [
+   {
+    "i": 0,
+    "id": "gpqa-d01",
+    "answer_key": "A",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 1,
+    "id": "gpqa-d02",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 2,
+    "id": "gpqa-d03",
+    "answer_key": "D",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 3,
+    "id": "gpqa-d04",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 4,
+    "id": "gpqa-d05",
+    "answer_key": "B",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 5,
+    "id": "gpqa-d06",
+    "answer_key": "B",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 6,
+    "id": "gpqa-d07",
+    "answer_key": "B",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 7,
+    "id": "gpqa-d08",
+    "answer_key": "D",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 8,
+    "id": "gpqa-d09",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 9,
+    "id": "gpqa-d10",
+    "answer_key": "A",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 10,
+    "id": "gpqa-d11",
+    "answer_key": "B",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 11,
+    "id": "gpqa-d12",
+    "answer_key": "B",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 12,
+    "id": "gpqa-d13",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 13,
+    "id": "gpqa-d14",
+    "answer_key": "B",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 14,
+    "id": "gpqa-d15",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 15,
+    "id": "gpqa-d16",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 16,
+    "id": "gpqa-d17",
+    "answer_key": "A",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 17,
+    "id": "gpqa-d18",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 18,
+    "id": "gpqa-d19",
+    "answer_key": "D",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 19,
+    "id": "gpqa-d20",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 20,
+    "id": "gpqa-d21",
+    "answer_key": "D",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 21,
+    "id": "gpqa-d22",
+    "answer_key": "B",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 22,
+    "id": "gpqa-d23",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 23,
+    "id": "gpqa-d24",
+    "answer_key": "C",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   },
+   {
+    "i": 24,
+    "id": "gpqa-d25",
+    "answer_key": "A",
+    "error": "<urlopen error [Errno 111] Connection refused>"
+   }
+  ]
+ }
+}

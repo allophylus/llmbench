@@ -124,7 +124,109 @@ def med(rows):
 
 # ---------------------------------------------------------------- section A: accuracy
 
+def _style_findings(lines):
+    return ("<h2 class=sec>Findings</h2><ul class=findings>"
+            + "".join("<li>%s</li>" % x for x in lines) + "</ul>")
+
+
+def thinking_p1_findings():
+    """Findings for the 25-question accuracy set, computed from its own summary."""
+    try:
+        rows = json.load(open(os.path.join(ROOT, "benchmarks", "a3b-thinking", "summary.json"),
+                              encoding="utf-8"))
+    except OSError:
+        return ""
+    by = {(r["run"], r["mode"]): r for r in rows}
+    out = []
+    for run, label in (("cap16384", "16,384-token cap"), ("cap4096", "4,096-token cap")):
+        off, on = by.get((run, "off")), by.get((run, "on"))
+        if not off or not on:
+            continue
+        d = off["correct"] - on["correct"]
+        verb = "lost" if d > 0 else ("gained" if d < 0 else "held")
+        out.append("<li>At the %s, thinking %s %d of %d questions (%d → %d correct) while "
+                   "spending %.1f× the tokens.</li>"
+                   % (label, verb, abs(d), off["n"], off["correct"], on["correct"],
+                      on["tokens"] / off["tokens"]))
+    on16 = by.get(("cap16384", "on"))
+    if on16 and on16.get("length_stops"):
+        out.append("<li>%d of 25 thinking runs hit the 16,384-token cap without committing; "
+                   "they are scored as wrong, not rescued.</li>" % on16["length_stops"])
+    out.append("<li class=meta>One model, one run per arm: read the size of the drop as "
+               "indicative, the direction as the finding.</li>")
+    return _style_findings(out)
+
+
+def thinking_p2_findings():
+    """Findings for the logic-trap set, from the shared analysis."""
+    import build_pages_method as m
+    lines = m.thinking_findings_html()
+    return _style_findings(lines) if lines else ""
+
+
+
+# ---------------------------------------------------------------- corrected pairs
+# The first thinking run was invalid (the flag never disabled thinking, so both arms
+# reasoned, and the per-question token counts were not generated counts). These files
+# come from the rebuilt harness: same 25 questions, max_tokens matched, only
+# enable_thinking varies. Rows whose "on" arm produced no tokens are marked invalid
+# rather than scored.
+PAIR_LABELS = {
+    "stock38": "Qwen3.8-27B Q4_K_M",
+    "q4_0": "Qwen3.8-27B Q4_0",
+    "davidau": "DavidAU NEO-MAX MTP 27B",
+    "huihui": "Huihui abliterated 27B",
+    "ornith": "Ornith-1.5-35B-A3B",
+    "qwen36": "Qwen3.6-35B-A3B",
+}
+
+
+def corrected_pairs_html():
+    import glob as _glob
+    rows = []
+    for f in sorted(_glob.glob(os.path.join(ROOT, "benchmarks", "thinking2", "*pair*.json"))):
+        key = os.path.basename(f).replace("-pair.json", "")
+        label = PAIR_LABELS.get(key)
+        if not label:
+            continue
+        d = json.load(open(f, encoding="utf-8"))
+        off = d.get("off") or {}
+        on = d.get("on") or {}
+        cap = d.get("max_tokens")
+        def valid(x):
+            return (x.get("n") or 0) > 0 and (x.get("tokens") or 0) > 0
+        ov, nv = valid(off), valid(on)
+        rows.append((label, cap, off, on, ov, nv))
+    if not rows:
+        return "<p>No corrected thinking pairs found.</p>"
+    out = ["<div class=table-wrap><table class=probe><thead><tr>"
+           "<th>model</th><th>cap</th><th>thinking off</th><th>thinking on</th>"
+           "<th>tokens off</th><th>tokens on</th><th>verdict</th></tr></thead><tbody>"]
+    for label, cap, off, on, ov, nv in rows:
+        if ov and nv:
+            verdict = "on loses %d, costs +%d tokens" % (off["correct"] - on["correct"], on["tokens"] - off["tokens"])
+            oc = "%d/%d" % (off["correct"], off["n"]); nc = "%d/%d" % (on["correct"], on["n"])
+        elif ov and not nv:
+            verdict = "on arm invalid — not measured"; oc = "%d/%d" % (off["correct"], off["n"]); nc = "—"
+        else:
+            verdict = "invalid — not measured"; oc = "—"; nc = "—"
+        out.append("<tr><td>%s</td><td>%s</td><td class=num>%s</td><td class=num>%s</td>"
+                   "<td class=num>%s</td><td class=num>%s</td><td>%s</td></tr>" % (
+                       html.escape(label), cap or "—", oc, nc,
+                       "{:,}".format(off.get("tokens") or 0) if ov else "—",
+                       "{:,}".format(on.get("tokens") or 0) if nv else "—",
+                       html.escape(verdict)))
+    out.append("</tbody></table></div>")
+    out.append('<p class="note">Both arms share the same max-token cap; the only variable is the '
+               'thinking switch. Rows marked invalid had their run killed by a competing server on '
+               'the host, so they are not scored.</p>')
+    return "".join(out)
+
+
 def accuracy_html():
+    _corr = corrected_pairs_html()
+    if "No corrected thinking pairs" not in _corr:
+        return _corr
     doc = json.load(open(os.path.join(ROOT, "data", "results.json"), encoding="utf-8"))
     # one block per model version: the multi-context rows carry the same block, so append once
     blocks, seen = [], set()
@@ -447,9 +549,11 @@ def build():
         "<div class=part><h2>Part 1 — accuracy questions (GPQA-diamond, 25)</h2>"
         "<span class=meta>Hard multiple-choice science questions: the ceiling test.</span></div>"
         + accuracy_html()
+        + thinking_p1_findings()
         + "<div class=part id=logic><h2>Part 2 — logic traps (everyday questions, 10)</h2>"
           "<span class=meta>Short questions with an obvious-looking wrong answer: the reasoning test.</span></div>"
-        + logic_html())
+        + logic_html()
+        + thinking_p2_findings())
     page = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
             "<title>thinking on/off — llmbench</title><style>" + CSS + TOPBAR_CSS + "</style></head>"
