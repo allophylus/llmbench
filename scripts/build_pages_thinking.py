@@ -126,7 +126,11 @@ def corrected_pairs_html():
         on = d.get("on") or {}
 
         def valid(x):
-            return (x.get("n") or 0) > 0 and (x.get("tokens") or 0) > 0
+            # an arm is only a measurement if it actually completed: a killed run still
+            # reports tokens and a score, and computing a cost delta from it produced
+            # nonsense like "costs +-57774 tokens"
+            return ((x.get("n") or 0) > 0 and (x.get("tokens") or 0) > 0
+                    and (x.get("errors") or 0) == 0)
 
         rows.append((label, d.get("max_tokens"), off, on, valid(off), valid(on)))
     if not rows:
