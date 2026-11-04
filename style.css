@@ -542,10 +542,14 @@ td.c-name .dep-note { display: block; font: 11px/1.35 var(--mono); color: var(--
 
 /* ---- context/speed detail table (below the main table) ---- */
 .probes { margin: 0 0 2rem; }
-/* the matched-context speed matrix lives in this block (index.html #speed-sweep) */
-.sweep { margin: 1.4rem 0 2rem; }
-.sweep ul { margin: .4rem 0 0; padding-left: 1.2rem; }
-.sweep .scroll { scrollbar-gutter: stable; }
+/* ---- findings + method lists (per-page documentation blocks) ---- */
+ul.findings { margin: .5rem 0 1rem; padding-left: 1.15rem; max-width: 95ch; }
+ul.findings > li { color: var(--fg-dim); margin: .4rem 0; line-height: 1.5; }
+ul.findings > li > strong, ul.findings b { color: var(--fg); }
+ul.findings > li.meta, ul.findings li > .meta { color: var(--fg-faint); font-size: 12.5px; }
+ul.methodul { margin: .5rem 0 1rem; padding-left: 1.15rem; max-width: 95ch; }
+ul.methodul > li { color: var(--fg-dim); margin: .4rem 0; line-height: 1.5; }
+ul.methodul > li > strong { color: var(--fg); }
 .probes h2 { font: 600 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--fg-faint); margin: 0 0 .5rem; }
 .probe-note { color: var(--fg-dim); font-size: 13px; max-width: 90ch; margin: 0 0 1rem; }
 .probe-h { font: 600 13px var(--mono); color: var(--fg); margin: 1rem 0 .4rem; }

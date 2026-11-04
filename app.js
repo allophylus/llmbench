@@ -160,7 +160,6 @@
     if (key === "game_tokens") return r.game ? num(r.game.tokens) : null;
     if (key === "game_link") return r.game ? "play" : null;
     if (key === "game_video") return videoCount(r);
-    if (key === "logic") return num((r.cells || {}).logic);
     if (key === "think_off") return thinkPct(r, "off");
     if (key === "think_on") return thinkPct(r, "on");
     if (key === "think_delta") {
@@ -439,21 +438,6 @@
       ]
     },
 
-    logic: {
-      title: "Logic — everyday traps, and what thinking on adds",
-      sub: "Two different sets: ten everyday questions with an obvious wrong answer (logic traps), and twenty-five fixed questions run with the reasoning channel off and on.",
-      hint: "Percent correct. <b>Logic traps</b> is the ten-question everyday set — only models that ran it have a number. <b>Thinking off/on</b> is the twenty-five-question set at the model’s largest output cap; delta is on minus off.",
-      legend: "<b>Careful:</b> these are two different question sets and are never averaged together. The full per-trap matrix, the questions themselves and the per-model answers are in <a href=\"thinking/#logic\">Part 2 of the Thinking page</a>. A dash means that set was not run for that model.",
-      cols: [
-        C("name", "Model", { type: "text", group: "Model", cls: "c-name", cell: nameCell }),
-        C("params", "Params", { type: "params", group: "Model", cls: "c-params", cell: function (r) { return esc(r.params_total || "—"); } }),
-        C("quant", "Quant", { type: "text", group: "Model", cls: "c-quant", all: true, cell: function (r) { return '<span class="pill">' + esc(r.quant || "—") + "</span>"; } }),
-        C("logic", "Logic traps", { group: "10 everyday questions", sub: "% correct", cls: "sc", cell: function (r) { return fmtPct(value(r, "logic")); } }),
-        C("think_off", "Thinking off", { group: "25 fixed questions", sub: "% correct", cls: "sc", cell: function (r) { return thinkCell(r, "off"); } }),
-        C("think_on", "Thinking on", { group: "25 fixed questions", sub: "% correct", cls: "sc", cell: function (r) { return thinkCell(r, "on"); } }),
-        C("think_delta", "Delta", { group: "25 fixed questions", sub: "on − off", cls: "sc", cell: deltaCell })
-      ]
-    }
   };
 
   /* ---------------------------------------------------------------- sorting */
@@ -514,7 +498,6 @@
       if (view === "speed") return hasSpeed(r) || nativeProbe(r) || r.speed;
       if (view === "accuracy") return Object.keys(r.cells || {}).some(function (k) { return num(r.cells[k]) !== null; });
       if (view === "games") return !!r.game;
-      if (view === "logic") return num((r.cells || {}).logic) !== null || !!r.thinking;
       return true;
     });
   }
