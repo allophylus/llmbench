@@ -374,8 +374,8 @@
     speed: {
       title: "Speed — prefill and decode rates as measured",
       sub: "One row per model, then the matched-context matrix: every model at 4K, 32K, 64K, 128K and 256K. A model served at several context windows keeps its probes as collapsible sub-rows instead of pretending to be several models.",
-      hint: "Prefill (prompt processing) and decode (token generation) are tokens per second. <b>30K</b> marks the standardised probe; <b>·n</b> marks a single probe at the row’s own server context. Click a header to sort, again to reverse, a third time to clear. — means not measured, never guessed. The <a href=\"#speed-sweep\">speed-by-context matrix</a> below plans for one model per row and five server contexts.",
-      legend: "<b>How to read:</b> every number here came from a live server on the R9700, not a vendor sheet. Rows with several context windows show their standardised 30K probe in the sub-rows. VRAM is the GPU’s used-memory peak during the request. The <a href=\"#speed-sweep\">speed-by-context matrix</a> replaced the old A/B/C speed columns: there the server is restarted at each rung, so the column heading means the same thing on both sides.",
+      hint: "Prefill (prompt processing) and decode (token generation) are tokens per second. <b>30K</b> marks the standardised probe; <b>·n</b> marks a single probe at the row’s own server context. Click a header to sort, again to reverse, a third time to clear. — means not measured, never guessed.",
+      legend: "<b>How to read:</b> every number here came from a live server on the R9700, not a vendor sheet. Rows with several context windows show their standardised 30K probe in the sub-rows. VRAM is the GPU’s used-memory peak during the request.",
       cols: [
         C("name", "Model", { type: "text", group: "Model", cls: "c-name", cell: nameCell, title: "click to sort by model" }),
         C("params", "Params", { type: "params", group: "Model", sub: "total/active", cls: "c-params", cell: function (r) {

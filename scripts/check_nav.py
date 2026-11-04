@@ -7,7 +7,7 @@ Fails (exit 1) if, on any page:
   * a nav (or any internal) href points at a path that does not exist, or
   * an internal link (nav or body) still points at a retired section
     (/sweep/, /logic/, /raw-chat/, /ablation/, /method/ — folded into
-    /#speed-sweep, /thinking/#logic, /#raw, /#ablation and /#method).
+    /thinking/#logic, /#raw, /#ablation and /#method).
 
 The canonical set is exactly the seven items in scripts/site_nav.py. This checker
 fails if a page ships more (a new tab was invented) or fewer (an item was dropped).
