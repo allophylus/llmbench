@@ -184,11 +184,14 @@ def main():
                 break
 
     status = "accepted" if accepted else "failed_all_attempts"
-    if accepted:
-        src = os.path.join(att, "attempt-%d" % accepted)
+    # Publish the accepted file, or (when nothing passed) the last attempt, so a visitor
+    # sees what the model actually produced instead of an empty "not run" cell. The
+    # status field still reports fail — the file is evidence, not a pass.
+    src = os.path.join(att, "attempt-%d" % (accepted or per_attempt[-1]["attempt"]))
+    if os.path.exists(os.path.join(src, "index.html")):
         shutil.copyfile(os.path.join(src, "index.html"), os.path.join(out, "index.html"))
-        if os.path.exists(os.path.join(src, "shot.png")):
-            shutil.copyfile(os.path.join(src, "shot.png"), os.path.join(out, "shot.png"))
+    if os.path.exists(os.path.join(src, "shot.png")):
+        shutil.copyfile(os.path.join(src, "shot.png"), os.path.join(out, "shot.png"))
     rep_status = ("accepted" if accepted else
                   ("stalled-no-progress" if repair_turns and not repair_turns[-1]["distinct"]
                    else "still-broken")) if repair_turns else "not-needed"
