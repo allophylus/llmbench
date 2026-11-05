@@ -40,7 +40,7 @@ table.mx th.rowh span{display:block;color:var(--dim);font-size:12px;text-transfo
   --line-soft: #1b2431;
   --fg: #d7e0ea;
   --fg-dim: #8593a5;
-  --fg-faint: #4d5a6b;
+  --fg-faint: #7c8b9e;
   --accent: #5ee0a3;
   --accent-dim: #1f6b4c;
   --warn: #e0b05e;
@@ -576,10 +576,14 @@ td.c-name .dep-note { display: block; font: 11px/1.35 var(--mono); color: var(--
 
 /* ---- context/speed detail table (below the main table) ---- */
 .probes { margin: 0 0 2rem; }
-/* the matched-context speed matrix lives in this block (index.html #speed-sweep) */
-.sweep { margin: 1.4rem 0 2rem; }
-.sweep ul { margin: .4rem 0 0; padding-left: 1.2rem; }
-.sweep .scroll { scrollbar-gutter: stable; }
+/* ---- findings + method lists (per-page documentation blocks) ---- */
+ul.findings { margin: .5rem 0 1rem; padding-left: 1.15rem; max-width: 95ch; }
+ul.findings > li { color: var(--fg-dim); margin: .4rem 0; line-height: 1.5; }
+ul.findings > li > strong, ul.findings b { color: var(--fg); }
+ul.findings > li.meta, ul.findings li > .meta { color: var(--fg-faint); font-size: 12.5px; }
+ul.methodul { margin: .5rem 0 1rem; padding-left: 1.15rem; max-width: 95ch; }
+ul.methodul > li { color: var(--fg-dim); margin: .4rem 0; line-height: 1.5; }
+ul.methodul > li > strong { color: var(--fg); }
 .probes h2 { font: 600 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--fg-faint); margin: 0 0 .5rem; }
 .probe-note { color: var(--fg-dim); font-size: 13px; max-width: 90ch; margin: 0 0 1rem; }
 .probe-h { font: 600 13px var(--mono); color: var(--fg); margin: 1rem 0 .4rem; }
@@ -754,27 +758,11 @@ body.show-scores #tbl td.sc { display: table-cell; }
 .legend { margin: .1rem 0 .9rem; color: var(--fg-faint); font-size: 12.5px; max-width: 95ch; }
 .legend b { color: var(--fg-dim); font-weight: 600; }
 
-/* ---- two-row header: group band above individual column labels ---- */
+/* ---- sortable column headers ---- */
 @media (min-width: 761px) {
   #tbl { table-layout: auto; width: max-content; min-width: 100%; }
 }
-#tbl thead tr.grprow th {
-  position: sticky;
-  top: 0;
-  z-index: 4;
-  cursor: default;
-  text-align: center;
-  font: 700 9.5px/1.2 var(--mono);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--fg-faint);
-  background: #111925;
-  border-bottom: 1px solid var(--line-soft);
-  padding: .4rem .45rem .3rem;
-  user-select: none;
-}
-#tbl thead tr.grprow th.gcell-empty { background: #111925; }
-#tbl thead tr.colrow th { top: 27px; }
+#tbl thead tr.colrow th { top: 0; }
 #tbl thead tr.colrow th.num { text-align: right; }
 #tbl thead tr.colrow th.c-name { text-align: left; }
 
@@ -856,7 +844,6 @@ body.show-scores #tbl td.sc { display: table-cell; }
   .viewtabs::-webkit-scrollbar { display: none; }
   .viewtab { flex: none; padding: .5rem .85rem; font-size: 11px; }
   .viewsub { font-size: 12.5px; }
-  #tbl thead tr.grprow { display: none; }
   #tbl thead tr.colrow th { top: var(--thead-stick); }
   #tbl thead tr.colrow th.c-name,
   #tbl tbody td.c-name { position: static; box-shadow: none; }
@@ -877,4 +864,261 @@ body.show-scores #tbl td.sc { display: table-cell; }
 @media (max-width: 760px) {
   #tbl th.c-name, #tbl td.c-name { width: auto; min-width: 0; max-width: none; }
 }
-</style></head><body><header class="site-head"><div class="wrap"><h1>llmbench</h1><p class="sub">Raw, repeatable benchmark numbers for local models served by <strong>llama.cpp (Vulkan)</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB box.</p></div></header><div class="topbar"><div class="wrap"><nav class="site-nav" aria-label="Sections"><a href="../../">Overview</a><a href="../../games/" aria-current="page">Games</a><a href="../../chat/">Chat</a><a href="../../thinking/">Thinking</a></nav></div></div><div class=wrap><h1>games, side by side</h1><p class=sub>Four browser games, one frozen prompt each, the same models. Every game is generated as a single self-contained HTML file drawn with three.js, then graded in a headless browser: it must run, and a grader drives it through a small published state object and checks the rules numerically (determinism, counts, economy, stability). <b>Assertions</b> = rules verified by execution. <b>Compliance</b> = did it build what was asked, and only that (0-100, points off for extras the task did not request). <b>Attempts</b> = generations used, including up to 10 repair turns after a failure. Live frames are playable; a failed build shows its last screenshot.</p><div class=scroll><table class=mx><thead><tr><th class=rowh>game</th><th><span>Qwen3.8-27B Q4_K_M</span><span class=fn>Qwen3.8-27B-Q4_K_M.gguf</span></th></tr></thead><tbody><tr><th class=rowh><b>ball drop sandbox</b><span>25 balls dropped into a glass box: gravity, restitution, ball-to-ball collisions. Deterministic seed, no player input beyond pause.</span><span class=fn><a href='../specs/GAME_SPEC_ball-drop-sandbox.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr><tr><th class=rowh><b>tower stacker</b><span>20 blocks dropped at seeded offsets: stacking, friction, and a tower that must not topple from jitter or drift.</span><span class=fn><a href='../specs/GAME_SPEC_tower-stacker.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr><tr><th class=rowh><b>tower defence</b><span>A fixed path, five fixed waves, finite gold and one automatic build policy — no tower spam, exact economy.</span><span class=fn><a href='../specs/GAME_SPEC_tower-defence.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr><tr><th class=rowh><b>match 3 cascades</b><span>8x8 seeded board, adjacent swaps, cascades resolved until the board is stable, a stated numeric scoring rule.</span><span class=fn><a href='../specs/GAME_SPEC_match3-cascades.md'>spec</a></span></th><td><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></td></tr></tbody></table></div><div class=stack><h2>ball drop sandbox</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div><h2>tower stacker</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div><h2>tower defence</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div><h2>match 3 cascades</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell empty'><div class='frame'><span>not run</span></div><div class='badges'><span class='b pend'>no result<i>status</i></span></div></div></div></div></div><p class=note>Each specification uses its own minimal programmatic interface — only what that game needs — so a physics sandbox is never graded as a shooter. Scores are recorded per attempt; the full attempt history of every cell is linked under its frame.</p></div></body></html>
+
+/* ---- per-row extras: context sweep + logic traps live inside the model row ---- */
+.rowextra { margin-top: .4rem; }
+.rowextra > summary { cursor: pointer; color: var(--fg-faint); font: 11.5px var(--mono);
+  letter-spacing: .02em; list-style: none; }
+.rowextra > summary::-webkit-details-marker { display: none; }
+.rowextra > summary::before { content: "\25B8 "; }
+.rowextra[open] > summary::before { content: "\25BE "; }
+.rowextra > summary:hover { color: var(--fg); }
+.rx-h { margin: .6rem 0 .3rem; color: var(--fg-faint); font: 600 10.5px var(--mono);
+  text-transform: uppercase; letter-spacing: .07em; }
+table.rx { border-collapse: collapse; font: 11.5px/1.5 var(--mono); }
+table.rx th, table.rx td { padding: 1px 10px 1px 0; text-align: left; color: var(--fg-dim); }
+table.rx th { color: var(--fg-faint); font-weight: 600; }
+table.rx td.num { font-variant-numeric: tabular-nums; color: var(--fg); }
+.rx-l { color: var(--fg-dim); font: 12px var(--mono); margin-bottom: .3rem; }
+.rx-l b { color: var(--fg); }
+
+.sweep-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  margin: 0 0 .75rem;
+  padding: .5rem .75rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--fg-dim);
+  font-size: 13px;
+}
+.sweep-metrics[hidden] { display: none; }
+.sweep-metrics legend { padding: 0 .25rem; font-weight: 600; }
+.sweep-metrics label { display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; }
+.sweep-metrics input { accent-color: var(--accent); }
+
+/* Visible per-model sweep and logic cells in the Speed view. */
+#tbl th.c-sweep, #tbl td.c-sweep { min-width: 120px; }
+#tbl th.c-logic, #tbl td.c-logic { min-width: 100px; }
+#tbl td.c-sweep, #tbl td.c-logic { padding: .5rem .65rem; }
+#tbl .metric {
+  display: flex;
+  justify-content: space-between;
+  gap: .6rem;
+  font: 11.5px/1.6 var(--mono);
+}
+#tbl .metric > span { color: var(--fg-faint); font-size: 10px; }
+#tbl .logic-score { display: block; font: 600 13px/1.6 var(--mono); }
+/* Speed stays a comparison table, including below the other views' card breakpoint. */
+#tablepanel[data-view="speed"] {
+  overflow: auto;
+  max-height: 75vh;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  scroll-margin-top: calc(var(--topbar-h) + 8px);
+}
+#tablepanel[data-view="speed"] #tbl {
+  display: table;
+  width: max-content;
+  min-width: 100%;
+  table-layout: auto;
+}
+#tablepanel[data-view="speed"] #tbl > thead {
+  display: table-header-group;
+  position: static;
+}
+#tablepanel[data-view="speed"] #tbl > tbody { display: table-row-group; width: auto; }
+#tablepanel[data-view="speed"] #tbl > thead > tr,
+#tablepanel[data-view="speed"] #tbl > tbody > tr {
+  display: table-row;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+#tablepanel[data-view="speed"] #tbl > thead > tr > th,
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td {
+  display: table-cell !important;
+  width: auto;
+  padding: .65rem .75rem;
+  border: 0;
+  border-right: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  vertical-align: top;
+  font-size: 13px;
+}
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td { text-align: right !important; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr.archhead > td { text-align: left !important; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td::before { display: none; content: none; }
+#tablepanel[data-view="speed"] #tbl > thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  font-size: 11px;
+}
+#tablepanel[data-view="speed"] #tbl th .th-sub { display: inline; }
+#tablepanel[data-view="speed"] #tbl td .meta { display: none; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr:nth-child(odd) > td { background: var(--bg); }
+#tablepanel[data-view="speed"] #tbl > tbody > tr:nth-child(even) > td { background: var(--bg-soft); }
+#tablepanel[data-view="speed"] #tbl > tbody > tr:hover > td { background: #192638; }
+#tablepanel[data-view="speed"] #tbl > thead > tr > th.c-name,
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td.c-name {
+  position: sticky;
+  left: 0;
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+  text-align: left !important;
+  box-shadow: 1px 0 0 var(--line);
+}
+#tablepanel[data-view="speed"] #tbl > thead > tr > th.c-name { z-index: 5; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td.c-name { z-index: 2; font-weight: 400; }
+#tablepanel[data-view="speed"] #tbl td.c-name .name {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  font-weight: 600;
+}
+#tablepanel[data-view="speed"] #tbl .metric { font-size: 12px; line-height: 1.65; }
+#tablepanel[data-view="speed"] #tbl .metric > span { font-size: 11px; }
+@media (max-width: 760px) {
+  #tablepanel[data-view="speed"] #tbl > thead > tr > th.c-name,
+  #tablepanel[data-view="speed"] #tbl > tbody > tr > td.c-name {
+    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
+  }
+}
+
+/* ---- overview ablation block ---- */
+.about#ablation { max-width: none; }
+.about#ablation .abl-h {
+  margin: 0 0 .45rem;
+  color: var(--fg);
+  font: 600 1.15rem/1.35 var(--mono);
+  letter-spacing: -.01em;
+  text-transform: none;
+}
+.about#ablation > .sub { max-width: 76ch; margin: 0 0 1.1rem; color: var(--fg-dim); }
+.about#ablation .abl-t {
+  margin: 1.6rem 0 .6rem;
+  color: var(--fg-dim);
+  font: 600 12px/1.25 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.about#ablation .scroll {
+  width: 100%;
+  max-width: 100%;
+  margin: .6rem 0 .3rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-soft);
+  -webkit-overflow-scrolling: touch;
+}
+.about#ablation .scroll table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+}
+.about#ablation .scroll th,
+.about#ablation .scroll td {
+  width: auto;
+  padding: .55rem .65rem;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: top;
+}
+.about#ablation .scroll th {
+  position: static;
+  top: auto;
+  color: var(--fg-dim);
+  background: #16202c;
+  font: 600 10px/1.3 var(--mono);
+  letter-spacing: .04em;
+  text-align: left;
+  cursor: default;
+}
+.about#ablation .scroll th:hover { color: var(--fg-dim); background: #16202c; }
+.about#ablation .scroll td.num {
+  color: var(--fg);
+  font: 12px/1.4 var(--mono);
+  text-align: right;
+  white-space: nowrap;
+}
+.about#ablation .scroll td.arm { min-width: 190px; }
+.about#ablation .scroll td.arm b { display: block; color: var(--fg); }
+.about#ablation .scroll td.arm span { display: block; color: var(--fg-faint); font-size: 11.5px; }
+.about#ablation .ok { color: var(--accent); }
+.about#ablation .bad { color: #e08a8a; }
+.about#ablation .dim { color: var(--fg-faint); }
+.about#ablation .scroll tbody tr:nth-child(even) td { background: var(--bg-zebra); }
+.about#ablation .scroll tbody tr:last-child td { border-bottom: 0; }
+.about#ablation .detail {
+  margin: .8rem 0 1rem;
+  padding: .8rem .95rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-soft);
+}
+.about#ablation .detail summary {
+  color: var(--fg);
+  font: 600 12px/1.4 var(--mono);
+  cursor: pointer;
+}
+.about#ablation .detail[open] summary { margin-bottom: .6rem; }
+.about#ablation .callout,
+.about#ablation .limits {
+  margin: .7rem 0;
+  padding: .7rem .85rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent-dim);
+  border-radius: 7px;
+  background: var(--bg-soft);
+  color: var(--fg-dim);
+  font-size: 13px;
+}
+.about#ablation .callout b { color: var(--fg); }
+.about#ablation .limits { border-left-color: var(--fg-faint); }
+.about#ablation .limits > b { color: var(--fg); }
+.about#ablation .limits ul { margin: .45rem 0 0; padding-left: 1.2rem; }
+.about#ablation .limits li { margin: .35rem 0; }
+.about#ablation #mob { display: none; }
+
+@media (max-width: 760px) {
+  .about#ablation .scroll table {
+    display: table;
+    width: max-content;
+    min-width: 900px;
+    table-layout: auto;
+  }
+  .about#ablation .scroll thead { display: table-header-group; position: static; top: auto; }
+  .about#ablation .scroll tbody { display: table-row-group; }
+  .about#ablation .scroll tr {
+    display: table-row;
+    grid-template-columns: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .about#ablation .scroll th,
+  .about#ablation .scroll td {
+    display: table-cell;
+    padding: .45rem .5rem;
+    border-bottom: 1px solid var(--line-soft);
+    text-align: left !important;
+    font-size: 11.5px;
+  }
+  .about#ablation .scroll td::before { display: none; content: none; }
+  .about#ablation .scroll td.num { text-align: right !important; }
+  .about#ablation #mob { display: block; margin: .35rem 0 0; color: var(--fg-faint); font-size: 12px; }
+}
+</style></head><body><header class="site-head"><div class="wrap"><h1>llmbench</h1><p class="sub">Raw, repeatable benchmark numbers for local models served by <strong>llama.cpp (Vulkan)</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB box.</p></div></header><div class="topbar"><div class="wrap"><nav class="site-nav" aria-label="Sections"><a href="../../">Overview</a><a href="../../games/" aria-current="page">Games</a><a href="../../chat/">Chat</a><a href="../../thinking/">Thinking</a></nav></div></div><div class=wrap><h1>games, side by side</h1><p class=sub>Four browser games, one frozen prompt each, the same models. Every game is generated as a single self-contained HTML file drawn with three.js, then graded in a headless browser: it must run, and a grader drives it through a small published state object and checks the rules numerically (determinism, counts, economy, stability). <b>Assertions</b> = rules verified by execution. <b>Compliance</b> = did it build what was asked, and only that (0-100, points off for extras the task did not request). <b>Attempts</b> = generations used, including up to 10 repair turns after a failure. Live frames are playable; a failed build shows its last screenshot.</p><div class=scroll><table class=mx><thead><tr><th class=rowh>game</th><th><span>Qwen3.8-27B Q4_K_M</span><span class=fn>Qwen3.8-27B-Q4_K_M.gguf</span></th><th><span>Qwen3.6-35B-A3B Q4_K_M</span><span class=fn>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></th></tr></thead><tbody><tr><th class=rowh><b>ball drop sandbox</b><span>25 balls dropped into a glass box: gravity, restitution, ball-to-ball collisions. Deterministic seed, no player input beyond pause.</span><span class=fn><a href='../specs/GAME_SPEC_ball-drop-sandbox.md'>spec</a></span></th><td><div class='cell warn'><iframe src='../suite/out/qwen3-8-27b-q4km/ball-drop-sandbox/index.html' loading='lazy' title='Qwen3.8-27B Q4_K_M — ball-drop-sandbox' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>4/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>11<i>attempts</i></span><span class='b '>357.5<i>build s</i></span><span class='b '>33360<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-8-27b-q4km/ball-drop-sandbox/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-8-27b-q4km/ball-drop-sandbox/build.json'>attempt history</a></div></td><td><div class='cell warn'><iframe src='../suite/out/qwen3-6-35b-a3b-ud-q4km/ball-drop-sandbox/index.html' loading='lazy' title='Qwen3.6-35B-A3B Q4_K_M — ball-drop-sandbox' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>2/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>11<i>attempts</i></span><span class='b '>41.2<i>build s</i></span><span class='b '>6144<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/ball-drop-sandbox/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/ball-drop-sandbox/build.json'>attempt history</a></div></td></tr><tr><th class=rowh><b>tower stacker</b><span>20 blocks dropped at seeded offsets: stacking, friction, and a tower that must not topple from jitter or drift.</span><span class=fn><a href='../specs/GAME_SPEC_tower-stacker.md'>spec</a></span></th><td><div class='cell ok'><iframe src='../suite/out/qwen3-8-27b-q4km/tower-stacker/index.html' loading='lazy' title='Qwen3.8-27B Q4_K_M — tower-stacker' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>5/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>1<i>attempts</i></span><span class='b '>97.3<i>build s</i></span><span class='b '>4727<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-8-27b-q4km/tower-stacker/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-8-27b-q4km/tower-stacker/build.json'>attempt history</a></div></td><td><div class='cell warn'><iframe src='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-stacker/index.html' loading='lazy' title='Qwen3.6-35B-A3B Q4_K_M — tower-stacker' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>1/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>11<i>attempts</i></span><span class='b '>27.9<i>build s</i></span><span class='b '>4570<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-stacker/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-stacker/build.json'>attempt history</a></div></td></tr><tr><th class=rowh><b>tower defence</b><span>A fixed path, five fixed waves, finite gold and one automatic build policy — no tower spam, exact economy.</span><span class=fn><a href='../specs/GAME_SPEC_tower-defence.md'>spec</a></span></th><td><div class='cell warn'><iframe src='../suite/out/qwen3-8-27b-q4km/tower-defence/index.html' loading='lazy' title='Qwen3.8-27B Q4_K_M — tower-defence' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>4/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>2<i>attempts</i></span><span class='b '>428.0<i>build s</i></span><span class='b '>27573<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-8-27b-q4km/tower-defence/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-8-27b-q4km/tower-defence/build.json'>attempt history</a></div></td><td><div class='cell warn'><iframe src='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-defence/index.html' loading='lazy' title='Qwen3.6-35B-A3B Q4_K_M — tower-defence' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>4/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>11<i>attempts</i></span><span class='b '>47.4<i>build s</i></span><span class='b '>6962<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-defence/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-defence/build.json'>attempt history</a></div></td></tr><tr><th class=rowh><b>match 3 cascades</b><span>8x8 seeded board, adjacent swaps, cascades resolved until the board is stable, a stated numeric scoring rule.</span><span class=fn><a href='../specs/GAME_SPEC_match3-cascades.md'>spec</a></span></th><td><div class='cell warn'><iframe src='../suite/out/qwen3-8-27b-q4km/match3-cascades/index.html' loading='lazy' title='Qwen3.8-27B Q4_K_M — match3-cascades' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>1/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>2<i>attempts</i></span><span class='b '>352.3<i>build s</i></span><span class='b '>25379<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-8-27b-q4km/match3-cascades/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-8-27b-q4km/match3-cascades/build.json'>attempt history</a></div></td><td><div class='cell ok'><iframe src='../suite/out/qwen3-6-35b-a3b-ud-q4km/match3-cascades/index.html' loading='lazy' title='Qwen3.6-35B-A3B Q4_K_M — match3-cascades' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>5/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>2<i>attempts</i></span><span class='b '>83.5<i>build s</i></span><span class='b '>16716<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/match3-cascades/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/match3-cascades/build.json'>attempt history</a></div></td></tr></tbody></table></div><div class=stack><h2>ball drop sandbox</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell warn'><iframe src='../suite/out/qwen3-8-27b-q4km/ball-drop-sandbox/index.html' loading='lazy' title='Qwen3.8-27B Q4_K_M — ball-drop-sandbox' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>4/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>11<i>attempts</i></span><span class='b '>357.5<i>build s</i></span><span class='b '>33360<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-8-27b-q4km/ball-drop-sandbox/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-8-27b-q4km/ball-drop-sandbox/build.json'>attempt history</a></div></div><div><div class=meta>Qwen3.6-35B-A3B Q4_K_M</div><div class='cell warn'><iframe src='../suite/out/qwen3-6-35b-a3b-ud-q4km/ball-drop-sandbox/index.html' loading='lazy' title='Qwen3.6-35B-A3B Q4_K_M — ball-drop-sandbox' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>2/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>11<i>attempts</i></span><span class='b '>41.2<i>build s</i></span><span class='b '>6144<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/ball-drop-sandbox/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/ball-drop-sandbox/build.json'>attempt history</a></div></div></div><h2>tower stacker</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell ok'><iframe src='../suite/out/qwen3-8-27b-q4km/tower-stacker/index.html' loading='lazy' title='Qwen3.8-27B Q4_K_M — tower-stacker' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>5/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>1<i>attempts</i></span><span class='b '>97.3<i>build s</i></span><span class='b '>4727<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-8-27b-q4km/tower-stacker/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-8-27b-q4km/tower-stacker/build.json'>attempt history</a></div></div><div><div class=meta>Qwen3.6-35B-A3B Q4_K_M</div><div class='cell warn'><iframe src='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-stacker/index.html' loading='lazy' title='Qwen3.6-35B-A3B Q4_K_M — tower-stacker' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>1/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>11<i>attempts</i></span><span class='b '>27.9<i>build s</i></span><span class='b '>4570<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-stacker/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-stacker/build.json'>attempt history</a></div></div></div><h2>tower defence</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell warn'><iframe src='../suite/out/qwen3-8-27b-q4km/tower-defence/index.html' loading='lazy' title='Qwen3.8-27B Q4_K_M — tower-defence' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>4/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>2<i>attempts</i></span><span class='b '>428.0<i>build s</i></span><span class='b '>27573<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-8-27b-q4km/tower-defence/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-8-27b-q4km/tower-defence/build.json'>attempt history</a></div></div><div><div class=meta>Qwen3.6-35B-A3B Q4_K_M</div><div class='cell warn'><iframe src='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-defence/index.html' loading='lazy' title='Qwen3.6-35B-A3B Q4_K_M — tower-defence' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>4/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>11<i>attempts</i></span><span class='b '>47.4<i>build s</i></span><span class='b '>6962<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-defence/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/tower-defence/build.json'>attempt history</a></div></div></div><h2>match 3 cascades</h2><div class=cards><div><div class=meta>Qwen3.8-27B Q4_K_M</div><div class='cell warn'><iframe src='../suite/out/qwen3-8-27b-q4km/match3-cascades/index.html' loading='lazy' title='Qwen3.8-27B Q4_K_M — match3-cascades' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>1/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>2<i>attempts</i></span><span class='b '>352.3<i>build s</i></span><span class='b '>25379<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-8-27b-q4km/match3-cascades/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-8-27b-q4km/match3-cascades/build.json'>attempt history</a></div></div><div><div class=meta>Qwen3.6-35B-A3B Q4_K_M</div><div class='cell ok'><iframe src='../suite/out/qwen3-6-35b-a3b-ud-q4km/match3-cascades/index.html' loading='lazy' title='Qwen3.6-35B-A3B Q4_K_M — match3-cascades' sandbox='allow-scripts allow-same-origin'></iframe><div class='badges'><span class='b '>5/5<i>assertions</i></span><span class='b '>100<i>compliance</i></span><span class='b '>2<i>attempts</i></span><span class='b '>83.5<i>build s</i></span><span class='b '>16716<i>tokens</i></span></div><a class='lnk' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/match3-cascades/index.html' target='_blank' rel='noopener'>open full screen</a><a class='lnk hist' href='../suite/out/qwen3-6-35b-a3b-ud-q4km/match3-cascades/build.json'>attempt history</a></div></div></div></div><p class=note>Each specification uses its own minimal programmatic interface — only what that game needs — so a physics sandbox is never graded as a shooter. Scores are recorded per attempt; the full attempt history of every cell is linked under its frame.</p></div></body></html>

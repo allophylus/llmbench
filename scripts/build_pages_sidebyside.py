@@ -122,19 +122,20 @@ def cell(slug, spec):
                 "<div class='badges'>%s</div></div>" % badge("status", "no result", "pend"))
     a = accepted(b)
     gate = bool(a and a.get("gate_pass"))
-    if gate and os.path.isfile(os.path.join(mdir, "index.html")):
-        frame = (f"<iframe src='{esc(rel('index.html'))}' loading='lazy' "
+    cellgame = os.path.join(OUT, slug, spec, "index.html")
+    if gate and os.path.isfile(cellgame):
+        frame = (f"<iframe src='{esc(rel(spec + '/index.html'))}' loading='lazy' "
                  f"title='{esc(name(slug))} — {esc(spec)}' sandbox='allow-scripts allow-same-origin'></iframe>")
-        play = f"<a class='lnk' href='{esc(rel('index.html'))}' target='_blank' rel='noopener'>open full screen</a>"
+        play = f"<a class='lnk' href='{esc(rel(spec + '/index.html'))}' target='_blank' rel='noopener'>open full screen</a>"
     else:
         shot = rel("shot-%s.png" % spec)
         if os.path.isfile(os.path.join(mdir, "shot-%s.png" % spec)):
-            frame = (f"<a class='frame shot' href='{esc(rel('index.html'))}'>"
+            frame = (f"<a class='frame shot' href='{esc(rel(spec + '/index.html'))}'>"
                      f"<img src='{esc(shot)}' alt='{esc(name(slug))} {esc(spec)} frame' loading='lazy'>"
                      f"<span class='why'>{'failed gate' if b else 'no frame'}</span></a>")
         else:
             frame = "<div class='frame'><span>no frame recorded</span></div>"
-        play = f"<a class='lnk' href='{esc(rel('index.html'))}' target='_blank' rel='noopener'>open what it built</a>"
+        play = f"<a class='lnk' href='{esc(rel(spec + '/index.html'))}' target='_blank' rel='noopener'>open what it built</a>"
     passed = a.get("passed") if a else None
     total = a.get("total") if a else None
     comp = a.get("compliance") if a else None

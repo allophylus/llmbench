@@ -1,0 +1,77 @@
+{
+ "cells": {
+  "qwen3-8-27b-q4km/ball-drop-sandbox": {
+   "valid": true,
+   "why": null,
+   "void_turns": 0,
+   "turns_used": 11,
+   "accepted": null,
+   "status": "plays-with-failures",
+   "at": "2026-11-05T22:26:26+0800"
+  },
+  "qwen3-8-27b-q4km/tower-stacker": {
+   "valid": true,
+   "why": null,
+   "void_turns": 0,
+   "turns_used": 1,
+   "accepted": 1,
+   "status": "all-accepted",
+   "at": "2026-11-05T22:53:47+0800"
+  },
+  "qwen3-8-27b-q4km/tower-defence": {
+   "valid": true,
+   "why": null,
+   "void_turns": 0,
+   "turns_used": 2,
+   "accepted": null,
+   "status": "plays-with-failures",
+   "at": "2026-11-05T23:16:31+0800"
+  },
+  "qwen3-6-35b-a3b-ud-q4km/ball-drop-sandbox": {
+   "valid": true,
+   "why": null,
+   "void_turns": 0,
+   "turns_used": 11,
+   "accepted": null,
+   "status": "plays-with-failures",
+   "at": "2026-11-05T21:38:15+0800"
+  },
+  "qwen3-6-35b-a3b-ud-q4km/tower-stacker": {
+   "valid": true,
+   "why": null,
+   "void_turns": 0,
+   "turns_used": 11,
+   "accepted": null,
+   "status": "plays-with-failures",
+   "at": "2026-11-05T21:44:29+0800"
+  },
+  "qwen3-6-35b-a3b-ud-q4km/tower-defence": {
+   "valid": true,
+   "why": null,
+   "void_turns": 0,
+   "turns_used": 11,
+   "accepted": null,
+   "status": "plays-with-failures",
+   "at": "2026-11-05T21:54:25+0800"
+  },
+  "qwen3-6-35b-a3b-ud-q4km/match3-cascades": {
+   "valid": true,
+   "why": null,
+   "void_turns": 0,
+   "turns_used": 2,
+   "accepted": 2,
+   "status": "all-accepted",
+   "at": "2026-11-05T21:55:59+0800"
+  },
+  "qwen3-8-27b-q4km/match3-cascades": {
+   "valid": true,
+   "why": null,
+   "void_turns": 0,
+   "turns_used": 2,
+   "accepted": null,
+   "status": "plays-with-failures",
+   "at": "2026-11-05T23:03:12+0800"
+  }
+ },
+ "runs": []
+}

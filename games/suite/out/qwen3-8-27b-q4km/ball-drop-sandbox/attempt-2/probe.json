@@ -1,0 +1,88 @@
+{
+ "spec": "ball-drop-sandbox",
+ "game_dir": "attempt-2",
+ "probed_at": "2026-11-05T22:03:11+0800",
+ "gate": {
+  "load_ok": true,
+  "ready": true,
+  "canvas": true,
+  "three": true,
+  "contract_keys": [
+   "ready",
+   "seed",
+   "balls",
+   "score",
+   "over",
+   "step",
+   "reset",
+   "hash"
+  ],
+  "contract_missing": [],
+  "pass": true,
+  "animation_advancing": true
+ },
+ "assertions": [
+  {
+   "id": "a1_ball_count_150",
+   "desc": "5 balls exist after 150 ticks (one every 30)",
+   "ok": true,
+   "got": 5,
+   "want": 5
+  },
+  {
+   "id": "a2_all_dropped_gravity",
+   "desc": "25 balls after 800 ticks and the first ball fell",
+   "ok": true,
+   "got": {
+    "balls": 25,
+    "lowest_y": 0.5548
+   },
+   "want": {
+    "balls": 25,
+    "fell": true
+   }
+  },
+  {
+   "id": "a3_inside_bounds",
+   "desc": "no ball leaves the box after 6000 ticks",
+   "ok": false,
+   "got": {
+    "escaped": 18,
+    "nan": 0,
+    "n": 25
+   },
+   "want": {
+    "escaped": 0,
+    "nan": 0
+   }
+  },
+  {
+   "id": "a4_settled",
+   "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+   "ok": false,
+   "got": "0 settled",
+   "want": ">=1"
+  },
+  {
+   "id": "a5_determinism",
+   "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+   "ok": true,
+   "got": {
+    "same_seed": true,
+    "other_seed_differs": true
+   },
+   "want": {
+    "same_seed": true,
+    "other_seed_differs": true
+   }
+  }
+ ],
+ "compliance": {
+  "score": 100,
+  "violations": [],
+  "notes": []
+ },
+ "console_errors": [],
+ "passed": 3,
+ "total": 5
+}

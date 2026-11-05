@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tower Stacker</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#0b1016;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e8eef4}
+  #c{position:fixed;inset:0;display:block}
+  .hud{position:fixed;z-index:10;pointer-events:none}
+  #meter{left:22px;top:22px;width:210px}
+  .kicker{font-size:11px;letter-spacing:.32em;color:#7f93a6}
+  #title{font-size:26px;font-weight:800;letter-spacing:.02em;margin:2px 0 14px}
+  .row{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .lbl{font-size:11px;letter-spacing:.22em;color:#7f93a6}
+  #height{font-size:44px;font-weight:800;line-height:1;color:#f4f8fc}
+  #height small{font-size:14px;color:#7f93a6;font-weight:600}
+  #score{font-size:30px;font-weight:800;color:#f2c14e}
+  #bar{width:100%;height:8px;background:#182230;border-radius:4px;overflow:hidden;margin-bottom:14px}
+  #barfill{height:100%;width:0;background:linear-gradient(90deg,#3f7fae,#5fb0a0);transition:width .12s linear}
+  #status{font-size:13px;letter-spacing:.14em;color:#9fb2c4}
+  #status.over{color:#f2c14e}
+  #status.top{color:#ff7a6b}
+  #hint{right:22px;bottom:20px;font-size:11px;letter-spacing:.14em;color:#5f7183;text-align:right}
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="meter" class="hud">
+  <div class="kicker">TOWER STACKER</div>
+  <div id="title">STACK</div>
+  <div class="row"><span class="lbl">HEIGHT</span><span id="height">0<small> / 20</small></span></div>
+  <div id="bar"><div id="barfill"></div></div>
+  <div class="row"><span class="lbl">SCORE</span><span id="score">0</span></div>
+  <div id="status">RUNNING</div>
+</div>
+<div id="hint" class="hud">R · restart&nbsp;&nbsp;&nbsp;SPACE · pause</div>
+<script type="module">
+import * as THREE from 'three';
+
+const BLOCKS=20, BW=2, BH=1, BD=2, GRAV=9.8, DROP_EVERY=40, DROP_Y=8, SETTLE_TICKS=20, SETTLE_VY=0.05;
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const mulberry32=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+
+let renderer,scene,camera,ground,grid,blocks=[],rng,seed=1234,dropped=0,settled=0,over=false,toppled=false,score=0,paused=false,ready=false;
+let camTheta=0.72,camPhi=1.02,camDist=15,dragging=false,px=0,py=0;
+const camTarget=new THREE.Vector3(0,2.2,0);
+const el={height:document.getElementById('height'),score:document.getElementById('score'),bar:document.getElementById('barfill'),status:document.getElementById('status')};
+
+function makeBlock(i){
+  const r=rng(),g=rng(),b=rng(),m=Math.max(r,g,b),n=Math.min(r,g,b),l=(m+n)/2,s=m===n?0:(m-n)/(m>l?m-n:m+n);
+  let h=m===n?0:m===l?1+(n-b)/(m-n):3+(r-b)/(m-n); h=((h/6)%1+1)%1*360;
+  const col=new THREE.Color().setHSL(h,0.5,0.55);
+  const mesh=new THREE.Mesh(new THREE.BoxGeometry(BW,BH,BD),new THREE.MeshStandardMaterial({color:col,roughness:0.62,metalness:0.05}));
+  const edges=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry),new THREE.LineBasicMaterial({color:col.clone().multiplyScalar(0.55),transparent:true,opacity:0.55}));
+  mesh.add(edges); scene.add(mesh);
+  return {mesh,edges,x:0,y:DROP_Y,z:0,vy:0,dropped:false,settled:false,contact:0};
+}
+function reset(s){
+  seed=s; rng=mulberry32(seed);
+  if(blocks.length){ for(const b of blocks){ scene.remove(b.mesh); b.mesh.geometry.dispose(); b.mesh.material.dispose(); b.edges.geometry.dispose(); b.edges.material.dispose(); } }
+  blocks=[]; for(let i=0;i<BLOCKS;i++) blocks.push(makeBlock(i));
+  dropped=0; settled=0; over=false; toppled=false; score=0; paused=false;
+  for(const b of blocks){ b.mesh.visible=false; b.x=0; b.y=DROP_Y; b.z=0; b.vy=0; b.dropped=false; b.settled=false; b.contact=0; }
+  updateHUD();
+}
+function supportTop(i){
+  if(i===0) return 0;
+  const a=blocks[i-1];
+  if(Math.abs(a.x-blocks[i].x)<BW && Math.abs(a.z-blocks[i].z)<BD) return a.y+BH/2;
+  return 0;
+}
+function step(dt){
+  if(over) return;
+  if(dropped<BLOCKS && Math.floor((dropped+1)*DROP_EVERY/60)===Math.floor((dropped+1)*DROP_EVERY/60+dt)) {
+    const i=dropped, r=rng();
+    blocks[i].x=i===0?0:(r*1.2-0.6); blocks[i].z=0; blocks[i].y=DROP_Y; blocks[i].vy=0;
+    blocks[i].dropped=true; blocks[i].contact=0; blocks[i].mesh.visible=true; dropped++;
+  }
+  for(let i=0;i<dropped;i++){
+    const b=blocks[i];
+    if(b.settled) continue;
+    b.vy-=GRAV*dt; b.y+=b.vy*dt;
+    const top=supportTop(i);
+    if(b.y-BH/2<=top){ b.y=top+BH/2; if(b.vy<0) b.vy=0; b.contact++; } else b.contact=0;
+    if(b.contact>=SETTLE_TICKS && Math.abs(b.vy)<SETTLE_VY){
+      b.settled=true; b.y=top+BH/2; b.vy=0; settled++;
+      if(Math.abs(b.x)>BW/2 || Math.abs(b.z)>BD/2){ toppled=true; over=true; }
+    }
+  }
+  if(!over && settled===BLOCKS){ over=true; score+=500; }
+  score=settled*100+(over&&!toppled?500:0);
+  for(let i=0;i<dropped;i++){ const b=blocks[i]; b.mesh.position.set(b.x,b.y,b.z); }
+  updateHUD();
+}
+function updateHUD(){
+  el.height.innerHTML=settled+'<small> / 20</small>';
+  el.score.textContent=score;
+  el.bar.style.width=(settled/BLOCKS*100)+'%';
+  if(over&&toppled){ el.status.textContent='TOPPLED'; el.status.className='top'; }
+  else if(over){ el.status.textContent='COMPLETE'; el.status.className='over'; }
+  else { el.status.textContent='RUNNING'; el.status.className=''; }
+}
+function hash(){
+  let s='';
+  for(const b of blocks) s+=b.x.toFixed(4)+','+b.y.toFixed(4)+','+b.z.toFixed(4)+','+(b.dropped?1:0)+','+(b.settled?1:0)+';';
+  return s+'|'+score;
+}
+function updateCamera(){
+  const sp=Math.sin(camPhi),cp=Math.cos(camPhi);
+  camera.position.set(camTarget.x+camDist*sp*Math.sin(camTheta),camTarget.y+camDist*cp,camTarget.z+camDist*sp*Math.cos(camTheta));
+  camera.lookAt(camTarget);
+}
+function init(){
+  renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
+  scene=new THREE.Scene(); scene.background=new THREE.Color(0x0b1016); scene.fog=new THREE.Fog(0x0b1016,22,55);
+  camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,0.1,200);
+  scene.add(new THREE.HemisphereLight(0x9fb4c8,0x0a0e14,0.55));
+  const key=new THREE.DirectionalLight(0xfff2df,1.15); key.position.set(7,13,6); key.castShadow=true;
+  key.shadow.mapSize.set(2048,2048); key.shadow.camera.near=1; key.shadow.camera.far=45;
+  key.shadow.camera.left=-12; key.shadow.camera.right=12; key.shadow.camera.top=16; key.shadow.camera.bottom=-6; key.shadow.bias=-0.0004;
+  scene.add(key);
+  const fill=new THREE.DirectionalLight(0x8fb0d8,0.4); fill.position.set(-8,6,-4); scene.add(fill);
+  ground=new THREE.Mesh(new THREE.PlaneGeometry(80,80),new THREE.MeshStandardMaterial({color:0x141b24,roughness:0.95,metalness:0}));
+  ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
+  grid=new THREE.GridHelper(40,40,0x2a3a4c,0x1a2532); grid.position.y=0.002; scene.add(grid);
+  addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
+  const cv=renderer.domElement;
+  cv.addEventListener('pointerdown',e=>{dragging=true;px=e.clientX;py=e.clientY;});
+  addEventListener('pointerup',()=>dragging=false);
+  addEventListener('pointermove',e=>{ if(!dragging)return; camTheta-=(e.clientX-px)*0.005; camPhi=clamp(camPhi-(e.clientY-py)*0.005,0.25,1.45); px=e.clientX; py=e.clientY; });
+  cv.addEventListener('wheel',e=>{ e.preventDefault(); camDist=clamp(camDist+e.deltaY*0.01,7,30); },{passive:false});
+  addEventListener('keydown',e=>{ if(e.code==='KeyR') reset(seed); else if(e.code==='Space'){ e.preventDefault(); paused=!paused; } });
+  reset(1234); ready=true;
+  const clock=new THREE.Clock();
+  (function loop(){
+    requestAnimationFrame(loop);
+    const dt=Math.min(clock.getDelta(),0.05);
+    if(!paused) step(dt);
+    updateCamera();
+    renderer.render(scene,camera);
+  })();
+}
+window.__game={
+  get ready(){return ready;},
+  get seed(){return seed;},
+  get blocks(){return blocks.map(b=>({x:b.x,y:b.y,z:b.z,w:BW,h:BH,dropped:b.dropped,settled:b.settled}));},
+  get height(){return settled;},
+  get score(){return score;},
+  get over(){return over;},
+  get toppled(){return toppled;},
+  step, reset, hash
+};
+init();
+</script>
+</body>
+</html>

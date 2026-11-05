@@ -1,0 +1,805 @@
+{
+ "slug": "qwen3-6-35b-a3b-ud-q4km",
+ "spec": "ball-drop-sandbox",
+ "model_id": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+ "base_url": "http://192.168.1.148:8080",
+ "prompt_file": "GAME_SPEC_ball-drop-sandbox.md",
+ "prompt_sha256": "965d26558ccd7c3af9d9384f6aec57f224abef4e865d528317c71c964dd7b3c2",
+ "max_repairs": 10,
+ "turns_allowed": 11,
+ "turns_used": 11,
+ "accepted_attempt": null,
+ "best_attempt": 1,
+ "status": "plays-with-failures",
+ "per_attempt": [
+  {
+   "attempt": 1,
+   "wall_s": 41.22,
+   "prompt_tokens": 1721,
+   "completion_tokens": 4423,
+   "decode_tps": 108.92,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 2,
+   "wall_s": 43.31,
+   "prompt_tokens": 6378,
+   "completion_tokens": 4423,
+   "decode_tps": 106.83,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 3,
+   "wall_s": 43.31,
+   "prompt_tokens": 6378,
+   "completion_tokens": 4423,
+   "decode_tps": 106.99,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 4,
+   "wall_s": 43.19,
+   "prompt_tokens": 6378,
+   "completion_tokens": 4423,
+   "decode_tps": 107.26,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 5,
+   "wall_s": 43.32,
+   "prompt_tokens": 6378,
+   "completion_tokens": 4423,
+   "decode_tps": 106.94,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 6,
+   "wall_s": 43.55,
+   "prompt_tokens": 6378,
+   "completion_tokens": 4423,
+   "decode_tps": 106.34,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 7,
+   "wall_s": 43.49,
+   "prompt_tokens": 6378,
+   "completion_tokens": 4423,
+   "decode_tps": 106.48,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 8,
+   "wall_s": 43.62,
+   "prompt_tokens": 6378,
+   "completion_tokens": 4423,
+   "decode_tps": 106.31,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 9,
+   "wall_s": 43.4,
+   "prompt_tokens": 6378,
+   "completion_tokens": 4423,
+   "decode_tps": 106.73,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 10,
+   "wall_s": 43.23,
+   "prompt_tokens": 6378,
+   "completion_tokens": 4423,
+   "decode_tps": 107.18,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 11,
+   "wall_s": 43.35,
+   "prompt_tokens": 6379,
+   "completion_tokens": 4423,
+   "decode_tps": 106.84,
+   "html_bytes": 11556,
+   "gate_pass": true,
+   "passed": 2,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "a1_ball_count_150",
+     "desc": "5 balls exist after 150 ticks (one every 30)",
+     "ok": false,
+     "got": 0,
+     "want": 5
+    },
+    {
+     "id": "a2_all_dropped_gravity",
+     "desc": "25 balls after 800 ticks and the first ball fell",
+     "ok": false,
+     "got": {
+      "balls": 0,
+      "lowest_y": null
+     },
+     "want": {
+      "balls": 25,
+      "fell": true
+     }
+    },
+    {
+     "id": "a3_inside_bounds",
+     "desc": "no ball leaves the box after 6000 ticks",
+     "ok": true,
+     "got": {
+      "escaped": 0,
+      "nan": 0,
+      "n": 0
+     },
+     "want": {
+      "escaped": 0,
+      "nan": 0
+     }
+    },
+    {
+     "id": "a4_settled",
+     "desc": "at least one ball is settled with |vy| < 0.06 after 6000 ticks",
+     "ok": false,
+     "got": "0 settled",
+     "want": ">=1"
+    },
+    {
+     "id": "a5_determinism",
+     "desc": "reset(1234) twice gives the same hash; reset(99) differs",
+     "ok": true,
+     "got": {
+      "same_seed": true,
+      "other_seed_differs": true
+     },
+     "want": {
+      "same_seed": true,
+      "other_seed_differs": true
+     }
+    }
+   ]
+  }
+ ],
+ "total_wall_s": 570.1,
+ "total_prompt_tokens": 65502,
+ "total_completion_tokens": 48653,
+ "recorded_at": "2026-11-05T21:38:15+0800",
+ "identity": {
+  "before": {
+   "ok": true,
+   "served_raw": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+   "served_real": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+   "served_size": "22134528992",
+   "want_real": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+   "want_size": "22134528992",
+   "n_ctx": 32768
+  },
+  "after": {
+   "ok": true,
+   "served_raw": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+   "served_real": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+   "served_size": "22134528992",
+   "want_real": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+   "want_size": "22134528992",
+   "n_ctx": 32768
+  },
+  "launched_file": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "checked": true
+ },
+ "void_turns": 0,
+ "valid": true,
+ "why_invalid": null,
+ "driver_wall_s": 570.5
+}

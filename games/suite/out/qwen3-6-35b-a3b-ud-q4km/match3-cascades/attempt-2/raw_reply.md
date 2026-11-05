@@ -1,0 +1,413 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>match3-cascades</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',system-ui,sans-serif}
+canvas{display:block}
+#hud{position:absolute;top:12px;left:16px;color:#e0e0ff;font-size:15px;line-height:1.7;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+#hud span{font-weight:700;color:#ffd700}
+#hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);color:#8888aa;font-size:13px;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="hud"></div>
+<div id="hint">swap two adjacent jewels · R = restart</div>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+
+/* ── seeded RNG (mulberry32) ─────────────────────────────── */
+function mulberry32(s){
+  return function(){
+    s |= 0; s = s + 0x6D2B79F5 | 0;
+    let t = Math.imul(s ^ s >>> 15, 1 | s);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+/* ── constants ───────────────────────────────────────────── */
+const ROWS=8, COLS=8, MAX_MOVES=30, MAX_TYPES=5;
+const JEWEL_TYPES=[
+  {geo:new THREE.SphereGeometry(.38,16,16),color:0xff4466},
+  {geo:new THREE.OctahedronGeometry(.4,0),color:0x44bbff},
+  {geo:new THREE.BoxGeometry(.55,.55,.55),color:0x44ff88},
+  {geo:new THREE.TorusGeometry(.28,.12,8,16),color:0xffaa22},
+  {geo:new THREE.IcosahedronGeometry(.38,0),color:0xcc66ff},
+];
+const EMPTY=-1;
+
+/* ── game state ──────────────────────────────────────────── */
+let grid=[], score=0, moves=0, over=false, cascade=0, seed=1234;
+let rng=null, boardGroup=null, animating=false;
+let cellSize=1, offsetX=0, offsetY=0;
+let pointerDown=null, dragStart=null;
+
+/* ── helpers ─────────────────────────────────────────────── */
+function makeGrid(){ return Array.from({length:ROWS}, ()=>Array(COLS).fill(EMPTY)) }
+
+function fillCell(r,c){
+  if(rng===null) rng=mulberry32(seed);
+  grid[r][c] = Math.floor(rng()*MAX_TYPES);
+}
+
+function generateBoard(){
+  grid = makeGrid();
+  rng = mulberry32(seed);
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) fillCell(r,c);
+  
+  // remove initial matches
+  let hasMatch = true;
+  while(hasMatch){
+    hasMatch = false;
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS-2;c++){
+      if(grid[r][c]>=0 && grid[r][c]===grid[r][c+1] && grid[r][c]===grid[r][c+2]){
+        fillCell(r,c+2); hasMatch=true;
+      }
+    }
+    for(let c=0;c<COLS;c++) for(let r=0;r<ROWS-2;r++){
+      if(grid[r][c]>=0 && grid[r][c]===grid[r+1][c] && grid[r][c]===grid[r+2][c]){
+        fillCell(r+2,c); hasMatch=true;
+      }
+    }
+  }
+  
+  // ensure at least one legal move exists
+  if(!hasAnyLegalMove()){
+    for(let attempt=0;attempt<100;attempt++){
+      let r1=Math.floor(rng()*ROWS), c1=Math.floor(rng()*COLS);
+      let dr=Math.floor(rng()*3)-1, dc=Math.floor(rng()*3)-1;
+      if(dr===0 && dc===0) continue;
+      let r2=r1+dr, c2=c1+dc;
+      if(r2<0||r2>=ROWS||c2<0||c2>=COLS) continue;
+      [grid[r1][c1], grid[r2][c2]] = [grid[r2][c2], grid[r1][c1]];
+      if(hasAnyLegalMove()) break;
+      [grid[r1][c1], grid[r2][c2]] = [grid[r2][c2], grid[r1][c1]];
+    }
+  }
+}
+
+function hasAnyLegalMove(){
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    if(c+1<COLS){
+      [grid[r][c], grid[r][c+1]] = [grid[r][c+1], grid[r][c]];
+      if(findMatches().length > 0){
+        [grid[r][c], grid[r][c+1]] = [grid[r][c+1], grid[r][c]];
+        return true;
+      }
+      [grid[r][c], grid[r][c+1]] = [grid[r][c+1], grid[r][c]];
+    }
+    if(r+1<ROWS){
+      [grid[r][c], grid[r+1][c]] = [grid[r+1][c], grid[r][c]];
+      if(findMatches().length > 0){
+        [grid[r][c], grid[r+1][c]] = [grid[r+1][c], grid[r][c]];
+        return true;
+      }
+      [grid[r][c], grid[r+1][c]] = [grid[r+1][c], grid[r][c]];
+    }
+  }
+  return false;
+}
+
+function findMatches(){
+  const matched = new Set();
+  const runs = [];
+  
+  // horizontal
+  for(let r=0;r<ROWS;r++){
+    let runStart = 0;
+    for(let c=1;c<=COLS;c++){
+      if(c<COLS && grid[r][c]>=0 && grid[r][c]===grid[r][runStart]){ continue; }
+      if(c-runStart>=3){
+        for(let k=runStart;k<c;k++) matched.add(r*COLS+k);
+        runs.push({type:grid[r][runStart], cells:[], isHoriz:true});
+        for(let k=runStart;k<c;k++) runs[runs.length-1].cells.push({r:r, c:k});
+      }
+      runStart = c;
+    }
+  }
+  
+  // vertical
+  for(let c=0;c<COLS;c++){
+    let runStart = 0;
+    for(let r=1;r<=ROWS;r++){
+      if(r<ROWS && grid[r][c]>=0 && grid[r][c]===grid[runStart][c]){ continue; }
+      if(r-runStart>=3){
+        for(let k=runStart;k<r;k++) matched.add(k*COLS+c);
+        runs.push({type:grid[runStart][c], cells:[], isHoriz:false});
+        for(let k=runStart;k<r;k++) runs[runs.length-1].cells.push({r:k, c:c});
+      }
+      runStart = r;
+    }
+  }
+  return runs;
+}
+
+function resolveCascade(){
+  cascade = 0;
+  let depth = 0;
+  while(true){
+    const runs = findMatches();
+    if(runs.length === 0) break;
+    depth++;
+    
+    // scoring with tie-break: horizontal preferred
+    const cellBestRun = new Map();
+    for(const run of runs){
+      for(const cell of run.cells){
+        const key = cell.r*COLS+cell.c;
+        const len = run.cells.length;
+        const isHoriz = run.isHoriz;
+        
+        if(!cellBestRun.has(key)){
+          cellBestRun.set(key, {len, isHoriz});
+        } else {
+          const prev = cellBestRun.get(key);
+          if(len > prev.len || (len === prev.len && isHoriz && !prev.isHoriz)){
+            cellBestRun.set(key, {len, isHoriz});
+          }
+        }
+      }
+    }
+    
+    let runScore = 0;
+    for(const [key, {len}] of cellBestRun){
+      runScore += len*len*10;
+    }
+    score += runScore * depth;
+    cascade = depth;
+    
+    // remove matched cells
+    for(const run of runs){
+      for(const cell of run.cells){
+        grid[cell.r][cell.c] = EMPTY;
+      }
+    }
+    
+    // gravity
+    for(let c=0;c<COLS;c++){
+      let writePos = ROWS-1;
+      for(let r=ROWS-1;r>=0;r--){
+        if(grid[r][c]>=0){
+          grid[writePos][c] = grid[r][c];
+          if(writePos !== r) grid[r][c] = EMPTY;
+          writePos--;
+        }
+      }
+      // refill from top
+      for(let r=writePos;r>=0;r--){
+        fillCell(r,c);
+      }
+    }
+  }
+}
+
+/* ── Three.js setup ──────────────────────────────────────── */
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:false});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x1a1a2e);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, .1, 100);
+camera.position.set(0, 0, 6);
+camera.lookAt(0, 0, 0);
+
+const ambientLight = new THREE.AmbientLight(0xffffff, .5);
+scene.add(ambientLight);
+const dirLight = new THREE.DirectionalLight(0xffffff, .8);
+dirLight.position.set(2, 3, 4);
+scene.add(dirLight);
+const dirLight2 = new THREE.DirectionalLight(0x8888ff, .3);
+dirLight2.position.set(-2, -1, 3);
+scene.add(dirLight2);
+
+boardGroup = new THREE.Group();
+scene.add(boardGroup);
+
+const jewelMeshes = [];
+for(let r=0;r<ROWS;r++){
+  jewelMeshes[r] = [];
+  for(let c=0;c<COLS;c++){
+    jewelMeshes[r][c] = null;
+  }
+}
+
+function updateLayout(){
+  const cw = window.innerWidth, ch = window.innerHeight;
+  const aspect = cw/ch;
+  const maxH = 5.5;
+  cellSize = maxH/ROWS;
+  const boardW = cellSize*COLS;
+  if(boardW/cw > 1){
+    cellSize = Math.min(cw/1.1/COLS, maxH/ROWS);
+  }
+  offsetX = -(COLS-1)*cellSize/2;
+  offsetY = (ROWS-1)*cellSize/2;
+  renderer.setSize(cw, ch);
+  camera.aspect = cw/ch;
+  camera.updateProjectionMatrix();
+}
+
+function createJewelMesh(type){
+  const jt = JEWEL_TYPES[type];
+  const mat = new THREE.MeshStandardMaterial({color:jt.color, roughness:.3, metalness:.1});
+  const mesh = new THREE.Mesh(jt.geo, mat);
+  mesh.scale.setScalar(.85);
+  return mesh;
+}
+
+function rebuildBoard(){
+  while(boardGroup.children.length) boardGroup.remove(boardGroup.children[0]);
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    if(jewelMeshes[r][c]){ boardGroup.remove(jewelMeshes[r][c]); jewelMeshes[r][c]=null; }
+    if(grid[r][c]>=0){
+      const m = createJewelMesh(grid[r][c]);
+      m.position.set(c*cellSize+offsetX, -r*cellSize+offsetY, 0);
+      boardGroup.add(m);
+      jewelMeshes[r][c] = m;
+    } else {
+      jewelMeshes[r][c] = null;
+    }
+  }
+}
+
+/* ── HUD ─────────────────────────────────────────────────── */
+const hudEl = document.getElementById('hud');
+function updateHUD(){
+  hudEl.innerHTML = `score: <span>${score}</span><br>moves: <span>${moves}</span> / ${MAX_MOVES}<br>best cascade: <span>${cascade}</span>`;
+}
+
+/* ── window.__game contract ──────────────────────────────── */
+window.__game = {
+  ready: false,
+  seed: seed,
+  get grid() { return grid; },
+  get score() { return score; },
+  get moves() { return moves; },
+  get over() { return over; },
+  get cascade() { return cascade; },
+  step: function(dt){},
+  reset: function(s){
+    seed = s;
+    score = 0;
+    moves = 0;
+    over = false;
+    cascade = 0;
+    generateBoard();
+    rebuildBoard();
+    updateHUD();
+    window.__game.ready = true;
+  },
+  swap: function(r1, c1, r2, c2){
+    if(over || animating) return false;
+    if(r1<0||r1>=ROWS||c1<0||c1>=COLS||r2<0||r2>=ROWS||c2<0||c2>=COLS) return false;
+    if(Math.abs(r1-r2)+Math.abs(c1-c2)!==1) return false;
+    
+    // swap
+    [grid[r1][c1], grid[r2][c2]] = [grid[r2][c2], grid[r1][c1]];
+    
+    const runs = findMatches();
+    if(runs.length === 0){
+      // revert
+      [grid[r1][c1], grid[r2][c2]] = [grid[r2][c2], grid[r1][c1]];
+      rebuildBoard();
+      return false;
+    }
+    
+    moves++;
+    if(moves >= MAX_MOVES) over = true;
+    
+    resolveCascade();
+    rebuildBoard();
+    updateHUD();
+    return true;
+  },
+  settle: function(){
+    if(animating) return;
+    const runs = findMatches();
+    if(runs.length === 0) return;
+    resolveCascade();
+    rebuildBoard();
+    updateHUD();
+  },
+  hash: function(){
+    let h = score.toString() + moves.toString();
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) h += grid[r][c];
+    return h;
+  }
+};
+
+/* ── input handling ──────────────────────────────────────── */
+function getCellFromPointer(e){
+  const rect = renderer.domElement.getBoundingClientRect();
+  const x = e.clientX - rect.left, y = e.clientY - rect.top;
+  const sx = (x/rect.width)*2-1, sy = -(y/rect.height)*2+1;
+  const worldX = sx * camera.aspect * 3.5, worldY = sy * 3.5;
+  const c = Math.round((worldX - offsetX)/cellSize);
+  const r = Math.round((offsetY - worldY)/cellSize);
+  if(r<0||r>=ROWS||c<0||c>=COLS) return null;
+  return {r, c};
+}
+
+renderer.domElement.addEventListener('pointerdown', e=>{
+  if(over || animating) return;
+  const cell = getCellFromPointer(e);
+  if(!cell) return;
+  pointerDown = cell;
+  dragStart = {x:e.clientX, y:e.clientY};
+});
+
+renderer.domElement.addEventListener('pointermove', e=>{
+  if(!pointerDown || over || animating) return;
+  const dx = e.clientX - dragStart.x, dy = e.clientY - dragStart.y;
+  const threshold = cellSize * window.innerWidth / 2 / 3.5;
+  if(Math.abs(dx)>threshold || Math.abs(dy)>threshold){
+    let dr=0, dc=0;
+    if(Math.abs(dx) > Math.abs(dy)) dc = dx>0?1:-1;
+    else dr = dy>0?-1:1;
+    const r2 = pointerDown.r+dr, c2 = pointerDown.c+dc;
+    if(r2>=0&&r2<ROWS&&c2>=0&&c2<COLS){
+      window.__game.swap(pointerDown.r, pointerDown.c, r2, c2);
+      pointerDown = null; dragStart = null;
+    }
+  }
+});
+
+renderer.domElement.addEventListener('pointerup', ()=>{pointerDown=null; dragStart=null;});
+renderer.domElement.addEventListener('pointercancel', ()=>{pointerDown=null; dragStart=null;});
+
+window.addEventListener('keydown', e=>{
+  if(e.key==='r'||e.key==='R') window.__game.reset(seed);
+});
+
+window.addEventListener('resize', ()=>{updateLayout(); rebuildBoard();});
+
+/* ── animation loop ──────────────────────────────────────── */
+function animate(){
+  requestAnimationFrame(animate);
+  const t = performance.now()*.001;
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const m = jewelMeshes[r]?.[c];
+    if(m){
+      m.rotation.y = Math.sin(t*.5+r*.3+c*.2)*.1;
+      m.rotation.x = Math.cos(t*.3+r*.2+c*.4)*.05;
+    }
+  }
+  renderer.render(scene, camera);
+}
+
+/* ── init ────────────────────────────────────────────────── */
+updateLayout();
+window.__game.reset(1234);
+animate();
+</script>
+</body>
+</html>
+```

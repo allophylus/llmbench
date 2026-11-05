@@ -471,9 +471,15 @@ def run(spec, game_dir, shot_path=None, out_json=None):
                       three: /three/i.test(document.documentElement.outerHTML.slice(0, 3000000)),
                       game: window.__game ? Object.keys(window.__game) : []};
             }""")
-            types = page.evaluate("""() => { const g = window.__game || {}; const o = {};
-              for (const k of Object.keys(g)) o[k] = Array.isArray(g[k]) ? 'array' : typeof g[k];
-              return o; }""")
+            try:
+                types = page.evaluate("""() => { const g = window.__game || {}; const o = {};
+                  for (const k of Object.keys(g)) o[k] = Array.isArray(g[k]) ? 'array' : typeof g[k];
+                  return o; }""")
+            except Exception as e:
+                # a page whose contract getter throws (e.g. units built from a missing array)
+                # must fail the gate with evidence, not abort the whole cell
+                types = {}
+                result["gate"]["contract_probe_error"] = str(e)[:200]
             req = CONTRACT[spec]["required"]
             missing = [k for k, t in req.items() if types.get(k) != t]
             if not g["canvas"]:

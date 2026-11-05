@@ -1,0 +1,91 @@
+{
+ "spec": "tower-stacker",
+ "game_dir": "attempt-5",
+ "probed_at": "2026-11-05T21:41:00+0800",
+ "gate": {
+  "load_ok": true,
+  "ready": true,
+  "canvas": true,
+  "three": true,
+  "contract_keys": [
+   "ready",
+   "seed",
+   "blocks",
+   "height",
+   "score",
+   "over",
+   "toppled",
+   "step",
+   "reset",
+   "hash"
+  ],
+  "contract_missing": [],
+  "pass": true,
+  "animation_advancing": false
+ },
+ "assertions": [
+  {
+   "id": "b1_twenty_blocks",
+   "desc": "20 blocks dropped, all within x in [-3,3]",
+   "ok": false,
+   "got": {
+    "n": 0,
+    "off": 0
+   },
+   "want": {
+    "n": 20,
+    "off": 0
+   }
+  },
+  {
+   "id": "b2_stack_height",
+   "desc": "height == 20 and not toppled after 800 ticks",
+   "ok": false,
+   "got": {
+    "height": 0,
+    "over": false,
+    "toppled": false
+   },
+   "want": {
+    "height": 20,
+    "over": true,
+    "toppled": false
+   }
+  },
+  {
+   "id": "b3_no_interpenetration",
+   "desc": "no two blocks overlap vertically at any 200-tick sample",
+   "ok": true,
+   "got": "0 overlaps over 4 samples",
+   "want": "0"
+  },
+  {
+   "id": "b4_no_drift",
+   "desc": "top block near its seeded offset; stack centre of mass |x| <= 0.15",
+   "ok": false,
+   "got": "no blocks",
+   "want": "20"
+  },
+  {
+   "id": "b5_determinism",
+   "desc": "same seed same tower, other seed differs",
+   "ok": false,
+   "got": {
+    "same": true,
+    "differs": false
+   },
+   "want": {
+    "same": true,
+    "differs": true
+   }
+  }
+ ],
+ "compliance": {
+  "score": 100,
+  "violations": [],
+  "notes": []
+ },
+ "console_errors": [],
+ "passed": 1,
+ "total": 5
+}

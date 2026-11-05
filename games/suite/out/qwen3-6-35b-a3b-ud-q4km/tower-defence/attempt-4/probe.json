@@ -1,0 +1,109 @@
+{
+ "spec": "tower-defence",
+ "game_dir": "attempt-4",
+ "probed_at": "2026-11-05T21:48:00+0800",
+ "gate": {
+  "load_ok": true,
+  "ready": true,
+  "canvas": true,
+  "three": true,
+  "contract_keys": [
+   "ready",
+   "seed",
+   "gold",
+   "lives",
+   "wave",
+   "kills",
+   "towers",
+   "units",
+   "path",
+   "score",
+   "over",
+   "won",
+   "step",
+   "reset",
+   "hash"
+  ],
+  "contract_missing": [],
+  "pass": true,
+  "animation_advancing": false
+ },
+ "assertions": [
+  {
+   "id": "c1_grid_placement",
+   "desc": "every tower on a distinct non-path tile",
+   "ok": true,
+   "got": {
+    "towers": 4,
+    "bad": 0
+   },
+   "want": {
+    "bad": 0
+   }
+  },
+  {
+   "id": "c2_gold_exact",
+   "desc": "gold == 200 + 5*kills - sum(cost) at every sample; never negative",
+   "ok": true,
+   "got": {
+    "mismatch_samples": 0,
+    "negative": 0,
+    "of": 60
+   },
+   "want": {
+    "mismatch_samples": 0,
+    "negative": 0
+   }
+  },
+  {
+   "id": "c3_five_waves_win",
+   "desc": "fixed policy clears all 5 waves (won: true)",
+   "ok": false,
+   "got": {
+    "over": false,
+    "won": false,
+    "wave": 0,
+    "ticks": 120000,
+    "lives": 20
+   },
+   "want": {
+    "over": true,
+    "won": true
+   }
+  },
+  {
+   "id": "c4_no_tower_spam",
+   "desc": "towers grow by <=1 per 10-tick window and never off-grid",
+   "ok": true,
+   "got": {
+    "jumps": 0,
+    "max_growth": 1,
+    "towers": 4
+   },
+   "want": {
+    "jumps": 0
+   }
+  },
+  {
+   "id": "c5_determinism",
+   "desc": "same seed same outcome and hash",
+   "ok": true,
+   "got": {
+    "same_hash": true,
+    "same_score": true
+   },
+   "want": {
+    "same_hash": true,
+    "same_score": true
+   }
+  }
+ ],
+ "compliance": {
+  "score": 100,
+  "violations": [],
+  "notes": []
+ },
+ "console_errors": [],
+ "passed": 4,
+ "total": 5
+}

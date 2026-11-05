@@ -1,0 +1,108 @@
+{
+ "spec": "match3-cascades",
+ "game_dir": "attempt-1",
+ "probed_at": "2026-11-05T23:00:16+0800",
+ "gate": {
+  "load_ok": true,
+  "ready": true,
+  "canvas": true,
+  "three": true,
+  "contract_keys": [
+   "ready",
+   "seed",
+   "grid",
+   "score",
+   "moves",
+   "over",
+   "cascade",
+   "step",
+   "reset",
+   "swap",
+   "settle",
+   "hash"
+  ],
+  "contract_missing": [],
+  "pass": true,
+  "animation_advancing": true
+ },
+ "assertions": [
+  {
+   "id": "d1_clean_board",
+   "desc": "8x8 ints 0..4, no run of 3, settle() changes nothing",
+   "ok": false,
+   "got": {
+    "shape": true,
+    "runs": 1,
+    "stable_after_settle": true
+   },
+   "want": {
+    "shape": true,
+    "runs": 0,
+    "stable_after_settle": true
+   }
+  },
+  {
+   "id": "d2_seeded_cascade",
+   "desc": "fixed swap script reproduces its score on a second identical run",
+   "ok": false,
+   "got": {
+    "r1": 1490,
+    "r2": 1490,
+    "quiet": false,
+    "cascade_before": 1
+   },
+   "want": {
+    "equal_score": true,
+    "quiet": true
+   }
+  },
+  {
+   "id": "d3_no_unsolicited_cascade",
+   "desc": "after each of 30 sampled legal swaps, settle() changes nothing",
+   "ok": false,
+   "got": {
+    "unstable_returns": 29,
+    "played": 30
+   },
+   "want": {
+    "unstable_returns": 0
+   }
+  },
+  {
+   "id": "d4_always_stable",
+   "desc": "every returned board has no run of 3 (200 sampled swaps over fresh boards)",
+   "ok": false,
+   "got": {
+    "unstable": 196,
+    "swaps": 200
+   },
+   "want": {
+    "unstable": 0,
+    "swaps": ">=30"
+   }
+  },
+  {
+   "id": "d5_determinism",
+   "desc": "seed 1234 replay identical; seed 99 differs",
+   "ok": true,
+   "got": {
+    "same": true,
+    "differs": true
+   },
+   "want": {
+    "same": true,
+    "differs": true
+   }
+  }
+ ],
+ "compliance": {
+  "score": 75,
+  "violations": [
+   "Math.random used (seeded generator required)"
+  ],
+  "notes": []
+ },
+ "console_errors": [],
+ "passed": 1,
+ "total": 5
+}

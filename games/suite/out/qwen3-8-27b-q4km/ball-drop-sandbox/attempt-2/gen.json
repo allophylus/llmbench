@@ -1,0 +1,8 @@
+{
+ "attempt": 2,
+ "wall_s": 126.78,
+ "prompt_tokens": 7341,
+ "completion_tokens": 5609,
+ "decode_tps": 47.92,
+ "html_bytes": 14502
+}

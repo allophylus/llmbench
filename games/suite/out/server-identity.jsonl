@@ -1,0 +1,1 @@
+{"slug": "qwen3-8-27b-q4km", "spec": "ball-drop-sandbox", "started": "2026-11-04T08:10:46+0800", "server": {"model_path": "/home/ubuntu/models/active.gguf", "n_ctx": 131072, "chat_template_present": true}}

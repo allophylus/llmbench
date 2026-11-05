@@ -1,0 +1,95 @@
+{
+ "spec": "match3-cascades",
+ "game_dir": "attempt-1",
+ "probed_at": "2026-11-05T21:55:06+0800",
+ "gate": {
+  "load_ok": true,
+  "ready": true,
+  "canvas": true,
+  "three": true,
+  "contract_keys": [
+   "ready",
+   "seed",
+   "grid",
+   "score",
+   "moves",
+   "over",
+   "cascade",
+   "step",
+   "reset",
+   "swap",
+   "settle",
+   "hash"
+  ],
+  "contract_missing": [
+   "grid",
+   "score",
+   "moves",
+   "over",
+   "cascade"
+  ],
+  "pass": false,
+  "animation_advancing": true
+ },
+ "assertions": [
+  {
+   "id": "d1_clean_board",
+   "desc": "8x8 ints 0..4, no run of 3, settle() changes nothing",
+   "ok": false,
+   "got": "S.grid.map is not a function",
+   "want": "no exception"
+  },
+  {
+   "id": "d2_seeded_cascade",
+   "desc": "fixed swap script reproduces its score on a second identical run",
+   "ok": true,
+   "got": {
+    "r1": null,
+    "r2": null,
+    "quiet": true,
+    "cascade_before": null
+   },
+   "want": {
+    "equal_score": true,
+    "quiet": true
+   }
+  },
+  {
+   "id": "d3_no_unsolicited_cascade",
+   "desc": "after each of 30 sampled legal swaps, settle() changes nothing",
+   "ok": false,
+   "got": "Cannot read properties of undefined (reading 'length')",
+   "want": "no exception"
+  },
+  {
+   "id": "d4_always_stable",
+   "desc": "every returned board has no run of 3 (200 sampled swaps over fresh boards)",
+   "ok": false,
+   "got": "Cannot read properties of undefined (reading 'length')",
+   "want": "no exception"
+  },
+  {
+   "id": "d5_determinism",
+   "desc": "seed 1234 replay identical; seed 99 differs",
+   "ok": false,
+   "got": {
+    "same": true,
+    "differs": false
+   },
+   "want": {
+    "same": true,
+    "differs": true
+   }
+  }
+ ],
+ "compliance": {
+  "score": 75,
+  "violations": [
+   "window.__game contract incomplete: grid, score, moves, over, cascade"
+  ],
+  "notes": []
+ },
+ "console_errors": [],
+ "passed": 1,
+ "total": 5
+}

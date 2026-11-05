@@ -161,7 +161,7 @@ def cell_done(slug, spec):
     return bool(b.get("valid")) and bool(b.get("turns_used"))
 
 
-def run_cell(slug, spec):
+def run_cell(slug, spec, attempts=0):
     """Run one cell with an identity assertion before and after; annotate build.json."""
     st = load_state()
     idn0 = identity(slug)
@@ -173,9 +173,13 @@ def run_cell(slug, spec):
         return
     log("%s/%s: start (served %s, ctx %s) pid-free check done" % (slug, spec, idn0["served_real"], idn0["n_ctx"]))
     t0 = time.time()
-    r = subprocess.run([PY, os.path.join(HERE, "suite_run.py"), "--base", MODELS[slug]["base"],
-                        "--model-slug", slug, "--spec", spec, "--out", OUT],
-                       capture_output=True, text=True, timeout=8 * 3600)
+    cmd = [PY, os.path.join(HERE, "suite_run.py"), "--base", MODELS[slug]["base"],
+           "--model-slug", slug, "--spec", spec, "--out", OUT]
+    if attempts:
+        # a wall-clock cap the operator sets deliberately; recorded in build.json as
+        # turns_allowed so a short run is never mistaken for a full 10-repair sweep
+        cmd += ["--attempts", str(attempts)]
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=8 * 3600)
     idn1 = identity(slug)
     bj = os.path.join(OUT, slug, spec, "build.json")
     try:
@@ -236,7 +240,7 @@ def cmd_run(a):
                 log("%s: NOT STARTED (no-restart) — %s" % (slug, json.dumps(idn)[:300]))
                 continue
         for spec in todo:
-            run_cell(slug, spec)
+            run_cell(slug, spec, a.attempts)
         stop_extra(slug)
 
 
@@ -275,6 +279,7 @@ if __name__ == "__main__":
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("run"); p.add_argument("--models", default=""); p.add_argument("--specs", default="")
     p.add_argument("--no-restart", action="store_true")
+    p.add_argument("--attempts", type=int, default=0)
     sub.add_parser("restore")
     q = sub.add_parser("identity"); q.add_argument("--slug", required=True)
     sub.add_parser("summary")

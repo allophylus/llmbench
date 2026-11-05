@@ -202,6 +202,9 @@ def run_cell(base, slug, spec, out_root, attempts, skip_done=False):
         os.makedirs(mdir, exist_ok=True)
         if os.path.exists(os.path.join(src, "index.html")):
             shutil.copyfile(os.path.join(src, "index.html"), os.path.join(mdir, "index.html"))
+            # also at the cell root: four cells share one model directory, so the model-level
+            # copy is always the LAST cell's game and must never be used to show a cell
+            shutil.copyfile(os.path.join(src, "index.html"), os.path.join(cell, "index.html"))
         if os.path.exists(os.path.join(src, "shot.png")):
             shutil.copyfile(os.path.join(src, "shot.png"),
                             os.path.join(mdir, "shot-%s.png" % spec))

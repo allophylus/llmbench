@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tower Stacker</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #1a1a1a; font-family: monospace; }
+  #hud {
+    position: absolute; top: 20px; left: 20px; color: #fff;
+    background: rgba(0,0,0,0.6); padding: 15px; border-radius: 8px;
+    pointer-events: none; user-select: none;
+  }
+  #hud h1 { margin: 0 0 10px 0; font-size: 20px; color: #ffcc00; }
+  #hud p { margin: 5px 0; font-size: 16px; }
+  #status { margin-top: 10px; font-weight: bold; }
+  .over { color: #ff4444; }
+  .win { color: #44ff44; }
+</style>
+</head>
+<body>
+<div id="hud">
+  <h1>TOWER STACKER</h1>
+  <p>Height: <span id="h-val">0</span> / 20</p>
+  <p>Score: <span id="s-val">0</span></p>
+  <p id="status">Ready</p>
+  <p style="font-size:12px; color:#aaa; margin-top:10px;">R: Restart | SPACE: Pause</p>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// --- Seeded RNG (Mulberry32) ---
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+// --- Constants ---
+const BLOCK_W = 2, BLOCK_H = 1, BLOCK_D = 2;
+const GRAVITY = -9.8;
+const DROP_INTERVAL = 40; // ticks
+const SETTLE_THRESHOLD = 0.05;
+const SETTLE_TICKS = 20;
+const MAX_BLOCKS = 20;
+const DROP_Y = 8;
+const OFFSET_RANGE = 0.6;
+
+// --- Game State ---
+let seed = 1234;
+let rng = mulberry32(seed);
+let blocks = [];
+let meshes = [];
+let tick = 0;
+let paused = false;
+let gameOver = false;
+let toppled = false;
+let settledCount = 0;
+let score = 0;
+let lastTime = 0;
+let accumulator = 0;
+const FIXED_DT = 1/60;
+
+// --- Three.js Setup ---
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x222222);
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.set(8, 6, 8);
+camera.lookAt(0, 2, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+// --- Lighting ---
+const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+scene.add(ambientLight);
+
+const keyLight = new THREE.DirectionalLight(0xffffff, 0.8);
+keyLight.position.set(5, 10, 5);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.width = 2048;
+keyLight.shadow.mapSize.height = 2048;
+keyLight.shadow.camera.near = 0.5;
+keyLight.shadow.camera.far = 50;
+keyLight.shadow.camera.left = -10;
+keyLight.shadow.camera.right = 10;
+keyLight.shadow.camera.top = 10;
+keyLight.shadow.camera.bottom = -10;
+scene.add(keyLight);
+
+const fillLight = new THREE.DirectionalLight(0x8888ff, 0.3);
+fillLight.position.set(-5, 5, -5);
+scene.add(fillLight);
+
+// --- Ground ---
+const groundGeo = new THREE.PlaneGeometry(20, 20);
+const groundMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.8 });
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI/2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// --- Block Geometry & Material ---
+const blockGeo = new THREE.BoxGeometry(BLOCK_W, BLOCK_H, BLOCK_D);
+const baseColor = new THREE.Color(0x4488cc);
+
+function createBlockMesh(index) {
+  const hueShift = (index * 0.05) % 1;
+  const color = baseColor.clone().offsetHSL(hueShift, 0, 0);
+  const mat = new THREE.MeshStandardMaterial({ 
+    color: color, 
+    roughness: 0.6,
+    metalness: 0.1
+  });
+  const mesh = new THREE.Mesh(blockGeo, mat);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+
+// --- Game Logic ---
+function resetGame(newSeed) {
+  seed = newSeed;
+  rng = mulberry32(seed);
+  blocks = [];
+  meshes = [];
+  tick = 0;
+  gameOver = false;
+  toppled = false;
+  settledCount = 0;
+  score = 0;
+  accumulator = 0;
+  
+  // Clear old meshes
+  meshes.forEach(m => scene.remove(m));
+  meshes = [];
+  
+  // Create block meshes
+  for (let i = 0; i < MAX_BLOCKS; i++) {
+    const mesh = createBlockMesh(i);
+    scene.add(mesh);
+    meshes.push(mesh);
+    
+    blocks.push({
+      x: 0,
+      y: DROP_Y,
+      z: 0,
+      vx: 0,
+      vy: 0,
+      dropped: false,
+      settled: false,
+      settleTicks: 0,
+      index: i
+    });
+  }
+  
+  updateHUD();
+}
+
+function getOffset(index) {
+  if (index === 0) return 0;
+  return (rng() * 2 - 1) * OFFSET_RANGE;
+}
+
+function checkStability(blockIndex) {
+  const block = blocks[blockIndex];
+  if (blockIndex === 0) return true; // Base block is always stable
+  
+  const prevBlock = blocks[blockIndex - 1];
+  if (!prevBlock.settled) return true; // Wait for support to settle
+  
+  // Check if block's center of mass is over support
+  const supportHalfW = BLOCK_W / 2;
+  const supportHalfD = BLOCK_D / 2;
+  
+  const dx = Math.abs(block.x - prevBlock.x);
+  const dz = Math.abs(block.z - prevBlock.z);
+  
+  // Block is stable if center is within support area
+  return dx <= supportHalfW && dz <= supportHalfD;
+}
+
+function updatePhysics(dt) {
+  if (gameOver) return;
+  
+  // Drop new blocks
+  if (tick % DROP_INTERVAL === 0 && tick < MAX_BLOCKS * DROP_INTERVAL) {
+    const blockIndex = Math.floor(tick / DROP_INTERVAL);
+    if (blockIndex < MAX_BLOCKS && !blocks[blockIndex].dropped) {
+      blocks[blockIndex].dropped = true;
+      blocks[blockIndex].x = getOffset(blockIndex);
+    }
+  }
+  
+  // Update each block
+  for (let i = 0; i < MAX_BLOCKS; i++) {
+    const block = blocks[i];
+    if (!block.dropped || block.settled) continue;
+    
+    // Apply gravity
+    block.vy += GRAVITY * dt;
+    block.y += block.vy * dt;
+    
+    // Check collision with ground or block below
+    let groundY = 0;
+    if (i > 0 && blocks[i-1].settled) {
+      groundY = blocks[i-1].y + BLOCK_H/2;
+    } else if (i === 0) {
+      groundY = BLOCK_H/2;
+    }
+    
+    // Check if block has landed
+    if (block.y - BLOCK_H/2 <= groundY) {
+      block.y = groundY + BLOCK_H/2;
+      block.vy = 0;
+      block.settleTicks++;
+      
+      if (block.settleTicks >= SETTLE_TICKS) {
+        block.settled = true;
+        settledCount++;
+        
+        // Check stability
+        if (!checkStability(i)) {
+          gameOver = true;
+          toppled = true;
+        }
+      }
+    } else {
+      block.settleTicks = 0;
+    }
+  }
+  
+  // Check if all blocks have settled
+  if (settledCount === MAX_BLOCKS && !gameOver) {
+    gameOver = true;
+    score += 500; // Bonus for completing the tower
+  }
+  
+  // Update score
+  score = settledCount * 100;
+  
+  tick++;
+}
+
+function updateMeshes() {
+  for (let i = 0; i < MAX_BLOCKS; i++) {
+    const block = blocks[i];
+    const mesh = meshes[i];
+    mesh.position.set(block.x, block.y, block.z);
+    mesh.visible = block.dropped;
+  }
+}
+
+function updateHUD() {
+  document.getElementById('h-val').textContent = settledCount;
+  document.getElementById('s-val').textContent = score;
+  
+  const statusEl = document.getElementById('status');
+  if (gameOver) {
+    if (toppled) {
+      statusEl.textContent = 'TOPPLED!';
+      statusEl.className = 'over';
+    } else {
+      statusEl.textContent = 'COMPLETE!';
+      statusEl.className = 'win';
+    }
+  } else {
+    statusEl.textContent = 'Stacking...';
+    statusEl.className = '';
+  }
+}
+
+// --- Game Contract ---
+window.__game = {
+  ready: false,
+  seed: seed,
+  blocks: [],
+  height: 0,
+  score: 0,
+  over: false,
+  toppled: false,
+  step: function(dt) {
+    updatePhysics(dt);
+    updateMeshes();
+    updateHUD();
+    this.ready = true;
+  },
+  reset: function(newSeed) {
+    resetGame(newSeed);
+    this.seed = newSeed;
+  },
+  hash: function() {
+    let hash = '';
+    for (let i = 0; i < blocks.length; i++) {
+      const b = blocks[i];
+      hash += `${b.x.toFixed(4)},${b.y.toFixed(4)},${b.z.toFixed(4)},`;
+    }
+    hash += score;
+    return hash;
+  }
+};
+
+// --- Animation Loop ---
+function animate(time) {
+  requestAnimationFrame(animate);
+  
+  if (!paused && !gameOver) {
+    const delta = (time - lastTime) / 1000;
+    lastTime = time;
+    
+    accumulator += delta;
+    while (accumulator >= FIXED_DT) {
+      window.__game.step(FIXED_DT);
+      accumulator -= FIXED_DT;
+    }
+  }
+  
+  renderer.render(scene, camera);
+}
+
+// --- Input Handling ---
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'r' || e.key === 'R') {
+    window.__game.reset(seed);
+  } else if (e.key === ' ') {
+    paused = !paused;
+  }
+});
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// --- Initialize ---
+resetGame(seed);
+window.__game.ready = true;
+animate(0);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>match3-cascades</title>
+<style>
+  :root{
+    --bg0:#07131a; --bg1:#0c2230; --bg2:#123246;
+    --ink:#eaf6f4; --dim:#7fa3ad; --faint:#4a6b76;
+    --gold:#ffcf5c; --teal:#37e0c8; --coral:#ff6f61;
+    --line:rgba(120,200,210,.14);
+    --mono: ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --disp: "Bahnschrift","DIN Alternate","Oswald","Arial Narrow",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:var(--bg0);color:var(--ink);
+    font-family:var(--mono);-webkit-user-select:none;user-select:none;touch-action:none}
+  #bg{position:fixed;inset:0;z-index:0}
+  #stage{position:fixed;inset:0;z-index:1}
+  #stage canvas{display:block}
+  .hud{position:fixed;z-index:3;pointer-events:none}
+  .top{top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;
+    padding:clamp(14px,2.4vw,30px)}
+  .brand{display:flex;flex-direction:column;gap:2px}
+  .brand .k{font-size:11px;letter-spacing:.42em;color:var(--teal);text-transform:uppercase;
+    opacity:.85}
+  .brand .t{font-family:var(--disp);font-weight:700;font-size:clamp(26px,4.4vw,52px);
+    line-height:.92;letter-spacing:.02em;text-transform:uppercase}
+  .brand .t b{color:var(--gold);font-weight:700}
+  .brand .s{font-size:11px;letter-spacing:.28em;color:var(--faint);text-transform:uppercase;margin-top:4px}
+  .stats{display:flex;gap:clamp(10px,1.6vw,22px);align-items:flex-start}
+  .stat{display:flex;flex-direction:column;align-items:flex-end;gap:3px;min-width:64px}
+  .stat .lab{font-size:10px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
+  .stat .val{font-family:var(--disp);font-weight:700;font-size:clamp(22px,3.4vw,40px);
+    line-height:1;font-variant-numeric:tabular-nums}
+  .stat.score .val{color:var(--gold)}
+  .stat.moves .val{color:var(--ink)}
+  .stat.casc .val{color:var(--teal)}
+  .stat .val.pop{animation:pop .42s cubic-bezier(.2,1.4,.4,1)}
+  @keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.28)}100%{transform:scale(1)}}
+  .bar{position:fixed;left:clamp(14px,2.4vw,30px);bottom:clamp(14px,2.4vw,26px);z-index:3;
+    pointer-events:none;display:flex;flex-direction:column;gap:9px;max-width:min(420px,72vw)}
+  .track{height:6px;width:min(300px,52vw);background:rgba(255,255,255,.08);border-radius:3px;
+    overflow:hidden;position:relative}
+  .track i{position:absolute;inset:0 auto 0 0;width:0%;background:linear-gradient(90deg,var(--teal),var(--gold));
+    border-radius:3px;transition:width .35s cubic-bezier(.2,.8,.2,1)}
+  .hint{font-size:12px;letter-spacing:.06em;color:var(--dim)}
+  .hint b{color:var(--ink);font-weight:600}
+  .hint .key{display:inline-block;padding:1px 6px;border:1px solid var(--line);border-radius:4px;
+    color:var(--teal);font-size:11px;margin:0 2px}
+  .over{position:fixed;inset:0;z-index:4;display:none;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 50% 45%,rgba(7,19,26,.55),rgba(7,19,26,.86));
+    backdrop-filter:blur(3px)}
+  .over.show{display:flex;animation:fade .5s ease}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .over .card{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;
+    padding:34px 46px;border:1px solid var(--line);border-radius:14px;
+    background:linear-gradient(180deg,rgba(18,50,70,.5),rgba(9,26,36,.5))}
+  .over .card .h{font-family:var(--disp);font-weight:700;font-size:clamp(30px,5vw,54px);
+    letter-spacing:.04em;text-transform:uppercase}
+  .over .card .h span{color:var(--gold)}
+  .over .card .p{font-size:13px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
+  .over .card .p b{color:var(--ink)}
+  .over .card .r{font-size:12px;color:var(--faint);letter-spacing:.1em}
+  .over .card .r .key{display:inline-block;padding:1px 7px;border:1px solid var(--line);
+    border-radius:4px;color:var(--teal);margin:0 3px}
+  @media (max-width:560px){ .brand .s{display:none} .stat{min-width:52px} }
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="stage"></div>
+
+<div class="hud top">
+  <div class="brand">
+    <div class="k">llmbench · cell</div>
+    <div class="t">match<b>3</b></div>
+    <div class="s">cascades</div>
+  </div>
+  <div class="stats">
+    <div class="stat score"><div class="lab">Score</div><div class="val" id="vScore">0</div></div>
+    <div class="stat moves"><div class="lab">Moves</div><div class="val" id="vMoves">0 / 30</div></div>
+    <div class="stat casc"><div class="lab">Best Cascade</div><div class="val" id="vCasc">0</div></div>
+  </div>
+</div>
+
+<div class="hud bar">
+  <div class="track"><i id="barFill"></i></div>
+  <div class="hint">swap two <b>adjacent</b> jewels to clear a run of 3+ · press <span class="key">R</span> to restart</div>
+</div>
+
+<div class="over" id="over">
+  <div class="card">
+    <div class="h">Game <span>Over</span></div>
+    <div class="p">Final Score <b id="oScore">0</b></div>
+    <div class="r">press <span class="key">R</span> to play again</div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+/* ---------- constants ---------- */
+const N = 8, MAXMOVES = 30, SEED = 1234;
+const CELL = 1.0, GAP = 0.16, SP = CELL + GAP;
+const HALF = (N - 1) * SP / 2;
+const COLORS = [0xff5a5f, 0xffc93c, 0x35d0a5, 0x3aa0ff, 0xc06bff];
+const GEM = [
+  new THREE.SphereGeometry(0.40, 26, 20),
+  new THREE.OctahedronGeometry(0.46, 0),
+  new THREE.BoxGeometry(0.56, 0.56, 0.56),
+  new THREE.TorusGeometry(0.30, 0.13, 16, 30),
+  new THREE.IcosahedronGeometry(0.44, 0)
+];
+const GEMROT = [
+  [0, 0, 0], [0.5, 0.6, 0], [0.6, 0.6, 0], [Math.PI / 2, 0, 0], [0.4, 0.5, 0.3]
+];
+const MATS = COLORS.map(c => new THREE.MeshStandardMaterial({
+  color: c, metalness: 0.35, roughness: 0.22,
+  emissive: new THREE.Color(c).multiplyScalar(0.16), flatShading: true
+}));
+
+/* ---------- seeded RNG (mulberry32) ---------- */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+/* ---------- game state ---------- */
+let grid = [], score = 0, moves = 0, over = false, cascade = 0, bestCascade = 0;
+let rng = mulberry32(SEED);
+const gems = [];
+for (let r = 0; r < N; r++){ gems[r] = []; for (let c = 0; c < N; c++) gems[r][c] = null; }
+
+/* ---------- three.js scene ---------- */
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.setSize(innerWidth, innerHeight);
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 100);
+camera.position.set(0, 0, 15);
+camera.lookAt(0, 0, 0);
+
+scene.add(new THREE.AmbientLight(0x8fb4c4, 0.55));
+const key = new THREE.DirectionalLight(0xffffff, 1.15); key.position.set(5, 8, 10); scene.add(key);
+const fill = new THREE.DirectionalLight(0x66d0ff, 0.45); fill.position.set(-7, -3, 6); scene.add(fill);
+const rim = new THREE.DirectionalLight(0xffb060, 0.35); rim.position.set(0, -6, -8); scene.add(rim);
+
+const boardGroup = new THREE.Group(); scene.add(boardGroup);
+const cellGeo = new THREE.BoxGeometry(CELL * 0.94, CELL * 0.94, 0.16);
+const cellMat = new THREE.MeshStandardMaterial({ color: 0x0c2230, metalness: 0.2, roughness: 0.85,
+  emissive: 0x0a1c26, emissiveIntensity: 0.6 });
+for (let r = 0; r < N; r++) for (let c = 0; c < N; c++){
+  const m = new THREE.Mesh(cellGeo, cellMat);
+  m.position.set((c - (N - 1) / 2) * SP, ((N - 1) / 2 - r) * SP, -0.12);
+  boardGroup.add(m);
+}
+const frame = new THREE.Mesh(new THREE.BoxGeometry(N * SP + 0.5, N * SP + 0.5, 0.1),
+  new THREE.MeshStandardMaterial({ color: 0x123246, metalness: 0.4, roughness: 0.5,
+    emissive: 0x0e2a3a, emissiveIntensity: 0.5 }));
+frame.position.z = -0.2; boardGroup.add(frame);
+
+function makeGem(type){
+  const g = new THREE.Mesh(GEM[type], MATS[type]);
+  g.rotation.set(GEMROT[type][0], GEMROT[type][1], GEMROT[type][2]);
+  g.userData = { type, baseScale: 1, targetScale: 1, spawn: 0, spawnFrom: 0,
+    spin: 0.3 + (type * 0.13) % 0.5, spinAxis: (type % 2 ? 1 : 0.6) };
+  return g;
+}
+function setGem(r, c, type){
+  const g = makeGem(type);
+  g.position.set((c - (N - 1) / 2) * SP, ((N - 1) / 2 - r) * SP, 0);
+  g.scale.setScalar(0.001);
+  g.userData.spawn = 1; g.userData.spawnFrom = 1.6;
+  boardGroup.add(g);
+  gems[r][c] = g;
+}
+function removeGem(r, c){
+  const g = gems[r][c];
+  if (g){ boardGroup.remove(g); gems[r][c] = null; }
+}
+
+/* ---------- board logic ---------- */
+function findRuns(g){
+  const runs = [];
+  for (let r = 0; r < N; r++){
+    let c = 0;
+    while (c < N){
+      const t = g[r][c]; let e = c + 1;
+      while (e < N && g[r][e] === t) e++;
+      if (e - c >= 3) runs.push({ h: true, r, c, len: e - c });
+      c = e;
+    }
+  }
+  for (let c = 0; c < N; c++){
+    let r = 0;
+    while (r < N){
+      const t = g[r][c]; let e = r + 1;
+      while (e < N && g[e][c] === t) e++;
+      if (e - r >= 3) runs.push({ h: false, r, c, len: e - r });
+      r = e;
+    }
+  }
+  return runs;
+}
+function hasRun(g){ return findRuns(g).length > 0; }
+function hasAnyMove(g){
+  const t = (a, b) => { const x = g[a[0]][a[1]]; g[a[0]][a[1]] = g[b[0]][b[1]]; g[b[0]][b[1]] = x;
+    const ok = hasRun(g); g[a[0]][a[1]] = g[b[0]][b[1]]; g[b[0]][b[1]] = x; return ok; };
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++){
+    if (c + 1 < N && t([r, c], [r, c + 1])) return true;
+    if (r + 1 < N && t([r, c], [r + 1, c])) return true;
+  }
+  return false;
+}
+function buildBoard(){
+  grid = [];
+  for (let r = 0; r < N; r++){
+    grid[r] = [];
+    for (let c = 0; c < N; c++){
+      let t;
+      do { t = (rng() * 5) | 0; }
+      while ((c >= 2 && grid[r][c - 1] === t && grid[r][c - 2] === t) ||
+             (r >= 2 && grid[r - 1][c] === t && grid[r - 2][c] === t));
+      grid[r][c] = t;
+    }
+  }
+  let guard = 0;
+  while (!hasAnyMove(grid) && guard++ < 5000){
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) grid[r][c] = (rng() * 5) | 0;
+  }
+}
+function resolve(){
+  let depth = 0;
+  while (true){
+    const runs = findRuns(grid);
+    if (!runs.length) break;
+    depth++;
+    const removed = new Set();
+    for (const run of runs){
+      const len = run.len;
+      for (let k = 0; k < len; k++){
+        const rr = run.h ? run.r : run.r + k;
+        const cc = run.h ? run.c + k : run.c;
+        removed.add(rr * N + cc);
+      }
+    }
+    score += runs.reduce((s, run) => s + run.len * run.len * 10, 0) * depth;
+    for (const idx of removed){
+      const r = (idx / N) | 0, c = idx % N;
+      removeGem(r, c); grid[r][c] = -1;
+    }
+    for (let c = 0; c < N; c++){
+      let write = N - 1;
+      for (let r = N - 1; r >= 0; r--){
+        if (grid[r][c] !== -1){
+          if (write !== r){
+            grid[write][c] = grid[r][c]; grid[r][c] = -1;
+            const g = gems[r][c]; gems[write][c] = g; gems[r][c] = null;
+            if (g) g.userData.spawnFrom = (write - r) * SP;
+          }
+          write--;
+        }
+      }
+      for (let r = write; r >= 0; r--){
+        const t = (rng() * 5) | 0;
+        grid[r][c] = t;
+        setGem(r, c, t);
+        gems[r][c].userData.spawnFrom = (write + 1) * SP;
+      }
+    }
+  }
+  return depth;
+}
+
+/* ---------- contract actions ---------- */
+function doSwap(r1, c1, r2, c2){
+  if (over) return false;
+  if (r1 < 0 || r1 >= N || c1 < 0 || c1 >= N || r2 < 0 || r2 >= N || c2 < 0 || c2 >= N) return false;
+  if (Math.abs(r1 - r2) + Math.abs(c1 - c2) !== 1) return false;
+  const a = grid[r1][c1], b = grid[r2][c2];
+  grid[r1][c1] = b; grid[r2][c2] = a;
+  const ga = gems[r1][c1], gb = gems[r2][c2];
+  gems[r1][c1] = gb; gems[r2][c2] = ga;
+  if (!hasRun(grid)){
+    grid[r1][c1] = a; grid[r2][c2] = b;
+    gems[r1][c1] = ga; gems[r2][c2] = gb;
+    return false;
+  }
+  moves++;
+  cascade = resolve();
+  bestCascade = Math.max(bestCascade, cascade);
+  if (moves >= MAXMOVES || !hasAnyMove(grid)) over = true;
+  return true;
+}
+function reset(seed){
+  seed = (seed | 0);
+  rng = mulberry32(seed);
+  score = 0; moves = 0; over = false; cascade = 0; bestCascade = 0;
+  buildBoard();
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++){
+    removeGem(r, c);
+    setGem(r, c, grid[r][c]);
+    gems[r][c].userData.spawnFrom = (N - r) * SP;
+  }
+  overEl.classList.remove('show');
+  updateHUD(true);
+}
+
+/* ---------- HUD ---------- */
+const vScore = document.getElementById('vScore');
+const vMoves = document.getElementById('vMoves');
+const vCasc = document.getElementById('vCasc');
+const barFill = document.getElementById('barFill');
+const overEl = document.getElementById('over');
+const oScore = document.getElementById('oScore');
+let shownScore = 0;
+function pop(el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+function updateHUD(force){
+  if (force) shownScore = score;
+  vScore.textContent = Math.round(shownScore).toLocaleString();
+  vMoves.textContent = moves + ' / ' + MAXMOVES;
+  vCasc.textContent = bestCascade;
+  barFill.style.width = (moves / MAXMOVES * 100) + '%';
+  if (over){ oScore.textContent = score.toLocaleString(); overEl.classList.add('show'); }
+}
+
+/* ---------- pointer input ---------- */
+const ray = new THREE.Raycaster();
+const ndc = new THREE.Vector2();
+let drag = null;
+function pick(e){
+  const rect = renderer.domElement.getBoundingClientRect();
+  ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  ndc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  ray.setFromCamera(ndc, camera);
+  const hits = ray.intersectObjects(boardGroup.children, false);
+  for (const h of hits){
+    const o = h.object;
+    if (o.geometry === cellGeo) continue;
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (gems[r][c] === o) return { r, c };
+  }
+  return null;
+}
+renderer.domElement.addEventListener('pointerdown', e => {
+  if (over) return;
+  const p = pick(e);
+  if (p) drag = { r: p.r, c: p.c, x: e.clientX, y: e.clientY };
+});
+window.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (Math.hypot(dx, dy) < 14) return;
+  let tr = drag.r, tc = drag.c;
+  if (Math.abs(dx) > Math.abs(dy)) tc += dx > 0 ? 1 : -1; else tr += dy > 0 ? 1 : -1;
+  if (tr >= 0 && tr < N && tc >= 0 && tc < N){
+    const ok = doSwap(drag.r, drag.c, tr, tc);
+    if (ok){ pop(vScore); pop(vCasc); }
+  }
+  drag = null;
+});
+window.addEventListener('pointerup', () => { drag = null; });
+window.addEventListener('keydown', e => {
+  if (e.key === 'r' || e.key === 'R') reset(SEED);
+});
+
+/* ---------- ambient background ---------- */
+const bg = document.getElementById('bg');
+const bctx = bg.getContext('2d');
+let BW = 0, BH = 0, motes = [];
+function sizeBG(){
+  BW = bg.width = innerWidth; BH = bg.height = innerHeight;
+  motes = [];
+  const n = Math.min(70, Math.floor(BW * BH / 26000));
+  for (let i = 0; i < n; i++) motes.push({
+    x: Math.random() * BW, y: Math.random() * BH,
+    r: 0.6 + Math.random() * 2.2, s: 4 + Math.random() * 14,
+    a: 0.05 + Math.random() * 0.22, ph: Math.random() * 6.28
+  });
+}
+function drawBG(t){
+  const g = bctx.createLinearGradient(0, 0, 0, BH);
+  g.addColorStop(0, '#07131a'); g.addColorStop(0.55, '#0c2230'); g.addColorStop(1, '#0a1c26');
+  bctx.fillStyle = g; bctx.fillRect(0, 0, BW, BH);
+  const rg = bctx.createRadialGradient(BW * 0.5, BH * 0.42, 0, BW * 0.5, BH * 0.42, Math.max(BW, BH) * 0.7);
+  rg.addColorStop(0, 'rgba(55,224,200,0.10)'); rg.addColorStop(1, 'rgba(55,224,200,0)');
+  bctx.fillStyle = rg; bctx.fillRect(0, 0, BW, BH);
+  for (const m of motes){
+    m.y -= m.s * 0.016; if (m.y < -4){ m.y = BH + 4; m.x = Math.random() * BW; }
+    const tw = 0.6 + 0.4 * Math.sin(t * 0.001 + m.ph);
+    bctx.globalAlpha = m.a * tw;
+    bctx.fillStyle = '#8fe6d8';
+    bctx.beginPath(); bctx.arc(m.x, m.y, m.r, 0, 6.283); bctx.fill();
+  }
+  bctx.globalAlpha = 1;
+}
+
+/* ---------- animation loop ---------- */
+const clock = new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const t = performance.now();
+  drawBG(t);
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++){
+    const g = gems[r][c]; if (!g) continue;
+    const u = g.userData;
+    const tx = (c - (N - 1) / 2) * SP, ty = ((N - 1) / 2 - r) * SP;
+    g.position.x += (tx - g.position.x) * Math.min(1, dt * 14);
+    g.position.y += (ty - g.position.y) * Math.min(1, dt * 14);
+    if (u.spawn > 0){
+      u.spawn -= dt * 3.2;
+      const s = u.spawn > 0 ? Math.max(0.001, u.spawn) : 1;
+      g.scale.setScalar(s * u.targetScale);
+      if (u.spawn <= 0) u.spawn = 0;
+    } else {
+      g.scale.setScalar(u.targetScale);
+    }
+    g.rotation.y += dt * u.spin;
+    g.rotation.x += dt * u.spin * u.spinAxis;
+  }
+  boardGroup.rotation.y = Math.sin(t * 0.00022) * 0.05;
+  boardGroup.rotation.x = Math.sin(t * 0.00017) * 0.03;
+  if (shownScore < score){
+    shownScore += (score - shownScore) * Math.min(1, dt * 8);
+    if (score - shownScore < 0.5) shownScore = score;
+    vScore.textContent = Math.round(shownScore).toLocaleString();
+  }
+  renderer.render(scene, camera);
+}
+
+/* ---------- resize ---------- */
+function onResize(){
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  sizeBG();
+}
+window.addEventListener('resize', onResize);
+
+/* ---------- public contract ---------- */
+window.__game = {
+  get ready(){ return true; },
+  get seed(){ return SEED; },
+  get grid(){ return grid; },
+  get score(){ return score; },
+  get moves(){ return moves; },
+  get over(){ return over; },
+  get cascade(){ return cascade; },
+  step(dt){},
+  reset(seed){ reset(seed); },
+  swap(r1, c1, r2, c2){ return doSwap(r1, c1, r2, c2); },
+  settle(){ return resolve(); },
+  hash(){
+    let h = '';
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) h += grid[r][c];
+    return h + '|' + score + '|' + moves;
+  }
+};
+
+/* ---------- boot ---------- */
+sizeBG();
+reset(SEED);
+animate();
+</script>
+</body>
+</html>
