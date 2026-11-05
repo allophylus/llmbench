@@ -56,6 +56,20 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 .legend span b{font-weight:600}
 .matrix td.c{text-align:center;font-family:ui-monospace,monospace;font-size:13px}
 .matrix td.t{min-width:9.5em;white-space:nowrap}
+/* The accuracy table's 7 columns are sized by the browser otherwise: "thinking off"
+   absorbed the slack and the verdict wrapped one word per line. Pin the proportions on
+   desktop only; the phone layout (card stack) is left exactly as it was. */
+@media(min-width:761px){
+ table.probe{table-layout:fixed}
+ table.probe th:nth-child(1){width:24%}
+ table.probe th:nth-child(2){width:7%}
+ table.probe th:nth-child(3){width:11%}
+ table.probe th:nth-child(4){width:11%}
+ table.probe th:nth-child(5){width:12%}
+ table.probe th:nth-child(6){width:12%}
+ table.probe th:nth-child(7){width:23%}
+ table.probe td{overflow-wrap:anywhere}
+}
 details{margin:10px 0}
 summary{cursor:pointer;color:var(--blue);font-size:13px}
 details ul{padding-left:1.1rem}
@@ -113,7 +127,15 @@ PAIR_LABELS = {
 }
 
 
-def corrected_pairs_html():
+def _arm_valid(x):
+    # an arm is only a measurement if it actually completed: a killed run still reports
+    # tokens and a score, and computing a cost delta from it produced nonsense like
+    # "costs +-57774 tokens"
+    return ((x.get("n") or 0) > 0 and (x.get("tokens") or 0) > 0
+            and (x.get("errors") or 0) == 0)
+
+
+def pair_rows():
     """The re-measured pairs in benchmarks/thinking2/ (both arms genuinely ran)."""
     rows = []
     for f in sorted(glob.glob(os.path.join(ROOT, "benchmarks", "thinking2", "*pair*.json"))):
@@ -124,17 +146,15 @@ def corrected_pairs_html():
         d = json.load(open(f, encoding="utf-8"))
         off = d.get("off") or {}
         on = d.get("on") or {}
+        rows.append((label, d.get("max_tokens"), off, on, _arm_valid(off), _arm_valid(on)))
+    return rows
 
-        def valid(x):
-            # an arm is only a measurement if it actually completed: a killed run still
-            # reports tokens and a score, and computing a cost delta from it produced
-            # nonsense like "costs +-57774 tokens"
-            return ((x.get("n") or 0) > 0 and (x.get("tokens") or 0) > 0
-                    and (x.get("errors") or 0) == 0)
 
-        rows.append((label, d.get("max_tokens"), off, on, valid(off), valid(on)))
+def corrected_pairs_html():
+    rows = pair_rows()
     if not rows:
         return "<p>No corrected thinking pairs found.</p>"
+    invalid_seen = False
     out = ["<div class=table-wrap><table class=probe><thead><tr>"
            "<th>model</th><th>cap</th><th>thinking off</th><th>thinking on</th>"
            "<th>tokens off</th><th>tokens on</th><th>verdict</th></tr></thead><tbody>"]
@@ -145,8 +165,10 @@ def corrected_pairs_html():
             oc, nc = "%d/%d" % (off["correct"], off["n"]), "%d/%d" % (on["correct"], on["n"])
         elif ov and not nv:
             verdict, oc, nc = "on arm invalid — not measured", "%d/%d" % (off["correct"], off["n"]), "—"
+            invalid_seen = True
         else:
             verdict, oc, nc = "invalid — not measured", "—", "—"
+            invalid_seen = True
         out.append("<tr><td>%s</td><td>%s</td><td class=num>%s</td><td class=num>%s</td>"
                    "<td class=num>%s</td><td class=num>%s</td><td>%s</td></tr>" % (
                        html.escape(label), cap or "—", oc, nc,
@@ -154,10 +176,48 @@ def corrected_pairs_html():
                        "{:,}".format(on.get("tokens") or 0) if nv else "—",
                        html.escape(verdict)))
     out.append("</tbody></table></div>")
-    out.append('<p class="note">Both arms share the same max-token cap; the only variable is the '
-               'thinking switch. Rows marked invalid had their run killed by a competing server on '
-               'the host, so they are not scored.</p>')
+    note = ('Both arms share the same max-token cap; the only variable is the thinking switch.')
+    if invalid_seen:
+        note += (' Rows marked invalid had their run killed by a competing server on the host, '
+                 'so they are not scored.')
+    out.append('<p class="note">%s</p>' % note)
     return "".join(out)
+
+
+def corrected_findings():
+    """Findings computed from the finished pairs themselves — no hand-typed numbers."""
+    rows = [(l, cap, o, n) for l, cap, o, n, ov, nv in pair_rows() if ov and nv]
+    if not rows:
+        return ""
+    losses = [o["correct"] - n["correct"] for _, _, o, n in rows]
+    ratios = [n["tokens"] / float(o["tokens"]) for _, _, o, n in rows]
+    out = []
+    out.append("<li><b>Switching reasoning on never gained a question</b> on this set: it lost "
+               "between %d and %d of 25 across the %d models measured.</li>"
+               % (min(losses), max(losses), len(rows)))
+    small = [(x, r) for x, r in zip(losses, ratios) if x <= 3 and r < 2.0]
+    if small:
+        out.append("<li>For %d of the %d models the cost is modest: %d–%d fewer correct and "
+                   "%.2f–%.2f× the generated tokens.</li>"
+                   % (len(small), len(rows), min(x for x, _ in small), max(x for x, _ in small),
+                      min(r for _, r in small), max(r for _, r in small)))
+    worst = max(range(len(rows)), key=lambda i: (losses[i], ratios[i]))
+    wl, wcap, wo, wn = rows[worst]
+    stops = wn.get("length_stops") or 0
+    if stops:
+        out.append("<li><b>%s</b> is the outlier: %d of its 25 reasoning runs hit the %s-token cap "
+                   "before committing, the score fell %d → %d, and it spent %.2f× the tokens.</li>"
+                   % (html.escape(wl), stops, gb(wcap), wo["correct"], wn["correct"], ratios[worst]))
+    big = max(range(len(rows)), key=lambda i: ratios[i])
+    if big != worst:
+        bl, bcap, bo, bn = rows[big]
+        out.append("<li><b>%s</b> is the most expensive per token: %.2f× the generated tokens "
+                   "for %d fewer correct (%.0f → %.0f tokens per question).</li>"
+                   % (html.escape(bl), ratios[big], bo["correct"] - bn["correct"],
+                      bo["tokens"] / float(bo["n"]), bn["tokens"] / float(bn["n"])))
+    out.append("<li class=meta>One run per arm, 25 frozen questions, temperature 0: read the size "
+               "of a difference as indicative and its direction as the finding.</li>")
+    return _style_findings(out)
 
 
 def _style_findings(lines):
@@ -289,7 +349,7 @@ def build():
         "<div class=part><h2>Accuracy questions (GPQA-diamond, 25)</h2>"
         "<span class=meta>Hard multiple-choice science questions: the ceiling test.</span></div>"
         + accuracy_html()
-        + thinking_p1_findings())
+        + (corrected_findings() or thinking_p1_findings()))
     page = ("<!doctype html><html lang=en><head><meta charset=utf-8>"
             "<meta name=viewport content='width=device-width,initial-scale=1'>"
             "<title>thinking on/off — llmbench</title><style>" + CSS + TOPBAR_CSS + "</style></head>"

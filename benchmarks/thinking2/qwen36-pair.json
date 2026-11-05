@@ -1,5 +1,5 @@
 {
- "harness": "think_pair2.py",
+ "harness": "think_arm.py (think_pair2 scoring)",
  "base": "http://127.0.0.1:8080",
  "pack": "/home/ubuntu/llmbench/suite/packs/gpqa25.jsonl",
  "seed": 5,
@@ -32,16 +32,17 @@
   "gpqa-d24",
   "gpqa-d25"
  ],
- "when": "2026-11-03T15:49:11+0000",
- "model": "/home/ubuntu/models/active.gguf",
+ "when": "2026-11-05T12:42:00+0000",
+ "model": "/home/ubuntu/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+ "served_argv": "b11517-8a1a9b512",
  "off": {
   "n": 25,
-  "correct": 8,
-  "tokens": 31435,
-  "length_stops": 4,
-  "errors": 13,
-  "wall_s": 426.3,
-  "mean_wall_s": 11.81,
+  "correct": 18,
+  "tokens": 60716,
+  "length_stops": 6,
+  "errors": 0,
+  "wall_s": 559.8,
+  "mean_wall_s": 22.39,
   "rows": [
    {
     "i": 0,
@@ -57,8 +58,8 @@
     "reasoning_chars": 0,
     "content_chars": 2998,
     "finish_reason": "stop",
-    "wall_s": 9.47,
-    "decode_tps": 108.55
+    "wall_s": 9.46,
+    "decode_tps": 108.81
    },
    {
     "i": 1,
@@ -74,8 +75,8 @@
     "reasoning_chars": 0,
     "content_chars": 5498,
     "finish_reason": "stop",
-    "wall_s": 17.26,
-    "decode_tps": 108.79
+    "wall_s": 17.08,
+    "decode_tps": 109.88
    },
    {
     "i": 2,
@@ -91,8 +92,8 @@
     "reasoning_chars": 0,
     "content_chars": 10328,
     "finish_reason": "length",
-    "wall_s": 37.81,
-    "decode_tps": 108.91
+    "wall_s": 37.45,
+    "decode_tps": 109.98
    },
    {
     "i": 3,
@@ -108,8 +109,8 @@
     "reasoning_chars": 0,
     "content_chars": 13041,
     "finish_reason": "length",
-    "wall_s": 37.94,
-    "decode_tps": 108.68
+    "wall_s": 37.56,
+    "decode_tps": 109.76
    },
    {
     "i": 4,
@@ -125,8 +126,8 @@
     "reasoning_chars": 0,
     "content_chars": 10707,
     "finish_reason": "stop",
-    "wall_s": 30.44,
-    "decode_tps": 109.33
+    "wall_s": 30.18,
+    "decode_tps": 110.26
    },
    {
     "i": 5,
@@ -142,8 +143,8 @@
     "reasoning_chars": 0,
     "content_chars": 3669,
     "finish_reason": "stop",
-    "wall_s": 8.27,
-    "decode_tps": 110.14
+    "wall_s": 8.22,
+    "decode_tps": 110.77
    },
    {
     "i": 6,
@@ -159,8 +160,8 @@
     "reasoning_chars": 0,
     "content_chars": 3992,
     "finish_reason": "stop",
-    "wall_s": 8.1,
-    "decode_tps": 108.95
+    "wall_s": 8.0,
+    "decode_tps": 110.2
    },
    {
     "i": 7,
@@ -176,8 +177,8 @@
     "reasoning_chars": 0,
     "content_chars": 6700,
     "finish_reason": "stop",
-    "wall_s": 18.42,
-    "decode_tps": 109.9
+    "wall_s": 18.35,
+    "decode_tps": 110.34
    },
    {
     "i": 8,
@@ -193,8 +194,8 @@
     "reasoning_chars": 0,
     "content_chars": 12532,
     "finish_reason": "length",
-    "wall_s": 37.76,
-    "decode_tps": 109.21
+    "wall_s": 37.5,
+    "decode_tps": 109.94
    },
    {
     "i": 9,
@@ -210,8 +211,8 @@
     "reasoning_chars": 0,
     "content_chars": 12218,
     "finish_reason": "stop",
-    "wall_s": 36.43,
-    "decode_tps": 108.95
+    "wall_s": 36.18,
+    "decode_tps": 109.7
    },
    {
     "i": 10,
@@ -227,8 +228,8 @@
     "reasoning_chars": 0,
     "content_chars": 11886,
     "finish_reason": "length",
-    "wall_s": 38.19,
-    "decode_tps": 107.93
+    "wall_s": 37.5,
+    "decode_tps": 109.93
    },
    {
     "i": 11,
@@ -244,248 +245,668 @@
     "reasoning_chars": 0,
     "content_chars": 3225,
     "finish_reason": "stop",
-    "wall_s": 15.23,
-    "decode_tps": 80.44
+    "wall_s": 11.25,
+    "decode_tps": 109.63
    },
    {
     "i": 12,
     "id": "gpqa-d13",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "/folding).\n    3.  Why not D? CBA is strong. Why not B? \"No signal\" vs \"Punctate\". Why not A? Irrelevant to fluorescence.\n    \n    Therefore, **C** is the most logical technical explanation for a \"silent\" failure of the fluorescent tag despite successful expression of the primary protein.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 3487,
+    "predicted_n": 3487,
+    "reasoning_chars": 0,
+    "content_chars": 13640,
+    "finish_reason": "stop",
+    "wall_s": 31.94,
+    "decode_tps": 110.06
    },
    {
     "i": 13,
     "id": "gpqa-d14",
     "answer_key": "B",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "ct to the radial bisectors. Thus, it drops from $D_{3h}$ to **$C_{3h}$**.\n*   The benzo derivative (Option D) is highly symmetric and likely retains **$D_{3h}$** symmetry.\n\nTherefore, the molecule with $C_{3h}$ symmetry is triphenyleno[1,2-c:5,6-c':9,10-c'']trifuran-1,3,6,8,11,13-hexaone.\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 2284,
+    "predicted_n": 2284,
+    "reasoning_chars": 0,
+    "content_chars": 8069,
+    "finish_reason": "stop",
+    "wall_s": 20.95,
+    "decode_tps": 110.22
    },
    {
     "i": 14,
     "id": "gpqa-d15",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "brational frequency directly in the simple harmonic oscillator approximation $E = \\hbar \\omega (v+1/2)$, unless $\\omega$ itself depended on mass, but $\\omega$ is given explicitly.\n\n    Therefore, the question asks for the momentum corresponding to the vibrational transition $v=0 \\to v=1$.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 4009,
+    "predicted_n": 4009,
+    "reasoning_chars": 0,
+    "content_chars": 11898,
+    "finish_reason": "stop",
+    "wall_s": 36.92,
+    "decode_tps": 109.25
    },
    {
     "i": 15,
     "id": "gpqa-d16",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "shmooing, the primary chromatin changes are related to gene expression (mating pheromone response). Therefore, proteins involved in replication initiation are less likely to be enriched in a pull-down of *transcriptionally active* chromatin compared to the transcription-related complexes.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 1036,
+    "predicted_n": 1036,
+    "reasoning_chars": 0,
+    "content_chars": 4955,
+    "finish_reason": "stop",
+    "wall_s": 9.61,
+    "decode_tps": 110.44
    },
    {
     "i": 16,
     "id": "gpqa-d17",
     "answer_key": "A",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "ar 1 / Star 2:\n$$ \\frac{10^{0.3} \\times A(\\text{Si})_{\\odot}}{10^{-0.3} \\times A(\\text{Si})_{\\odot}} = 10^{0.3 - (-0.3)} = 10^{0.6} $$\n\n$10^{0.6} \\approx 3.981$.\n\nLooking at the choices:\nA) ~12.6\nB) ~3.9\nC) ~1.2\nD) ~0.8\n\nThe calculated value is approximately 3.98, which is closest to 3.9.\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": false,
+    "completion_tokens": 2032,
+    "predicted_n": 2032,
+    "reasoning_chars": 0,
+    "content_chars": 4880,
+    "finish_reason": "stop",
+    "wall_s": 18.63,
+    "decode_tps": 110.36
    },
    {
     "i": 17,
     "id": "gpqa-d18",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "nd detects antibodies, not the virus itself directly.\n\nTherefore, the most scientifically sound approach for a *molecular* diagnostic kit for a *retrovirus* that is *quick* and *accurate* is to sequence the cDNA (representing the viral genome) and use Real-time PCR (RT-PCR) for detection.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 801,
+    "predicted_n": 801,
+    "reasoning_chars": 0,
+    "content_chars": 3613,
+    "finish_reason": "stop",
+    "wall_s": 7.6,
+    "decode_tps": 108.66
    },
    {
     "i": 18,
     "id": "gpqa-d19",
     "answer_key": "D",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "mation).\n\nNow, take the reciprocal:\n$$ \\frac{T_4}{T_2} \\approx \\frac{1}{1.205} \\approx 0.8298 $$\n\nRounding to two decimal places, we get approximately **0.83**.\n\n**Conclusion:**\n\nThe ratio of the equilibrium temperature of Planet_4 to Planet_2 is approximately 0.83. This matches choice D.\n\nAnswer: D",
+    "answer_got": "D",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 833,
+    "predicted_n": 833,
+    "reasoning_chars": 0,
+    "content_chars": 2332,
+    "finish_reason": "stop",
+    "wall_s": 7.81,
+    "decode_tps": 109.7
    },
    {
     "i": 19,
     "id": "gpqa-d20",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "CCCTCAACAAGATGTTTTGCCAACTGGCCAAGACCTGCCCTGTGCAGCTGTGGGTTGATTCCACACCCCCGTCCGGCACCCGCGTCCGCGCCATGGCCATCTACAAGCAGTCACAGCACATGACGGAGGTTGTGAGGCGCTGCCCCCACCATGAGCGCTGCTCAGATAGCGATGGTCTGGCCCCTCCTCAGCATCTTATCCGAGTGGAAGGAAATTTGCGTGTGGAGTATTTGGATGACAGAAACACTTTTCGACATAGTGTGGTGGTGCCCTATGAGCCGCCTGAGGTTGGCTCTGACT",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 0,
+    "content_chars": 9315,
+    "finish_reason": "length",
+    "wall_s": 38.71,
+    "decode_tps": 108.24
    },
    {
     "i": 20,
     "id": "gpqa-d21",
     "answer_key": "D",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "matches (8H).\n    *   Structure is $CH_3-CH=CH-O-CO-CH_3$.\n    *   The large coupling constant ($J = 16.0$ Hz) confirms the **trans** geometry.\n    *   The chemical shifts and splitting patterns are consistent with the trans isomer.\n\n**Conclusion:**\nThe compound is Trans-propenyl acetate.\n\nAnswer: D",
+    "answer_got": "D",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 1302,
+    "predicted_n": 1302,
+    "reasoning_chars": 0,
+    "content_chars": 4144,
+    "finish_reason": "stop",
+    "wall_s": 12.08,
+    "decode_tps": 110.22
    },
    {
     "i": 21,
     "id": "gpqa-d22",
     "answer_key": "B",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": " the mm/sub-mm band (energies $\\sim 10^{-4}$ eV), which is two orders of magnitude higher than the given energy.\n- Warm atomic gas is diffuse and less likely to show strong absorption compared to the cold phase.\n\nTherefore, the most likely candidate is the Cold Atomic Interstellar Medium.\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 2335,
+    "predicted_n": 2335,
+    "reasoning_chars": 0,
+    "content_chars": 7741,
+    "finish_reason": "stop",
+    "wall_s": 21.56,
+    "decode_tps": 109.37
    },
    {
     "i": 22,
     "id": "gpqa-d23",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "s 45. But COOH is 45.\n*   The combination of Broad OH + C=O + C=C is the textbook signature for an **unsaturated carboxylic acid**.\n*   The formula for an acyclic mono-unsaturated carboxylic acid is $C_n H_{2n-2} O_2$.\n*   For n=6, this is **C6H10O2**.\n\nTherefore, the compound is C6H10O2.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 1911,
+    "predicted_n": 1911,
+    "reasoning_chars": 0,
+    "content_chars": 5536,
+    "finish_reason": "stop",
+    "wall_s": 17.57,
+    "decode_tps": 110.23
    },
    {
     "i": 23,
     "id": "gpqa-d24",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "t)^2 = 0.1036 $$\n\nSolving for the radius ratio:\n$$ \\frac{R_{pl}}{R_{star}} = \\sqrt{0.1036} $$\n$$ \\frac{R_{pl}}{R_{star}} \\approx 0.3219 $$\n\n**Step 4: Compare with the given choices.**\n\nA) ~0.07\nB) ~0.11\nC) ~0.32\nD) ~0.39\n\nThe calculated value is approximately 0.32, which matches choice C.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 1059,
+    "predicted_n": 1059,
+    "reasoning_chars": 0,
+    "content_chars": 3119,
+    "finish_reason": "stop",
+    "wall_s": 9.84,
+    "decode_tps": 110.09
    },
    {
     "i": 24,
     "id": "gpqa-d25",
     "answer_key": "A",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "et's assume the structure is: A cyclobutane ring spiro-fused to a cyclohexene ring. The carbon *adjacent* to the spiro center in the cyclobutane ring bears the Vinyl and OH?\n    Or, is it possible the \"spiro[3.5]\" refers to the product? No.\n    \n    Let's look at the options for B first, it might be",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 0,
+    "content_chars": 12673,
+    "finish_reason": "length",
+    "wall_s": 37.81,
+    "decode_tps": 109.01
    }
-  ]
+  ],
+  "wall_basis": "process"
  },
  "on": {
   "n": 25,
-  "correct": 0,
-  "tokens": 0,
-  "length_stops": 0,
-  "errors": 25,
-  "wall_s": 0.0,
-  "mean_wall_s": 0.0,
+  "correct": 5,
+  "tokens": 94981,
+  "length_stops": 20,
+  "errors": 0,
+  "wall_s": 872.8,
+  "mean_wall_s": 34.91,
   "rows": [
    {
     "i": 0,
     "id": "gpqa-d01",
     "answer_key": "A",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "0\\lambda})^{1.5} = 1 - (0.68)^{1.5}$\n\nCompute $(0.68)^{1.5}$:\n$(0.68)^{1.5} = 0.68 \\times \\sqrt{0.68} \\approx 0.68 \\times 0.8246 \\approx 0.5607$\n\nThus:\n$P(T \\le 150) = 1 - 0.5607 = 0.4393 \\approx 44\\%$\n\nThe probability that the atom will decay in the next 150 minutes is approximately 44%.\n\nAnswer: A",
+    "answer_got": "A",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 2734,
+    "predicted_n": 2734,
+    "reasoning_chars": 5782,
+    "content_chars": 1199,
+    "finish_reason": "stop",
+    "wall_s": 25.03,
+    "decode_tps": 110.21
    },
    {
     "i": 1,
     "id": "gpqa-d02",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 11588,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.69,
+    "decode_tps": 109.34
    },
    {
     "i": 2,
     "id": "gpqa-d03",
     "answer_key": "D",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 11562,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.61,
+    "decode_tps": 109.52
    },
    {
     "i": 3,
     "id": "gpqa-d04",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 11254,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.72,
+    "decode_tps": 109.28
    },
    {
     "i": 4,
     "id": "gpqa-d05",
     "answer_key": "B",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 12928,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.6,
+    "decode_tps": 109.61
    },
    {
     "i": 5,
     "id": "gpqa-d06",
     "answer_key": "B",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": " Golgi \u2192 vesicles) to ultimately reach the **extracellular space** (or plasma membrane).\n\nPutting it together: The interaction occurs as the chain emerges into the **cytosol** and is targeted to the ER, and its ultimate destination via the secretory pathway is the **extracellular space**.\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 2289,
+    "predicted_n": 2289,
+    "reasoning_chars": 7534,
+    "content_chars": 1577,
+    "finish_reason": "stop",
+    "wall_s": 21.05,
+    "decode_tps": 109.89
    },
    {
     "i": 6,
     "id": "gpqa-d07",
     "answer_key": "B",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "ats:** Repeats are typically masked during alignment/peak-calling and are not the primary source of PFA-specific false positives.\n\nTherefore, the disappearing peaks are most likely false positives generated by PFA's accessibility bias, which are concentrated at active regulatory elements.\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 2305,
+    "predicted_n": 2305,
+    "reasoning_chars": 7556,
+    "content_chars": 2484,
+    "finish_reason": "stop",
+    "wall_s": 21.09,
+    "decode_tps": 110.38
    },
    {
     "i": 7,
     "id": "gpqa-d08",
     "answer_key": "D",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 12664,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.62,
+    "decode_tps": 109.5
    },
    {
     "i": 8,
     "id": "gpqa-d09",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 12496,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.57,
+    "decode_tps": 109.75
    },
    {
     "i": 9,
     "id": "gpqa-d10",
     "answer_key": "A",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 11793,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.68,
+    "decode_tps": 109.36
    },
    {
     "i": 10,
     "id": "gpqa-d11",
     "answer_key": "B",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 11635,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.58,
+    "decode_tps": 109.67
    },
    {
     "i": 11,
     "id": "gpqa-d12",
     "answer_key": "B",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 11253,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.67,
+    "decode_tps": 109.41
    },
    {
     "i": 12,
     "id": "gpqa-d13",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 15025,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.64,
+    "decode_tps": 109.61
    },
    {
     "i": 13,
     "id": "gpqa-d14",
     "answer_key": "B",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 13396,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.69,
+    "decode_tps": 109.34
    },
    {
     "i": 14,
     "id": "gpqa-d15",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 10950,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.64,
+    "decode_tps": 109.5
    },
    {
     "i": 15,
     "id": "gpqa-d16",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 16466,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.58,
+    "decode_tps": 109.66
    },
    {
     "i": 16,
     "id": "gpqa-d17",
     "answer_key": "A",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 10272,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.64,
+    "decode_tps": 109.49
    },
    {
     "i": 17,
     "id": "gpqa-d18",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "ly with modern molecular diagnostics for rapid viral detection.\n   - **D** describes an ELISA kit for IgG antibodies. This is a serological (immunological) assay, not a molecular one. Additionally, IgG indicates past or late-stage infection, making it unsuitable for quick acute diagnosis.\n\nAnswer: C",
+    "answer_got": "C",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 2235,
+    "predicted_n": 2235,
+    "reasoning_chars": 8641,
+    "content_chars": 1650,
+    "finish_reason": "stop",
+    "wall_s": 20.49,
+    "decode_tps": 110.3
    },
    {
     "i": 18,
     "id": "gpqa-d19",
     "answer_key": "D",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 9819,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.62,
+    "decode_tps": 109.5
    },
    {
     "i": 19,
     "id": "gpqa-d20",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 8091,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.96,
+    "decode_tps": 108.41
    },
    {
     "i": 20,
     "id": "gpqa-d21",
     "answer_key": "D",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 11998,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.68,
+    "decode_tps": 109.47
    },
    {
     "i": 21,
     "id": "gpqa-d22",
     "answer_key": "B",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "CNM)**. Warm atomic gas is too diffuse and thermally broadened to produce significant 21 cm absorption.\n\n4. **Match to Choices:**\n   Since the line traces neutral atomic hydrogen and absorption specifically targets the cold phase, the correct choice is the cold atomic interstellar medium.\n\nAnswer: B",
+    "answer_got": "B",
+    "answer_how": "answer-line",
+    "correct": true,
+    "completion_tokens": 3498,
+    "predicted_n": 3498,
+    "reasoning_chars": 9513,
+    "content_chars": 1656,
+    "finish_reason": "stop",
+    "wall_s": 32.03,
+    "decode_tps": 109.96
    },
    {
     "i": 22,
     "id": "gpqa-d23",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 11314,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.65,
+    "decode_tps": 109.47
    },
    {
     "i": 23,
     "id": "gpqa-d24",
     "answer_key": "C",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 12640,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.57,
+    "decode_tps": 109.71
    },
    {
     "i": 24,
     "id": "gpqa-d25",
     "answer_key": "A",
-    "error": "<urlopen error [Errno 111] Connection refused>"
+    "error": null,
+    "content_tail": "",
+    "answer_got": null,
+    "answer_how": "none",
+    "correct": false,
+    "completion_tokens": 4096,
+    "predicted_n": 4096,
+    "reasoning_chars": 13116,
+    "content_chars": 0,
+    "finish_reason": "length",
+    "wall_s": 37.64,
+    "decode_tps": 109.51
    }
-  ]
+  ],
+  "wall_basis": "process"
  }
 }
