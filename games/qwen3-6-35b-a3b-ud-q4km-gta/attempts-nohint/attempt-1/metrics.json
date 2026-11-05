@@ -1,0 +1,510 @@
+{
+ "slug": "attempt-1",
+ "probed_at": "2026-11-05T21:12:34+0800",
+ "chrome": "google-chrome (headless, playwright)",
+ "viewport": {
+  "width": 1280,
+  "height": 800
+ },
+ "http": {
+  "url": "http://127.0.0.1:33131/index.html",
+  "scheme": "http",
+  "load_ok": true,
+  "canvas_present": true,
+  "canvas_count": 1,
+  "webgl_ok": true,
+  "mentions_three": true,
+  "uses_three_global": true,
+  "overlay_regions": {
+   "viewport": [
+    1280,
+    800
+   ],
+   "overlays": [
+    {
+     "x": 20,
+     "y": 20,
+     "w": 96,
+     "h": 23,
+     "tag": "span",
+     "id": "scoreEl",
+     "cls": ""
+    },
+    {
+     "x": 592,
+     "y": 20,
+     "w": 96,
+     "h": 23,
+     "tag": "span",
+     "id": "timeEl",
+     "cls": ""
+    },
+    {
+     "x": 1164,
+     "y": 20,
+     "w": 96,
+     "h": 23,
+     "tag": "span",
+     "id": "livesEl",
+     "cls": ""
+    },
+    {
+     "x": 20,
+     "y": 676,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btnLeft",
+     "cls": "btn"
+    },
+    {
+     "x": 114,
+     "y": 676,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btnRight",
+     "cls": "btn"
+    },
+    {
+     "x": 1082,
+     "y": 676,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btnBrake",
+     "cls": "btn"
+    },
+    {
+     "x": 1176,
+     "y": 676,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btnGas",
+     "cls": "btn"
+    },
+    {
+     "x": 532,
+     "y": 334,
+     "w": 216,
+     "h": 45,
+     "tag": "h1",
+     "id": null,
+     "cls": ""
+    },
+    {
+     "x": 472,
+     "y": 405,
+     "w": 336,
+     "h": 18,
+     "tag": "p",
+     "id": "statusText",
+     "cls": ""
+    },
+    {
+     "x": 522,
+     "y": 439,
+     "w": 235,
+     "h": 53,
+     "tag": "button",
+     "id": null,
+     "cls": "start-btn"
+    }
+   ]
+  },
+  "overlays": [
+   {
+    "x": 20,
+    "y": 20,
+    "w": 96,
+    "h": 23,
+    "tag": "span",
+    "id": "scoreEl",
+    "cls": "",
+    "pixels_differ_when_hidden": 760
+   },
+   {
+    "x": 592,
+    "y": 20,
+    "w": 96,
+    "h": 23,
+    "tag": "span",
+    "id": "timeEl",
+    "cls": "",
+    "pixels_differ_when_hidden": 680
+   },
+   {
+    "x": 1164,
+    "y": 20,
+    "w": 96,
+    "h": 23,
+    "tag": "span",
+    "id": "livesEl",
+    "cls": "",
+    "pixels_differ_when_hidden": 621
+   },
+   {
+    "x": 20,
+    "y": 676,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btnLeft",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 2098
+   },
+   {
+    "x": 114,
+    "y": 676,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btnRight",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 2094
+   },
+   {
+    "x": 1082,
+    "y": 676,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btnBrake",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 2096
+   },
+   {
+    "x": 1176,
+    "y": 676,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btnGas",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 2096
+   },
+   {
+    "x": 532,
+    "y": 334,
+    "w": 216,
+    "h": 45,
+    "tag": "h1",
+    "id": null,
+    "cls": "",
+    "pixels_differ_when_hidden": 7299
+   },
+   {
+    "x": 472,
+    "y": 405,
+    "w": 336,
+    "h": 18,
+    "tag": "p",
+    "id": "statusText",
+    "cls": "",
+    "pixels_differ_when_hidden": 1766
+   },
+   {
+    "x": 522,
+    "y": 439,
+    "w": 235,
+    "h": 53,
+    "tag": "button",
+    "id": null,
+    "cls": "start-btn",
+    "pixels_differ_when_hidden": 12376
+   }
+  ],
+  "hidden_geometry_under_overlays": true,
+  "animation_advancing": false,
+  "frame_hashes": [
+   "8687deae83ad32b6",
+   "8687deae83ad32b6"
+  ],
+  "input_changes_pixels": false,
+  "input_left_changes_pixels": false,
+  "input_ok": false,
+  "control_vs_input_hashes": [
+   "8687deae83ad32b6",
+   "8687deae83ad32b6",
+   "8687deae83ad32b6"
+  ],
+  "screenshot": "shot.png",
+  "hud_markers": {
+   "SCORE": true,
+   "LIVES": true,
+   "GAME OVER": true
+  },
+  "console_errors": [],
+  "console_error_count": 0,
+  "failed_resources": [],
+  "ignored_favicon_404s": [],
+  "contract": {
+   "present": true,
+   "ready": true,
+   "reasons": [],
+   "ok": true
+  }
+ },
+ "file": {
+  "url": "file:///home/fen/repos/llmbench/games/qwen3-6-35b-a3b-ud-q4km-gta/attempts/attempt-1/index.html",
+  "scheme": "file",
+  "load_ok": true,
+  "canvas_present": true,
+  "canvas_count": 1,
+  "webgl_ok": true,
+  "mentions_three": true,
+  "uses_three_global": true,
+  "overlay_regions": {
+   "viewport": [
+    1280,
+    800
+   ],
+   "overlays": [
+    {
+     "x": 20,
+     "y": 20,
+     "w": 96,
+     "h": 23,
+     "tag": "span",
+     "id": "scoreEl",
+     "cls": ""
+    },
+    {
+     "x": 592,
+     "y": 20,
+     "w": 96,
+     "h": 23,
+     "tag": "span",
+     "id": "timeEl",
+     "cls": ""
+    },
+    {
+     "x": 1164,
+     "y": 20,
+     "w": 96,
+     "h": 23,
+     "tag": "span",
+     "id": "livesEl",
+     "cls": ""
+    },
+    {
+     "x": 20,
+     "y": 676,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btnLeft",
+     "cls": "btn"
+    },
+    {
+     "x": 114,
+     "y": 676,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btnRight",
+     "cls": "btn"
+    },
+    {
+     "x": 1082,
+     "y": 676,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btnBrake",
+     "cls": "btn"
+    },
+    {
+     "x": 1176,
+     "y": 676,
+     "w": 84,
+     "h": 84,
+     "tag": "div",
+     "id": "btnGas",
+     "cls": "btn"
+    },
+    {
+     "x": 532,
+     "y": 334,
+     "w": 216,
+     "h": 45,
+     "tag": "h1",
+     "id": null,
+     "cls": ""
+    },
+    {
+     "x": 472,
+     "y": 405,
+     "w": 336,
+     "h": 18,
+     "tag": "p",
+     "id": "statusText",
+     "cls": ""
+    },
+    {
+     "x": 522,
+     "y": 439,
+     "w": 235,
+     "h": 53,
+     "tag": "button",
+     "id": null,
+     "cls": "start-btn"
+    }
+   ]
+  },
+  "overlays": [
+   {
+    "x": 20,
+    "y": 20,
+    "w": 96,
+    "h": 23,
+    "tag": "span",
+    "id": "scoreEl",
+    "cls": "",
+    "pixels_differ_when_hidden": 760
+   },
+   {
+    "x": 592,
+    "y": 20,
+    "w": 96,
+    "h": 23,
+    "tag": "span",
+    "id": "timeEl",
+    "cls": "",
+    "pixels_differ_when_hidden": 682
+   },
+   {
+    "x": 1164,
+    "y": 20,
+    "w": 96,
+    "h": 23,
+    "tag": "span",
+    "id": "livesEl",
+    "cls": "",
+    "pixels_differ_when_hidden": 621
+   },
+   {
+    "x": 20,
+    "y": 676,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btnLeft",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 2098
+   },
+   {
+    "x": 114,
+    "y": 676,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btnRight",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 2094
+   },
+   {
+    "x": 1082,
+    "y": 676,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btnBrake",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 6447
+   },
+   {
+    "x": 1176,
+    "y": 676,
+    "w": 84,
+    "h": 84,
+    "tag": "div",
+    "id": "btnGas",
+    "cls": "btn",
+    "pixels_differ_when_hidden": 6179
+   },
+   {
+    "x": 532,
+    "y": 334,
+    "w": 216,
+    "h": 45,
+    "tag": "h1",
+    "id": null,
+    "cls": "",
+    "pixels_differ_when_hidden": 7299
+   },
+   {
+    "x": 472,
+    "y": 405,
+    "w": 336,
+    "h": 18,
+    "tag": "p",
+    "id": "statusText",
+    "cls": "",
+    "pixels_differ_when_hidden": 1766
+   },
+   {
+    "x": 522,
+    "y": 439,
+    "w": 235,
+    "h": 53,
+    "tag": "button",
+    "id": null,
+    "cls": "start-btn",
+    "pixels_differ_when_hidden": 12376
+   }
+  ],
+  "hidden_geometry_under_overlays": true,
+  "animation_advancing": false,
+  "frame_hashes": [
+   "63cd7e1c7e5e702c",
+   "63cd7e1c7e5e702c"
+  ],
+  "input_changes_pixels": false,
+  "input_left_changes_pixels": false,
+  "input_ok": false,
+  "control_vs_input_hashes": [
+   "63cd7e1c7e5e702c",
+   "63cd7e1c7e5e702c",
+   "63cd7e1c7e5e702c"
+  ],
+  "screenshot": "shot-file.png",
+  "hud_markers": {
+   "SCORE": true,
+   "LIVES": true,
+   "GAME OVER": true
+  },
+  "console_errors": [],
+  "console_error_count": 0,
+  "failed_resources": [],
+  "ignored_favicon_404s": [],
+  "contract": {
+   "present": true,
+   "ready": true,
+   "reasons": [],
+   "ok": true
+  }
+ },
+ "cdn_reachable": false,
+ "summary": {
+  "http_load_ok": true,
+  "file_load_ok": true,
+  "canvas_ok": true,
+  "webgl_ok": true,
+  "uses_three": true,
+  "animation_ok": false,
+  "input_ok": false,
+  "console_error_count": 0,
+  "contract_ok": true,
+  "contract_reasons": [],
+  "cdn_reachable": false,
+  "overlays_cover_geometry": true,
+  "player_centre_onscreen": null,
+  "player_visible": null,
+  "player_fully_onscreen": null,
+  "player_bbox_px": null,
+  "pass": false,
+  "accept": false
+ }
+}

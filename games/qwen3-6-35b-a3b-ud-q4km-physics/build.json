@@ -1,22 +1,21 @@
 {
- "slug": "qwen3-6-35b-a3b-physics",
- "generated_at": "2026-11-03T05:51:40+0000",
+ "slug": "qwen3-6-35b-a3b-ud-q4km",
+ "generated_at": "2026-11-05T21:22:09+0800",
  "prompt_file": "WEBGAME_PHYSICS.md",
- "max_attempts": 3,
+ "prompt_sha256": "56bd1a7eefbf79542c7cd9f27e658b0645e150568a3cc620101097ff0dfa2c47",
+ "max_attempts": 11,
  "attempts_used": 3,
  "accepted_attempt": null,
- "status": "rejected",
- "total_wall_s": 355.8,
- "total_completion_tokens": 13142,
- "total_prompt_tokens": 1599,
+ "status": "failed_all_attempts",
  "per_attempt": [
   {
    "attempt": 1,
-   "completion_tokens": 3696,
-   "wall_s": 74.41,
-   "decode_tps": 55.07,
-   "html_lines": 364,
-   "html_bytes": 11008,
+   "completion_tokens": 3812,
+   "prompt_tokens": 533,
+   "wall_s": 35.1,
+   "decode_tps": 109.5,
+   "html_lines": 362,
+   "html_bytes": 11777,
    "finish_reason": "stop",
    "ok": false,
    "checks": {
@@ -26,18 +25,28 @@
     "webgl_ok": true,
     "uses_three": true,
     "animation_ok": false,
-    "input_ok": true,
+    "input_ok": false,
     "contract_ok": true,
-    "console_error_count": 0
-   }
+    "console_error_count": 703
+   },
+   "failed": [
+    "animation_ok",
+    "input_ok",
+    "console_error_count=703",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:38819/index.html:343:23)",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:38819/index.html:343:23)",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:38819/index.html:343:23)",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:38819/index.html:343:23)"
+   ]
   },
   {
    "attempt": 2,
-   "completion_tokens": 3449,
-   "wall_s": 78.49,
-   "decode_tps": 56.93,
-   "html_lines": 349,
-   "html_bytes": 10611,
+   "completion_tokens": 3671,
+   "prompt_tokens": 4194,
+   "wall_s": 35.2,
+   "decode_tps": 107.85,
+   "html_lines": 337,
+   "html_bytes": 11222,
    "finish_reason": "stop",
    "ok": false,
    "checks": {
@@ -49,16 +58,26 @@
     "animation_ok": false,
     "input_ok": false,
     "contract_ok": true,
-    "console_error_count": 0
-   }
+    "console_error_count": 704
+   },
+   "failed": [
+    "animation_ok",
+    "input_ok",
+    "console_error_count=704",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:50039/index.html:319:23)",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:50039/index.html:319:23)",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:50039/index.html:319:23)",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:50039/index.html:319:23)"
+   ]
   },
   {
    "attempt": 3,
-   "completion_tokens": 3505,
-   "wall_s": 82.52,
-   "decode_tps": 55.67,
-   "html_lines": 331,
-   "html_bytes": 10556,
+   "completion_tokens": 3671,
+   "prompt_tokens": 4053,
+   "wall_s": 35.2,
+   "decode_tps": 108.1,
+   "html_lines": 337,
+   "html_bytes": 11222,
    "finish_reason": "stop",
    "ok": false,
    "checks": {
@@ -70,39 +89,63 @@
     "animation_ok": false,
     "input_ok": false,
     "contract_ok": true,
-    "console_error_count": 0
-   }
+    "console_error_count": 706
+   },
+   "failed": [
+    "animation_ok",
+    "input_ok",
+    "console_error_count=706",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:43999/index.html:319:23)",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:43999/index.html:319:23)",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:43999/index.html:319:23)",
+    "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:43999/index.html:319:23)"
+   ]
   }
  ],
+ "total_wall_s": 105.5,
+ "total_completion_tokens": 11154,
+ "total_prompt_tokens": 8780,
+ "generation_wall_s": 35.1,
+ "generation_tokens": 3812,
  "repair": {
-  "status": "accepted",
-  "turns_used": 1,
-  "distinct_outputs": 1,
-  "repair_tokens": 2492,
-  "repair_wall_s": 35.7,
+  "status": "stalled-no-progress",
+  "turns_used": 2,
+  "distinct_outputs": 2,
+  "repair_tokens": 7342,
+  "repair_wall_s": 70.4,
   "turns": [
    {
     "turn": 1,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 2492,
-    "wall_s": 35.7,
-    "html_bytes": 7566
+    "accept": false,
+    "failed": [
+     "animation_ok",
+     "input_ok",
+     "console_error_count=704",
+     "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:50039/index.html:319:23)",
+     "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:50039/index.html:319:23)",
+     "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:50039/index.html:319:23)"
+    ],
+    "completion_tokens": 3671,
+    "wall_s": 35.2,
+    "html_bytes": 11222,
+    "distinct": true
+   },
+   {
+    "turn": 2,
+    "accept": false,
+    "failed": [
+     "animation_ok",
+     "input_ok",
+     "console_error_count=706",
+     "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:43999/index.html:319:23)",
+     "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:43999/index.html:319:23)",
+     "Cannot set property score of #<Object> which has only a getter @ at animate (http://127.0.0.1:43999/index.html:319:23)"
+    ],
+    "completion_tokens": 3671,
+    "wall_s": 35.2,
+    "html_bytes": 11222,
+    "distinct": false
    }
   ]
- },
- "playtest": {
-  "game_after_input": {
-   "score": 10,
-   "lives": 3,
-   "over": false,
-   "player": {
-    "x": 0,
-    "y": 0
-   },
-   "enemies": 2,
-   "bullets": 0,
-   "ready": true
-  }
  }
 }

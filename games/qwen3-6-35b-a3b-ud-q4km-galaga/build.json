@@ -1,24 +1,23 @@
 {
- "slug": "qwen3-6-35b-a3b-galaga",
- "generated_at": "2026-11-03T05:51:52+0000",
+ "slug": "qwen3-6-35b-a3b-ud-q4km",
+ "generated_at": "2026-11-05T21:10:14+0800",
  "prompt_file": "WEBGAME_GALAGA.md",
- "max_attempts": 3,
- "attempts_used": 3,
- "accepted_attempt": null,
- "status": "rejected",
- "total_wall_s": 928.9,
- "total_completion_tokens": 53909,
- "total_prompt_tokens": 1419,
+ "prompt_sha256": "8ba6e1d45270601f52c9cdf9b6df40124422b5d51200d36a78cf3e8781f647a3",
+ "max_attempts": 11,
+ "attempts_used": 1,
+ "accepted_attempt": 1,
+ "status": "accepted",
  "per_attempt": [
   {
    "attempt": 1,
-   "completion_tokens": 4316,
-   "wall_s": 84.56,
-   "decode_tps": 51.28,
-   "html_lines": 393,
-   "html_bytes": 15851,
+   "completion_tokens": 4132,
+   "prompt_tokens": 473,
+   "wall_s": 38.2,
+   "decode_tps": 108.99,
+   "html_lines": 355,
+   "html_bytes": 15541,
    "finish_reason": "stop",
-   "ok": false,
+   "ok": true,
    "checks": {
     "http_load_ok": true,
     "file_load_ok": true,
@@ -27,140 +26,23 @@
     "uses_three": true,
     "animation_ok": true,
     "input_ok": true,
-    "contract_ok": false,
+    "contract_ok": true,
     "console_error_count": 0
-   }
-  },
-  {
-   "attempt": 2,
-   "completion_tokens": 4267,
-   "wall_s": 85.41,
-   "decode_tps": 55.01,
-   "html_lines": 375,
-   "html_bytes": 15819,
-   "finish_reason": "stop",
-   "ok": false,
-   "checks": {
-    "http_load_ok": true,
-    "file_load_ok": true,
-    "canvas_ok": true,
-    "webgl_ok": true,
-    "uses_three": true,
-    "animation_ok": true,
-    "input_ok": true,
-    "contract_ok": false,
-    "console_error_count": 0
-   }
-  },
-  {
-   "attempt": 3,
-   "completion_tokens": 4062,
-   "wall_s": 77.83,
-   "decode_tps": 54.41,
-   "html_lines": 372,
-   "html_bytes": 13263,
-   "finish_reason": "stop",
-   "ok": false,
-   "checks": {
-    "http_load_ok": true,
-    "file_load_ok": true,
-    "canvas_ok": true,
-    "webgl_ok": true,
-    "uses_three": true,
-    "animation_ok": true,
-    "input_ok": true,
-    "contract_ok": false,
-    "console_error_count": 0
-   }
+   },
+   "failed": []
   }
  ],
+ "total_wall_s": 38.2,
+ "total_completion_tokens": 4132,
+ "total_prompt_tokens": 473,
+ "generation_wall_s": 38.2,
+ "generation_tokens": 4132,
  "repair": {
-  "status": "still-broken",
-  "turns_used": 10,
-  "distinct_outputs": 2,
-  "repair_tokens": 41264,
-  "repair_wall_s": 597.0,
-  "turns": [
-   {
-    "turn": 1,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4139,
-    "wall_s": 56.9,
-    "html_bytes": 13608
-   },
-   {
-    "turn": 2,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4125,
-    "wall_s": 59.1,
-    "html_bytes": 13551
-   },
-   {
-    "turn": 3,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4125,
-    "wall_s": 60.1,
-    "html_bytes": 13551
-   },
-   {
-    "turn": 4,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4125,
-    "wall_s": 57.9,
-    "html_bytes": 13551
-   },
-   {
-    "turn": 5,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4125,
-    "wall_s": 63.9,
-    "html_bytes": 13551
-   },
-   {
-    "turn": 6,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4125,
-    "wall_s": 56.9,
-    "html_bytes": 13551
-   },
-   {
-    "turn": 7,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4125,
-    "wall_s": 58.3,
-    "html_bytes": 13551
-   },
-   {
-    "turn": 8,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4125,
-    "wall_s": 65.3,
-    "html_bytes": 13551
-   },
-   {
-    "turn": 9,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4125,
-    "wall_s": 60.7,
-    "html_bytes": 13551
-   },
-   {
-    "turn": 10,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4125,
-    "wall_s": 57.9,
-    "html_bytes": 13551
-   }
-  ]
+  "status": "not-needed",
+  "turns_used": 0,
+  "distinct_outputs": 1,
+  "repair_tokens": 0,
+  "repair_wall_s": 0.0,
+  "turns": []
  }
 }

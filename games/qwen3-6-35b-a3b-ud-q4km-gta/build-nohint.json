@@ -1,0 +1,166 @@
+{
+ "slug": "qwen3-6-35b-a3b-ud-q4km",
+ "generated_at": "2026-11-05T21:15:45+0800",
+ "prompt_file": "WEBGAME_GTA.md",
+ "prompt_sha256": "1220e0f60b68a93e683bb8841543cbe07af5ba082da2802830a4e0f0689ff6db",
+ "max_attempts": 11,
+ "attempts_used": 4,
+ "accepted_attempt": null,
+ "status": "failed_all_attempts",
+ "per_attempt": [
+  {
+   "attempt": 1,
+   "completion_tokens": 4782,
+   "prompt_tokens": 480,
+   "wall_s": 44.0,
+   "decode_tps": 109.26,
+   "html_lines": 472,
+   "html_bytes": 15132,
+   "finish_reason": "stop",
+   "ok": false,
+   "checks": {
+    "http_load_ok": true,
+    "file_load_ok": true,
+    "canvas_ok": true,
+    "webgl_ok": true,
+    "uses_three": true,
+    "animation_ok": false,
+    "input_ok": false,
+    "contract_ok": true,
+    "console_error_count": 0
+   },
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ]
+  },
+  {
+   "attempt": 2,
+   "completion_tokens": 4967,
+   "prompt_tokens": 4919,
+   "wall_s": 47.8,
+   "decode_tps": 107.26,
+   "html_lines": 471,
+   "html_bytes": 15130,
+   "finish_reason": "stop",
+   "ok": false,
+   "checks": {
+    "http_load_ok": true,
+    "file_load_ok": true,
+    "canvas_ok": true,
+    "webgl_ok": true,
+    "uses_three": true,
+    "animation_ok": false,
+    "input_ok": false,
+    "contract_ok": true,
+    "console_error_count": 0
+   },
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ]
+  },
+  {
+   "attempt": 3,
+   "completion_tokens": 4537,
+   "prompt_tokens": 4916,
+   "wall_s": 43.8,
+   "decode_tps": 107.32,
+   "html_lines": 371,
+   "html_bytes": 13563,
+   "finish_reason": "stop",
+   "ok": false,
+   "checks": {
+    "http_load_ok": true,
+    "file_load_ok": true,
+    "canvas_ok": true,
+    "webgl_ok": true,
+    "uses_three": true,
+    "animation_ok": false,
+    "input_ok": false,
+    "contract_ok": true,
+    "console_error_count": 0
+   },
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ]
+  },
+  {
+   "attempt": 4,
+   "completion_tokens": 4357,
+   "prompt_tokens": 4494,
+   "wall_s": 41.9,
+   "decode_tps": 107.51,
+   "html_lines": 371,
+   "html_bytes": 13563,
+   "finish_reason": "stop",
+   "ok": false,
+   "checks": {
+    "http_load_ok": true,
+    "file_load_ok": true,
+    "canvas_ok": true,
+    "webgl_ok": true,
+    "uses_three": true,
+    "animation_ok": false,
+    "input_ok": false,
+    "contract_ok": true,
+    "console_error_count": 0
+   },
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ]
+  }
+ ],
+ "total_wall_s": 177.5,
+ "total_completion_tokens": 18643,
+ "total_prompt_tokens": 14809,
+ "generation_wall_s": 44.0,
+ "generation_tokens": 4782,
+ "repair": {
+  "status": "stalled-no-progress",
+  "turns_used": 3,
+  "distinct_outputs": 3,
+  "repair_tokens": 13861,
+  "repair_wall_s": 133.5,
+  "turns": [
+   {
+    "turn": 1,
+    "accept": false,
+    "failed": [
+     "animation_ok",
+     "input_ok"
+    ],
+    "completion_tokens": 4967,
+    "wall_s": 47.8,
+    "html_bytes": 15130,
+    "distinct": true
+   },
+   {
+    "turn": 2,
+    "accept": false,
+    "failed": [
+     "animation_ok",
+     "input_ok"
+    ],
+    "completion_tokens": 4537,
+    "wall_s": 43.8,
+    "html_bytes": 13563,
+    "distinct": true
+   },
+   {
+    "turn": 3,
+    "accept": false,
+    "failed": [
+     "animation_ok",
+     "input_ok"
+    ],
+    "completion_tokens": 4357,
+    "wall_s": 41.9,
+    "html_bytes": 13563,
+    "distinct": false
+   }
+  ]
+ }
+}

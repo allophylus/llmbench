@@ -1,22 +1,21 @@
 {
- "slug": "qwen3-6-35b-a3b-gta",
- "generated_at": "2026-11-03T05:52:00+0000",
+ "slug": "qwen3-6-35b-a3b-ud-q4km",
+ "generated_at": "2026-11-05T21:24:08+0800",
  "prompt_file": "WEBGAME_GTA.md",
- "max_attempts": 3,
- "attempts_used": 3,
+ "prompt_sha256": "1220e0f60b68a93e683bb8841543cbe07af5ba082da2802830a4e0f0689ff6db",
+ "max_attempts": 11,
+ "attempts_used": 2,
  "accepted_attempt": null,
- "status": "rejected",
- "total_wall_s": 671.8,
- "total_completion_tokens": 36081,
- "total_prompt_tokens": 1440,
+ "status": "failed_all_attempts",
  "per_attempt": [
   {
    "attempt": 1,
-   "completion_tokens": 4346,
-   "wall_s": 84.99,
-   "decode_tps": 51.37,
-   "html_lines": 379,
-   "html_bytes": 15919,
+   "completion_tokens": 4782,
+   "prompt_tokens": 480,
+   "wall_s": 44.1,
+   "decode_tps": 109.31,
+   "html_lines": 472,
+   "html_bytes": 15132,
    "finish_reason": "stop",
    "ok": false,
    "checks": {
@@ -28,16 +27,21 @@
     "animation_ok": false,
     "input_ok": false,
     "contract_ok": true,
-    "console_error_count": 681
-   }
+    "console_error_count": 0
+   },
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ]
   },
   {
    "attempt": 2,
-   "completion_tokens": 4308,
-   "wall_s": 86.19,
-   "decode_tps": 54.98,
-   "html_lines": 389,
-   "html_bytes": 16001,
+   "completion_tokens": 4782,
+   "prompt_tokens": 4972,
+   "wall_s": 45.9,
+   "decode_tps": 107.37,
+   "html_lines": 472,
+   "html_bytes": 15132,
    "finish_reason": "stop",
    "ok": false,
    "checks": {
@@ -49,77 +53,37 @@
     "animation_ok": false,
     "input_ok": false,
     "contract_ok": true,
-    "console_error_count": 687
-   }
-  },
-  {
-   "attempt": 3,
-   "completion_tokens": 4530,
-   "wall_s": 85.99,
-   "decode_tps": 54.56,
-   "html_lines": 442,
-   "html_bytes": 14655,
-   "finish_reason": "stop",
-   "ok": false,
-   "checks": {
-    "http_load_ok": true,
-    "file_load_ok": true,
-    "canvas_ok": true,
-    "webgl_ok": true,
-    "uses_three": true,
-    "animation_ok": false,
-    "input_ok": false,
-    "contract_ok": false,
-    "console_error_count": 2
-   }
+    "console_error_count": 0
+   },
+   "failed": [
+    "animation_ok",
+    "input_ok"
+   ]
   }
  ],
+ "total_wall_s": 90.1,
+ "total_completion_tokens": 9564,
+ "total_prompt_tokens": 5452,
+ "generation_wall_s": 44.1,
+ "generation_tokens": 4782,
  "repair": {
   "status": "stalled-no-progress",
-  "turns_used": 5,
-  "distinct_outputs": 3,
-  "repair_tokens": 22897,
-  "repair_wall_s": 332.1,
+  "turns_used": 1,
+  "distinct_outputs": 1,
+  "repair_tokens": 4782,
+  "repair_wall_s": 45.9,
   "turns": [
    {
     "turn": 1,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4560,
-    "wall_s": 64.6,
-    "html_bytes": 14675
-   },
-   {
-    "turn": 2,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4570,
-    "wall_s": 71.9,
-    "html_bytes": 14716
-   },
-   {
-    "turn": 3,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4589,
-    "wall_s": 69.1,
-    "html_bytes": 14791
-   },
-   {
-    "turn": 4,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4589,
-    "wall_s": 65.5,
-    "html_bytes": 14791
-   },
-   {
-    "turn": 5,
-    "accept": null,
-    "failed": null,
-    "completion_tokens": 4589,
-    "wall_s": 61.0,
-    "html_bytes": 14791
+    "accept": false,
+    "failed": [
+     "animation_ok",
+     "input_ok"
+    ],
+    "completion_tokens": 4782,
+    "wall_s": 45.9,
+    "html_bytes": 15132,
+    "distinct": false
    }
   ]
  }

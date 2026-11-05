@@ -1,13 +1,13 @@
 {
- "slug": "qwen3-6-35b-a3b-gta",
- "probed_at": "2026-11-03T06:23:00+0000",
+ "slug": "attempt-2",
+ "probed_at": "2026-11-05T21:23:54+0800",
  "chrome": "google-chrome (headless, playwright)",
  "viewport": {
   "width": 1280,
   "height": 800
  },
  "http": {
-  "url": "http://<gate-server>/index.html",
+  "url": "http://127.0.0.1:46099/index.html",
   "scheme": "http",
   "load_ok": true,
   "canvas_present": true,
@@ -25,7 +25,7 @@
      "x": 20,
      "y": 20,
      "w": 96,
-     "h": 24,
+     "h": 23,
      "tag": "span",
      "id": "scoreEl",
      "cls": ""
@@ -34,7 +34,7 @@
      "x": 592,
      "y": 20,
      "w": 96,
-     "h": 24,
+     "h": 23,
      "tag": "span",
      "id": "timeEl",
      "cls": ""
@@ -43,7 +43,7 @@
      "x": 1164,
      "y": 20,
      "w": 96,
-     "h": 24,
+     "h": 23,
      "tag": "span",
      "id": "livesEl",
      "cls": ""
@@ -54,7 +54,7 @@
      "w": 84,
      "h": 84,
      "tag": "div",
-     "id": "btn-left",
+     "id": "btnLeft",
      "cls": "btn"
     },
     {
@@ -63,7 +63,7 @@
      "w": 84,
      "h": 84,
      "tag": "div",
-     "id": "btn-right",
+     "id": "btnRight",
      "cls": "btn"
     },
     {
@@ -72,7 +72,7 @@
      "w": 84,
      "h": 84,
      "tag": "div",
-     "id": "btn-brake",
+     "id": "btnBrake",
      "cls": "btn"
     },
     {
@@ -81,34 +81,34 @@
      "w": 84,
      "h": 84,
      "tag": "div",
-     "id": "btn-gas",
+     "id": "btnGas",
      "cls": "btn"
     },
     {
-     "x": 508,
-     "y": 333,
-     "w": 265,
-     "h": 46,
+     "x": 532,
+     "y": 334,
+     "w": 216,
+     "h": 45,
      "tag": "h1",
      "id": null,
      "cls": ""
     },
     {
-     "x": 471,
+     "x": 472,
      "y": 405,
-     "w": 337,
-     "h": 19,
+     "w": 336,
+     "h": 18,
      "tag": "p",
-     "id": null,
+     "id": "statusText",
      "cls": ""
     },
     {
-     "x": 519,
-     "y": 440,
-     "w": 242,
-     "h": 54,
+     "x": 522,
+     "y": 439,
+     "w": 235,
+     "h": 53,
      "tag": "button",
-     "id": "start-btn",
+     "id": null,
      "cls": "start-btn"
     }
    ]
@@ -118,31 +118,31 @@
     "x": 20,
     "y": 20,
     "w": 96,
-    "h": 24,
+    "h": 23,
     "tag": "span",
     "id": "scoreEl",
     "cls": "",
-    "pixels_differ_when_hidden": 756
+    "pixels_differ_when_hidden": 760
    },
    {
     "x": 592,
     "y": 20,
     "w": 96,
-    "h": 24,
+    "h": 23,
     "tag": "span",
     "id": "timeEl",
     "cls": "",
-    "pixels_differ_when_hidden": 746
+    "pixels_differ_when_hidden": 680
    },
    {
     "x": 1164,
     "y": 20,
     "w": 96,
-    "h": 24,
+    "h": 23,
     "tag": "span",
     "id": "livesEl",
     "cls": "",
-    "pixels_differ_when_hidden": 644
+    "pixels_differ_when_hidden": 621
    },
    {
     "x": 20,
@@ -150,9 +150,9 @@
     "w": 84,
     "h": 84,
     "tag": "div",
-    "id": "btn-left",
+    "id": "btnLeft",
     "cls": "btn",
-    "pixels_differ_when_hidden": 662
+    "pixels_differ_when_hidden": 2098
    },
    {
     "x": 114,
@@ -160,9 +160,9 @@
     "w": 84,
     "h": 84,
     "tag": "div",
-    "id": "btn-right",
+    "id": "btnRight",
     "cls": "btn",
-    "pixels_differ_when_hidden": 663
+    "pixels_differ_when_hidden": 2094
    },
    {
     "x": 1082,
@@ -170,9 +170,9 @@
     "w": 84,
     "h": 84,
     "tag": "div",
-    "id": "btn-brake",
+    "id": "btnBrake",
     "cls": "btn",
-    "pixels_differ_when_hidden": 704
+    "pixels_differ_when_hidden": 6447
    },
    {
     "x": 1176,
@@ -180,54 +180,54 @@
     "w": 84,
     "h": 84,
     "tag": "div",
-    "id": "btn-gas",
+    "id": "btnGas",
     "cls": "btn",
-    "pixels_differ_when_hidden": 704
+    "pixels_differ_when_hidden": 6179
    },
    {
-    "x": 508,
-    "y": 333,
-    "w": 265,
-    "h": 46,
+    "x": 532,
+    "y": 334,
+    "w": 216,
+    "h": 45,
     "tag": "h1",
     "id": null,
     "cls": "",
-    "pixels_differ_when_hidden": 10031
+    "pixels_differ_when_hidden": 7299
    },
    {
-    "x": 471,
+    "x": 472,
     "y": 405,
-    "w": 337,
-    "h": 19,
+    "w": 336,
+    "h": 18,
     "tag": "p",
-    "id": null,
+    "id": "statusText",
     "cls": "",
-    "pixels_differ_when_hidden": 2747
+    "pixels_differ_when_hidden": 1766
    },
    {
-    "x": 519,
-    "y": 440,
-    "w": 242,
-    "h": 54,
+    "x": 522,
+    "y": 439,
+    "w": 235,
+    "h": 53,
     "tag": "button",
-    "id": "start-btn",
+    "id": null,
     "cls": "start-btn",
-    "pixels_differ_when_hidden": 13021
+    "pixels_differ_when_hidden": 12376
    }
   ],
   "hidden_geometry_under_overlays": true,
   "animation_advancing": false,
   "frame_hashes": [
-   "f26df35b561adb1d",
-   "f26df35b561adb1d"
+   "fae033b75d071b41",
+   "fae033b75d071b41"
   ],
   "input_changes_pixels": false,
   "input_left_changes_pixels": false,
   "input_ok": false,
   "control_vs_input_hashes": [
-   "f26df35b561adb1d",
-   "f26df35b561adb1d",
-   "f26df35b561adb1d"
+   "fae033b75d071b41",
+   "fae033b75d071b41",
+   "fae033b75d071b41"
   ],
   "screenshot": "shot.png",
   "hud_markers": {
@@ -241,15 +241,13 @@
   "ignored_favicon_404s": [],
   "contract": {
    "present": true,
-   "ready": false,
-   "reasons": [
-    "reset() not callable"
-   ],
-   "ok": false
+   "ready": true,
+   "reasons": [],
+   "ok": true
   }
  },
  "file": {
-  "url": "file://<work-dir>/index.html",
+  "url": "file:///home/fen/repos/llmbench/games/qwen3-6-35b-a3b-ud-q4km-gta/attempts/attempt-2/index.html",
   "scheme": "file",
   "load_ok": true,
   "canvas_present": true,
@@ -267,7 +265,7 @@
      "x": 20,
      "y": 20,
      "w": 96,
-     "h": 24,
+     "h": 23,
      "tag": "span",
      "id": "scoreEl",
      "cls": ""
@@ -276,7 +274,7 @@
      "x": 592,
      "y": 20,
      "w": 96,
-     "h": 24,
+     "h": 23,
      "tag": "span",
      "id": "timeEl",
      "cls": ""
@@ -285,7 +283,7 @@
      "x": 1164,
      "y": 20,
      "w": 96,
-     "h": 24,
+     "h": 23,
      "tag": "span",
      "id": "livesEl",
      "cls": ""
@@ -296,7 +294,7 @@
      "w": 84,
      "h": 84,
      "tag": "div",
-     "id": "btn-left",
+     "id": "btnLeft",
      "cls": "btn"
     },
     {
@@ -305,7 +303,7 @@
      "w": 84,
      "h": 84,
      "tag": "div",
-     "id": "btn-right",
+     "id": "btnRight",
      "cls": "btn"
     },
     {
@@ -314,7 +312,7 @@
      "w": 84,
      "h": 84,
      "tag": "div",
-     "id": "btn-brake",
+     "id": "btnBrake",
      "cls": "btn"
     },
     {
@@ -323,34 +321,34 @@
      "w": 84,
      "h": 84,
      "tag": "div",
-     "id": "btn-gas",
+     "id": "btnGas",
      "cls": "btn"
     },
     {
-     "x": 508,
-     "y": 333,
-     "w": 265,
-     "h": 46,
+     "x": 532,
+     "y": 334,
+     "w": 216,
+     "h": 45,
      "tag": "h1",
      "id": null,
      "cls": ""
     },
     {
-     "x": 471,
+     "x": 472,
      "y": 405,
-     "w": 337,
-     "h": 19,
+     "w": 336,
+     "h": 18,
      "tag": "p",
-     "id": null,
+     "id": "statusText",
      "cls": ""
     },
     {
-     "x": 519,
-     "y": 440,
-     "w": 242,
-     "h": 54,
+     "x": 522,
+     "y": 439,
+     "w": 235,
+     "h": 53,
      "tag": "button",
-     "id": "start-btn",
+     "id": null,
      "cls": "start-btn"
     }
    ]
@@ -360,31 +358,31 @@
     "x": 20,
     "y": 20,
     "w": 96,
-    "h": 24,
+    "h": 23,
     "tag": "span",
     "id": "scoreEl",
     "cls": "",
-    "pixels_differ_when_hidden": 756
+    "pixels_differ_when_hidden": 760
    },
    {
     "x": 592,
     "y": 20,
     "w": 96,
-    "h": 24,
+    "h": 23,
     "tag": "span",
     "id": "timeEl",
     "cls": "",
-    "pixels_differ_when_hidden": 746
+    "pixels_differ_when_hidden": 680
    },
    {
     "x": 1164,
     "y": 20,
     "w": 96,
-    "h": 24,
+    "h": 23,
     "tag": "span",
     "id": "livesEl",
     "cls": "",
-    "pixels_differ_when_hidden": 644
+    "pixels_differ_when_hidden": 621
    },
    {
     "x": 20,
@@ -392,9 +390,9 @@
     "w": 84,
     "h": 84,
     "tag": "div",
-    "id": "btn-left",
+    "id": "btnLeft",
     "cls": "btn",
-    "pixels_differ_when_hidden": 662
+    "pixels_differ_when_hidden": 2089
    },
    {
     "x": 114,
@@ -402,9 +400,9 @@
     "w": 84,
     "h": 84,
     "tag": "div",
-    "id": "btn-right",
+    "id": "btnRight",
     "cls": "btn",
-    "pixels_differ_when_hidden": 663
+    "pixels_differ_when_hidden": 2094
    },
    {
     "x": 1082,
@@ -412,9 +410,9 @@
     "w": 84,
     "h": 84,
     "tag": "div",
-    "id": "btn-brake",
+    "id": "btnBrake",
     "cls": "btn",
-    "pixels_differ_when_hidden": 704
+    "pixels_differ_when_hidden": 1579
    },
    {
     "x": 1176,
@@ -422,54 +420,54 @@
     "w": 84,
     "h": 84,
     "tag": "div",
-    "id": "btn-gas",
+    "id": "btnGas",
     "cls": "btn",
     "pixels_differ_when_hidden": 704
    },
    {
-    "x": 508,
-    "y": 333,
-    "w": 265,
-    "h": 46,
+    "x": 532,
+    "y": 334,
+    "w": 216,
+    "h": 45,
     "tag": "h1",
     "id": null,
     "cls": "",
-    "pixels_differ_when_hidden": 10031
+    "pixels_differ_when_hidden": 7299
    },
    {
-    "x": 471,
+    "x": 472,
     "y": 405,
-    "w": 337,
-    "h": 19,
+    "w": 336,
+    "h": 18,
     "tag": "p",
-    "id": null,
+    "id": "statusText",
     "cls": "",
-    "pixels_differ_when_hidden": 2747
+    "pixels_differ_when_hidden": 1766
    },
    {
-    "x": 519,
-    "y": 440,
-    "w": 242,
-    "h": 54,
+    "x": 522,
+    "y": 439,
+    "w": 235,
+    "h": 53,
     "tag": "button",
-    "id": "start-btn",
+    "id": null,
     "cls": "start-btn",
-    "pixels_differ_when_hidden": 13021
+    "pixels_differ_when_hidden": 12376
    }
   ],
   "hidden_geometry_under_overlays": true,
   "animation_advancing": false,
   "frame_hashes": [
-   "f26df35b561adb1d",
-   "f26df35b561adb1d"
+   "e76c0dab24ff5025",
+   "e76c0dab24ff5025"
   ],
   "input_changes_pixels": false,
   "input_left_changes_pixels": false,
   "input_ok": false,
   "control_vs_input_hashes": [
-   "f26df35b561adb1d",
-   "f26df35b561adb1d",
-   "f26df35b561adb1d"
+   "e76c0dab24ff5025",
+   "e76c0dab24ff5025",
+   "e76c0dab24ff5025"
   ],
   "screenshot": "shot-file.png",
   "hud_markers": {
@@ -483,11 +481,9 @@
   "ignored_favicon_404s": [],
   "contract": {
    "present": true,
-   "ready": false,
-   "reasons": [
-    "reset() not callable"
-   ],
-   "ok": false
+   "ready": true,
+   "reasons": [],
+   "ok": true
   }
  },
  "cdn_reachable": false,
@@ -500,11 +496,8 @@
   "animation_ok": false,
   "input_ok": false,
   "console_error_count": 0,
-  "contract_ok": false,
-  "contract_reasons": [
-   "reset() not callable",
-   "(file://) reset() not callable"
-  ],
+  "contract_ok": true,
+  "contract_reasons": [],
   "cdn_reachable": false,
   "overlays_cover_geometry": true,
   "player_centre_onscreen": null,

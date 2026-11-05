@@ -205,6 +205,10 @@ def main():
         shutil.copyfile(os.path.join(src, "index.html"), os.path.join(out, "index.html"))
     if os.path.exists(os.path.join(src, "shot.png")):
         shutil.copyfile(os.path.join(src, "shot.png"), os.path.join(out, "shot.png"))
+    if os.path.exists(os.path.join(src, "metrics.json")):
+        # the games table reads <dir>/metrics.json for the pass/notes columns; keep it the
+        # last measured attempt, never a previous run's leftover
+        shutil.copyfile(os.path.join(src, "metrics.json"), os.path.join(out, "metrics.json"))
     rep_status = ("accepted" if accepted else
                   ("stalled-no-progress" if repair_turns and not repair_turns[-1]["distinct"]
                    else "still-broken")) if repair_turns else "not-needed"

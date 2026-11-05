@@ -1,0 +1,8 @@
+{
+ "attempt": 3,
+ "prompt_tokens": 4053,
+ "completion_tokens": 3671,
+ "wall_s": 35.2,
+ "finish_reason": "stop",
+ "prompt_sha256": "a8442f2644fb44daea2678ac058dd765e1c08be55201f2e681f79a49e1025654"
+}

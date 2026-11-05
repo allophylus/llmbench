@@ -112,6 +112,8 @@ def game_rows():
         notes = []
         if s and not s.get("contract_ok"): notes.append("no window.__game contract → robot cannot score it")
         if s and not s.get("animation_ok"): notes.append("animation not advancing")
+        if s and (s.get("console_error_count") or 0) > 0:
+            notes.append("%s console errors" % "{:,}".format(s["console_error_count"]))
         if not notes and status == "renders": notes.append("playable in browser")
         shot = "shot.png" if os.path.exists(os.path.join(d, "shot.png")) else ""
         rows.append(dict(model=model, model_file=model_file, game=GAME_LABEL.get(game, game), slug=slug,

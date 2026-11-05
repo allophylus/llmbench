@@ -41,7 +41,7 @@ table{min-width:520px}
   --line-soft: #1b2431;
   --fg: #d7e0ea;
   --fg-dim: #8593a5;
-  --fg-faint: #4d5a6b;
+  --fg-faint: #7c8b9e;
   --accent: #5ee0a3;
   --accent-dim: #1f6b4c;
   --warn: #e0b05e;
@@ -577,10 +577,14 @@ td.c-name .dep-note { display: block; font: 11px/1.35 var(--mono); color: var(--
 
 /* ---- context/speed detail table (below the main table) ---- */
 .probes { margin: 0 0 2rem; }
-/* the matched-context speed matrix lives in this block (index.html #speed-sweep) */
-.sweep { margin: 1.4rem 0 2rem; }
-.sweep ul { margin: .4rem 0 0; padding-left: 1.2rem; }
-.sweep .scroll { scrollbar-gutter: stable; }
+/* ---- findings + method lists (per-page documentation blocks) ---- */
+ul.findings { margin: .5rem 0 1rem; padding-left: 1.15rem; max-width: 95ch; }
+ul.findings > li { color: var(--fg-dim); margin: .4rem 0; line-height: 1.5; }
+ul.findings > li > strong, ul.findings b { color: var(--fg); }
+ul.findings > li.meta, ul.findings li > .meta { color: var(--fg-faint); font-size: 12.5px; }
+ul.methodul { margin: .5rem 0 1rem; padding-left: 1.15rem; max-width: 95ch; }
+ul.methodul > li { color: var(--fg-dim); margin: .4rem 0; line-height: 1.5; }
+ul.methodul > li > strong { color: var(--fg); }
 .probes h2 { font: 600 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--fg-faint); margin: 0 0 .5rem; }
 .probe-note { color: var(--fg-dim); font-size: 13px; max-width: 90ch; margin: 0 0 1rem; }
 .probe-h { font: 600 13px var(--mono); color: var(--fg); margin: 1rem 0 .4rem; }
@@ -755,27 +759,11 @@ body.show-scores #tbl td.sc { display: table-cell; }
 .legend { margin: .1rem 0 .9rem; color: var(--fg-faint); font-size: 12.5px; max-width: 95ch; }
 .legend b { color: var(--fg-dim); font-weight: 600; }
 
-/* ---- two-row header: group band above individual column labels ---- */
+/* ---- sortable column headers ---- */
 @media (min-width: 761px) {
   #tbl { table-layout: auto; width: max-content; min-width: 100%; }
 }
-#tbl thead tr.grprow th {
-  position: sticky;
-  top: 0;
-  z-index: 4;
-  cursor: default;
-  text-align: center;
-  font: 700 9.5px/1.2 var(--mono);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--fg-faint);
-  background: #111925;
-  border-bottom: 1px solid var(--line-soft);
-  padding: .4rem .45rem .3rem;
-  user-select: none;
-}
-#tbl thead tr.grprow th.gcell-empty { background: #111925; }
-#tbl thead tr.colrow th { top: 27px; }
+#tbl thead tr.colrow th { top: 0; }
 #tbl thead tr.colrow th.num { text-align: right; }
 #tbl thead tr.colrow th.c-name { text-align: left; }
 
@@ -857,7 +845,6 @@ body.show-scores #tbl td.sc { display: table-cell; }
   .viewtabs::-webkit-scrollbar { display: none; }
   .viewtab { flex: none; padding: .5rem .85rem; font-size: 11px; }
   .viewsub { font-size: 12.5px; }
-  #tbl thead tr.grprow { display: none; }
   #tbl thead tr.colrow th { top: var(--thead-stick); }
   #tbl thead tr.colrow th.c-name,
   #tbl tbody td.c-name { position: static; box-shadow: none; }
@@ -878,7 +865,264 @@ body.show-scores #tbl td.sc { display: table-cell; }
 @media (max-width: 760px) {
   #tbl th.c-name, #tbl td.c-name { width: auto; min-width: 0; max-width: none; }
 }
-</style></head><body><header class="site-head"><div class="wrap"><h1>llmbench</h1><p class="sub">Raw, repeatable benchmark numbers for local models served by <strong>llama.cpp (Vulkan)</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB box.</p></div></header><div class="topbar"><div class="wrap"><nav class="site-nav" aria-label="Sections"><a href="../">Overview</a><a href="../games/" aria-current="page">Games</a><a href="../chat/">Chat</a><a href="../thinking/">Thinking</a></nav></div></div><div class=wrap><h1>games — model-written browser games</h1><p class=sub>Each model writes a single-file three.js game from a frozen prompt. The model draws everything with geometry — no images, textures or audio files. Repeats = extra generation turns allowed to fix a failing build (max 10).</p><p class=sub><b><a href='../sidebyside/'>New: four games, side by side →</a></b> each model's ball sandbox, tower stacker, tower defence and match-3 next to the others, with executed rule checks and a spec-compliance score per attempt.</p><div class=table-wrap><table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th><th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th><th>Robot</th><th>Screenshot</th><th>Play</th></tr></thead><tbody><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>2324</td><td class=num>22.0</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it; animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-galaga'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>53909</td><td class=num>928.9</td><td>renders</td><td class=meta>animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-gta'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>36081</td><td class=num>671.8</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it; animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-physics'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>13142</td><td class=num>355.8</td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-physics/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>3508</td><td class=num>79.5</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it</td><td>0</td><td><img class=thumb src='qwen3-8-27b-q4km/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-galaga'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-gta'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-physics'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-physics/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-solar'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>solar system mission</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td>—</td><td>—</td><td><a href='qwen3-8-27b-q4km-solar/index.html'>play</a></td></tr></tbody></table></div><h2 class=sec>Details</h2><section class=detail id='qwen3-6-35b-a3b-ud-q4km'><h2>Qwen3.6-35B-A3B — space shooter (v1 prompt)</h2><p class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 2324 tokens · 22.0s</p><p class=notes>no window.__game contract → robot cannot score it; animation not advancing</p><details><summary>prompt used</summary><pre class=promptbox>&lt;!--
+
+/* ---- per-row extras: context sweep + logic traps live inside the model row ---- */
+.rowextra { margin-top: .4rem; }
+.rowextra > summary { cursor: pointer; color: var(--fg-faint); font: 11.5px var(--mono);
+  letter-spacing: .02em; list-style: none; }
+.rowextra > summary::-webkit-details-marker { display: none; }
+.rowextra > summary::before { content: "\25B8 "; }
+.rowextra[open] > summary::before { content: "\25BE "; }
+.rowextra > summary:hover { color: var(--fg); }
+.rx-h { margin: .6rem 0 .3rem; color: var(--fg-faint); font: 600 10.5px var(--mono);
+  text-transform: uppercase; letter-spacing: .07em; }
+table.rx { border-collapse: collapse; font: 11.5px/1.5 var(--mono); }
+table.rx th, table.rx td { padding: 1px 10px 1px 0; text-align: left; color: var(--fg-dim); }
+table.rx th { color: var(--fg-faint); font-weight: 600; }
+table.rx td.num { font-variant-numeric: tabular-nums; color: var(--fg); }
+.rx-l { color: var(--fg-dim); font: 12px var(--mono); margin-bottom: .3rem; }
+.rx-l b { color: var(--fg); }
+
+.sweep-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  margin: 0 0 .75rem;
+  padding: .5rem .75rem .75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--fg-dim);
+  font-size: 13px;
+}
+.sweep-metrics[hidden] { display: none; }
+.sweep-metrics legend { padding: 0 .25rem; font-weight: 600; }
+.sweep-metrics label { display: inline-flex; align-items: center; gap: .35rem; cursor: pointer; }
+.sweep-metrics input { accent-color: var(--accent); }
+
+/* Visible per-model sweep and logic cells in the Speed view. */
+#tbl th.c-sweep, #tbl td.c-sweep { min-width: 120px; }
+#tbl th.c-logic, #tbl td.c-logic { min-width: 100px; }
+#tbl td.c-sweep, #tbl td.c-logic { padding: .5rem .65rem; }
+#tbl .metric {
+  display: flex;
+  justify-content: space-between;
+  gap: .6rem;
+  font: 11.5px/1.6 var(--mono);
+}
+#tbl .metric > span { color: var(--fg-faint); font-size: 10px; }
+#tbl .logic-score { display: block; font: 600 13px/1.6 var(--mono); }
+/* Speed stays a comparison table, including below the other views' card breakpoint. */
+#tablepanel[data-view="speed"] {
+  overflow: auto;
+  max-height: 75vh;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  scroll-margin-top: calc(var(--topbar-h) + 8px);
+}
+#tablepanel[data-view="speed"] #tbl {
+  display: table;
+  width: max-content;
+  min-width: 100%;
+  table-layout: auto;
+}
+#tablepanel[data-view="speed"] #tbl > thead {
+  display: table-header-group;
+  position: static;
+}
+#tablepanel[data-view="speed"] #tbl > tbody { display: table-row-group; width: auto; }
+#tablepanel[data-view="speed"] #tbl > thead > tr,
+#tablepanel[data-view="speed"] #tbl > tbody > tr {
+  display: table-row;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+#tablepanel[data-view="speed"] #tbl > thead > tr > th,
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td {
+  display: table-cell !important;
+  width: auto;
+  padding: .65rem .75rem;
+  border: 0;
+  border-right: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  vertical-align: top;
+  font-size: 13px;
+}
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td { text-align: right !important; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr.archhead > td { text-align: left !important; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td::before { display: none; content: none; }
+#tablepanel[data-view="speed"] #tbl > thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  font-size: 11px;
+}
+#tablepanel[data-view="speed"] #tbl th .th-sub { display: inline; }
+#tablepanel[data-view="speed"] #tbl td .meta { display: none; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr:nth-child(odd) > td { background: var(--bg); }
+#tablepanel[data-view="speed"] #tbl > tbody > tr:nth-child(even) > td { background: var(--bg-soft); }
+#tablepanel[data-view="speed"] #tbl > tbody > tr:hover > td { background: #192638; }
+#tablepanel[data-view="speed"] #tbl > thead > tr > th.c-name,
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td.c-name {
+  position: sticky;
+  left: 0;
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+  text-align: left !important;
+  box-shadow: 1px 0 0 var(--line);
+}
+#tablepanel[data-view="speed"] #tbl > thead > tr > th.c-name { z-index: 5; }
+#tablepanel[data-view="speed"] #tbl > tbody > tr > td.c-name { z-index: 2; font-weight: 400; }
+#tablepanel[data-view="speed"] #tbl td.c-name .name {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  font-weight: 600;
+}
+#tablepanel[data-view="speed"] #tbl .metric { font-size: 12px; line-height: 1.65; }
+#tablepanel[data-view="speed"] #tbl .metric > span { font-size: 11px; }
+@media (max-width: 760px) {
+  #tablepanel[data-view="speed"] #tbl > thead > tr > th.c-name,
+  #tablepanel[data-view="speed"] #tbl > tbody > tr > td.c-name {
+    width: 160px;
+    min-width: 160px;
+    max-width: 160px;
+  }
+}
+
+/* ---- overview ablation block ---- */
+.about#ablation { max-width: none; }
+.about#ablation .abl-h {
+  margin: 0 0 .45rem;
+  color: var(--fg);
+  font: 600 1.15rem/1.35 var(--mono);
+  letter-spacing: -.01em;
+  text-transform: none;
+}
+.about#ablation > .sub { max-width: 76ch; margin: 0 0 1.1rem; color: var(--fg-dim); }
+.about#ablation .abl-t {
+  margin: 1.6rem 0 .6rem;
+  color: var(--fg-dim);
+  font: 600 12px/1.25 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.about#ablation .scroll {
+  width: 100%;
+  max-width: 100%;
+  margin: .6rem 0 .3rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-soft);
+  -webkit-overflow-scrolling: touch;
+}
+.about#ablation .scroll table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+}
+.about#ablation .scroll th,
+.about#ablation .scroll td {
+  width: auto;
+  padding: .55rem .65rem;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: top;
+}
+.about#ablation .scroll th {
+  position: static;
+  top: auto;
+  color: var(--fg-dim);
+  background: #16202c;
+  font: 600 10px/1.3 var(--mono);
+  letter-spacing: .04em;
+  text-align: left;
+  cursor: default;
+}
+.about#ablation .scroll th:hover { color: var(--fg-dim); background: #16202c; }
+.about#ablation .scroll td.num {
+  color: var(--fg);
+  font: 12px/1.4 var(--mono);
+  text-align: right;
+  white-space: nowrap;
+}
+.about#ablation .scroll td.arm { min-width: 190px; }
+.about#ablation .scroll td.arm b { display: block; color: var(--fg); }
+.about#ablation .scroll td.arm span { display: block; color: var(--fg-faint); font-size: 11.5px; }
+.about#ablation .ok { color: var(--accent); }
+.about#ablation .bad { color: #e08a8a; }
+.about#ablation .dim { color: var(--fg-faint); }
+.about#ablation .scroll tbody tr:nth-child(even) td { background: var(--bg-zebra); }
+.about#ablation .scroll tbody tr:last-child td { border-bottom: 0; }
+.about#ablation .detail {
+  margin: .8rem 0 1rem;
+  padding: .8rem .95rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-soft);
+}
+.about#ablation .detail summary {
+  color: var(--fg);
+  font: 600 12px/1.4 var(--mono);
+  cursor: pointer;
+}
+.about#ablation .detail[open] summary { margin-bottom: .6rem; }
+.about#ablation .callout,
+.about#ablation .limits {
+  margin: .7rem 0;
+  padding: .7rem .85rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent-dim);
+  border-radius: 7px;
+  background: var(--bg-soft);
+  color: var(--fg-dim);
+  font-size: 13px;
+}
+.about#ablation .callout b { color: var(--fg); }
+.about#ablation .limits { border-left-color: var(--fg-faint); }
+.about#ablation .limits > b { color: var(--fg); }
+.about#ablation .limits ul { margin: .45rem 0 0; padding-left: 1.2rem; }
+.about#ablation .limits li { margin: .35rem 0; }
+.about#ablation #mob { display: none; }
+
+@media (max-width: 760px) {
+  .about#ablation .scroll table {
+    display: table;
+    width: max-content;
+    min-width: 900px;
+    table-layout: auto;
+  }
+  .about#ablation .scroll thead { display: table-header-group; position: static; top: auto; }
+  .about#ablation .scroll tbody { display: table-row-group; }
+  .about#ablation .scroll tr {
+    display: table-row;
+    grid-template-columns: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .about#ablation .scroll th,
+  .about#ablation .scroll td {
+    display: table-cell;
+    padding: .45rem .5rem;
+    border-bottom: 1px solid var(--line-soft);
+    text-align: left !important;
+    font-size: 11.5px;
+  }
+  .about#ablation .scroll td::before { display: none; content: none; }
+  .about#ablation .scroll td.num { text-align: right !important; }
+  .about#ablation #mob { display: block; margin: .35rem 0 0; color: var(--fg-faint); font-size: 12px; }
+}
+</style></head><body><header class="site-head"><div class="wrap"><h1>llmbench</h1><p class="sub">Raw, repeatable benchmark numbers for local models served by <strong>llama.cpp (Vulkan)</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB box.</p></div></header><div class="topbar"><div class="wrap"><nav class="site-nav" aria-label="Sections"><a href="../">Overview</a><a href="../games/" aria-current="page">Games</a><a href="../chat/">Chat</a><a href="../thinking/">Thinking</a></nav></div></div><div class=wrap><h1>games — model-written browser games</h1><p class=sub>Each model writes a single-file three.js game from a frozen prompt. The model draws everything with geometry — no images, textures or audio files. Repeats = extra generation turns allowed to fix a failing build (max 10).</p><p class=sub><b><a href='../sidebyside/'>New: four games, side by side →</a></b> each model's ball sandbox, tower stacker, tower defence and match-3 next to the others, with executed rule checks and a spec-compliance score per attempt.</p><div class=table-wrap><table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th><th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th><th>Robot</th><th>Screenshot</th><th>Play</th></tr></thead><tbody><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>2324</td><td class=num>22.0</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it; animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-galaga'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>4132</td><td class=num>38.2</td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-gta'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num>9564</td><td class=num>90.1</td><td>renders</td><td class=meta>animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-physics'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>3</td><td class=num>2</td><td class=num>11154</td><td class=num>105.5</td><td>renders</td><td class=meta>animation not advancing; 706 console errors</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-physics/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>3508</td><td class=num>79.5</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it</td><td>0</td><td><img class=thumb src='qwen3-8-27b-q4km/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-galaga'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-gta'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-physics'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-physics/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-solar'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>solar system mission</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td>—</td><td>—</td><td><a href='qwen3-8-27b-q4km-solar/index.html'>play</a></td></tr></tbody></table></div><h2 class=sec>Details</h2><section class=detail id='qwen3-6-35b-a3b-ud-q4km'><h2>Qwen3.6-35B-A3B — space shooter (v1 prompt)</h2><p class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 2324 tokens · 22.0s</p><p class=notes>no window.__game contract → robot cannot score it; animation not advancing</p><details><summary>prompt used</summary><pre class=promptbox>&lt;!--
 WEBGAME_PROMPT — FROZEN (llmbench browser-game cell v1, game cell &quot;webgame-3js&quot;)
 
 Sent verbatim as the single user message to every model. Never edit; the sha256 of
@@ -990,7 +1234,78 @@ Hard requirements (an automated browser grader checks all of them):
     more than extra features: a smaller game that runs perfectly beats a big one that
     throws.
 
-Output: one ```html block containing a complete &lt;!DOCTYPE html&gt; document, then stop.</pre></details><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=bad>failed</td><td class=meta>window.__game contract missing</td><td class=num>2324</td><td class=num>22.0</td></tr></tbody></table><img class=bigshot src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''><p><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play the game →</a> · <a href='qwen3-6-35b-a3b-ud-q4km/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-6-35b-a3b-ud-q4km-galaga'><h2>Qwen3.6-35B-A3B — arcade shooter (TUI-derived)</h2><p class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 53909 tokens · 928.9s</p><p class=notes>animation not advancing</p><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=bad>failed</td><td class=meta>—</td><td class=num>4316</td><td class=num>84.6</td></tr><tr><td class=num>2</td><td class=bad>failed</td><td class=meta>—</td><td class=num>4267</td><td class=num>85.4</td></tr><tr><td class=num>3</td><td class=bad>failed</td><td class=meta>—</td><td class=num>4062</td><td class=num>77.8</td></tr></tbody></table><img class=bigshot src='qwen3-6-35b-a3b-ud-q4km-galaga/shot.png' alt=''><p><a href='qwen3-6-35b-a3b-ud-q4km-galaga/index.html'>play the game →</a> · <a href='qwen3-6-35b-a3b-ud-q4km-galaga/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-6-35b-a3b-ud-q4km-gta'><h2>Qwen3.6-35B-A3B — top-down driving (TUI-derived)</h2><p class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 36081 tokens · 671.8s</p><p class=notes>no window.__game contract → robot cannot score it; animation not advancing</p><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=bad>failed</td><td class=meta>—</td><td class=num>4346</td><td class=num>85.0</td></tr><tr><td class=num>2</td><td class=bad>failed</td><td class=meta>—</td><td class=num>4308</td><td class=num>86.2</td></tr><tr><td class=num>3</td><td class=bad>failed</td><td class=meta>—</td><td class=num>4530</td><td class=num>86.0</td></tr></tbody></table><img class=bigshot src='qwen3-6-35b-a3b-ud-q4km-gta/shot.png' alt=''><p><a href='qwen3-6-35b-a3b-ud-q4km-gta/index.html'>play the game →</a> · <a href='qwen3-6-35b-a3b-ud-q4km-gta/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-6-35b-a3b-ud-q4km-physics'><h2>Qwen3.6-35B-A3B — 3D physics sandbox (TUI-derived)</h2><p class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 13142 tokens · 355.8s</p><p class=notes>playable in browser</p><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=bad>failed</td><td class=meta>—</td><td class=num>3696</td><td class=num>74.4</td></tr><tr><td class=num>2</td><td class=bad>failed</td><td class=meta>—</td><td class=num>3449</td><td class=num>78.5</td></tr><tr><td class=num>3</td><td class=bad>failed</td><td class=meta>—</td><td class=num>3505</td><td class=num>82.5</td></tr></tbody></table><img class=bigshot src='qwen3-6-35b-a3b-ud-q4km-physics/shot.png' alt=''><p><a href='qwen3-6-35b-a3b-ud-q4km-physics/index.html'>play the game →</a> · <a href='qwen3-6-35b-a3b-ud-q4km-physics/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-8-27b-q4km'><h2>Qwen3.8-27B — space shooter (v1 prompt)</h2><p class=meta>Qwen3.8-27B-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 3508 tokens · 79.5s</p><p class=notes>no window.__game contract → robot cannot score it</p><details><summary>prompt used</summary><pre class=promptbox>&lt;!--
+Output: one ```html block containing a complete &lt;!DOCTYPE html&gt; document, then stop.</pre></details><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=bad>failed</td><td class=meta>window.__game contract missing</td><td class=num>2324</td><td class=num>22.0</td></tr></tbody></table><img class=bigshot src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''><p><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play the game →</a> · <a href='qwen3-6-35b-a3b-ud-q4km/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-6-35b-a3b-ud-q4km-galaga'><h2>Qwen3.6-35B-A3B — arcade shooter (TUI-derived)</h2><p class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 4132 tokens · 38.2s</p><p class=notes>playable in browser</p><details><summary>prompt used</summary><pre class=promptbox>IMPORTANT: keep the whole file under about 350 lines. A truncated file is a failed submission.
+Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
+Reply with the full file inside one ```html fenced block and nothing else.
+
+Hard requirements (an automated browser grader checks them):
+1. ONE FILE, NO BUILD STEP, runs from file:// — load three.js from a pinned CDN import map:
+   &lt;script type=&quot;importmap&quot;&gt;{&quot;imports&quot;:{&quot;three&quot;:&quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}&lt;/script&gt;
+   &lt;script type=&quot;module&quot;&gt;import * as THREE from &#x27;three&#x27;; ...&lt;/script&gt;
+2. You must DRAW everything yourself with three.js geometry, materials, lights and particles.
+   NO external images, textures, models, fonts or audio files. No base64 art. Code-drawn only.
+3. You must expose a machine-readable state, updated every frame:
+   window.__game = { ready:true, score:0, lives:3, over:false, player:{x,y}, enemies:[{x,y}], bullets:[{x,y}] };
+   window.__game.reset = function(){...};
+4. Input: listen on window for keydown/keyup (Arrows/WASD + Space). Also support touch:
+   on-screen buttons using pointerdown/pointerup with touch-action:none, usable at 390x844.
+5. Visual quality bar (this is graded by a human): deliberate 4-5 colour palette, gradient or
+   nebula background instead of flat black, additive particle bursts on hits, hit-flash and
+   screen shake, eased movement (no linear jumps), readable typographic HUD.
+6. Keep it under ~450 lines. No commentary outside the code block.
+
+GAME BRIEF:
+ARCADE SPACE SHOOTER. Player ship at the bottom, enemy waves descend from the top,
+player shoots upward, enemies that reach the bottom cost a life. Score per kill, waves get faster.
+Player must be visible on screen and shots must be able to hit enemies (shared plane).</pre></details><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=ok>ok</td><td class=meta>renders</td><td class=num>4132</td><td class=num>38.2</td></tr></tbody></table><img class=bigshot src='qwen3-6-35b-a3b-ud-q4km-galaga/shot.png' alt=''><p><a href='qwen3-6-35b-a3b-ud-q4km-galaga/index.html'>play the game →</a> · <a href='qwen3-6-35b-a3b-ud-q4km-galaga/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-6-35b-a3b-ud-q4km-gta'><h2>Qwen3.6-35B-A3B — top-down driving (TUI-derived)</h2><p class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 2 attempt(s), 1 repeat(s) · 9564 tokens · 90.1s</p><p class=notes>animation not advancing</p><details><summary>prompt used</summary><pre class=promptbox>Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
+Reply with the full file inside one ```html fenced block and nothing else.
+
+Hard requirements (an automated browser grader checks them):
+1. ONE FILE, NO BUILD STEP, runs from file:// — load three.js from a pinned CDN import map:
+   &lt;script type=&quot;importmap&quot;&gt;{&quot;imports&quot;:{&quot;three&quot;:&quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}&lt;/script&gt;
+   &lt;script type=&quot;module&quot;&gt;import * as THREE from &#x27;three&#x27;; ...&lt;/script&gt;
+2. You must DRAW everything yourself with three.js geometry, materials, lights and particles.
+   NO external images, textures, models, fonts or audio files. No base64 art. Code-drawn only.
+3. You must expose a machine-readable state, updated every frame:
+   window.__game = { ready:true, score:0, lives:3, over:false, player:{x,y}, enemies:[{x,y}], bullets:[{x,y}] };
+   window.__game.reset = function(){...};
+4. Input: listen on window for keydown/keyup (Arrows/WASD + Space). Also support touch:
+   on-screen buttons using pointerdown/pointerup with touch-action:none, usable at 390x844.
+5. Visual quality bar (this is graded by a human): deliberate 4-5 colour palette, gradient or
+   nebula background instead of flat black, additive particle bursts on hits, hit-flash and
+   screen shake, eased movement (no linear jumps), readable typographic HUD.
+6. Keep it under ~450 lines. No commentary outside the code block.
+
+GAME BRIEF:
+TOP-DOWN DRIVING MISSION. A car the player steers (left/right turn, up/down accelerate/brake)
+on a simple city grid with roads, buildings as obstacles, and 5 pickup waypoints shown on the map.
+Reaching a waypoint scores. Colliding with a building costs time; a 60 second timer. Camera follows the car
+from above. Draw roads, buildings, car and waypoints with geometry only.</pre></details><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=bad>failed</td><td class=meta>—</td><td class=num>4782</td><td class=num>44.1</td></tr><tr><td class=num>2</td><td class=bad>failed</td><td class=meta>—</td><td class=num>4782</td><td class=num>45.9</td></tr></tbody></table><img class=bigshot src='qwen3-6-35b-a3b-ud-q4km-gta/shot.png' alt=''><p><a href='qwen3-6-35b-a3b-ud-q4km-gta/index.html'>play the game →</a> · <a href='qwen3-6-35b-a3b-ud-q4km-gta/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-6-35b-a3b-ud-q4km-physics'><h2>Qwen3.6-35B-A3B — 3D physics sandbox (TUI-derived)</h2><p class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 3 attempt(s), 2 repeat(s) · 11154 tokens · 105.5s</p><p class=notes>animation not advancing; 706 console errors</p><details><summary>prompt used</summary><pre class=promptbox>IMPORTANT: keep the whole file under 250 lines. No large &lt;style&gt; block — at most 30 lines of CSS, inline styles elsewhere. A truncated file is a failed submission.
+Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
+Reply with the full file inside one ```html fenced block and nothing else.
+
+Hard requirements (an automated browser grader checks them):
+1. ONE FILE, NO BUILD STEP, runs from file:// — load three.js from a pinned CDN import map:
+   &lt;script type=&quot;importmap&quot;&gt;{&quot;imports&quot;:{&quot;three&quot;:&quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}&lt;/script&gt;
+   &lt;script type=&quot;module&quot;&gt;import * as THREE from &#x27;three&#x27;; ...&lt;/script&gt;
+2. You must DRAW everything yourself with three.js geometry, materials, lights and particles.
+   NO external images, textures, models, fonts or audio files. No base64 art. Code-drawn only.
+3. You must expose a machine-readable state, updated every frame:
+   window.__game = { ready:true, score:0, lives:3, over:false, player:{x,y}, enemies:[{x,y}], bullets:[{x,y}] };
+   window.__game.reset = function(){...};
+4. Input: listen on window for keydown/keyup (Arrows/WASD + Space). Also support touch:
+   on-screen buttons using pointerdown/pointerup with touch-action:none, usable at 390x844.
+5. Visual quality bar (this is graded by a human): deliberate 4-5 colour palette, gradient or
+   nebula background instead of flat black, additive particle bursts on hits, hit-flash and
+   screen shake, eased movement (no linear jumps), readable typographic HUD.
+6. Keep it under ~450 lines. No commentary outside the code block.
+
+GAME BRIEF:
+3D PHYSICS SANDBOX. A translucent box. Balls spawn and fall under gravity, bounce off the
+floor and walls with restitution, and collide with each other (simple sphere-sphere). The player launches a ball
+with Space from a random position; a HUD shows ball count. Score = number of simultaneous balls still bouncing after
+they settle is a failure; the game ends when 25 balls have been launched. Determinism matters: same seed/timing must
+bounce the same way.</pre></details><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=bad>failed</td><td class=meta>—</td><td class=num>3812</td><td class=num>35.1</td></tr><tr><td class=num>2</td><td class=bad>failed</td><td class=meta>—</td><td class=num>3671</td><td class=num>35.2</td></tr><tr><td class=num>3</td><td class=bad>failed</td><td class=meta>—</td><td class=num>3671</td><td class=num>35.2</td></tr></tbody></table><img class=bigshot src='qwen3-6-35b-a3b-ud-q4km-physics/shot.png' alt=''><p><a href='qwen3-6-35b-a3b-ud-q4km-physics/index.html'>play the game →</a> · <a href='qwen3-6-35b-a3b-ud-q4km-physics/metrics.json'>metrics</a></p></section><section class=detail id='qwen3-8-27b-q4km'><h2>Qwen3.8-27B — space shooter (v1 prompt)</h2><p class=meta>Qwen3.8-27B-Q4_K_M.gguf</p><p class=meta>renders · thinking off · 1 attempt(s),  repeat(s) · 3508 tokens · 79.5s</p><p class=notes>no window.__game contract → robot cannot score it</p><details><summary>prompt used</summary><pre class=promptbox>&lt;!--
 WEBGAME_PROMPT — FROZEN (llmbench browser-game cell v1, game cell &quot;webgame-3js&quot;)
 
 Sent verbatim as the single user message to every model. Never edit; the sha256 of
