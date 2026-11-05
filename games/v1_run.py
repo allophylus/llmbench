@@ -68,7 +68,13 @@ def validate(d):
     if not os.path.isfile(p):
         return {"accept": False, "pass": False, "contract_reasons": ["no metrics.json"],
                 "console_error_count": -1}
-    return json.load(open(p)).get("summary") or {}
+    m = json.load(open(p))
+    s = dict(m.get("summary") or {})
+    # The repair prompt must carry the ACTUAL failure text: a model told only "console
+    # errors" re-emits the same crashing file ten times. These are the browser's words.
+    errs = ((m.get("http") or {}).get("console_errors") or [])[:4]
+    s["console_errors"] = [str(e)[:220] for e in errs]
+    return s
 
 
 def checks_of(s):
@@ -85,6 +91,7 @@ def failed_of(s):
                        "animation_ok", "input_ok", "contract_ok") if not c.get(k)]
     if c.get("console_error_count"):
         out.append("console_error_count=%s" % c["console_error_count"])
+    out += [str(x) for x in (s.get("console_errors") or [])]
     out += [str(x) for x in (s.get("contract_reasons") or [])[:4]]
     return out
 
@@ -150,12 +157,18 @@ def main():
         for turn in range(1, a.turns + 1):
             if accepted:
                 break
-            errs = "\n".join(failed_of(st)[:8]) or "the page does not run"
+            errs = "\n".join(failed_of(st)[:10]) or "the page does not run"
+            hint = ""
+            if not st.get("animation_ok") or not st.get("input_ok"):
+                hint = ("\nThe grader loads the page and presses ArrowRight and ArrowLeft. It never "
+                        "clicks a button: the game must be running and responding to the arrow keys "
+                        "immediately after load, with something visibly moving on screen. "
+                        "Do not put the game behind a start screen.\n")
             code = open(os.path.join(att, "attempt-%d" % (rec["attempt"]), "index.html"),
                         encoding="utf-8", errors="replace").read()
             prompt = (
                 "You wrote this single-file three.js browser game. It FAILS an automated browser grader.\n\n"
-                "Failed checks:\n" + errs + "\n\n"
+                "Failed checks:\n" + errs + "\n" + hint + "\n"
                 "Requirements: one self-contained HTML file; three.js from the pinned CDN import map; "
                 "everything drawn with geometry (no external images/textures/models/audio); a live "
                 "`window.__game` object updated every frame with the keys the prompt asks for, plus "
