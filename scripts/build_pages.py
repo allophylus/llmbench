@@ -192,13 +192,16 @@ def build_games():
             f"<p class=notes>{esc(r['notes']) or '—'}</p>"
             + (f"<details><summary>prompt used</summary><pre class=promptbox>{esc(prompt)}</pre></details>" if prompt else "")
             + attempts_table(r) + robot_block(r) + shot +
-            f"<p><a href='{esc(r['slug'])}/index.html'>play the game →</a> · "
-            f"<a href='{esc(r['slug'])}/metrics.json'>metrics</a></p></section>")
+            "<p><a href='%s/index.html'>play the game →</a>"
+            % esc(r["slug"])
+            + (" · <a href='%s/metrics.json'>metrics</a>" % esc(r["slug"])
+               if os.path.exists(os.path.join(d, "metrics.json")) else "")
+            + "</p></section>")
 
     body = ("<p class=sub>Each model writes a single-file three.js game from a frozen prompt. "
             "The model draws everything with geometry — no images, textures or audio files. "
             "Repeats = extra generation turns allowed to fix a failing build (max 10).</p>"
-            "<p class=sub><b><a href='../sidebyside/'>New: four games, side by side →</a></b> "
+            "<p class=sub><b><a href='sidebyside/'>New: four games, side by side →</a></b> "
             "each model's ball sandbox, tower stacker, tower defence and match-3 next to the "
             "others, with executed rule checks and a spec-compliance score per attempt.</p>"
             "<div class=table-wrap><table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th>"

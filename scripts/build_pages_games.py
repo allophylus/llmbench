@@ -143,7 +143,8 @@ def scan():
 def collect(base, game, d):
     r = dict(model=MODEL_LABEL[base], model_file=MODEL_FILE.get(base, ""),
              game=GAME_NAME.get(game, game), slug=os.path.join(os.path.basename(os.path.dirname(d)), os.path.basename(d)),
-             has_game=os.path.exists(os.path.join(d, "index.html")))
+             has_game=os.path.exists(os.path.join(d, "index.html")),
+             has_metrics=os.path.exists(os.path.join(d, "metrics.json")))
     if not r["has_game"]:
         r.update(status="not run", status_cls="pend", notes="no build recorded yet",
                  attempts=None, tokens=None, wall=None, gen_tokens=None, gen_wall=None,
@@ -254,7 +255,8 @@ def build():
             links.append("<a href='%s/index.html'>play</a>" % esc(rel(r["slug"])))
             if r["video"]:
                 links.append("<a href='%s/%s'>video</a>" % (esc(rel(r["slug"])), esc(r["video"])))
-            links.append("<a href='%s/metrics.json'>metrics</a>" % esc(rel(r["slug"])))
+            if r.get("has_metrics"):
+                links.append("<a href='%s/metrics.json'>metrics</a>" % esc(rel(r["slug"])))
         tr.append("<tr>"
                   "<td>%s<br><span class=meta>%s</span></td>" % (name, esc(r["model_file"]))
                   + "<td class=%s>%s</td>" % (r["status_cls"], esc(r["status"]))
@@ -302,8 +304,8 @@ def build():
             + vid + shot
             + "<p><a href='%s/index.html'>open the final build →</a>" % esc(rel(r["slug"]))
             + (" · <a href='%s/%s'>screen recording (webm) →</a>" % (esc(rel(r["slug"])), esc(r["video"])) if r["video"] else "")
-            + " · <a href='%s/metrics.json'>gate metrics</a></p>" % esc(rel(r["slug"]))
-            + "</section>")
+            + (" · <a href='%s/metrics.json'>gate metrics</a>" % esc(rel(r["slug"])) if r.get("has_metrics") else "")
+            + "</p></section>")
 
     body = (
         "<p class=sub>Each model writes a single-file three.js game from a frozen prompt — "
