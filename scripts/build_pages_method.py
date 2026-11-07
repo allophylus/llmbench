@@ -256,8 +256,10 @@ def body_html():
 
         "<h2>Engine and build</h2>",
         "<ul>",
-        "<li><strong>Engine:</strong> llama.cpp <code>llama-server</code>, Vulkan backend on an "
-        "AMD Radeon AI PRO R9700 (32&nbsp;GiB). Models run on a different engine (e.g. a "
+        "<li><strong>Engine:</strong> llama.cpp <code>llama-server</code>: Vulkan backend on an "
+        "AMD Radeon AI PRO R9700 (32&nbsp;GiB), and a CUDA (Windows) build on an NVIDIA GeForce "
+        "RTX 3090 (24&nbsp;GiB) for the one model measured on that card, whose rows are kept in "
+        "their own table. Models run on a different engine (e.g. a "
         "proprietary container format) are labelled with that engine in the table instead.</li>",
         "<li><strong>Builds:</strong> the build id is printed in the <em>Speed evidence</em> column "
         "of each row. Three builds appear: <code>b11517</code>, the mainline server that measured "

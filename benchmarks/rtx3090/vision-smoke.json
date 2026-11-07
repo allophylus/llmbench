@@ -1,0 +1,17 @@
+{
+ "when": "2026-11-07T22:59:07+0800",
+ "prompt": "code inside the red rectangle",
+ "expect": "ZQ-731",
+ "answer": "ZQ-731\nThe user wants the alphanumeric code inside the red rectangle. Looking at the image, there's a red-bordered square on the left containing the text \"ZQ-731\". The blue circle on the right is irrelevant. The instruction is to reply with only the code, no extra text. So the response should be exactly \"ZQ-731\".",
+ "ok": true,
+ "wall_s": 1.34,
+ "usage": {
+  "completion_tokens": 83,
+  "prompt_tokens": 185,
+  "total_tokens": 268,
+  "prompt_tokens_details": {
+   "cached_tokens": 181
+  }
+ },
+ "image_bytes": 2409
+}

@@ -1,0 +1,32 @@
+{
+ "when": "2026-11-07T23:06:11+0800",
+ "server_ctx": 32768,
+ "spec": "off",
+ "prompt_n": 32253,
+ "predicted_n": 64,
+ "prefill_tps": 1379.8,
+ "decode_tps": 29.89,
+ "draft_n": null,
+ "flags_no_spec": [
+  "-ngl",
+  "99",
+  "-fa",
+  "on",
+  "-b",
+  "16384",
+  "-ub",
+  "2048",
+  "-ctk",
+  "q8_0",
+  "-ctv",
+  "q4_0",
+  "--cache-reuse",
+  "256",
+  "--metrics",
+  "--jinja",
+  "-np",
+  "1",
+  "--reasoning",
+  "off"
+ ]
+}

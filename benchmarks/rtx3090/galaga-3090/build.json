@@ -1,0 +1,20 @@
+{
+ "slug": "byteshape-qwen3-8-27b",
+ "generated_at": "2026-11-07T23:00:45+0800",
+ "prompt_file": "WEBGAME_GALAGA.md",
+ "max_attempts": 3,
+ "attempts_used": 1,
+ "retries": 0,
+ "accepted_attempt": 1,
+ "status": "accepted",
+ "per_attempt": [
+  {
+   "attempt": 1,
+   "ok": true,
+   "reasons": []
+  }
+ ],
+ "total_wall_s": 94.5,
+ "total_prompt_tokens": 473,
+ "total_completion_tokens": 5377
+}
