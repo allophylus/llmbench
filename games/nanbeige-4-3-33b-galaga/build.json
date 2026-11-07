@@ -1,0 +1,20 @@
+{
+ "slug": "nanbeige-4-3-33b",
+ "generated_at": "2026-11-08T01:14:41+0800",
+ "prompt_file": "WEBGAME_PROMPT.md",
+ "max_attempts": 3,
+ "attempts_used": 1,
+ "retries": 0,
+ "accepted_attempt": 1,
+ "status": "accepted",
+ "per_attempt": [
+  {
+   "attempt": 1,
+   "ok": true,
+   "reasons": []
+  }
+ ],
+ "total_wall_s": 294.5,
+ "total_prompt_tokens": 1726,
+ "total_completion_tokens": 3470
+}

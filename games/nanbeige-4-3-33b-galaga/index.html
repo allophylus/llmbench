@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arcade Space Shooter</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
+  body { font-family: monospace; }
+  #canvas { display: block; width: 100vw; height: 100vh; }
+  #hud { position: absolute; top: 12px; left: 12px; color: #fff; font-size: 18px;
+         text-shadow: 0 0 6px #0ff; pointer-events: none; }
+  #hud .lives { color: #ff6; }
+  #gameover { position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%);
+              color: #fff; font-size: 32px; text-align: center; display: none;
+              text-shadow: 0 0 10px #f00; pointer-events: none; }
+  #gameover small { display: block; font-size: 18px; color: #ff6; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="hud">SCORE: <span id="score">0</span> &nbsp;|&nbsp; LIVES: <span id="lives" class="lives">3</span></div>
+<div id="gameover">GAME OVER<small>Press R to restart</small></div>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ---------- Renderer / scene ----------
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x01020a);
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+camera.position.set(0, 0, 12);
+camera.lookAt(0, 0, 0);
+
+// ---------- Starfield ----------
+const starGeo = new THREE.BufferGeometry();
+{
+  const N = 900;
+  const pos = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    pos[i*3]     = (Math.random() - 0.5) * 400;
+    pos[i*3+1]   = (Math.random() - 0.5) * 400;
+    pos[i*3+2]   = Math.random() * 600 + 20;
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+}
+const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7, sizeAttenuation: true });
+const stars = new THREE.Points(starGeo, starMat);
+scene.add(stars);
+
+// ---------- Lights ----------
+scene.add(new THREE.AmbientLight(0x223355));
+const key = new THREE.DirectionalLight(0x88bbff, 1.2);
+key.position.set(5, 8, 10);
+scene.add(key);
+
+// ---------- Shared geometries / materials ----------
+const playerGeo = new THREE.ConeGeometry(0.5, 1.2, 8);
+const playerMat = new THREE.MeshStandardMaterial({ color: 0x00ccff, emissive: 0x0066cc, emissiveIntensity: 0.6 });
+const bulletGeo = new THREE.SphereGeometry(0.12, 8, 6);
+const bulletMat = new THREE.MeshBasicMaterial({ color: 0x88ff88 });
+const explosionGeo = new THREE.SphereGeometry(0.5, 8, 6);
+const explosionMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 1 });
+
+const ENEMY_COLORS = [0xff3344, 0xaa44ff, 0xffaa00, 0x44ff88];
+const enemyGeos = ENEMY_COLORS.map(() => new THREE.OctahedronGeometry(0.45, 0));
+const enemyMats = ENEMY_COLORS.map(c => new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: 0.35 }));
+
+// ---------- Game state ----------
+const MAX_ENEMIES = 12;
+const SPAWN_INTERVAL = 1.1;
+const SHOOT_COOLDOWN = 0.18;
+
+let score = 0, lives = 3, over = false;
+let player = { x: 0, y: 0, mesh: null };
+let enemies = [], bullets = [], explosions = [];
+let spawnTimer = 0;
+let nextShoot = 0;
+let keys = {};
+let ready = false;
+
+// ---------- Player ----------
+player.mesh = new THREE.Mesh(playerGeo, playerMat);
+scene.add(player.mesh);
+
+function resetPlayer() {
+  player.x = 0;
+  player.y = 0.6;
+  player.mesh.position.set(player.x, player.y, 0);
+  player.mesh.rotation.y = Math.PI / 2; // point upward
+}
+resetPlayer();
+
+// ---------- Bullets ----------
+function fireBullet() {
+  const b = new THREE.Mesh(bulletGeo, bulletMat);
+  b.position.set(player.x, player.y + 0.8, 0);
+  scene.add(b);
+  bullets.push({ mesh: b, velY: 3.2 });
+}
+
+// ---------- Enemies ----------
+function spawnEnemy() {
+  if (enemies.length >= MAX_ENEMIES) return;
+  const colorIdx = Math.floor(Math.random() * enemyMats.length);
+  const e = new THREE.Mesh(enemyGeos[colorIdx], enemyMats[colorIdx]);
+  e.position.set((Math.random() - 0.5) * 14, 8 + Math.random() * 3, 0);
+  scene.add(e);
+  enemies.push({ mesh: e, velY: 0.5 + Math.random() * 0.7 });
+}
+
+// ---------- Explosions ----------
+function addExplosion(x, y) {
+  const exp = new THREE.Mesh(explosionGeo, explosionMat.clone());
+  exp.position.set(x, y, 0);
+  exp.scale.setScalar(0.4);
+  scene.add(exp);
+  explosions.push({ mesh: exp, life: 0.5, maxLife: 0.5 });
+}
+
+// ---------- Collision ----------
+function checkCollisions() {
+  // bullets vs enemies
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+    for (let j = enemies.length - 1; j >= 0; j--) {
+      const e = enemies[j];
+      const dx = b.mesh.position.x - e.mesh.position.x;
+      const dy = b.mesh.position.y - e.mesh.position.y;
+      if (dx*dx + dy*dy < 1.2) {
+        scene.remove(b.mesh);
+        bullets.splice(i, 1);
+        scene.remove(e.mesh);
+        enemies.splice(j, 1);
+        score += 10;
+        addExplosion(e.mesh.position.x, e.mesh.position.y);
+        break;
+      }
+    }
+  }
+  // enemies vs player
+  for (let j = enemies.length - 1; j >= 0; j--) {
+    const e = enemies[j];
+    const dx = e.mesh.position.x - player.x;
+    const dy = e.mesh.position.y - player.y;
+    if (dx*dx + dy*dy < 1.5) {
+      scene.remove(e.mesh);
+      enemies.splice(j, 1);
+      lives--;
+      if (lives <= 0) { lives = 0; over = true; }
+    }
+  }
+}
+
+// ---------- Reset ----------
+function reset() {
+  score = 0; lives = 3; over = false;
+  spawnTimer = 0; nextShoot = 0;
+  keys = {};
+  for (const b of bullets) scene.remove(b.mesh);
+  bullets.length = 0;
+  for (const e of enemies) scene.remove(e.mesh);
+  enemies.length = 0;
+  for (const ex of explosions) scene.remove(ex.mesh);
+  explosions.length = 0;
+  resetPlayer();
+  document.getElementById('score').textContent = '0';
+  document.getElementById('lives').textContent = '3';
+  document.getElementById('gameover').style.display = 'none';
+}
+
+// ---------- Input ----------
+window.addEventListener('keydown', (ev) => {
+  keys[ev.key] = true;
+  if (ev.key === 'r' || ev.key === 'R') reset();
+});
+window.addEventListener('keyup', (ev) => {
+  keys[ev.key] = false;
+});
+
+// ---------- Resize ----------
+function onResize() {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', onResize);
+
+// ---------- Game loop ----------
+const clock = new THREE.Clock();
+const hudScore = document.getElementById('score');
+const hudLives = document.getElementById('lives');
+const gameoverEl = document.getElementById('gameover');
+
+function updateHUD() {
+  hudScore.textContent = String(score);
+  hudLives.textContent = String(lives);
+  gameoverEl.style.display = over ? 'block' : 'none';
+}
+
+function frame() {
+  requestAnimationFrame(frame);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  ready = true;
+
+  if (!over) {
+    // player movement
+    let mx = 0;
+    if (keys['ArrowLeft'] || keys['a'] || keys['A']) mx -= 1;
+    if (keys['ArrowRight'] || keys['d'] || keys['D']) mx += 1;
+    player.x += mx * 3.0 * dt;
+    player.x = Math.max(-3.5, Math.min(3.5, player.x));
+    player.mesh.position.x = player.x;
+
+    // shooting
+    if (keys[' '] || keys['Space'] || keys['spacebar']) {
+      if (clock.elapsedTime >= nextShoot) {
+        fireBullet();
+        nextShoot = clock.elapsedTime + SHOOT_COOLDOWN;
+      }
+    }
+
+    // spawn enemies
+    spawnTimer -= dt;
+    if (spawnTimer <= 0) {
+      spawnEnemy();
+      spawnTimer = SPAWN_INTERVAL * (0.7 + Math.random() * 0.6);
+    }
+
+    // update bullets
+    for (let i = bullets.length - 1; i >= 0; i--) {
+      const b = bullets[i];
+      b.mesh.position.y += b.velY * dt;
+      if (b.mesh.position.y > 12) { scene.remove(b.mesh); bullets.splice(i, 1); }
+    }
+
+    // update enemies
+    for (let j = enemies.length - 1; j >= 0; j--) {
+      const e = enemies[j];
+      e.mesh.position.y -= e.velY * dt;
+      if (e.mesh.position.y < -1) { scene.remove(e.mesh); enemies.splice(j, 1); }
+    }
+
+    // update explosions
+    for (let i = explosions.length - 1; i >= 0; i--) {
+      const ex = explosions[i];
+      ex.life -= dt;
+      const t = ex.life / ex.maxLife;
+      ex.mesh.scale.setScalar(0.4 + (1 - t) * 1.6);
+      ex.mesh.material.opacity = t;
+      if (ex.life <= 0) { scene.remove(ex.mesh); explosions.splice(i, 1); }
+    }
+
+    checkCollisions();
+  }
+
+  // starfield scroll
+  stars.position.z += dt * 4;
+  if (stars.position.z > 100) stars.position.z -= 600;
+
+  renderer.render(scene, camera);
+
+  // machine-readable contract
+  window.__game = {
+    ready: ready,
+    score: score,
+    lives: lives,
+    over: over,
+    player: { x: player.x * (window.innerWidth / 6), y: player.y * (window.innerHeight / 6) },
+    enemies: enemies.map(e => ({ x: e.mesh.position.x * (window.innerWidth / 6), y: e.mesh.position.y * (window.innerHeight / 6) })),
+    bullets: bullets.map(b => ({ x: b.mesh.position.x * (window.innerWidth / 6), y: b.mesh.position.y * (window.innerHeight / 6) })),
+    reset: reset
+  };
+
+  updateHUD();
+}
+
+frame();
+</script>
+<script src="../../../touch.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # Matched-context sweep — R9700 32 GiB, llama.cpp Vulkan
 
-Generated: 2026-11-03 21:22 +0000
+Generated: 2026-11-08 01:15 +0800
 
 ## What this fixes
 
@@ -36,6 +36,8 @@ prompt is calibrated with `/tokenize` to `ctx - 512` tokens.
 | Huihui abliterated 27B (Q4_K_M) | 815.0 / 30.45 | 667.0 / 28.4 | 523.0 / 26.48 | 363.5 / 23.19 | 225.0 / 18.59 | 256K |  |
 | Ornith-1.5-35B-A3B (Q4_K_M) | 2976.1 / 115.3 | 2321.4 / 103.38 | 1627.4 / 96.88 | 1002.1 / 82.62 | 559.8 / 66.03 | 256K |  |
 | LFM3-1.7B (Q4_K_M) | 7720.9 / 270.13 | 7480.2 / 255.01 | 5296.5 / 223.59 | 3281.4 / 176.39 | 1992.2 / 127.92 | 256K |  |
+| Gemma 4 26B-A4B (UD-Q4_K_M) | 2706.0 / 94.98 | 2291.7 / 80.25 | 1577.0 / 72.26 | 940.6 / 62.8 | 509.2 / 47.77 | 256K |  |
+| Nanbeige 4.3-33B (Q4_K) | 738.1 / 28.03 | 375.9 / 22.7 | 238.5 / 18.59 | 138.4 / 13.74 | 52.3 / 2.66 | 256K |  |
 
 ## Per-cell detail
 
@@ -76,6 +78,16 @@ prompt is calibrated with `/tokenize` to `ctx - 512` tokens.
 | lfm3-1-7b-q4-k-m | 65536 | 65047 | 5296.5 | 12.3 | 223.59 | 64 | length | 1.95 |
 | lfm3-1-7b-q4-k-m | 131072 | 130580 | 3281.4 | 39.8 | 176.39 | 64 | length | 2.5 |
 | lfm3-1-7b-q4-k-m | 262144 | 261685 | 1992.2 | 131.4 | 127.92 | 64 | length | 3.61 |
+| gemma-4-26b-a4b-ud-q4-k-m | 4096 | 3597 | 2706.0 | 1.3 | 94.98 | 64 | length | 16.69 |
+| gemma-4-26b-a4b-ud-q4-k-m | 32768 | 32261 | 2291.7 | 14.1 | 80.25 | 64 | length | 17.18 |
+| gemma-4-26b-a4b-ud-q4-k-m | 65536 | 65025 | 1577.0 | 41.2 | 72.26 | 64 | length | 17.56 |
+| gemma-4-26b-a4b-ud-q4-k-m | 131072 | 130570 | 940.6 | 138.8 | 62.8 | 64 | length | 18.32 |
+| gemma-4-26b-a4b-ud-q4-k-m | 262144 | 261635 | 509.2 | 513.8 | 47.77 | 64 | length | 19.84 |
+| nanbeige-4-3-33b-q4-k | 4096 | 3622 | 738.1 | 4.9 | 28.03 | 64 | length | 19.19 |
+| nanbeige-4-3-33b-q4-k | 32768 | 32308 | 375.9 | 86.0 | 22.7 | 64 | length | 21.61 |
+| nanbeige-4-3-33b-q4-k | 65536 | 65092 | 238.5 | 272.9 | 18.59 | 64 | length | 24.38 |
+| nanbeige-4-3-33b-q4-k | 131072 | 130660 | 138.4 | 944.3 | 13.74 | 64 | length | 29.91 |
+| nanbeige-4-3-33b-q4-k | 262144 | 261796 | 52.3 | 5001.2 | 2.66 | 64 | length | 31.85 |
 
 ## Failures
 
@@ -87,46 +99,3 @@ None — every cell measured.
 * `<slug>.json` — one file per model
 * `state.json` — resumable state (checkpointed per cell)
 
-
-## Wall time
-
-| phase | wall clock (UTC) | note |
-|---|---|---|
-| sweep started | 18:57 | first clean cell (harness rebuild) |
-| last cell started | 21:12 | Ornith 256K |
-| sweep finished | 21:21 | last cell written, report generated |
-| total elapsed | **2 h 24 min** | of which **2 h 17 min** was in-cell serving (load + calibration + prefill + decode) |
-| restore | 21:20 (driver) / 21:22 (manual) | driver's restore raced the unit unlock; prod preset `stock38mtp` re-verified healthy at 131072 ctx |
-| slowest cells | 256K rungs | 480 s (Ornith) to 1199 s (DavidAU) each |
-
-Earlier attempts on the same evening (15:53–18:56) produced numbers that were
-**discarded**, not reported: decode was measured over 2-token EOS answers, and rival
-servers took the card mid-cell (see `CARD-LOCK.md`). The discarded cells are kept in
-`state.pre-rewrite.json.bak` for audit; nothing from them appears above.
-
-## Honest notes on this table
-
-* **No cell failed.** All 7 models loaded at all 5 contexts (up to 262144) and every one
-  produced a timed cold request — 35/35 measured. The largest context that loaded is
-  256K for every model, so the "does not fit" path was never exercised here (it is
-  implemented and was exercised by earlier, discarded runs).
-* **Decode is a fixed 64-token continuation.** These chat models end a turn after ~2
-  tokens, so the probe carries the long prompt in the user message and asks for a
-  multiplication table with `ignore_eos: true`; decode t/s is over those 64 tokens on
-  every model. `finish_reason` is `length` on all 35 cells because EOS is disabled.
-* **Matched, verified per cell:** the prompt is calibrated with the model's own
-  `/tokenize` to `ctx - 512` (worst deviation 0.2%), `n_ctx` reported by the live server
-  equals the rung, and the `-c` argument was read back from the running process's
-  `/proc/<pid>/cmdline` (`ctx_arg_matches: true` on every cell).
-* **VRAM** is the peak of a 1 Hz `mem_info_vram_used` sample from a ~0.06 GiB idle
-  baseline, after all other llama-servers were killed. It includes the prompt/KV cache
-  for the rung, the compute buffers, and the 64-token continuation.
-* **Prefill t/s is not purely a function of context.** The first hour of the run shared
-  the card with another agent's job; cells measured then (27B Q4_K_M 256K at 225.9 t/s
-  vs Q4_0 at 236.7 t/s with the same shape) carry roughly ±5% extra noise. Rung-to-rung
-  ratios within a row are reliable; absolute values are mid-session typical, not peak.
-* **lfm3 ran on its own build** (b11874, :8091) because b11517 rejects the architecture;
-  all other models ran on b11517 (:8080). lfm3 reports `cache_reuse is not supported by
-  this context` and disables it, so its row differs slightly in flags from the others.
-* **`--reasoning off`** was passed to the Qwen3.8-family rows; it does not stop those
-  templates from answering immediately, which is why the probe uses `ignore_eos`.

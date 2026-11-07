@@ -1,0 +1,332 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arcade Space Shooter</title>
+<style>
+  html, body { margin: 0; padding: 0; overflow: hidden; background: #000; }
+  body { font-family: monospace; }
+  #canvas { display: block; position: fixed; inset: 0; }
+  #hud {
+    position: fixed; top: 12px; left: 12px; color: #fff;
+    font-size: 18px; text-shadow: 0 0 4px #000; pointer-events: none;
+  }
+  #hud .lives { color: #ff6b6b; }
+  #gameover {
+    position: fixed; inset: 0; display: none; place-items: center;
+    background: rgba(0,0,0,0.6); color: #fff; font-size: 32px;
+    text-align: center; pointer-events: none;
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<div id="hud">
+  SCORE: <span id="score">0</span><br>
+  LIVES: <span id="lives" class="lives">3</span>
+</div>
+
+<div id="gameover">
+  GAME OVER<br><br>
+  Press R to restart
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ---------- Renderer / scene ----------
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+camera.position.set(0, 0, 12);
+camera.lookAt(0, 0, 0);
+
+// ---------- Starfield ----------
+const starGeo = new THREE.BufferGeometry();
+{
+  const N = 600;
+  const pos = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    pos[i*3+0] = (Math.random() - 0.5) * 400;
+    pos[i*3+1] = (Math.random() - 0.5) * 400;
+    pos[i*3+2] = Math.random() * 300 + 20;
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+}
+const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.6, sizeAttenuation: true });
+const stars = new THREE.Points(starGeo, starMat);
+scene.add(stars);
+
+// ---------- Lights ----------
+const ambient = new THREE.AmbientLight(0x404060);
+scene.add(ambient);
+const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+dir.position.set(0, 10, 10);
+scene.add(dir);
+
+// ---------- Shared geometries / materials ----------
+const playerGeo = new THREE.ConeGeometry(0.4, 1.2, 8);
+const playerMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, emissive: 0x00ff88, emissiveIntensity: 0.6 });
+const bulletGeo = new THREE.SphereGeometry(0.12, 8, 8);
+const bulletMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+const explosionGeo = new THREE.SphereGeometry(0.5, 8, 8);
+const explosionMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 1 });
+
+const ENEMY_COLORS = [0xff4444, 0x44ff44, 0x4444ff, 0xffaa00];
+const enemyGeos = ENEMY_COLORS.map(() => new THREE.OctahedronGeometry(0.35, 0));
+const enemyMats = ENEMY_COLORS.map(c => new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: 0.3 }));
+
+// ---------- Game state ----------
+const MAX_ENEMIES = 12;
+const SHOOT_COOLDOWN = 0.18; // seconds
+const PLAYER_SPEED = 300;   // units/sec
+const BULLET_SPEED = 500;
+const ENEMY_SPEED = [60, 140];
+
+let score = 0;
+let lives = 3;
+let over = false;
+let lastShot = -1;
+let spawnTimer = 1.5;
+let elapsed = 0;
+
+const player = new THREE.Mesh(playerGeo, playerMat);
+player.position.set(0, -1.5, 0);
+scene.add(player);
+
+const bullets = [];
+const enemies = [];
+const explosions = [];
+
+function makeBullet() {
+  const b = new THREE.Mesh(bulletGeo, bulletMat);
+  b.position.set(player.position.x, player.position.y + 0.6, player.position.z);
+  scene.add(b);
+  return b;
+}
+
+function makeEnemy() {
+  const geo = enemyGeos[Math.floor(Math.random() * enemyGeos.length)];
+  const mat = enemyMats[geo.index];
+  const e = new THREE.Mesh(geo, mat);
+  // spawn near far end of playfield, random X
+  e.position.set((Math.random() - 0.5) * 8, 4 + Math.random() * 2, -6);
+  const sp = ENEMY_SPEED[Math.floor(Math.random() * ENEMY_SPEED.length)];
+  scene.add(e);
+  return { mesh: e, speed: sp };
+}
+
+function makeExplosion(x, y, z) {
+  const exp = new THREE.Mesh(explosionGeo, explosionMat.clone());
+  exp.position.set(x, y, z);
+  exp.scale.setScalar(0.5);
+  scene.add(exp);
+  explosions.push({ mesh: exp, life: 0.4, maxLife: 0.4 });
+}
+
+// ---------- Input ----------
+const keys = {};
+window.addEventListener('keydown', e => { keys[e.key] = true; });
+window.addEventListener('keyup',   e => { keys[e.key] = false; });
+
+// ---------- HUD ----------
+const scoreEl = document.getElementById('score');
+const livesEl = document.getElementById('lives');
+const overEl  = document.getElementById('gameover');
+
+function updateHUD() {
+  scoreEl.textContent = String(score);
+  livesEl.textContent = String(lives);
+  overEl.style.display = over ? 'grid' : 'none';
+}
+
+// ---------- Reset ----------
+function reset() {
+  score = 0;
+  lives = 3;
+  over = false;
+  lastShot = -1;
+  spawnTimer = 1.5;
+  elapsed = 0;
+
+  for (const b of bullets) scene.remove(b.mesh);
+  bullets.length = 0;
+  for (const e of enemies) scene.remove(e.mesh);
+  enemies.length = 0;
+  for (const ex of explosions) scene.remove(ex.mesh);
+  explosions.length = 0;
+
+  player.position.set(0, -1.5, 0);
+  updateHUD();
+}
+
+// ---------- Frame update ----------
+const clock = new THREE.Clock();
+let ready = false;
+
+function update(dt) {
+  if (over) return;
+
+  // player movement
+  let dx = 0;
+  if (keys['ArrowLeft'] || keys['a'] || keys['A']) dx -= 1;
+  if (keys['ArrowRight'] || keys['d'] || keys['D']) dx += 1;
+  player.position.x += dx * PLAYER_SPEED * dt;
+  // clamp to playfield
+  const half = 4.5;
+  player.position.x = THREE.MathUtils.clamp(player.position.x, -half, half);
+
+  // shooting
+  if ((keys[' '] || keys['Space'] || keys['ArrowUp']) && (elapsed - lastShot) >= SHOOT_COOLDOWN) {
+    lastShot = elapsed;
+    bullets.push(makeBullet());
+  }
+
+  // bullets
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+    b.mesh.position.y += BULLET_SPEED * dt;
+    if (b.mesh.position.y > 8) { scene.remove(b.mesh); bullets.splice(i, 1); continue; }
+
+    // collision with enemies (bounding spheres)
+    for (let j = enemies.length - 1; j >= 0; j--) {
+      const e = enemies[j];
+      const dx = b.mesh.position.x - e.mesh.position.x;
+      const dy = b.mesh.position.y - e.mesh.position.y;
+      const dz = b.mesh.position.z - e.mesh.position.z;
+      if (dx*dx + dy*dy + dz*dz < 0.5) {
+        scene.remove(b.mesh); bullets.splice(i, 1);
+        scene.remove(e.mesh); enemies.splice(j, 1);
+        score += 10;
+        makeExplosion(e.mesh.position.x, e.mesh.position.y, e.mesh.position.z);
+        updateHUD();
+        break;
+      }
+    }
+  }
+
+  // spawn enemies
+  spawnTimer -= dt;
+  if (spawnTimer <= 0 && enemies.length < MAX_ENEMIES) {
+    enemies.push(makeEnemy());
+    spawnTimer = 1.2 + Math.random() * 1.0;
+  }
+
+  // move enemies toward player
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    const e = enemies[i];
+    e.mesh.position.y -= e.speed * dt;
+    // simple homing toward player x
+    const dx = player.position.x - e.mesh.position.x;
+    e.mesh.position.x += dx * dt * 2;
+
+    // collision with player
+    const ddx = e.mesh.position.x - player.position.x;
+    const ddy = e.mesh.position.y - player.position.y;
+    const ddz = e.mesh.position.z - player.position.z;
+    if (ddx*ddx + ddy*ddy + ddz*ddz < 0.6) {
+      scene.remove(e.mesh); enemies.splice(i, 1);
+      lives -= 1;
+      makeExplosion(player.position.x, player.position.y, player.position.z);
+      updateHUD();
+      if (lives <= 0) { over = true; updateHUD(); }
+      break;
+    }
+
+    // remove if passed player
+    if (e.mesh.position.y < -2) { scene.remove(e.mesh); enemies.splice(i, 1); }
+  }
+
+  // explosions
+  for (let i = explosions.length - 1; i >= 0; i--) {
+    const ex = explosions[i];
+    ex.life -= dt;
+    const t = Math.max(0, ex.life / ex.maxLife);
+    ex.mesh.scale.setScalar(0.5 + (1 - t) * 1.5);
+    ex.mesh.material.opacity = t;
+    if (ex.life <= 0) { scene.remove(ex.mesh); explosions.splice(i, 1); }
+  }
+
+  elapsed += dt;
+}
+
+// ---------- Machine-readable contract ----------
+function projectToScreen(worldPos) {
+  const v = worldPos.clone().project(camera);
+  return {
+    x: (v.x * 0.5 + 0.5) * canvas.clientWidth,
+    y: (-v.y * 0.5 + 0.5) * canvas.clientHeight
+  };
+}
+
+window.__game = {
+  ready: false,
+  score,
+  lives,
+  over,
+  player: { x: 0, y: 0 },
+  enemies: [],
+  bullets: [],
+  reset: reset
+};
+
+function refreshGame() {
+  window.__game.ready = ready;
+  window.__game.score = score;
+  window.__game.lives = lives;
+  window.__game.over = over;
+
+  const p = projectToScreen(player.position);
+  window.__game.player = { x: p.x, y: p.y };
+
+  window.__game.enemies = enemies.map(e => {
+    const s = projectToScreen(e.mesh.position);
+    return { x: s.x, y: s.y };
+  });
+
+  window.__game.bullets = bullets.map(b => {
+    const s = projectToScreen(b.mesh.position);
+    return { x: s.x, y: s.y };
+  });
+}
+
+// ---------- Main loop ----------
+function resize() {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+
+function loop() {
+  requestAnimationFrame(loop);
+  const dt = Math.min(clock.getDelta(), 0.05); // guard against huge deltas
+  update(dt);
+  renderer.render(scene, camera);
+  ready = true;
+  refreshGame();
+  updateHUD();
+}
+
+reset();
+loop();
+</script>
+</body>
+</html>
+```

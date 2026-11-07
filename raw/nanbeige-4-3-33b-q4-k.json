@@ -1,0 +1,49 @@
+{
+ "schema": 1,
+ "kind": "bench",
+ "model": {
+  "name": "Nanbeige 4.3-33B",
+  "repo": "eaddario/Nanbeige4.3-33B-JQK",
+  "file": "Nanbeige4.3-33B-Q4_K.gguf",
+  "quant": "Q4_K",
+  "params_total": "33B",
+  "params_active": "33B",
+  "arch": "dense transformer (llama arch), 52 layers, 524k ctx",
+  "slug": "nanbeige-4-3-33b-q4-k",
+  "native_ctx": 262144,
+  "size_bytes": 20050000000
+ },
+ "env": {
+  "host": "R9700 box",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b12110 (v0.9.0)",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -c 32768 -np 1 -b 16384 -ub 2048 -ctk q8_0 -ctv q4_0 --cache-reuse 256 --metrics --jinja",
+  "kv_cache": "q8_0/q4_0",
+  "run_started": "2026-11-07T16:52:00+0000",
+  "run_finished": "2026-11-07T17:40:00+0000",
+  "peak_vram_mib": 22129
+ },
+ "status": "done",
+ "tests": [
+  {
+   "id": "pub-gpqa25",
+   "task": "gpqa-diamond",
+   "acc": 0.76,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 600,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 19,
+    "total": 25,
+    "temp": 0.0,
+    "harness": "bench_wsp.py gpqa (same pack/grading as the published stock cell)",
+    "thinking": "off (chat_template_kwargs enable_thinking=false)"
+   }
+  }
+ ],
+ "slug": "nanbeige-4-3-33b-q4-k",
+ "_src": "results/nanbeige-4-3-33b-q4-k.json"
+}

@@ -1,0 +1,196 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Shooter</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; font-family: monospace; }
+        #hud { position: absolute; top: 10px; left: 10px; color: #fff; font-size: 20px; pointer-events: none; }
+        #msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 40px; text-align: center; display: none; pointer-events: none; }
+    </style>
+    <script type="importmap">
+    {"imports": {"three": "https://unpkg.com/three@0.160.0/build/three.module.js"}}
+    </script>
+</head>
+<body>
+    <div id="hud">SCORE: 0 | LIVES: 3</div>
+    <div id="msg">GAME OVER<br><span style="font-size:20px">Press R to restart</span></div>
+    <script type="module">
+        import * as THREE from 'three';
+
+        let scene, camera, renderer, clock, player, stars;
+        let bullets = [], enemies = [], particles = [];
+        let score = 0, lives = 3, over = false, lastShot = 0;
+        const keys = {};
+        const hud = document.getElementById('hud');
+        const msg = document.getElementById('msg');
+
+        const PLAYER_SPEED = 400;
+        const BULLET_SPEED = 500;
+        const ENEMY_SPEED_MIN = 100;
+        const ENEMY_SPEED_MAX = 250;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 10;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Starfield
+            const starGeo = new THREE.BufferGeometry();
+            const starCoords = [];
+            for(let i=0; i<1000; i++) starCoords.push((Math.random()-0.5)*100, (Math.random()-0.5)*100, -Math.random()*50);
+            starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
+            stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.1 }));
+            scene.add(stars);
+
+            // Player
+            const pGeo = new THREE.ConeGeometry(0.4, 1, 8);
+            const pMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            player = new THREE.Mesh(pGeo, pMat);
+            player.rotation.x = Math.PI / 2;
+            player.position.y = -4;
+            scene.add(player);
+
+            clock = new THREE.Clock();
+            window.addEventListener('resize', onResize);
+            window.addEventListener('keydown', e => { keys[e.key] = true; if(e.key.toLowerCase()==='r') reset(); });
+            window.addEventListener('keyup', e => keys[e.key] = false);
+
+            reset();
+            animate();
+        }
+
+        function reset() {
+            score = 0; lives = 3; over = false;
+            bullets.forEach(b => scene.remove(b.mesh));
+            enemies.forEach(e => scene.remove(e.mesh));
+            particles.forEach(p => scene.remove(p.mesh));
+            bullets = []; enemies = []; particles = [];
+            player.position.set(0, -4, 0);
+            msg.style.display = 'none';
+            updateHUD();
+        }
+
+        function onResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function spawnEnemy() {
+            if (over || enemies.length > 15) return;
+            const geo = new THREE.OctahedronGeometry(0.4);
+            const mat = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set((Math.random() - 0.5) * 15, 6, 0);
+            scene.add(mesh);
+            enemies.push({ mesh, speed: ENEMY_SPEED_MIN + Math.random() * (ENEMY_SPEED_MAX - ENEMY_SPEED_MIN) });
+        }
+
+        function updateHUD() {
+            hud.innerText = `SCORE: ${score} | LIVES: ${lives}`;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const dt = clock.getDelta();
+            if (!over) {
+                // Player Move
+                if (keys['ArrowLeft'] || keys['a'] || keys['A']) player.position.x -= PLAYER_SPEED * dt;
+                if (keys['ArrowRight'] || keys['d'] || keys['D']) player.position.x += PLAYER_SPEED * dt;
+                player.position.x = Math.max(-7.5, Math.min(7.5, player.position.x));
+
+                // Shooting
+                if (keys[' '] && Date.now() - lastShot > 200) {
+                    const bGeo = new THREE.BoxGeometry(0.1, 0.4, 0.1);
+                    const bMat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+                    const bMesh = new THREE.Mesh(bGeo, bMat);
+                    bMesh.position.copy(player.position);
+                    scene.add(bMesh);
+                    bullets.push({ mesh: bMesh });
+                    lastShot = Date.now();
+                }
+
+                // Stars scroll
+                stars.position.y -= 0.5 * dt;
+                if (stars.position.y < -20) stars.position.y = 0;
+
+                // Bullets
+                for (let i = bullets.length - 1; i >= 0; i--) {
+                    bullets[i].mesh.position.y += BULLET_SPEED * dt;
+                    if (bullets[i].mesh.position.y > 10) {
+                        scene.remove(bullets[i].mesh);
+                        bullets.splice(i, 1);
+                    }
+                }
+
+                // Enemies
+                if (Math.random() < 0.02) spawnEnemy();
+                for (let i = enemies.length - 1; i >= 0; i--) {
+                    enemies[i].mesh.position.y -= enemies[i].speed * dt;
+                    
+                    // Collision: Bullet vs Enemy
+                    for (let j = bullets.length - 1; j >= 0; j--) {
+                        if (bullets[j].mesh.position.distanceTo(enemies[i].mesh.position) < 0.6) {
+                            score += 10;
+                            updateHUD();
+                            scene.remove(enemies[i].mesh);
+                            enemies.splice(i, 1);
+                            scene.remove(bullets[j].mesh);
+                            bullets.splice(j, 1);
+                            break;
+                        }
+                    }
+                    // Collision: Player vs Enemy
+                    if (enemies[i] && enemies[i].mesh.position.distanceTo(player.position) < 0.8) {
+                        lives--;
+                        updateHUD();
+                        scene.remove(enemies[i].mesh);
+                        enemies.splice(i, 1);
+                        if (lives <= 0) {
+                            over = true;
+                            msg.style.display = 'block';
+                        }
+                    } else if (enemies[i] && enemies[i].mesh.position.y < -6) {
+                        scene.remove(enemies[i].mesh);
+                        enemies.splice(i, 1);
+                    }
+                }
+            }
+
+            renderer.render(scene, camera);
+
+            // Machine-readable contract
+            const canvas = renderer.domElement;
+            const w = canvas.clientWidth, h = canvas.clientHeight;
+            const toPx = (v) => {
+                const vec = v.clone().project(camera);
+                return {
+                    x: (vec.x * 0.5 + 0.5) * w,
+                    y: (-vec.y * 0.5 + 0.5) * h
+                };
+            };
+
+            window.__game = {
+                ready: true,
+                score: score,
+                lives: lives,
+                over: over,
+                player: toPx(player.position),
+                enemies: enemies.map(e => toPx(e.mesh.position)),
+                bullets: bullets.map(b => toPx(b.mesh.position)),
+                reset: reset
+            };
+        }
+
+        init();
+    </script>
+</body>
+</html>
+```

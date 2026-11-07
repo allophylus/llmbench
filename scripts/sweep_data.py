@@ -39,6 +39,8 @@ LABEL = {
     "huihui-abl-q4-k-m": ("Huihui abliterated 27B", "Q4_K_M"),
     "ornith-1-5-35b-a3b-q4-k-m": ("Ornith-1.5-35B-A3B", "Q4_K_M"),
     "lfm3-1-7b-q4-k-m": ("LFM3-1.7B", "Q4_K_M"),
+    "gemma-4-26b-a4b-ud-q4-k-m": ("Gemma 4 26B-A4B", "UD-Q4_K_M"),
+    "nanbeige-4-3-33b-jq4-k": ("Nanbeige 4.3-33B", "JQ4_K"),
 }
 ORDER = list(LABEL)
 RUNGS = [4096, 32768, 65536, 131072, 262144]

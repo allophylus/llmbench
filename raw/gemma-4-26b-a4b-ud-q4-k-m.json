@@ -1,0 +1,49 @@
+{
+ "schema": 1,
+ "kind": "bench",
+ "model": {
+  "name": "Gemma 4 26B-A4B",
+  "repo": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "quant": "UD-Q4_K_M",
+  "params_total": "26B",
+  "params_active": "4B",
+  "arch": "MoE 128 experts top-8, gemma4 arch, 262k ctx",
+  "slug": "gemma-4-26b-a4b-ud-q4-k-m",
+  "native_ctx": 262144,
+  "size_bytes": 16950000000
+ },
+ "env": {
+  "host": "R9700 box",
+  "gpu": "AMD Radeon AI PRO R9700 32GiB",
+  "llama_build": "b12110 (v0.9.0)",
+  "backend": "Vulkan",
+  "flags": "-ngl 99 -fa on -c 32768 -np 1 -b 16384 -ub 2048 -ctk q8_0 -ctv q4_0 --cache-reuse 256 --metrics --jinja",
+  "kv_cache": "q8_0/q4_0",
+  "run_started": "2026-11-07T14:00:28+0000",
+  "run_finished": "2026-11-07T15:00:00+0000",
+  "peak_vram_mib": 17592
+ },
+ "status": "done",
+ "tests": [
+  {
+   "id": "pub-gpqa25",
+   "task": "gpqa-diamond",
+   "acc": 0.72,
+   "metric": "acc",
+   "samples": 25,
+   "duration_s": 600,
+   "n_a": false,
+   "reason": "",
+   "metrics": {
+    "correct": 18,
+    "total": 25,
+    "temp": 0.0,
+    "harness": "bench_wsp.py gpqa (same pack/grading as the published stock cell)",
+    "thinking": "off (chat_template_kwargs enable_thinking=false)"
+   }
+  }
+ ],
+ "slug": "gemma-4-26b-a4b-ud-q4-k-m",
+ "_src": "results/gemma-4-26b-a4b-ud-q4-k-m.json"
+}

@@ -32,6 +32,7 @@ SLOTFILE = os.path.join(HERE, "slot.state")
 
 B11517 = "/home/ubuntu/llama-vulkan/llama-b11517/llama-server"
 B11874 = "/home/ubuntu/llama-vulkan/llama-b11874/llama-server"
+B12110 = "/home/ubuntu/llama-vulkan/llama-b12110/llama-server"   # llama.cpp v0.9.0
 M = "/home/ubuntu/models"
 LOCK = "~/.config/systemd/user/qwen-longctx.service.d/zz-ctxsweep-lock.conf"
 
@@ -87,6 +88,15 @@ MODELS = {
         name="LFM3-1.7B", quant="Q4_K_M",
         file="/home/ubuntu/llmbench/tune/dl4/LFM3-1.7B-Q4_K_M.gguf", mmproj="",
         bin=B11874, port=8091, extra=["--jinja", "-np", "1"], native_ctx=32768),
+    # v0.9.0-only architectures (gemma4 / nanbeige landed after b11517)
+    "gemma-4-26b-a4b-ud-q4-k-m": dict(
+        name="Gemma 4 26B-A4B", quant="UD-Q4_K_M",
+        file=f"{M}/qwen38fn/gemma4/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", mmproj="",
+        bin=B12110, port=8080, extra=["--jinja"], native_ctx=262144),   # GGUF context_length
+    "nanbeige-4-3-33b-q4-k": dict(
+        name="Nanbeige 4.3-33B", quant="Q4_K",
+        file=f"{M}/qwen38fn/nanbeige/Nanbeige4.3-33B-Q4_K.gguf", mmproj="",
+        bin=B12110, port=8080, extra=["--jinja"], native_ctx=524288),   # GGUF context_length,
 }
 RUNGS = [4096, 32768, 65536, 131072, 262144]
 
