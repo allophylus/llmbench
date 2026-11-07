@@ -1,0 +1,239 @@
+{
+ "generated": "2026-11-07",
+ "models": {
+  "stock": {
+   "name": "Qwen3.8-27B (local baseline file, labelled Q4_K_M)",
+   "file": "Qwen3.8-27B-Q4_K_M.gguf",
+   "bytes": 16464440224,
+   "note": "mixed-precision build: Q5_K / IQ4_XS / Q8_0 / Q6_K tensors present"
+  },
+  "wsp": {
+   "name": "Qwen3.8-27B-Weight-Space-Programming (Q4_K_M)",
+   "file": "Qwen3.8-27B-WSP-Q4_K_M.gguf",
+   "bytes": 16810715616,
+   "note": "mradermacher quant of ReBatch/Qwen3.8-27B-Weight-Space-Programming",
+   "upstream_base": "Qwen/Qwen3.8-27B @ 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0"
+  }
+ },
+ "ccpbench30": {
+  "stock": {
+   "mean": 3.467,
+   "china_mean": 4.045,
+   "non_china_mean": 1.875,
+   "n": 30,
+   "n_china": 22,
+   "n_non_china": 8,
+   "distribution": {
+    "1": 5,
+    "2": 5,
+    "3": 1,
+    "4": 9,
+    "5": 10
+   },
+   "categories": {
+    "lying": 5,
+    "reframing truth": 22,
+    "refusing answer": 6,
+    "bending truth": 16,
+    "other": 12,
+    "none": 2
+   }
+  },
+  "wsp": {
+   "mean": 2.4,
+   "china_mean": 2.636,
+   "non_china_mean": 1.75,
+   "n": 30,
+   "n_china": 22,
+   "n_non_china": 8,
+   "distribution": {
+    "1": 11,
+    "2": 6,
+    "3": 6,
+    "4": 4,
+    "5": 3
+   },
+   "categories": {
+    "reframing truth": 16,
+    "other": 13,
+    "bending truth": 12,
+    "western criticism": 3,
+    "none": 3,
+    "lying": 4
+   }
+  },
+  "judge": "deepseek-chat, official CCPBench rubric, blind to arm"
+ },
+ "math20": {
+  "stock": {
+   "n": 20,
+   "correct": 20,
+   "acc": 1.0,
+   "truncated": 0
+  },
+  "wsp": {
+   "n": 20,
+   "correct": 20,
+   "acc": 1.0,
+   "truncated": 0
+  }
+ },
+ "math500_20": {
+  "stock": {
+   "n": 20,
+   "correct": 17,
+   "acc": 0.85,
+   "truncated": 4
+  },
+  "wsp": {
+   "n": 20,
+   "correct": 17,
+   "acc": 0.85,
+   "truncated": 5
+  },
+  "grader": "deepseek-chat, reference-answer equivalence, blind to arm"
+ },
+ "gpqa25": {
+  "stock": {
+   "n": 25,
+   "correct": 10,
+   "acc": 0.4,
+   "truncated": 12,
+   "tokens": 38263,
+   "wall_s": 1261.8
+  },
+  "wsp": {
+   "n": 25,
+   "correct": 12,
+   "acc": 0.48,
+   "truncated": 13,
+   "tokens": 38809,
+   "wall_s": 1286.5
+  }
+ },
+ "speed": {
+  "wsp_4k": {
+   "prefill_tps": 771.53,
+   "prefill_spread": 0.8,
+   "decode_tps": 30.05,
+   "decode_spread": 0.1,
+   "reps": 3,
+   "prompt_n": 7405,
+   "n_ctx": 131072,
+   "vram_peak_gib": 19.43,
+   "vram_idle_gib": 19.43,
+   "build": "b11517-8a1a9b512"
+  },
+  "wsp_128k": {
+   "prefill_tps": 353.4,
+   "prefill_spread": 0.0,
+   "decode_tps": 23.01,
+   "decode_spread": 0.0,
+   "reps": 1,
+   "prompt_n": 129105,
+   "n_ctx": 131072,
+   "vram_peak_gib": 19.43,
+   "vram_idle_gib": 19.43,
+   "build": "b11517-8a1a9b512"
+  },
+  "stock_4k": {
+   "prefill_tps": 838.3,
+   "prefill_spread": 0.8,
+   "decode_tps": 30.16,
+   "decode_spread": 1.09,
+   "reps": 3,
+   "prompt_n": 7405,
+   "n_ctx": 131072,
+   "vram_peak_gib": 19.03,
+   "vram_idle_gib": 19.03,
+   "build": "b11517-8a1a9b512"
+  },
+  "stock_128k": {
+   "prefill_tps": 367.2,
+   "prefill_spread": 0.0,
+   "decode_tps": 23.14,
+   "decode_spread": 0.0,
+   "reps": 1,
+   "prompt_n": 129105,
+   "n_ctx": 131072,
+   "vram_peak_gib": 19.03,
+   "vram_idle_gib": 19.03,
+   "build": "b11517-8a1a9b512"
+  }
+ },
+ "recorded_baselines": {
+  "gpqa25_thinking_off": {
+   "correct": 16,
+   "n": 25,
+   "tokens": 65251,
+   "wall_s": 2148
+  },
+  "speed_4k": {
+   "prefill_tps": 846.8,
+   "decode_tps": 30.61
+  },
+  "speed_128k": {
+   "prefill_tps": 365.8,
+   "decode_tps": 23.16
+  }
+ },
+ "diff": {
+  "tensors_stock": 866,
+  "tensors_wsp": 866,
+  "names_equal": true,
+  "tensors_differing_type_or_shape": 417,
+  "svd_target": {
+   "tensor": "blk.29.ffn_down.weight",
+   "shape": [
+    5120,
+    17408
+   ],
+   "fro_norm": 13.6884,
+   "sv1": 7.438,
+   "sv2": 0.5053,
+   "sv1_over_sv2": 14.719,
+   "top1_energy_frac": 0.29526,
+   "cols_for_90pct_v1_energy": 1475,
+   "v1_top4096_col_blockiness": 0.2366,
+   "v1_abs_max_over_mean": 145.569,
+   "colmean_abs_median": 1.2e-05,
+   "colmean_abs_p99": 4.4e-05
+  },
+  "svd_controls": [
+   {
+    "tensor": "blk.27.ffn_down.weight",
+    "shape": [
+     5120,
+     17408
+    ],
+    "fro_norm": 8.6932,
+    "sv1": 0.4239,
+    "sv2": 0.1949,
+    "sv1_over_sv2": 2.175,
+    "top1_energy_frac": 0.00238,
+    "cols_for_90pct_v1_energy": 7293,
+    "v1_top4096_col_blockiness": 0.4012,
+    "v1_abs_max_over_mean": 9.882,
+    "colmean_abs_median": 9e-06,
+    "colmean_abs_p99": 3.4e-05
+   },
+   {
+    "tensor": "blk.29.ffn_gate.weight",
+    "shape": [
+     17408,
+     5120
+    ],
+    "fro_norm": 11.2546,
+    "sv1": 0.288,
+    "sv2": 0.2613,
+    "sv1_over_sv2": 1.102,
+    "top1_energy_frac": 0.00065,
+    "cols_for_90pct_v1_energy": 1296,
+    "v1_top4096_col_blockiness": 0.8005,
+    "v1_abs_max_over_mean": 19.408,
+    "colmean_abs_median": 7e-06,
+    "colmean_abs_p99": 2.5e-05
+   }
+  ]
+ }
+}

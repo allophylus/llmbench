@@ -1,0 +1,29 @@
+{
+ "label": "wsp",
+ "tasks": {
+  "ccp": {
+   "n": 30,
+   "scored": 0,
+   "score": null,
+   "tokens": 22585,
+   "wall_s": 744.0,
+   "errors": 0
+  },
+  "math20": {
+   "n": 20,
+   "scored": 20,
+   "score": 0.9,
+   "tokens": 5708,
+   "wall_s": 192.7,
+   "errors": 0
+  },
+  "math500": {
+   "n": 20,
+   "scored": 0,
+   "score": null,
+   "tokens": 17526,
+   "wall_s": 579.5,
+   "errors": 0
+  }
+ }
+}

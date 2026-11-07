@@ -1,0 +1,13 @@
+{
+ "label": "stock128k",
+ "tasks": {
+  "gpqa": {
+   "n": 25,
+   "scored": 25,
+   "score": 0.4,
+   "tokens": 38263,
+   "wall_s": 1261.8,
+   "errors": 0
+  }
+ }
+}

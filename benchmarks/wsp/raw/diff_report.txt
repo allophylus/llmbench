@@ -1,0 +1,50 @@
+GGUF integrity diff: stock Q4_K_M vs WSP Q4_K_M
+========================================================================
+tensors: stock=866 wsp=866 names_equal=True
+shape/type mismatches: 417
+only in stock: []
+only in wsp: []
+
+tensors with >=1 differing byte: 103 / 866
+total bytes differ: 1278583976/4924473344 = 25.963872%
+
+Top 10 tensors by differing-byte fraction:
+  blk.21.attn_qkv.weight                        99.44406%  type=Q4_K
+  blk.27.ffn_gate.weight                        99.43647%  type=Q4_K
+  blk.27.ffn_up.weight                          99.43091%  type=Q4_K
+  blk.50.ffn_gate.weight                        99.42954%  type=Q4_K
+  blk.1.attn_gate.weight                        41.80854%  type=Q4_K
+  blk.22.ssm_out.weight                         41.55186%  type=Q4_K
+  blk.19.attn_q.weight                          41.52115%  type=Q4_K
+  blk.53.attn_qkv.weight                        41.40055%  type=Q4_K
+  blk.43.attn_q.weight                          41.32912%  type=Q4_K
+  blk.53.attn_gate.weight                       41.24647%  type=Q4_K
+
+Target tensor (edited per upstream card):
+  tensor: blk.29.ffn_down.weight
+  np_shape: [5120, 17408]
+  quant: Q4_K
+  weight_rms: 0.011319311236322842
+  total_rel_rms: 0.12815824436669446
+  per_col_rms_median: 0.0012263189593959595
+  per_col_rms_max: 0.0393331203115334
+  cols_above_threshold: 31
+  threshold: 0.004905275837583838
+  selected_col_range: [161, 17181]
+  n_cols: 17408
+  frac_values_changed_gt_1e-3: 0.4355031630572151
+  cols_first10: [0.0011984715607462214, 0.0011935968300679995, 0.0011612371139102342, 0.0012070940654813802, 0.0012310078200631666, 0.0011873534988978839, 0.0012031819979928127, 0.001173648577328454, 0.0011946287049749882, 0.0012043095300127745]
+
+Control tensors (should be pure quantisation noise):
+  blk.0.attn_gate.weight                       rel_rms=0.081538 frac_neq=99.9724% type=Q4_K
+  blk.13.ffn_up.weight                         rel_rms=0.107159 frac_neq=99.9932% type=Q4_K
+  blk.18.ssm_conv1d.weight                     rel_rms=0.000000 frac_neq=0.0000% type=F32
+  blk.23.attn_k_norm.weight                    rel_rms=0.000000 frac_neq=0.0000% type=F32
+  blk.28.ssm_beta.weight                       rel_rms=0.083227 frac_neq=99.9898% type=Q4_K
+  blk.33.ffn_gate.weight                       rel_rms=0.108251 frac_neq=99.9933% type=Q4_K
+  blk.38.ssm_beta.weight                       rel_rms=0.078884 frac_neq=99.9927% type=Q4_K
+  blk.43.attn_k.weight                         rel_rms=0.087209 frac_neq=99.9631% type=Q4_K
+  blk.48.ssm_alpha.weight                      rel_rms=0.075666 frac_neq=99.9890% type=Q4_K
+  blk.52.ssm_out.weight                        rel_rms=0.082426 frac_neq=99.9722% type=Q4_K
+  blk.58.ffn_gate.weight                       rel_rms=0.080775 frac_neq=99.9674% type=Q4_K
+  blk.62.ssm_beta.weight                       rel_rms=0.079910 frac_neq=99.9906% type=Q4_K

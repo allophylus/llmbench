@@ -1,0 +1,40 @@
+# /home/ubuntu/.config/systemd/user/qwen-longctx.service
+[Unit]
+Description=Qwen3.8-27B llama.cpp Vulkan 128k R9700 (vision)
+After=network.target
+
+[Service]
+ExecStart=/home/ubuntu/llama-vulkan/llama-b11517/llama-server -m %h/models/qwen36/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf --mmproj %h/models/qwen36/mmproj-Qwen3.6-35B-A3B-F16.gguf --host 0.0.0.0 --port 8080 -c 262144 -ngl 99 --jinja -fa on --cache-type-k q8_0 --cache-type-v q4_0 --cache-reuse 256
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+
+# /home/ubuntu/.config/systemd/user/qwen-longctx.service.d/description.conf
+[Service]
+Description=Qwen3.8-27B-Q4_K_M llama.cpp Vulkan R9700 (vision)
+
+# /home/ubuntu/.config/systemd/user/qwen-longctx.service.d/oom.conf
+[Service]
+OOMScoreAdjust=-500
+
+# /home/ubuntu/.config/systemd/user/qwen-longctx.service.d/z-ablation4.conf
+# ablation4 ornith-1-5-35b-a3b-q4-k-m B-fa-off 262144
+[Service]
+ExecStart=
+ExecStart=/home/ubuntu/llama-vulkan/llama-b11517/llama-server -m /home/ubuntu/models/bench-new/ornith35a3b/Ornith-1.5-35B-Q4_K_M.gguf --host 127.0.0.1 --port 8080 -c 262144 -ngl 99 --jinja -b 16384 -ub 2048 --cache-type-k f16 --cache-type-v f16 --cache-reuse 256 --metrics --reasoning off -fa off
+
+# /home/ubuntu/.config/systemd/user/qwen-longctx.service.d/z-active-model.conf
+[Service]
+Description=stock38mtp llama.cpp Vulkan R9700 (vision) via active.gguf
+ExecStart=
+ExecStart=/home/ubuntu/llama-vulkan/llama-b11517/llama-server -m /home/ubuntu/models/active.gguf --mmproj /home/ubuntu/models/active-mmproj.gguf --host 0.0.0.0 --port 8080 -c 131072 -ngl 99 --jinja -fa on -b 16384 -ub 2048 --cache-type-k q8_0 --cache-type-v q4_0 --cache-reuse 256 --metrics --spec-type draft-mtp,ngram-cache --spec-draft-n-max 4 --spec-draft-n-min 1 --chat-template-kwargs {\"enable_thinking\":false} --image-min-tokens 1024
+
+# /home/ubuntu/.config/systemd/user/qwen-longctx.service.d/z-gapclose.conf
+[Service]
+ExecStart=
+ExecStart=/home/ubuntu/llama-vulkan/llama-b11517/llama-server -m /home/ubuntu/models/active.gguf --host 0.0.0.0 --port 8080 -c 131072 -ngl 99 --jinja -fa on -b 16384 -ub 2048 --cache-type-k q8_0 --cache-type-v q4_0 --cache-reuse 256 --metrics --reasoning off --spec-type draft-mtp,ngram-cache --spec-draft-n-max 4 --spec-draft-n-min 1 --image-min-tokens 1024 --mmproj /home/ubuntu/models/active-mmproj.gguf
+
+# /home/ubuntu/.config/systemd/user/qwen-longctx.service.d/z-powercap-250w.conf
+[Service]
+ExecStartPre=/bin/sh -c "echo 250000000 | sudo tee /sys/class/hwmon/hwmon0/power1_cap >/dev/null || true"

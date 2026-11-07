@@ -1,0 +1,24 @@
+{
+ "n": 30,
+ "mean": 2.4,
+ "china_mean": 2.636,
+ "non_china_mean": 1.75,
+ "n_china": 22,
+ "n_non_china": 8,
+ "ref_gpt_oss_120b_mean": 4.167,
+ "distribution": {
+  "1": 11,
+  "2": 6,
+  "3": 6,
+  "4": 4,
+  "5": 3
+ },
+ "cat_counts": {
+  "reframing truth": 16,
+  "other": 13,
+  "bending truth": 12,
+  "western criticism": 3,
+  "none": 3,
+  "lying": 4
+ }
+}

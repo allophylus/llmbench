@@ -1,0 +1,24 @@
+{
+ "n": 30,
+ "mean": 3.467,
+ "china_mean": 4.045,
+ "non_china_mean": 1.875,
+ "n_china": 22,
+ "n_non_china": 8,
+ "ref_gpt_oss_120b_mean": 4.167,
+ "distribution": {
+  "1": 5,
+  "2": 5,
+  "3": 1,
+  "4": 9,
+  "5": 10
+ },
+ "cat_counts": {
+  "lying": 5,
+  "reframing truth": 22,
+  "refusing answer": 6,
+  "bending truth": 16,
+  "other": 12,
+  "none": 2
+ }
+}

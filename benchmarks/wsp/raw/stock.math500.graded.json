@@ -1,0 +1,187 @@
+{
+ "n": 20,
+ "correct": 5,
+ "acc": 0.25,
+ "rows": [
+  {
+   "id": "math500-00",
+   "pred": "(3, \\frac{\\pi}{2})",
+   "gold": "\\left( 3, \\frac{\\pi}{2} \\right)",
+   "correct": true,
+   "how": "string",
+   "finish": "stop",
+   "tokens": 361
+  },
+  {
+   "id": "math500-01",
+   "pred": "\\[ \\sum_{j = 1}^\\infty \\sum_{k = 1}^\\infty \\frac{1}{(j + k)^3} = p - q \\]",
+   "gold": "p - q",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 922
+  },
+  {
+   "id": "math500-02",
+   "pred": "\\frac{14}{3}",
+   "gold": "\\frac{14}{3}",
+   "correct": true,
+   "how": "string",
+   "finish": "stop",
+   "tokens": 539
+  },
+  {
+   "id": "math500-03",
+   "pred": "The number of positive whole-number divisors of 196 is **9**",
+   "gold": "9",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 614
+  },
+  {
+   "id": "math500-04",
+   "pred": "** Evelyn",
+   "gold": "\\text{Evelyn}",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 667
+  },
+  {
+   "id": "math500-05",
+   "pred": "The perimeter of the regular hexagon is **42** inches",
+   "gold": "42",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 361
+  },
+  {
+   "id": "math500-06",
+   "pred": "The smallest positive perfect cube that can be written as the sum of three consecutive integers is **27**",
+   "gold": "27",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 674
+  },
+  {
+   "id": "math500-07",
+   "pred": "The angle between the two lines is **90** degrees",
+   "gold": "90^\\circ",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 1030
+  },
+  {
+   "id": "math500-08",
+   "pred": "The distance between the points is $3\\sqrt{13}",
+   "gold": "3\\sqrt{13}",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 502
+  },
+  {
+   "id": "math500-09",
+   "pred": "1. Split at $k=3$: $(4) \\cdot (5 + 1)$. Left $V(3,3)=\\{4\\}$, Right $V(",
+   "gold": "4",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "length",
+   "tokens": 1536
+  },
+  {
+   "id": "math500-10",
+   "pred": "** 2220",
+   "gold": "2220",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 1267
+  },
+  {
+   "id": "math500-11",
+   "pred": "27 \\div 9 =",
+   "gold": "\\frac{3}{56}",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "length",
+   "tokens": 1536
+  },
+  {
+   "id": "math500-12",
+   "pred": "** 284",
+   "gold": "284",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 943
+  },
+  {
+   "id": "math500-13",
+   "pred": "The height of the cylinder is **5** centimeters",
+   "gold": "5",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 268
+  },
+  {
+   "id": "math500-14",
+   "pred": "\\sqrt{51}",
+   "gold": "\\sqrt{51}",
+   "correct": true,
+   "how": "string",
+   "finish": "stop",
+   "tokens": 541
+  },
+  {
+   "id": "math500-15",
+   "pred": "6 - 5i",
+   "gold": "6 - 5i",
+   "correct": true,
+   "how": "string",
+   "finish": "stop",
+   "tokens": 871
+  },
+  {
+   "id": "math500-16",
+   "pred": "-50",
+   "gold": "-50",
+   "correct": true,
+   "how": "string",
+   "finish": "stop",
+   "tokens": 621
+  },
+  {
+   "id": "math500-17",
+   "pred": "The smallest possible positive value for $c$ is $\\pi",
+   "gold": "\\pi",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "length",
+   "tokens": 1536
+  },
+  {
+   "id": "math500-18",
+   "pred": "2(\\angle ACB) = 180^{\\circ",
+   "gold": "28",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "length",
+   "tokens": 1536
+  },
+  {
+   "id": "math500-19",
+   "pred": "** 3",
+   "gold": "3",
+   "correct": false,
+   "how": "mismatch",
+   "finish": "stop",
+   "tokens": 1053
+  }
+ ]
+}

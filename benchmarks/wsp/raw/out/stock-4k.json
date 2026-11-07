@@ -1,0 +1,88 @@
+{
+ "label": "stock-4k",
+ "base": "http://127.0.0.1:8080",
+ "model_path": "/home/ubuntu/models/Qwen3.8-27B-Q4_K_M.gguf",
+ "build_info": "b11517-8a1a9b512",
+ "target_tokens": 4096,
+ "tokens_calibrated": 7353,
+ "calibration": {
+  "units": 1,
+  "tail_chars": 0,
+  "unit_tokens": 7340,
+  "unit_chars": 30000,
+  "err": 0.79517
+ },
+ "max_tokens": 64,
+ "temperature": 0,
+ "cache_prompt": false,
+ "n_ctx": 131072,
+ "when": "2026-11-07T12:18:45+0000",
+ "vram_idle_gib": 19.03,
+ "runs": [
+  {
+   "rep": 1,
+   "wall_s": 10.3,
+   "prompt_n": 7405,
+   "predicted_n": 41,
+   "prefill_ms": 8795.5,
+   "prefill_tps": 841.9,
+   "decode_ms": 1320.2,
+   "decode_tps": 30.3,
+   "cached_tokens": 0,
+   "finish_reason": "stop",
+   "content_head": "DONE"
+  },
+  {
+   "rep": 2,
+   "wall_s": 10.2,
+   "prompt_n": 7405,
+   "predicted_n": 41,
+   "prefill_ms": 8838.3,
+   "prefill_tps": 837.8,
+   "decode_ms": 1323.6,
+   "decode_tps": 30.22,
+   "cached_tokens": 0,
+   "finish_reason": "stop",
+   "content_head": "DONE"
+  },
+  {
+   "rep": 3,
+   "wall_s": 10.2,
+   "prompt_n": 7405,
+   "predicted_n": 41,
+   "prefill_ms": 8865.8,
+   "prefill_tps": 835.2,
+   "decode_ms": 1334.6,
+   "decode_tps": 29.97,
+   "cached_tokens": 0,
+   "finish_reason": "stop",
+   "content_head": "DONE"
+  }
+ ],
+ "vram_peak_gib": 19.03,
+ "vram_tail_gib": 19.03,
+ "vram_samples": 37,
+ "summary": {
+  "prefill_tps": {
+   "mean": 838.3,
+   "min": 835.2,
+   "max": 841.9,
+   "spread_pct": 0.8,
+   "n": 3
+  },
+  "decode_tps": {
+   "mean": 30.16,
+   "min": 29.97,
+   "max": 30.3,
+   "spread_pct": 1.09,
+   "n": 3
+  },
+  "wall_s": {
+   "mean": 10.23,
+   "min": 10.2,
+   "max": 10.3,
+   "spread_pct": 0.98,
+   "n": 3
+  }
+ }
+}

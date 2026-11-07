@@ -1,0 +1,55 @@
+{
+ "target": {
+  "tensor": "blk.29.ffn_down.weight",
+  "shape": [
+   5120,
+   17408
+  ],
+  "fro_norm": 13.6884,
+  "sv1": 7.438,
+  "sv2": 0.5053,
+  "sv1_over_sv2": 14.719,
+  "top1_energy_frac": 0.29526,
+  "cols_for_90pct_v1_energy": 1475,
+  "v1_top4096_col_blockiness": 0.2366,
+  "v1_abs_max_over_mean": 145.569,
+  "colmean_abs_median": 1.2e-05,
+  "colmean_abs_p99": 4.4e-05
+ },
+ "controls": [
+  {
+   "tensor": "blk.27.ffn_down.weight",
+   "shape": [
+    5120,
+    17408
+   ],
+   "fro_norm": 8.6932,
+   "sv1": 0.4239,
+   "sv2": 0.1949,
+   "sv1_over_sv2": 2.175,
+   "top1_energy_frac": 0.00238,
+   "cols_for_90pct_v1_energy": 7293,
+   "v1_top4096_col_blockiness": 0.4012,
+   "v1_abs_max_over_mean": 9.882,
+   "colmean_abs_median": 9e-06,
+   "colmean_abs_p99": 3.4e-05
+  },
+  {
+   "tensor": "blk.29.ffn_gate.weight",
+   "shape": [
+    17408,
+    5120
+   ],
+   "fro_norm": 11.2546,
+   "sv1": 0.288,
+   "sv2": 0.2613,
+   "sv1_over_sv2": 1.102,
+   "top1_energy_frac": 0.00065,
+   "cols_for_90pct_v1_energy": 1296,
+   "v1_top4096_col_blockiness": 0.8005,
+   "v1_abs_max_over_mean": 19.408,
+   "colmean_abs_median": 7e-06,
+   "colmean_abs_p99": 2.5e-05
+  }
+ ]
+}

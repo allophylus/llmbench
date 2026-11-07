@@ -1,0 +1,162 @@
+[
+ {
+  "id": "math500-00",
+  "gold": "\\left( 3, \\frac{\\pi}{2} \\right)",
+  "judge_final": "(3, \\frac{\\pi}{2})",
+  "correct": true,
+  "tokens": 366,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-01",
+  "gold": "p - q",
+  "judge_final": "p - q",
+  "correct": true,
+  "tokens": 839,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-02",
+  "gold": "\\frac{14}{3}",
+  "judge_final": "\\frac{14}{3}",
+  "correct": true,
+  "tokens": 537,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-03",
+  "gold": "9",
+  "judge_final": "9",
+  "correct": true,
+  "tokens": 580,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-04",
+  "gold": "\\text{Evelyn}",
+  "judge_final": "Evelyn",
+  "correct": true,
+  "tokens": 601,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-05",
+  "gold": "42",
+  "judge_final": "42",
+  "correct": true,
+  "tokens": 311,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-06",
+  "gold": "27",
+  "judge_final": "27",
+  "correct": true,
+  "tokens": 676,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-07",
+  "gold": "90^\\circ",
+  "judge_final": "90 degrees",
+  "correct": true,
+  "tokens": 1027,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-08",
+  "gold": "3\\sqrt{13}",
+  "judge_final": "3\\sqrt{13}",
+  "correct": true,
+  "tokens": 492,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-09",
+  "gold": "4",
+  "judge_final": "4",
+  "correct": true,
+  "tokens": 1536,
+  "finish": "length"
+ },
+ {
+  "id": "math500-10",
+  "gold": "2220",
+  "judge_final": "2220",
+  "correct": true,
+  "tokens": 1536,
+  "finish": "length"
+ },
+ {
+  "id": "math500-11",
+  "gold": "\\frac{3}{56}",
+  "judge_final": "NONE",
+  "correct": false,
+  "tokens": 1536,
+  "finish": "length"
+ },
+ {
+  "id": "math500-12",
+  "gold": "284",
+  "judge_final": "284",
+  "correct": true,
+  "tokens": 936,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-13",
+  "gold": "5",
+  "judge_final": "5",
+  "correct": true,
+  "tokens": 263,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-14",
+  "gold": "\\sqrt{51}",
+  "judge_final": "\\sqrt{51}",
+  "correct": true,
+  "tokens": 769,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-15",
+  "gold": "6 - 5i",
+  "judge_final": "6 - 5i",
+  "correct": true,
+  "tokens": 845,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-16",
+  "gold": "-50",
+  "judge_final": "-50",
+  "correct": true,
+  "tokens": 632,
+  "finish": "stop"
+ },
+ {
+  "id": "math500-17",
+  "gold": "\\pi",
+  "judge_final": "NONE",
+  "correct": false,
+  "tokens": 1536,
+  "finish": "length"
+ },
+ {
+  "id": "math500-18",
+  "gold": "28",
+  "judge_final": "NONE",
+  "correct": false,
+  "tokens": 1536,
+  "finish": "length"
+ },
+ {
+  "id": "math500-19",
+  "gold": "3",
+  "judge_final": "3",
+  "correct": true,
+  "tokens": 972,
+  "finish": "stop"
+ }
+]

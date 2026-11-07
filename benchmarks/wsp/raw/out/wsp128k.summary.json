@@ -1,0 +1,13 @@
+{
+ "label": "wsp128k",
+ "tasks": {
+  "gpqa": {
+   "n": 25,
+   "scored": 25,
+   "score": 0.48,
+   "tokens": 38809,
+   "wall_s": 1286.5,
+   "errors": 0
+  }
+ }
+}

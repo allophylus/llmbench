@@ -1,0 +1,88 @@
+{
+ "label": "wsp-4k",
+ "base": "http://127.0.0.1:8080",
+ "model_path": "/home/ubuntu/models/qwen38fn/wsp-bench/Qwen3.8-27B-WSP-Q4_K_M.gguf",
+ "build_info": "b11517-8a1a9b512",
+ "target_tokens": 4096,
+ "tokens_calibrated": 7353,
+ "calibration": {
+  "units": 1,
+  "tail_chars": 0,
+  "unit_tokens": 7340,
+  "unit_chars": 30000,
+  "err": 0.79517
+ },
+ "max_tokens": 64,
+ "temperature": 0,
+ "cache_prompt": false,
+ "n_ctx": 131072,
+ "when": "2026-11-07T11:47:46+0000",
+ "vram_idle_gib": 19.43,
+ "runs": [
+  {
+   "rep": 1,
+   "wall_s": 10.8,
+   "prompt_n": 7405,
+   "predicted_n": 33,
+   "prefill_ms": 9554.6,
+   "prefill_tps": 775.0,
+   "decode_ms": 1064.4,
+   "decode_tps": 30.06,
+   "cached_tokens": 0,
+   "finish_reason": "stop",
+   "content_head": "DONE"
+  },
+  {
+   "rep": 2,
+   "wall_s": 10.7,
+   "prompt_n": 7405,
+   "predicted_n": 33,
+   "prefill_ms": 9606.4,
+   "prefill_tps": 770.8,
+   "decode_ms": 1065.4,
+   "decode_tps": 30.03,
+   "cached_tokens": 0,
+   "finish_reason": "stop",
+   "content_head": "DONE"
+  },
+  {
+   "rep": 3,
+   "wall_s": 10.7,
+   "prompt_n": 7405,
+   "predicted_n": 33,
+   "prefill_ms": 9632.0,
+   "prefill_tps": 768.8,
+   "decode_ms": 1064.9,
+   "decode_tps": 30.05,
+   "cached_tokens": 0,
+   "finish_reason": "stop",
+   "content_head": "DONE"
+  }
+ ],
+ "vram_peak_gib": 19.43,
+ "vram_tail_gib": 19.43,
+ "vram_samples": 39,
+ "summary": {
+  "prefill_tps": {
+   "mean": 771.53,
+   "min": 768.8,
+   "max": 775.0,
+   "spread_pct": 0.8,
+   "n": 3
+  },
+  "decode_tps": {
+   "mean": 30.05,
+   "min": 30.03,
+   "max": 30.06,
+   "spread_pct": 0.1,
+   "n": 3
+  },
+  "wall_s": {
+   "mean": 10.73,
+   "min": 10.7,
+   "max": 10.8,
+   "spread_pct": 0.93,
+   "n": 3
+  }
+ }
+}
