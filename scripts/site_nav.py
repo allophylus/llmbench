@@ -129,8 +129,8 @@ def expected_hrefs(prefix=""):
 # The overview used to be the only page with the logo + description, so every
 # sub-page looked like a different site. One helper, used by every builder.
 BRAND_TEXT = ("Raw, repeatable benchmark numbers for local models served by "
-              "<strong>llama.cpp (Vulkan)</strong> on an AMD Radeon AI PRO R9700 "
-              "32&nbsp;GiB box.")
+              "<strong>llama.cpp</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB (Vulkan) "
+              "and an NVIDIA GeForce RTX 3090 24&nbsp;GiB (CUDA).")
 
 
 def render_brand():

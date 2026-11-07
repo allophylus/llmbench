@@ -30,6 +30,26 @@ MODEL_LABEL = {
     "a3b": "Qwen3.6-35B-A3B",
     "qwen3-8-27b-q4km": "Qwen3.8-27B",
     "qwen3-6-35b-a3b-ud-q4km": "Qwen3.6-35B-A3B",
+    "gemma-4-26b-a4b": "Gemma 4 26B-A4B",
+    "nanbeige-4-3-33b": "Nanbeige 4.3-33B",
+    "byteshape-qwen3-8-27b-iq4xs": "Qwen3.8-27B (ByteShape IQ4_XS)",
+}
+MODEL_FILE = {
+    "qwen3-8-27b-q4km": "Qwen3.8-27B-Q4_K_M.gguf",
+    "qwen3-6-35b-a3b-ud-q4km": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "gemma-4-26b-a4b": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "nanbeige-4-3-33b": "Nanbeige4.3-33B-Q4_K.gguf",
+    "byteshape-qwen3-8-27b-iq4xs": "Qwen3.8-27B-IQ4_XS-3.84bpw.gguf",
+}
+# a cell measured on the other card is labelled as such and never mixed into the R9700 rows
+MODEL_GPU = {
+    "byteshape-qwen3-8-27b-iq4xs": "RTX 3090 · CUDA",
+}
+# cells whose artifacts live outside games/ keep their own tree; href is page-relative
+EXTERNAL = {
+    "byteshape-qwen3-8-27b-iq4xs-galaga": (
+        os.path.join(ROOT, "benchmarks", "rtx3090", "galaga-3090"),
+        "../benchmarks/rtx3090/galaga-3090"),
 }
 GAME_LABEL = {"galaga": "arcade shooter (TUI-derived)", "gta": "top-down driving (TUI-derived)", "physics": "3D physics sandbox (TUI-derived)", "solar": "solar system mission"}
 
@@ -51,6 +71,7 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 .thumb{width:150px;border-radius:6px;border:1px solid var(--line);display:block}
 .ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--gold)}
 .pill{display:inline-block;padding:1px 7px;border-radius:999px;border:1px solid var(--line);font-size:11px;color:var(--dim)}
+.pill.gpu{border-color:#6b5424;color:#f5c542;background:#1d1a10}
 .q{color:var(--fg)}.ans{color:var(--dim);font-size:13px}
 .prompt{color:var(--faint);font-size:12px;max-width:52ch}\n.detail{border:1px solid var(--line);border-radius:10px;padding:14px;margin:16px 0;background:var(--panel)}\n.detail h2{margin:0 0 6px;font-size:17px}.bigshot{width:min(560px,100%);border-radius:8px;border:1px solid var(--line);margin:10px 0}\n.promptbox{white-space:pre-wrap;font:12px/1.45 ui-monospace,monospace;color:var(--dim);background:#111821;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:260px;overflow:auto}\n.notes{color:var(--dim);margin:4px 0 8px}.sec{margin:26px 0 6px;font-size:15px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
 .meta{color:var(--faint);font-size:12px}
@@ -79,10 +100,17 @@ def page(title, body):
 
 def game_rows():
     rows = []
+    cells = []
     for d in sorted(glob.glob(os.path.join(GAMES, "*"))):
         if not os.path.isdir(d) or not os.path.exists(os.path.join(d, "index.html")):
             continue
-        slug = os.path.basename(d)
+        cells.append((d, os.path.basename(d), None))
+    for slug, (d, href) in EXTERNAL.items():
+        if os.path.isdir(d) and os.path.exists(os.path.join(d, "index.html")):
+            cells.append((d, slug, href))
+    # R9700 cells first; a cell from the other card is listed at the end, marked
+    cells.sort(key=lambda c: (bool(c[2]), c[1]))
+    for d, slug, href in cells:
         base = next((m for m in MODEL_LABEL if slug.startswith(m)), None)
         if not base:
             continue
@@ -95,12 +123,16 @@ def game_rows():
             except Exception:
                 model_file = ""
         if model_file.startswith("active.") or model_file == "":
-            model_file = {"qwen3-8-27b-q4km": "Qwen3.8-27B-Q4_K_M.gguf",
-                          "qwen3-6-35b-a3b-ud-q4km": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"}.get(base, model_file)
+            model_file = MODEL_FILE.get(base, model_file)
         model = MODEL_LABEL[base]
         b = json.load(open(os.path.join(d, "build.json"))) if os.path.exists(os.path.join(d, "build.json")) else {}
         g = json.load(open(os.path.join(d, "gen.json"))) if os.path.exists(os.path.join(d, "gen.json")) else {}
-        m = json.load(open(os.path.join(d, "metrics.json"))) if os.path.exists(os.path.join(d, "metrics.json")) else {}
+        m = {}
+        for _mp in [os.path.join(d, "metrics.json")] + sorted(
+                glob.glob(os.path.join(d, "attempts", "attempt-*", "metrics.json")), reverse=True):
+            if os.path.exists(_mp):
+                m = json.load(open(_mp))
+                break
         rj = os.path.join(d, "robot_metrics.json")
         robot = json.load(open(rj)) if os.path.exists(rj) else {}
         att = b.get("attempts") or b.get("turns_used") or len(glob.glob(os.path.join(d, "attempts", "attempt-*"))) or 1
@@ -108,15 +140,36 @@ def game_rows():
         tok = b.get("total_completion_tokens") or g.get("completion_tokens")
         wall = b.get("total_wall_s") or g.get("wall_s")
         s = m.get("summary", {}) if isinstance(m, dict) else {}
-        status = "renders" if s.get("canvas_ok") else ("failed" if m else "unverified")
+        if not s and isinstance(m, dict) and "canvas_ok" in m:
+            s = m
+        _gate = [s.get(k) for k in ("canvas_ok", "animation_ok", "input_ok", "contract_ok") if k in s]
+        accepted = bool(b.get("accepted_attempt")) and not any(v is False for v in _gate)
+        if accepted:
+            status = "pass"
+        elif s.get("canvas_ok"):
+            status = "renders"
+        elif m:
+            status = "failed"
+        else:
+            status = "unverified"
         notes = []
-        if s and not s.get("contract_ok"): notes.append("no window.__game contract → robot cannot score it")
-        if s and not s.get("animation_ok"): notes.append("animation not advancing")
-        if s and (s.get("console_error_count") or 0) > 0:
+        if accepted:
+            notes.append("accepted on attempt %s; gate: canvas, WebGL, three.js, animation, "
+                         "input and window.__game all green" % b.get("accepted_attempt"))
+        if s.get("contract_ok") is False: notes.append("no window.__game contract → robot cannot score it")
+        if s.get("animation_ok") is False: notes.append("animation not advancing")
+        if s and (s.get("console_error_count") or 0) > 0 and not accepted:
             notes.append("%s console errors" % "{:,}".format(s["console_error_count"]))
         if not notes and status == "renders": notes.append("playable in browser")
+        if status == "pass" and s.get("console_error_count"):
+            _note = ("%s console 404s during the http gate (a shared script fetched "
+                     "relative to the served page)" % s["console_error_count"])
+            if os.path.exists(os.path.join(d, "touch.js")):
+                _note += "; 0 in the published copy, which carries that script beside it"
+            notes.append(_note)
         shot = "shot.png" if os.path.exists(os.path.join(d, "shot.png")) else ""
-        rows.append(dict(model=model, model_file=model_file, game=GAME_LABEL.get(game, game), slug=slug,
+        rows.append(dict(model=model, model_file=model_file, game=GAME_LABEL.get(game, game),
+                         slug=href or slug, anchor=slug, dir=d, gpu=MODEL_GPU.get(base, ""),
                          thinking=bool(b.get("thinking")), robot=robot, build=b,
                          attempts=att, retries=retries, tokens=tok, wall=wall,
                          status=status, notes="; ".join(notes), shot=shot))
@@ -163,7 +216,9 @@ def build_games():
     for r in rows:
         shot = (f"<img class=thumb src='{esc(r['slug'])}/{esc(r['shot'])}' alt=''>") if r["shot"] else "—"
         tr.append("<tr>"
-                  f"<td><a href='#{esc(r['slug'])}'>{esc(r['model'])}</a><br><span class=meta>{esc(r.get('model_file'))}</span></td><td>{esc(r['game'])}</td>"
+                  f"<td><a href='#{esc(r['anchor'])}'>{esc(r['model'])}" +
+                  (f" <span class='pill gpu'>{esc(r['gpu'])}</span>" if r.get("gpu") else "") +
+                  f"</a><br><span class=meta>{esc(r.get('model_file'))}</span></td><td>{esc(r['game'])}</td>"
                   f"<td>{'on' if r.get('thinking') else 'off'}</td>"
                   f"<td class=num>{esc(r['attempts'])}</td><td class=num>{esc(r['retries'])}</td>"
                   f"<td class=num>{'' if r['tokens'] is None else r['tokens']}</td>"
@@ -175,7 +230,7 @@ def build_games():
 
     details = []
     for r in rows:
-        d = os.path.join(GAMES, r["slug"])
+        d = r.get("dir") or os.path.join(GAMES, r["slug"])
         prompt = ""
         for cand in (os.path.join(d, "attempts", "attempt-1", "prompt.txt"),):
             if os.path.exists(cand):
@@ -183,7 +238,7 @@ def build_games():
                 break
         shot = (f"<img class=bigshot src='{esc(r['slug'])}/{esc(r['shot'])}' alt=''>") if r["shot"] else ""
         details.append(
-            f"<section class=detail id='{esc(r['slug'])}'>"
+            f"<section class=detail id='{esc(r['anchor'])}'>"
             f"<h2>{esc(r['model'])} — {esc(r['game'])}</h2><p class=meta>{esc(r.get('model_file'))}</p>"
             f"<p class=meta>{esc(r['status'])} · thinking {'on' if r.get('thinking') else 'off'} · "
             f"{esc(r['attempts'])} attempt(s), {esc(r['retries'])} repeat(s) · "
@@ -209,6 +264,7 @@ def build_games():
             "<th>Robot</th><th>Screenshot</th><th>Play</th></tr></thead><tbody>"
             + "".join(tr) + "</tbody></table></div>"
             "<h2 class=sec>Details</h2>" + "".join(details))
+    # one writer: games/index.html is generated here from every cell's artifacts
     open(os.path.join(GAMES, "index.html"), "w").write(page("games — model-written browser games", body))
     print("games rows:", len(rows))
 
@@ -307,10 +363,19 @@ def build_chat():
             '<a href="../#method">method</a>.</p>' 
             "<h2 class=sec>Per-question detail</h2>" + "".join(details))
     os.makedirs(os.path.join(ROOT, "chat"), exist_ok=True)
-    open(os.path.join(ROOT, "chat", "index.html"), "w").write(
-        page("chat — knowledge accuracy", body).replace(
-            TOPBAR, render_topbar("../", "chat"), 1))
-    print("chat groups:", len(groups))
+    dst = os.path.join(ROOT, "chat", "index.html")
+    # The committed chat page carries a hand-built header (two-row column band) that this
+    # builder does not emit, so regenerating it silently strips that design. Only overwrite
+    # on an explicit request.
+    if os.path.exists(dst) and os.environ.get("LLMBENCH_REBUILD_CHAT") != "1":
+        print("chat groups:", len(groups),
+              "| chat/index.html kept as committed (design is hand-built; "
+              "set LLMBENCH_REBUILD_CHAT=1 to regenerate)")
+    else:
+        open(dst, "w").write(
+            page("chat — knowledge accuracy", body).replace(
+                TOPBAR, render_topbar("../", "chat"), 1))
+        print("chat groups:", len(groups))
 
 def build_sidebyside():
     """The 4-spec suite page is generated by its own script (one source of truth)."""

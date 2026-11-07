@@ -95,7 +95,8 @@ def models_table(doc):
             + (f" / {esc(r['params_active'])} active" if r.get("params_active") and
                r.get("params_active") != r.get("params_total") else "") + "</td>"
             f"<td>{esc(r.get('quant') or '—')}</td>"
-            f"<td>{esc(r.get('engine') or '—')}</td>"
+            f"<td>{esc(r.get('engine') or '—')}"
+            + (f" <span class=mode>{esc(r['gpu'])}</span>" if r.get("gpu") else "") + "</td>"
             f"<td class=num>{', '.join(str(c) for c in ctxs) or '—'}</td>"
             f"<td>{esc(r.get('status') or '')}</td>"
             "</tr>")
@@ -214,6 +215,7 @@ def raw_files_html():
         "huihui-abl-q4-k-m": "Huihui abliterated 27B (Q4_K_M)",
         "ornith-1-5-35b-a3b-q4-k-m": "Ornith-1.5-35B-A3B (Q4_K_M)",
         "lfm3-1-7b-q4-k-m": "LFM3-1.7B (Q4_K_M)",
+        "qwen3-8-27b-iq4xs-3090": "Qwen3.8-27B (ByteShape IQ4_XS, RTX 3090)",
         "27b": "Qwen3.8-27B (early one-off set)",
     }
     rows = []
@@ -249,9 +251,9 @@ def body_html():
         "measured. Nothing here is inferred: if a request did not produce a value, the cell is blank.</p>",
 
         "<h2>Model set</h2>",
-        "<p>Local open-weight models in GGUF form, quantised so each one fits a single 32&nbsp;GiB "
-        "GPU. One model per card at a time; a model's throughput is never measured while another "
-        "is loaded.</p>",
+        "<p>Local open-weight models in GGUF form, quantised so each one fits a single card — "
+        "the 32&nbsp;GiB R9700 or the 24&nbsp;GiB RTX 3090. One model per card at a time; a "
+        "model's throughput is never measured while another is loaded.</p>",
         models_table(doc),
 
         "<h2>Engine and build</h2>",

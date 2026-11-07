@@ -267,12 +267,19 @@
       parts.push("<div class=rx-h>Logic traps (10 everyday questions)</div>" +
         "<div class=rx-l>thinking off: <b>" + fmt(r.logic.off) + "</b> · thinking on: <b>" + fmt(r.logic.on) + "</b></div>");
     }
+    if (r.thinking && r.thinking.caps && r.thinking.caps.length) {
+      var cap = r.thinking.caps[r.thinking.caps.length - 1];
+      var g = function (a) { return (a && a.correct != null && a.n) ? (a.correct + "/" + a.n) : "—"; };
+      parts.push("<div class=rx-h>GPQA-25 by thinking mode (output cap " + esc(cap.cap) + ")</div>" +
+        "<div class=rx-l>thinking off: <b>" + g(cap.off) + "</b> · thinking on: <b>" + g(cap.on) + "</b></div>");
+    }
     if (!parts.length) return "";
-    return '<details class="rowextra"><summary>context sweep + logic</summary>' + parts.join("") + "</details>";
+    return '<details class="rowextra"><summary>context sweep + logic + thinking</summary>' + parts.join("") + "</details>";
   }
 
   function nameCell(r, grp) {
     var html = '<span class="name">' + esc(r.name) + "</span>" +
+      (r.gpu ? ' <span class="pill gpu" title="measured on a different card — these numbers are not R9700 numbers and are never mixed into them">' + esc(r.gpu) + "</span>" : "") +
       (r.status === "failed" ? ' <span class="st st-failed" title="the run produced no measurement">failed</span>' : "") +
       '<span class="slug">' + esc(r.filename || r.slug) + "</span>" +
       '<span class="meta">' + esc(metaLine(r)) + "</span>" + (state.view === "speed" ? "" : rowExtras(r));

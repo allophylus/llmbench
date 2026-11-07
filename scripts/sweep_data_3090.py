@@ -45,9 +45,9 @@ def table_html(anchor="rtx3090-sweep"):
         rows.append(
             f"<tr><td class=num>{c:,}</td>"
             f"<td class=num>{('{:,}'.format(v['prompt_n'])) if v.get('prompt_n') else '—'}</td>"
-            f"<td class=num>{v.get('prefill_tps') if ok else '—'}</td>"
-            f"<td class=num>{v.get('prefill_s') if ok else '—'}</td>"
-            f"<td class=num>{v.get('decode_tps') if ok else '—'}</td>"
+            f"<td class=num>{('{:,.1f}'.format(v['prefill_tps'])) if ok else '—'}</td>"
+            f"<td class=num>{('{:,.1f}'.format(v['prefill_s'])) if ok else '—'}</td>"
+            f"<td class=num>{('{:,.2f}'.format(v['decode_tps'])) if ok else '—'}</td>"
             f"<td class=num>{('%.2f' % v['vram_peak_gib']) if v.get('vram_peak_gib') else '—'}</td>"
             f"<td class=num>{v.get('draft_n_accepted') or '—'}/{v.get('draft_n') or '—'}</td>"
             f"<td>{'measured' if ok else esc(v.get('status'))}</td></tr>")
@@ -70,6 +70,46 @@ def table_html(anchor="rtx3090-sweep"):
         + (lambda d: f"{d.get('decode_tps')} t/s" if d else "—")(_spec_off())
         + " decode at 32&nbsp;K (measured on the same probe).</p>"
         "</section>")
+
+
+def _load(name):
+    try:
+        return json.load(open(os.path.join(ROOT, "benchmarks", "rtx3090", name), encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def summary_html():
+    """Quality cells measured on the same 3090 run (GPQA pair, chat, vision, galaga).
+
+    Every figure is read from the JSON the run wrote; a missing file prints a dash.
+    """
+    gpqa = _load("gpqa-pair-3090.json") or {}
+    chat = (_load("chat10-3090.json") or {}).get("summary") or {}
+    vis = _load("vision-smoke.json") or {}
+    gal = _load(os.path.join("galaga-3090", "build.json")) or {}
+
+    def pair(arm):
+        a = gpqa.get(arm) or {}
+        if not a.get("n"):
+            return "—"
+        return f"{a.get('correct')}/{a.get('n')}"
+
+    rows = [
+        ("GPQA-Diamond, 25 frozen questions", "thinking off", pair("off")),
+        ("GPQA-Diamond, 25 frozen questions", "thinking on", pair("on")),
+        ("Chat, 10 fixed questions", "thinking off",
+         (f"{chat.get('correct')}/{chat.get('n')}" + (f" (+{chat['partial']} partial)" if chat.get("partial") else ""))
+         if chat.get("n") else "—"),
+        ("Vision smoke (one image, exact code)", "thinking off",
+         ("pass" if vis.get("ok") else "fail") if vis else "—"),
+        ("Browser game: three.js Galaga", f"{gal.get('max_attempts', '—')} attempts allowed",
+         ((f"accepted, attempt {gal.get('accepted_attempt')}") if gal.get("accepted_attempt") else "fail") if gal else "—"),
+    ]
+    body = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td><td class=num>{esc(c)}</td></tr>"
+                   for a, b, c in rows)
+    return ("<div class=scroll><table id=sweep3090-summary><thead><tr><th>Cell</th>"
+            "<th>Mode</th><th>Result</th></tr></thead><tbody>" + body + "</tbody></table></div>")
 
 
 def _spec_off():

@@ -2316,6 +2316,127 @@
      "status": "ok"
     }
    }
+  },
+  {
+   "slug": "qwen3-8-27b-iq4xs-3090",
+   "name": "Qwen3.8-27B (ByteShape IQ4_XS)",
+   "params_total": "27B",
+   "params_active": "27B",
+   "quant": "IQ4_XS",
+   "arch": "dense Qwen3.8-27B, MTP draft head (n-max 3)",
+   "engine": "CUDA",
+   "gpu": "RTX 3090 · CUDA",
+   "decode_tps": 91.64,
+   "prefill_tps": 1208.1,
+   "context_window": 262144,
+   "vram_mib": 23695,
+   "date": "2026-11-07",
+   "cells": {
+    "gpqa": 64.0,
+    "aime": null,
+    "livebench": null,
+    "ctx30k": null,
+    "ctx110k": null,
+    "tau2": null,
+    "shell": null,
+    "termbench": null,
+    "mmlupro": null,
+    "arc": null,
+    "math": null,
+    "logic": null,
+    "code": null,
+    "tetris_gen": null,
+    "tetris_play": null
+   },
+   "videos": {},
+   "sources": [
+    "benchmarks/rtx3090/sweep3090.json",
+    "benchmarks/rtx3090/gpqa-pair-3090.json",
+    "benchmarks/rtx3090/chat10-3090.json",
+    "benchmarks/rtx3090/vision-smoke.json",
+    "benchmarks/rtx3090/galaga-3090/build.json"
+   ],
+   "speed_measured_at": "2026-11-07T21:37:41+0800",
+   "filename": "Qwen3.8-27B-IQ4_XS-3.84bpw.gguf",
+   "features": {
+    "fa": true,
+    "mtp": true,
+    "spec": "draft-mtp n-max 3",
+    "kv": "q8_0/q4_0",
+    "cuda": true
+   },
+   "speed_method": "server restarted per rung with -c <ctx>; one cold /v1/chat/completions (temp 0, cache_prompt false, ignore_eos, 64 generated tokens); prompt calibrated via /tokenize to ctx-512. Speculative decoding ON (MTP), so decode is a best-case figure: the spec-off control reads 29.89 t/s decode at 32K.",
+   "speed_flags": "-ngl 99 -fa on -b 16384 -ub 2048 -ctk q8_0 -ctv q4_0 --cache-reuse 256 --metrics --jinja -np 1 --reasoning off --spec-type draft-mtp --spec-draft-n-max 3",
+   "kv_cache": "q8_0/q4_0",
+   "engine_build": "b12189 (win-cuda-12.4)",
+   "status": "done",
+   "game": {
+    "attempts": 1,
+    "retries": 0,
+    "tokens": 5377,
+    "build_s": 94.5,
+    "url": "benchmarks/rtx3090/galaga-3090/index.html",
+    "playable": "playable - viewport click/touch is dispatched by the page"
+   },
+   "sweep": {
+    "4096": {
+     "prefill": 1208.1,
+     "decode": 91.64,
+     "vram": 20.05,
+     "prompt": 3578,
+     "status": "ok"
+    },
+    "32768": {
+     "prefill": 1256.5,
+     "decode": 74.42,
+     "vram": 21.01,
+     "prompt": 32241,
+     "status": "ok"
+    },
+    "65536": {
+     "prefill": 1094.5,
+     "decode": 63.83,
+     "vram": 22.17,
+     "prompt": 65004,
+     "status": "ok"
+    },
+    "131072": {
+     "prefill": 829.9,
+     "decode": 49.68,
+     "vram": 23.14,
+     "prompt": 130541,
+     "status": "ok"
+    },
+    "262144": {
+     "prefill": 132.8,
+     "decode": 8.38,
+     "vram": 23.08,
+     "prompt": 261667,
+     "status": "ok"
+    }
+   },
+   "thinking": {
+    "model": "Qwen3.8-27B (ByteShape IQ4_XS, RTX 3090)",
+    "caps": [
+     {
+      "cap": 4096,
+      "off": {
+       "correct": 16,
+       "n": 25,
+       "tokens": 65230,
+       "wall_s": 844.8,
+       "length_stops": 10
+      },
+      "on": {
+       "correct": 19,
+       "n": 25,
+       "tokens": 81745,
+       "wall_s": 1149.5,
+       "length_stops": 17
+      }
+     }
+    ]
+   }
   }
  ],
  "error_bars": {
@@ -2406,7 +2527,7 @@
  "chat": {
   "suite": "10 fixed general-knowledge questions, temperature 0, thinking off, scored strictly (correct / partial / wrong) against a fixed expected answer",
   "measured_at": "2026-11-03T10:41:24+0000",
-  "n_models": 7,
+  "n_models": 8,
   "saturated": true,
   "excluded": [
    {
@@ -2521,6 +2642,17 @@
     "ran_at": "2026-11-03T10:36:53+0000",
     "source": "data/chat/davidau-qwen3-8-27b-neo-max-mtp-q4-k-m.json",
     "decode_tps_median": 28.7
+   },
+   {
+    "slug": "qwen3-8-27b-iq4xs-3090",
+    "n": 10,
+    "correct": 9,
+    "partial": 1,
+    "wrong": 0,
+    "accuracy": 90.0,
+    "decode_tps": 72.89,
+    "decode_tps_kind": "mean of per-question decode rate",
+    "gpu": "RTX 3090 · CUDA"
    }
   ]
  }
