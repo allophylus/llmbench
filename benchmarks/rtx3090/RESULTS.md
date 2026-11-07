@@ -30,9 +30,19 @@ MTP speculative decoding was ON (ByteShape's published command); the speed probe
 
 9/10 correct, 1 partial, 0 wrong, 90.0% accuracy, mean decode 72.89 t/s.
 
+## Control: the same probe without speculative decoding
+
+32K rung, same flags minus `--spec-type draft-mtp`: decode **29.89 t/s** and prefill 1379.8 t/s (32253 prompt tokens). With MTP the same rung reads 74.42 t/s decode, so the published decode column is a speculative-decoding figure and the speed probe's repetitive output (draft acceptance 47/47) flatters it.
+
 ## Browser game (three.js Galaga)
 
 status: accepted, attempts used: 1, completion tokens: 5377, wall: 94.5 s.
+Gate: load, canvas, WebGL, three.js, animation advancing, input changing pixels and the
+`window.__game` contract all true (attempt-1/validation.json). The http run logged 2 console
+404s, both resource fetches of the shared `games/touch.js` that webgen injects by a path
+computed for `games/<slug>/`; stored one level deeper the relative path escapes the served
+root. The published copy carries `touch.js` beside it, so the page renders with 0 console
+errors (verified in headless Chrome). The frames are the model's own geometry.
 - attempt 1: pass
 
 ## Vision smoke

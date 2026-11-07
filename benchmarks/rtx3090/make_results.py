@@ -72,6 +72,16 @@ def main():
     else:
         L += ["## Chat", "", "not run", ""]
 
+    if os.path.exists(os.path.join(HERE, "spec-off-32k.json")):
+        sp = load("spec-off-32k.json")
+        L += ["## Control: the same probe without speculative decoding", "",
+              f"32K rung, same flags minus `--spec-type draft-mtp`: decode "
+              f"**{sp.get('decode_tps')} t/s** and prefill {sp.get('prefill_tps')} t/s "
+              f"({sp.get('prompt_n')} prompt tokens). With MTP the same rung reads "
+              f"{((sw or {}).get('cells') or {}).get('32768', {}).get('decode_tps')} t/s decode, "
+              "so the published decode column is a speculative-decoding figure and the speed "
+              "probe's repetitive output (draft acceptance 47/47) flatters it.", ""]
+
     if game:
         L += ["## Browser game (three.js Galaga)", "",
               f"status: {game.get('status')}, attempts used: {game.get('attempts_used')}, "
