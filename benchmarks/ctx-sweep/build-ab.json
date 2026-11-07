@@ -370,7 +370,7 @@
   "old": {
    "correct": 10,
    "n": 25,
-   "source": "benchmarks/wsp/results.json (stock cell, same settings)"
+   "source": "benchmarks/wsp/results.json \u2014 stock GPQA-25 cell measured on b11517 (3 Nov 2026), same 25 questions, temp 0, max_tokens 2048, thinking off"
   },
   "new": {
    "correct": 10,
