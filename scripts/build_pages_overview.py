@@ -37,6 +37,26 @@ CSS_START, CSS_END = "/* sweep-matrix:start */", "/* sweep-matrix:end */"
 ABLATION_CSS = """
 .abl-h{font:600 15px/1.3 var(--sans);color:var(--fg);margin:0 0 .4rem}
 .abl-t{font:600 12px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--fg-faint);margin:1.4rem 0 .6rem}
+#ablation .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:10px 0;max-width:100%}
+.abl-table{width:100%;min-width:860px;border-collapse:collapse;background:var(--panel)}
+.abl-table th,.abl-table td{padding:8px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top;text-align:left}
+.abl-table thead th{background:#1b2431;font:600 10.5px/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--fg-dim);white-space:nowrap}
+.abl-table tbody tr:nth-child(even) td{background:var(--bg-zebra)}
+.abl-table td.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.abl-table td.mdl{min-width:11em;border-right:1px solid var(--line)}
+.abl-table td.mdl b{display:block;color:var(--fg)}
+.abl-table td.mdl .abl-q{display:block;color:var(--fg-faint);font:11.5px/1.3 var(--mono);font-weight:400}
+.abl-table .abl-mnote{display:block;color:var(--warn);font-size:11px;line-height:1.35;margin-top:4px;font-weight:400;max-width:22ch}
+.abl-table td.arm b{display:block;color:var(--fg);font-size:12.5px}
+.abl-table td.arm span{display:block;color:var(--fg-faint);font-size:11px;max-width:26ch}
+.abl-table td.abl-method{color:var(--fg-dim);font-size:12px;white-space:nowrap}
+.abl-table .abl-dec{display:block;font-weight:600;color:var(--fg)}
+.abl-table .abl-pre{display:block;color:var(--fg-faint);font-size:12px}
+.abl-table .abl-dec i,.abl-table .abl-pre i{font-style:normal;font-size:10.5px;margin-left:4px}
+.abl-table .ok{color:#7ee787}.abl-table .bad{color:#ff8b82}.abl-table .dim{color:var(--fg-faint)}
+.abl-table .abl-th2{font-weight:400;text-transform:none;letter-spacing:0;font-size:10px;color:var(--fg-faint)}
+#ablation .callout{max-width:95ch}
+#ablation .limits li{max-width:95ch}
 """
 
 METHOD_CSS = """
