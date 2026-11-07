@@ -104,6 +104,73 @@ def models_table(doc):
             "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
 
 
+def build_ab_table():
+    """Build comparison, every number read from benchmarks/ctx-sweep/build-ab.json.
+
+    Two builds of the same engine, same GGUF, same flags, same probe; two cold reps per
+    window, interleaved build-by-build so both see the same thermal state. Cells and
+    spreads are computed here, never typed.
+    """
+    p = os.path.join(ROOT, "benchmarks", "ctx-sweep", "build-ab.json")
+    try:
+        ab = json.load(open(p, encoding="utf-8"))
+    except Exception:
+        return ""
+    cells = ab.get("cells") or []
+    if not cells:
+        return ""
+    rungs = sorted({c.get("ctx") for c in cells if c.get("ctx")})
+    builds = []
+    for c in cells:
+        if c.get("build") not in builds:
+            builds.append(c.get("build"))
+
+    def agg(b, ctx, key):
+        vals = [c.get(key) for c in cells
+                if c.get("build") == b and c.get("ctx") == ctx and c.get(key)]
+        if not vals:
+            return None, None
+        mean = sum(vals) / len(vals)
+        spread = (max(vals) - min(vals)) / mean * 100 if len(vals) > 1 and mean else 0.0
+        return mean, spread
+
+    gpqa = ab.get("gpqa") or {}
+    head = ("<tr><th>Build</th><th>Engine</th>" + "".join(
+        f"<th>{esc(f'{r//1024}K')} prefill / decode</th>" for r in rungs)
+        + "<th>Peak VRAM</th><th>GPQA-25 (thinking off)</th></tr>")
+    rows = []
+    for b in builds:
+        meta = (ab.get("builds") or {}).get(b) or {}
+        tds = []
+        for r in rungs:
+            pf, sp = agg(b, r, "prefill_tps")
+            dc, sd = agg(b, r, "decode_tps")
+            if pf is None:
+                tds.append("<td class=num>not measured</td>")
+            else:
+                worst = max([x for x in (sp, sd) if x is not None] or [0])
+                tds.append(f"<td class=num>{pf:,.0f} / {dc:,.1f}"
+                           + (f" <span class=pill>±{worst:.1f}%</span>" if worst else "")
+                           + "</td>")
+        vram, _ = agg(b, max(rungs), "vram_peak_gib")
+        g = gpqa.get(b) or {}
+        gtxt = f"{g.get('correct')}/{g.get('n')}" if g.get("n") else "—"
+        rows.append("<tr>" + f"<td><code>{esc(meta.get('tag') or b)}</code></td>"
+                    f"<td>{esc(meta.get('engine') or meta.get('note') or '')}</td>"
+                    + "".join(tds)
+                    + f"<td class=num>{(f'{vram:,.1f} GiB' if vram else '—')}</td>"
+                    f"<td class=num>{gtxt}</td></tr>")
+    return (
+        "<h3>Build A/B</h3>"
+        f"<p>Measured {esc(ab.get('when') or '')}: the same model file and identical flags "
+        "(<code>" + esc(" ".join(ab.get("flags_std") or [])) + "</code>) on two engine builds, "
+        f"{ab.get('reps', 1)} cold repetitions per window, interleaved. The percentage beside "
+        "a cell is the spread (max−min)/mean across those repetitions; VRAM is the peak at "
+        "the largest window.</p>"
+        '<div class=table-wrap><table><thead>' + head + "</thead><tbody>"
+        + "".join(rows) + "</tbody></table></div>")
+
+
 def error_table(doc):
     eb = doc.get("error_bars") or {}
     pts = [("A3B — 32K window", eb.get("a3b_32k")),
@@ -193,9 +260,12 @@ def body_html():
         "AMD Radeon AI PRO R9700 (32&nbsp;GiB). Models run on a different engine (e.g. a "
         "proprietary container format) are labelled with that engine in the table instead.</li>",
         "<li><strong>Builds:</strong> the build id is printed in the <em>Speed evidence</em> column "
-        "of each row. Two builds appear: <code>b11517</code> (the mainline server used for the "
-        "suite and the standard speed probe) and <code>b11874</code>, needed for one newer "
-        "architecture. A number is only comparable across rows measured on the same build.</li>",
+        "of each row. Three builds appear: <code>b11517</code>, the mainline server that measured "
+        "every early row; <code>b11874</code>, needed for one newer architecture; and "
+        "<code>b12110</code> (engine release v0.9.0), used for the <code>gemma4</code> and "
+        "<code>nanbeige</code> architectures and, after it matched <code>b11517</code> in the "
+        "build A/B below, for the serving configuration. A number is only comparable across "
+        "rows measured on the same build.</li>",
         "<li><strong>Flags</strong> (one server at a time, recorded per row): "
         "<code>-ngl 99 -fa on -c &lt;window&gt; --jinja -np 1 -ctk q8_0 -ctv q4_0</code>, plus "
         "<code>-b 16384 -ub 2048</code> on the serving-shaped probes. <code>-np 1</code> means one "
@@ -207,6 +277,7 @@ def body_html():
         "(<code>enable_thinking:false</code> via the chat template); the thinking tab is the "
         "on/off comparison.</li>",
         "</ul>",
+        build_ab_table(),
 
         "<h2>Throughput: the standard probe</h2>",
         "<ul>",

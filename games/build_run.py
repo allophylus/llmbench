@@ -89,6 +89,10 @@ for n in range(1, a.attempts + 1):
                 if os.path.exists(p):
                     m = json.load(open(p))
             http = (m.get("http") or {})
+            # webvalidate stores the contract verdict under http.contract (and mirrors it in
+            # summary.contract_ok); older records only had summary.contract_ok. Read all three
+            # so a passing attempt is never failed by a key-name mismatch.
+            ctr = m.get("contract") or http.get("contract") or {}
             checks = {
                 "load_ok": http.get("load_ok"),
                 "canvas": http.get("canvas_present"),
@@ -96,7 +100,7 @@ for n in range(1, a.attempts + 1):
                 "three_js": http.get("mentions_three") or http.get("uses_three_global"),
                 "animation": http.get("animation_advancing"),
                 "input": http.get("input_ok") or http.get("input_changes_pixels"),
-                "contract": (m.get("contract") or {}).get("ok", http.get("contract_ok")),
+                "contract": ctr.get("ok", (m.get("summary") or {}).get("contract_ok")),
             }
             ok = vrc == 0 and all(bool(v) for v in checks.values())
             reasons = [k for k, v in checks.items() if not v] or ([] if ok else [f"validator exit {vrc}"])

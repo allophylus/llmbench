@@ -1,0 +1,31 @@
+{
+ "slug": "qwen3-8-27b-q4km-b12110",
+ "generated_at": "2026-11-07T21:54:47+0800",
+ "prompt_file": "WEBGAME_PROMPT.md",
+ "max_attempts": 3,
+ "attempts_used": 3,
+ "retries": 2,
+ "accepted_attempt": 1,
+ "status": "accepted",
+ "per_attempt": [
+  {
+   "attempt": 1,
+   "ok": true,
+   "reasons": []
+  },
+  {
+   "attempt": 2,
+   "ok": true,
+   "reasons": []
+  },
+  {
+   "attempt": 3,
+   "ok": true,
+   "reasons": []
+  }
+ ],
+ "total_wall_s": 377.7,
+ "total_prompt_tokens": 4866,
+ "total_completion_tokens": 10146,
+ "note": "each attempt generated 3.3-3.5k tokens (~90-108 s). The first run was reported failed only because build_run looked for metrics['contract'] and metrics['http']['contract_ok']; webvalidate writes metrics['http']['contract']['ok'] (true in all three attempts) and summary.contract_ok. Re-scored, not regenerated."
+}
