@@ -33,6 +33,7 @@ MODEL_LABEL = {
     "gemma-4-26b-a4b": "Gemma 4 26B-A4B",
     "nanbeige-4-3-33b": "Nanbeige 4.3-33B",
     "byteshape-qwen3-8-27b-iq4xs": "Qwen3.8-27B (ByteShape IQ4_XS)",
+    "byteshape-qwen3-8-27b-iq4xs-3090": "Qwen3.8-27B (ByteShape IQ4_XS)",
 }
 MODEL_FILE = {
     "qwen3-8-27b-q4km": "Qwen3.8-27B-Q4_K_M.gguf",
@@ -40,16 +41,24 @@ MODEL_FILE = {
     "gemma-4-26b-a4b": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
     "nanbeige-4-3-33b": "Nanbeige4.3-33B-Q4_K.gguf",
     "byteshape-qwen3-8-27b-iq4xs": "Qwen3.8-27B-IQ4_XS-3.84bpw.gguf",
+    "byteshape-qwen3-8-27b-iq4xs-3090": "Qwen3.8-27B-IQ4_XS-3.84bpw.gguf",
 }
 # a cell measured on the other card is labelled as such and never mixed into the R9700 rows
 MODEL_GPU = {
     "byteshape-qwen3-8-27b-iq4xs": "RTX 3090 · CUDA",
+    "byteshape-qwen3-8-27b-iq4xs-3090": "RTX 3090 · CUDA",
 }
 # cells whose artifacts live outside games/ keep their own tree; href is page-relative
 EXTERNAL = {
     "byteshape-qwen3-8-27b-iq4xs-galaga": (
         os.path.join(ROOT, "benchmarks", "rtx3090", "galaga-3090"),
         "../benchmarks/rtx3090/galaga-3090"),
+    "byteshape-qwen3-8-27b-iq4xs-3090-gta": (
+        os.path.join(ROOT, "benchmarks", "rtx3090", "games", "gta-3d"),
+        "../benchmarks/rtx3090/games/gta-3d"),
+    "byteshape-qwen3-8-27b-iq4xs-3090-physics": (
+        os.path.join(ROOT, "benchmarks", "rtx3090", "games", "physics-3d"),
+        "../benchmarks/rtx3090/games/physics-3d"),
 }
 GAME_LABEL = {"galaga": "arcade shooter (TUI-derived)", "gta": "top-down driving (TUI-derived)", "physics": "3D physics sandbox (TUI-derived)", "solar": "solar system mission"}
 
@@ -111,7 +120,7 @@ def game_rows():
     # R9700 cells first; a cell from the other card is listed at the end, marked
     cells.sort(key=lambda c: (bool(c[2]), c[1]))
     for d, slug, href in cells:
-        base = next((m for m in MODEL_LABEL if slug.startswith(m)), None)
+        base = max((m for m in MODEL_LABEL if slug.startswith(m)), key=len, default=None)
         if not base:
             continue
         game = slug[len(base):].lstrip("-") or "space shooter (v1 prompt)"
@@ -146,6 +155,8 @@ def game_rows():
         accepted = bool(b.get("accepted_attempt")) and not any(v is False for v in _gate)
         if accepted:
             status = "pass"
+        elif b.get("status") == "still-broken":
+            status = "stalled"
         elif s.get("canvas_ok"):
             status = "renders"
         elif m:
@@ -156,6 +167,9 @@ def game_rows():
         if accepted:
             notes.append("accepted on attempt %s; gate: canvas, WebGL, three.js, animation, "
                          "input and window.__game all green" % b.get("accepted_attempt"))
+        if status == "stalled":
+            notes.append("canvas renders, but the game ends on load and keys do not move the "
+                         "player: still broken after %s repair turns" % b.get("turns_used"))
         if s.get("contract_ok") is False: notes.append("no window.__game contract → robot cannot score it")
         if s.get("animation_ok") is False: notes.append("animation not advancing")
         if s and (s.get("console_error_count") or 0) > 0 and not accepted:
@@ -168,6 +182,29 @@ def game_rows():
                 _note += "; 0 in the published copy, which carries that script beside it"
             notes.append(_note)
         shot = "shot.png" if os.path.exists(os.path.join(d, "shot.png")) else ""
+        # a cell that needed repair turns keeps its combined run record in run.json
+        run = {}
+        if os.path.exists(os.path.join(d, "run.json")):
+            try:
+                run = json.load(open(os.path.join(d, "run.json")))
+            except Exception:
+                run = {}
+        if run:
+            gen, rep = run.get("generation") or {}, run.get("repair") or {}
+            if gen.get("attempts_used"):
+                att = gen["attempts_used"] + (rep.get("turns_used") or 0)
+                retries = att - 1
+            if gen.get("completion_tokens") is not None:
+                tok = gen["completion_tokens"] + (rep.get("completion_tokens") or 0)
+            if gen.get("wall_s") is not None:
+                wall = round(gen["wall_s"] + (rep.get("wall_s") or 0), 1)
+            if run.get("verdict"):
+                status = run["verdict"]
+                notes = [("generation: %s attempt(s), %s tokens; then %s repair turn(s), %s tokens"
+                          % (gen.get("attempts_used", "—"), "{:,}".format(gen.get("completion_tokens") or 0),
+                             rep.get("turns_used", 0), "{:,}".format(rep.get("completion_tokens") or 0)))]
+                if run.get("verdict_detail"):
+                    notes.append(run["verdict_detail"])
         rows.append(dict(model=model, model_file=model_file, game=GAME_LABEL.get(game, game),
                          slug=href or slug, anchor=slug, dir=d, gpu=MODEL_GPU.get(base, ""),
                          thinking=bool(b.get("thinking")), robot=robot, build=b,

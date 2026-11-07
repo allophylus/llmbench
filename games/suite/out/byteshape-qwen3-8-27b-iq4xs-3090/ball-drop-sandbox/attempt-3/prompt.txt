@@ -1,0 +1,417 @@
+You wrote this single-file three.js game. It is being graded against the spec below and does not pass yet (repair turn 2 of up to 10).
+
+These behavioural assertions FAILED (the grader calls step(1/60) / swap() through window.__game and reads the state you publish):
+
+- a1_ball_count_150 (5 balls exist after 150 ticks (one every 30)): got 0, want 5
+
+- a2_all_dropped_gravity (25 balls after 800 ticks and the first ball fell): got {"balls": 0, "lowest_y": null}, want {"balls": 25, "fell": true}
+
+- a4_settled (at least one ball is settled with |vy| < 0.06 after 6000 ticks): got "0 settled", want ">=1"
+
+Fix the actual defects. Keep everything that already works. Reply with the COMPLETE corrected file in one ```html block and nothing else.
+
+=== SPEC (unchanged) ===
+<!--
+GAME SPEC — llmbench browser cell "ball-drop-sandbox"
+
+FROZEN. Sent verbatim as the single user message. Do not edit: the sha256 of this file is
+recorded per run (gen.json:prompt_sha256). A change means a new spec version and old
+results are not comparable.
+
+Contract note (why this file looks the way it does): the earlier v1/v2 game prompts used
+one shared window.__game contract that demanded `enemies[]` and `bullets[]`. A physics task
+built to that contract came back as a shooter. This spec has its OWN contract — only
+{ready, over, score} plus the handles this task needs. There are no enemies and no
+bullets anywhere in this task, and an automated grader penalises adding them.
+
+The grader (games/playprobe.py) executes the assertions below in headless Chrome with a
+virtual clock: it calls window.__game.step(1/60) exactly N times, so results do not depend
+on the machine's frame rate. Words like "tick" below mean one step(1/60) call.
+-->
+
+Write a complete, self-contained browser simulation as ONE HTML file using three.js.
+Reply with the file inside one ```html fenced block and nothing else.
+
+## SCENE
+A translucent glass box on a table: an open-top rectangular box with a floor and four
+walls (a slightly higher back wall is fine). Camera looks into the box from the front-top
+so the floor is clearly visible. Draw everything with three.js geometry, materials, lights
+and particles — NO external images, textures, models, fonts or audio, no base64 art.
+A deliberate 3-5 colour palette, soft lighting, and a readable HTML HUD over the canvas
+(DOM text, not drawn into the canvas) showing: balls dropped / 25, balls still awake,
+and the score. The canvas fills the window and adapts on resize.
+
+## RULES (physics is analytic — write it yourself, no physics engine)
+- 25 balls are dropped, one every 30 ticks, each from a seeded position near the top
+  inside the box. Ball radius 0.5. All balls identical mass.
+- gravity pulls down (about -9.8 units/s²); dt comes from step(1/60) or the frame clock.
+- Floor and walls: a ball that crosses a bound is pushed back inside and its velocity
+  component along that axis is multiplied by -restitution, restitution = 0.6.
+- Ball vs ball: sphere-sphere. If two balls overlap, separate them along the centre line
+  by half the overlap each (positional correction) and exchange the velocity component
+  along the centre line (equal mass), then apply a little friction to the tangential part.
+- A ball is "settled" when its speed is below 0.05 units/s AND it rests on the floor
+  (or on another settled ball) for at least 30 consecutive ticks. Settled balls are frozen.
+  Use a small sleep threshold, not a hard velocity zero each tick.
+- Score = number of settled balls × 10, plus 50 bonus when all 25 are settled.
+  The run is over (`over: true`) when all 25 balls are settled.
+
+## NO PLAYER WEAPON, NO ENEMIES
+This is a sandbox. Do NOT add a player character, weapons, projectiles, shooting,
+enemies, lives, timers or levels. There must be no keys that launch a ball and no
+Space-to-shoot. SPACE is only a pause/resume toggle, and R restarts the run with the same
+seed. Adding combat or any launch mechanic is graded as a spec violation.
+
+## DETERMINISM AND THE MACHINE-READABLE CONTRACT (mandatory)
+The grader drives the simulation through `window.__game` ONLY. Exact shape
+(extra keys are allowed, but these must exist with these types):
+
+```js
+window.__game = {
+  ready: false,          // boolean, true once the scene is built and step() works
+  seed: 1234,            // integer, the seed currently running
+  balls: [],             // array of {x, y, z, vx, vy, vz, r, settled} — plain numbers,
+                         // ALL balls that exist this run (0..25), settled ones included
+  score: 0,              // number, same number as the HUD
+  over: false,           // boolean, true once all 25 balls settled
+  step: function (dt) {},        // advance the simulation by exactly dt seconds, once
+  reset: function (seed) {},     // restart from scratch with the given integer seed
+  hash: function () {}           // string: stable serialisation of the state, see below
+};
+```
+
+`reset(seed)` must rebuild the world from that integer seed with NO randomness taken from
+Math.random or Date: all random values must come from a seeded generator kept in a closure
+(mulberry32, xorshift, LCG — your choice), so `reset(1234)` twice gives identical runs.
+`step(dt)` must simulate exactly one fixed step of dt (no accumulated frame time from the
+animation loop inside it when the grader calls it); the render loop may also call step()
+itself when nobody else drives it.
+
+`hash()` returns a string that changes if any ball's position/velocity or the score
+changes. It must be built only from rounded numbers (e.g. 4 decimals) so floating-point
+noise does not flip it: positions/velocities rounded to 1e-4, then the string of all balls
+in index order plus the score.
+
+The animation loop uses requestAnimationFrame with THREE.Clock and must never throw; the
+page must have 0 console errors. Keyboard events are listened for on `window`.
+
+## BEHAVIOURAL ASSERTIONS (the grader runs exactly these)
+S = window.__game, after `S.reset(1234)`.
+1. after 150 steps: S.balls.length is 5 (±0) — one new ball every 30 ticks.
+2. after 800 steps: S.balls.length is 25 and S.balls[0].y has decreased from its spawn
+   value (gravity acts).
+3. after 6000 steps: every ball's x is within the inner box (± box half-width minus r)
+   and y is at or above the floor (no ball escapes the box).
+4. after 6000 steps: at least one ball has settled === true and its |vy| < 0.06.
+5. determinism: reset(1234), run 3000 steps, h1 = S.hash(); reset(1234), run 3000 steps,
+   h2 = S.hash(); h1 must equal h2. Then reset(99) and run 3000 steps → hash differs.
+
+## WHAT COUNTS AS A SPEC VIOLATION (fails compliance, not just behaviour)
+- any projectile/firing/weapon/enemy/lives code path, or Space launching a ball;
+- balls spawned with Math.random (non-deterministic across reset with the same seed);
+- step() driving a wall clock / requestAnimationFrame internally instead of the dt given;
+- a physics engine library (cannon, ammo, rapier, oimo) instead of your own integration;
+- settled balls that keep jittering (hash changes while nothing new is dropped).
+
+## SIZE AND OUTPUT
+Under about 450 lines. Correctness first. Output ONE ```html block with a complete
+document (pinned import map `https://unpkg.com/three@0.160.0/build/three.module.js`), then stop.
+
+
+=== YOUR CURRENT FILE ===
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ball Drop Sandbox</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0b1016; }
+  #c { position: fixed; inset: 0; display: block; }
+  #hud {
+    position: fixed; top: 16px; left: 16px; z-index: 10;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color: #eaf2f8; background: rgba(12,18,26,0.62);
+    border: 1px solid rgba(120,160,190,0.28); border-radius: 12px;
+    padding: 12px 16px; min-width: 210px; backdrop-filter: blur(6px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  }
+  #hud .t { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #7fd0c0; margin-bottom: 8px; }
+  #hud .row { display: flex; justify-content: space-between; gap: 18px; font-size: 13px; line-height: 1.7; }
+  #hud .row b { font-weight: 700; color: #ffd166; }
+  #hud .hint { margin-top: 10px; font-size: 10px; color: #6b7c8c; letter-spacing: 0.5px; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">
+  <div class="t">Ball Drop Sandbox</div>
+  <div class="row"><span>dropped</span><b id="h-dropped">0 / 25</b></div>
+  <div class="row"><span>awake</span><b id="h-awake">0</b></div>
+  <div class="row"><span>score</span><b id="h-score">0</b></div>
+  <div class="hint">SPACE pause &nbsp;·&nbsp; R restart</div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+
+// ---- constants -------------------------------------------------------------
+const R = 0.5, GRAV = -9.8, REST = 0.6, TANG = 0.985;
+const SLEEP_V = 0.05, SLEEP_TICKS = 30, TOTAL = 25, DROP_EVERY = 30;
+const HW = 4, HD = 4, FLOOR = 0, CEIL = 8;
+const XMIN = -HW + R, XMAX = HW - R, ZMIN = -HD + R, ZMAX = HD - R, YMIN = FLOOR + R;
+
+// ---- seeded RNG (mulberry32) ----------------------------------------------
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (a >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// ---- three.js scene -------------------------------------------------------
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0b1016);
+scene.fog = new THREE.Fog(0x0b1016, 26, 60);
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.set(0, 11, 15);
+camera.lookAt(0, 2.2, 0);
+
+// lights
+scene.add(new THREE.HemisphereLight(0xbfd8ff, 0x1a2230, 0.55));
+const key = new THREE.DirectionalLight(0xfff2df, 1.15);
+key.position.set(7, 14, 9);
+key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+key.shadow.camera.near = 1; key.shadow.camera.far = 40;
+key.shadow.camera.left = -8; key.shadow.camera.right = 8;
+key.shadow.camera.top = 8; key.shadow.camera.bottom = -8;
+key.shadow.bias = -0.0004;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x8fd0ff, 0.35);
+fill.position.set(-8, 6, -6);
+scene.add(fill);
+
+// table
+const table = new THREE.Mesh(
+  new THREE.BoxGeometry(16, 1.2, 16),
+  new THREE.MeshStandardMaterial({ color: 0x2a2f38, roughness: 0.85, metalness: 0.1 })
+);
+table.position.set(0, -0.6, 0);
+table.receiveShadow = true;
+scene.add(table);
+
+// glass box (open top)
+const glassMat = new THREE.MeshPhysicalMaterial({
+  color: 0x9fd8ff, metalness: 0, roughness: 0.08,
+  transmission: 0.92, thickness: 0.6, ior: 1.4,
+  transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false
+});
+function wall(w, h, d, x, y, z) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), glassMat);
+  m.position.set(x, y, z);
+  scene.add(m);
+}
+wall(8.4, 0.2, 8.4, 0, -0.1, 0);   // floor
+wall(8.4, 4.2, 0.2, 0, 2.0, -4.1); // back (taller)
+wall(8.4, 3.2, 0.2, 0, 1.5, 4.1);  // front
+wall(0.2, 3.2, 8.4, -4.1, 1.5, 0); // left
+wall(0.2, 3.2, 8.4, 4.1, 1.5, 0);  // right
+
+// ball meshes
+const ballGeo = new THREE.SphereGeometry(R, 28, 20);
+const ballMat = new THREE.MeshStandardMaterial({ color: 0xffd166, roughness: 0.35, metalness: 0.15 });
+const ballMeshes = [];
+for (let i = 0; i < TOTAL; i++) {
+  const m = new THREE.Mesh(ballGeo, ballMat);
+  m.castShadow = true; m.receiveShadow = true; m.visible = false;
+  scene.add(m); ballMeshes.push(m);
+}
+
+// ---- simulation state -----------------------------------------------------
+let balls = [], rng = null, tick = 0, score = 0, over = false, paused = false;
+
+function spawnBall() {
+  const x = (rng() * 2 - 1) * (HW - 1.2);
+  const z = (rng() * 2 - 1) * (HD - 1.2);
+  const y = 6.5 + rng() * 1.2;
+  balls.push({
+    x, y, z,
+    vx: (rng() * 2 - 1) * 0.4, vy: 0, vz: (rng() * 2 - 1) * 0.4,
+    r: R, settled: false, rest: 0
+  });
+}
+
+function reset(seed) {
+  rng = mulberry32(seed | 0);
+  balls = []; tick = 0; score = 0; over = false;
+  for (let i = 0; i < TOTAL; i++) ballMeshes[i].visible = false;
+  window.__game.seed = seed | 0;
+  window.__game.ready = true;
+}
+
+function step(dt) {
+  if (over) return;
+  tick++;
+  if (balls.length < TOTAL && tick % DROP_EVERY === 0) spawnBall();
+
+  // integrate
+  for (const b of balls) {
+    if (b.settled) continue;
+    b.vy += GRAV * dt;
+    b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+  }
+
+  // ball vs ball (positional correction + equal-mass exchange + tangential friction)
+  for (let i = 0; i < balls.length; i++) {
+    const a = balls[i];
+    for (let j = i + 1; j < balls.length; j++) {
+      const b = balls[j];
+      let dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
+      let d2 = dx * dx + dy * dy + dz * dz;
+      const min = a.r + b.r;
+      if (d2 >= min * min || d2 === 0) continue;
+      const d = Math.sqrt(d2);
+      const nx = dx / d, ny = dy / d, nz = dz / d;
+      const overlap = min - d;
+      if (!a.settled && !b.settled) {
+        const h = overlap * 0.5;
+        a.x -= nx * h; a.y -= ny * h; a.z -= nz * h;
+        b.x += nx * h; b.y += ny * h; b.z += nz * h;
+      } else if (!a.settled) {
+        a.x -= nx * overlap; a.y -= ny * overlap; a.z -= nz * overlap;
+      } else if (!b.settled) {
+        b.x += nx * overlap; b.y += ny * overlap; b.z += nz * overlap;
+      }
+      const rvx = b.vx - a.vx, rvy = b.vy - a.vy, rvz = b.vz - a.vz;
+      const vn = rvx * nx + rvy * ny + rvz * nz;
+      if (vn < 0) {
+        const jn = -vn;
+        if (!a.settled) { a.vx -= jn * nx; a.vy -= jn * ny; a.vz -= jn * nz; }
+        if (!b.settled) { b.vx += jn * nx; b.vy += jn * ny; b.vz += jn * nz; }
+        const tvx = rvx - vn * nx, tvy = rvy - vn * ny, tvz = rvz - vn * nz;
+        const f = (1 - TANG) * 0.5;
+        if (!a.settled) { a.vx += tvx * f; a.vy += tvy * f; a.vz += tvz * f; }
+        if (!b.settled) { b.vx -= tvx * f; b.vy -= tvy * f; b.vz -= tvz * f; }
+      }
+    }
+  }
+
+  // walls + floor
+  for (const b of balls) {
+    if (b.settled) continue;
+    if (b.x < XMIN) { b.x = XMIN; b.vx = -b.vx * REST; }
+    else if (b.x > XMAX) { b.x = XMAX; b.vx = -b.vx * REST; }
+    if (b.z < ZMIN) { b.z = ZMIN; b.vz = -b.vz * REST; }
+    else if (b.z > ZMAX) { b.z = ZMAX; b.vz = -b.vz * REST; }
+    if (b.y < YMIN) { b.y = YMIN; b.vy = -b.vy * REST; }
+    if (b.y > CEIL) { b.y = CEIL; b.vy = -b.vy * REST; }
+  }
+
+  // settle detection
+  let settledCount = 0;
+  for (const b of balls) {
+    if (b.settled) { settledCount++; continue; }
+    const sp = Math.hypot(b.vx, b.vy, b.vz);
+    const onFloor = b.y <= YMIN + 0.02;
+    let onSettled = false;
+    if (!onFloor) {
+      for (const o of balls) {
+        if (o === b || !o.settled) continue;
+        const dx = o.x - b.x, dy = o.y - b.y, dz = o.z - b.z;
+        if (dx * dx + dy * dy + dz * dz < (b.r + o.r) * (b.r + o.r)) { onSettled = true; break; }
+      }
+    }
+    if (sp < SLEEP_V && (onFloor || onSettled)) {
+      b.rest++;
+      if (b.rest >= SLEEP_TICKS) { b.settled = true; b.vx = 0; b.vy = 0; b.vz = 0; settledCount++; }
+    } else b.rest = 0;
+  }
+
+  score = settledCount * 10 + (settledCount === TOTAL ? 50 : 0);
+  if (settledCount === TOTAL) over = true;
+}
+
+function hash() {
+  const r4 = (v) => Math.round(v * 1e4) / 1e4;
+  let s = '';
+  for (const b of balls) {
+    s += r4(b.x) + ',' + r4(b.y) + ',' + r4(b.z) + ',' +
+         r4(b.vx) + ',' + r4(b.vy) + ',' + r4(b.vz) + ',' +
+         (b.settled ? 1 : 0) + ';';
+  }
+  return s + '|' + score;
+}
+
+// ---- HUD ------------------------------------------------------------------
+const hD = document.getElementById('h-dropped');
+const hA = document.getElementById('h-awake');
+const hS = document.getElementById('h-score');
+function updateHUD() {
+  let awake = 0;
+  for (const b of balls) if (!b.settled) awake++;
+  hD.textContent = balls.length + ' / ' + TOTAL;
+  hA.textContent = awake;
+  hS.textContent = score;
+}
+
+// ---- render loop ----------------------------------------------------------
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  if (!paused) step(dt);
+  for (let i = 0; i < balls.length; i++) {
+    const b = balls[i], m = ballMeshes[i];
+    m.visible = true;
+    m.position.set(b.x, b.y, b.z);
+  }
+  updateHUD();
+  renderer.render(scene, camera);
+}
+
+// ---- input ----------------------------------------------------------------
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); paused = !paused; }
+  else if (e.code === 'KeyR') { reset(window.__game.seed); }
+});
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ---- contract -------------------------------------------------------------
+window.__game = {
+  ready: false,
+  seed: 1234,
+  balls: [],
+  score: 0,
+  over: false,
+  step,
+  reset,
+  hash
+};
+
+reset(1234);
+animate();
+</script>
+</body>
+</html>
+
+```

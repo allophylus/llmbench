@@ -1,0 +1,190 @@
+{
+ "slug": "byteshape-qwen3-8-27b-iq4xs-3090",
+ "spec": "match3-cascades",
+ "model_id": "C:\\llama3090\\models\\Qwen3.8-27B-IQ4_XS-3.84bpw.gguf",
+ "base_url": "http://127.0.0.1:18189",
+ "prompt_file": "GAME_SPEC_match3-cascades.md",
+ "prompt_sha256": "745ff7a60c12919ee5593540df37ae334e5b20a75835b6ff27ab5a4c82819603",
+ "max_repairs": 10,
+ "turns_allowed": 3,
+ "turns_used": 3,
+ "accepted_attempt": null,
+ "best_attempt": 2,
+ "status": "plays-with-failures",
+ "per_attempt": [
+  {
+   "attempt": 1,
+   "wall_s": 47.96,
+   "prompt_tokens": 1656,
+   "completion_tokens": 3947,
+   "decode_tps": 84.95,
+   "html_bytes": 10952,
+   "gate_pass": true,
+   "passed": 1,
+   "total": 5,
+   "compliance": 75,
+   "violations": [
+    "Math.random used (seeded generator required)"
+   ],
+   "assertions": [
+    {
+     "id": "d1_clean_board",
+     "desc": "8x8 ints 0..4, no run of 3, settle() changes nothing",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d2_seeded_cascade",
+     "desc": "fixed swap script reproduces its score on a second identical run",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d3_no_unsolicited_cascade",
+     "desc": "after each of 30 sampled legal swaps, settle() changes nothing",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d4_always_stable",
+     "desc": "every returned board has no run of 3 (200 sampled swaps over fresh boards)",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d5_determinism",
+     "desc": "seed 1234 replay identical; seed 99 differs",
+     "ok": true,
+     "got": {
+      "same": true,
+      "differs": true
+     },
+     "want": {
+      "same": true,
+      "differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 2,
+   "wall_s": 47.73,
+   "prompt_tokens": 5915,
+   "completion_tokens": 4031,
+   "decode_tps": 93.31,
+   "html_bytes": 11189,
+   "gate_pass": true,
+   "passed": 1,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "d1_clean_board",
+     "desc": "8x8 ints 0..4, no run of 3, settle() changes nothing",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d2_seeded_cascade",
+     "desc": "fixed swap script reproduces its score on a second identical run",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d3_no_unsolicited_cascade",
+     "desc": "after each of 30 sampled legal swaps, settle() changes nothing",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d4_always_stable",
+     "desc": "every returned board has no run of 3 (200 sampled swaps over fresh boards)",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d5_determinism",
+     "desc": "seed 1234 replay identical; seed 99 differs",
+     "ok": true,
+     "got": {
+      "same": true,
+      "differs": true
+     },
+     "want": {
+      "same": true,
+      "differs": true
+     }
+    }
+   ]
+  },
+  {
+   "attempt": 3,
+   "wall_s": 47.68,
+   "prompt_tokens": 5969,
+   "completion_tokens": 4031,
+   "decode_tps": 93.34,
+   "html_bytes": 11189,
+   "gate_pass": true,
+   "passed": 1,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "d1_clean_board",
+     "desc": "8x8 ints 0..4, no run of 3, settle() changes nothing",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d2_seeded_cascade",
+     "desc": "fixed swap script reproduces its score on a second identical run",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d3_no_unsolicited_cascade",
+     "desc": "after each of 30 sampled legal swaps, settle() changes nothing",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d4_always_stable",
+     "desc": "every returned board has no run of 3 (200 sampled swaps over fresh boards)",
+     "ok": false,
+     "got": "Cannot read properties of undefined (reading 'cells')",
+     "want": "no exception"
+    },
+    {
+     "id": "d5_determinism",
+     "desc": "seed 1234 replay identical; seed 99 differs",
+     "ok": true,
+     "got": {
+      "same": true,
+      "differs": true
+     },
+     "want": {
+      "same": true,
+      "differs": true
+     }
+    }
+   ]
+  }
+ ],
+ "total_wall_s": 157.3,
+ "total_prompt_tokens": 13540,
+ "total_completion_tokens": 12009,
+ "recorded_at": "2026-11-08T07:51:10+0800"
+}

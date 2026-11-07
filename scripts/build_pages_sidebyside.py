@@ -52,6 +52,7 @@ MODEL_NAME = {
     "huihui-abl-q4-k-m": ("Qwen3.8-27B abliterated (community)", "Huihui-abl-Q4_K_M.gguf"),
     "ornith-1-5-35b-a3b-q4-k-m": ("Ornith-1.5-35B-A3B Q4_K_M", "Ornith-1.5-35B-Q4_K_M.gguf"),
     "lfm3-1-7b-q4-k-m": ("LFM3-1.7B Q4_K_M", "LFM3-1.7B-Q4_K_M.gguf"),
+    "byteshape-qwen3-8-27b-iq4xs-3090": ("Qwen3.8-27B IQ4_XS · RTX 3090 (CUDA)", "Qwen3.8-27B-IQ4_XS-3.84bpw.gguf"),
 }
 ORDER = list(MODEL_NAME)
 

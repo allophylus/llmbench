@@ -1,0 +1,13 @@
+{
+ "attempt": 1,
+ "wall_s": 101.27,
+ "prompt_tokens": 1594,
+ "completion_tokens": 9000,
+ "decode_tps": 90.18,
+ "html_bytes": 0,
+ "gate_pass": false,
+ "passed": 0,
+ "total": 5,
+ "compliance": 0,
+ "note": "reply contained no usable HTML"
+}

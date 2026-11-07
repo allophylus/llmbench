@@ -1,0 +1,44 @@
+[byteshape-qwen3-8-27b-iq4xs-3090] turn 1: FAIL ['console: Failed to load resource: net::ERR_FILE_NOT_FOUND']
+[byteshape-qwen3-8-27b-iq4xs-3090] turn 2: FAIL ['no canvas/ready']
+[byteshape-qwen3-8-27b-iq4xs-3090] turn 3: FAIL ['no canvas/ready']
+{
+ "slug": "byteshape-qwen3-8-27b-iq4xs-3090",
+ "turns_allowed": 3,
+ "turns_used": 3,
+ "status": "still-broken",
+ "per_turn": [
+  {
+   "attempt": 1,
+   "ok": false,
+   "canvas": 1,
+   "ready": false,
+   "errors": [
+    "console: Failed to load resource: net::ERR_FILE_NOT_FOUND"
+   ],
+   "wall_s": 63.0,
+   "tokens": 5556,
+   "bytes": 14977
+  },
+  {
+   "attempt": 2,
+   "ok": false,
+   "canvas": 1,
+   "ready": false,
+   "errors": [],
+   "wall_s": 64.5,
+   "tokens": 5559,
+   "bytes": 14991
+  },
+  {
+   "attempt": 3,
+   "ok": false,
+   "canvas": 1,
+   "ready": false,
+   "errors": [],
+   "wall_s": 66.9,
+   "tokens": 5663,
+   "bytes": 14991
+  }
+ ],
+ "total_s": 204.7
+}

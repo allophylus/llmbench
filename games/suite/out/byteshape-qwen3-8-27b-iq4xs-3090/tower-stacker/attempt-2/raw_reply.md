@@ -1,0 +1,261 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tower Stacker</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#0e1116;font-family:ui-monospace,Menlo,Consolas,monospace;}
+  #c{position:fixed;inset:0;display:block;}
+  #meter{position:fixed;left:16px;top:16px;width:190px;padding:12px 14px;color:#e8eef7;
+    background:rgba(14,17,22,.72);border:1px solid rgba(255,255,255,.12);border-radius:10px;
+    backdrop-filter:blur(4px);user-select:none;}
+  #meter h1{font-size:13px;letter-spacing:2px;margin:0 0 8px;color:#8fd0ff;font-weight:600;}
+  .row{display:flex;justify-content:space-between;font-size:12px;margin:3px 0;color:#c7d2e0;}
+  .row b{color:#fff;font-weight:600;}
+  #bar{height:8px;background:rgba(255,255,255,.12);border-radius:4px;margin:8px 0;overflow:hidden;}
+  #bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#3aa0ff,#7be0a0);transition:width .1s;}
+  #state{font-size:12px;margin-top:6px;color:#7be0a0;}
+  #hint{position:fixed;left:16px;bottom:14px;font-size:11px;color:#5b6675;}
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="meter">
+  <h1>TOWER STACKER</h1>
+  <div class="row"><span>Height</span><b id="h">0 / 20</b></div>
+  <div class="row"><span>Score</span><b id="s">0</b></div>
+  <div id="bar"><i id="fill"></i></div>
+  <div id="state">running</div>
+</div>
+<div id="hint">R restart &nbsp;·&nbsp; SPACE pause &nbsp;·&nbsp; drag orbit / wheel zoom</div>
+<script type="module">
+import * as THREE from 'three';
+
+// ---------- seeded RNG (mulberry32) ----------
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+// ---------- constants ----------
+const W=2,H=1,D=2, N=20, DROP_EVERY=40, SETTLE_TICKS=20, VY_SETTLE=0.05, G=9.8, DROP_Y=8;
+const EPS=1e-4, EPS2=1e-3;
+
+// ---------- three.js scene ----------
+let renderer,scene,camera,ground,blocks=[],meshes=[],clock;
+let paused=false;
+
+function makeScene(){
+  renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.05;
+
+  scene=new THREE.Scene();
+  scene.background=new THREE.Color(0x0e1116);
+  scene.fog=new THREE.Fog(0x0e1116,26,60);
+
+  camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,0.1,200);
+  camera.position.set(11,8,13);
+  camera.lookAt(0,3,0);
+
+  scene.add(new THREE.HemisphereLight(0x9fc0ff,0x1a1410,0.55));
+  const key=new THREE.DirectionalLight(0xfff2df,1.15);
+  key.position.set(9,14,7); key.castShadow=true;
+  key.shadow.mapSize.set(2048,2048);
+  key.shadow.camera.left=-12;key.shadow.camera.right=12;
+  key.shadow.camera.top=16;key.shadow.camera.bottom=-12;
+  key.shadow.camera.near=1;key.shadow.camera.far=45;
+  key.shadow.bias=-0.0004;
+  scene.add(key);
+  const fill=new THREE.DirectionalLight(0x6f9dff,0.4);
+  fill.position.set(-8,6,-6); scene.add(fill);
+
+  ground=new THREE.Mesh(new THREE.PlaneGeometry(60,60),
+    new THREE.MeshStandardMaterial({color:0x14181f,roughness:0.95,metalness:0.0}));
+  ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
+  const grid=new THREE.GridHelper(60,60,0x2a3340,0x1c232d);
+  grid.position.y=0.001; scene.add(grid);
+
+  clock=new THREE.Clock();
+}
+
+function blockColor(i){
+  const hue=0.55+0.10*(i/(N-1));
+  const c=new THREE.Color().setHSL(hue,0.55,0.52);
+  c.offsetHSL(0,0,((i%2)?0.05:-0.05));
+  return c;
+}
+
+// ---------- game state ----------
+let seed=1234, rng=null, offsets=[], blocksState=[], droppedCount=0, tick=0;
+let over=false, toppled=false, score=0, height=0;
+
+function reset(seedArg){
+  seed=seedArg|0;
+  rng=mulberry32(seed);
+  offsets=[];
+  for(let i=0;i<N;i++){
+    if(i===0) offsets.push(0);
+    else offsets.push((rng()*1.2)-0.6);
+  }
+  blocksState=[]; droppedCount=0; tick=0;
+  over=false; toppled=false; score=0; height=0; paused=false;
+  for(const m of meshes){ if(m) scene.remove(m); }
+  meshes=[];
+  for(let i=0;i<N;i++){
+    const mat=new THREE.MeshStandardMaterial({color:blockColor(i),roughness:0.55,metalness:0.12});
+    const mesh=new THREE.Mesh(new THREE.BoxGeometry(W,H,D),mat);
+    mesh.castShadow=true; mesh.receiveShadow=true; mesh.visible=false;
+    scene.add(mesh); meshes.push(mesh);
+  }
+  updateHUD();
+}
+
+function dropBlock(i){
+  const b={x:offsets[i],y:DROP_Y,z:0,w:W,h:H,vy:0,dropped:true,settled:false,contact:0};
+  blocksState.push(b);
+  meshes[i].visible=true;
+  droppedCount++;
+}
+
+function supportTop(b){
+  let top=0;
+  for(const o of blocksState){
+    if(o===b) continue;
+    if(!o.settled) continue;
+    if(Math.abs(b.x-o.x)<(W-EPS2) && Math.abs(b.z-o.z)<(D-EPS2)){
+      const t=o.y+o.h/2;
+      if(t>top) top=t;
+    }
+  }
+  return top;
+}
+
+function isStable(b){
+  if(b.settled) return true;
+  const sup=supportTop(b);
+  if(sup<=EPS) return true; // ground: infinite support
+  const below=blocksState.find(o=>o!==b && o.settled && Math.abs(o.y+o.h/2-sup)<EPS2);
+  if(!below) return true;
+  const dx=b.x-below.x, dz=b.z-below.z;
+  return (Math.abs(dx)+EPS)<(W/2) && (Math.abs(dz)+EPS)<(D/2);
+}
+
+function step(dt){
+  if(over) return;
+  tick++;
+  if(droppedCount<N && tick%DROP_EVERY===1) dropBlock(droppedCount);
+
+  for(const b of blocksState){
+    if(b.settled) continue;
+    b.vy-=G*dt;
+    b.y+=b.vy*dt;
+    const sup=supportTop(b);
+    const floor=sup+b.h/2;
+    if(b.y<=floor){
+      b.y=floor;
+      if(b.vy<0) b.vy=0;
+      b.contact++;
+      if(b.contact>=SETTLE_TICKS && Math.abs(b.vy)<VY_SETTLE){
+        b.settled=true;
+        if(!isStable(b)){ toppled=true; over=true; }
+      }
+    } else {
+      b.contact=0;
+    }
+  }
+
+  height=blocksState.filter(b=>b.settled).length;
+  score=height*100;
+  if(!toppled && droppedCount===N && height===N){ score+=500; over=true; }
+
+  for(let i=0;i<blocksState.length;i++){
+    const b=blocksState[i], m=meshes[i];
+    m.position.set(b.x,b.y,b.z);
+  }
+  updateHUD();
+}
+
+function updateHUD(){
+  document.getElementById('h').textContent=height+' / '+N;
+  document.getElementById('s').textContent=score;
+  document.getElementById('fill').style.width=(height/N*100)+'%';
+  const st=document.getElementById('state');
+  if(over){ st.textContent=toppled?'TOPPLED':'COMPLETE'; st.style.color=toppled?'#ff7a6b':'#7be0a0'; }
+  else if(paused){ st.textContent='paused'; st.style.color='#e0c060'; }
+  else { st.textContent='running'; st.style.color='#7be0a0'; }
+}
+
+function hash(){
+  let s='';
+  for(const b of blocksState){
+    s+=Math.round(b.x*1e4)/1e4+','+Math.round(b.y*1e4)/1e4+','+Math.round(b.z*1e4)/1e4+',';
+  }
+  s+='|'+score;
+  return s;
+}
+
+// ---------- contract ----------
+window.__game={
+  ready:false,
+  get seed(){return seed;},
+  get blocks(){return blocksState.map(b=>({x:b.x,y:b.y,z:b.z,w:b.w,h:b.h,dropped:b.dropped,settled:b.settled}));},
+  get height(){return height;},
+  get score(){return score;},
+  get over(){return over;},
+  get toppled(){return toppled;},
+  step:step,
+  reset:reset,
+  hash:hash
+};
+
+// ---------- input ----------
+addEventListener('keydown',e=>{
+  if(e.code==='KeyR') reset(seed);
+  else if(e.code==='Space'){ e.preventDefault(); paused=!paused; updateHUD(); }
+});
+let dragging=false,px=0,py=0,az=0.62,el=0.5,radius=18;
+const canvas=document.getElementById('c');
+canvas.addEventListener('pointerdown',e=>{dragging=true;px=e.clientX;py=e.clientY;});
+addEventListener('pointerup',()=>dragging=false);
+addEventListener('pointermove',e=>{
+  if(!dragging) return;
+  az-=(e.clientX-px)*0.005; el-=(e.clientY-py)*0.005;
+  el=Math.max(0.15,Math.min(1.35,el)); px=e.clientX; py=e.clientY;
+});
+canvas.addEventListener('wheel',e=>{e.preventDefault();radius=Math.max(8,Math.min(40,radius+e.deltaY*0.01));},{passive:false});
+
+function updateCamera(){
+  const x=radius*Math.sin(az)*Math.cos(el), y=radius*Math.sin(el)+3, z=radius*Math.cos(az)*Math.cos(el);
+  camera.position.set(x,y,z); camera.lookAt(0,3,0);
+}
+
+// ---------- loop ----------
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=Math.min(clock.getDelta(),0.05);
+  if(!paused && !over) step(dt);
+  updateCamera();
+  renderer.render(scene,camera);
+}
+
+addEventListener('resize',()=>{
+  camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+});
+
+makeScene();
+reset(1234);
+window.__game.ready=true;
+animate();
+</script>
+</body>
+</html>
+```

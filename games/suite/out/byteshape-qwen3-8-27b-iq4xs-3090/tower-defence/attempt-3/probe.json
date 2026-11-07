@@ -1,0 +1,97 @@
+{
+ "spec": "tower-defence",
+ "game_dir": "attempt-3",
+ "probed_at": "2026-11-08T07:48:29+0800",
+ "gate": {
+  "load_ok": true,
+  "ready": true,
+  "canvas": true,
+  "three": true,
+  "contract_keys": [
+   "ready",
+   "seed",
+   "gold",
+   "lives",
+   "wave",
+   "kills",
+   "towers",
+   "units",
+   "path",
+   "score",
+   "over",
+   "won",
+   "step",
+   "reset",
+   "hash"
+  ],
+  "contract_missing": [],
+  "pass": true,
+  "animation_advancing": false
+ },
+ "assertions": [
+  {
+   "id": "c1_grid_placement",
+   "desc": "every tower on a distinct non-path tile",
+   "ok": false,
+   "got": "Cannot read properties of undefined (reading '0')",
+   "want": "no exception"
+  },
+  {
+   "id": "c2_gold_exact",
+   "desc": "gold == 200 + 5*kills - sum(cost) at every sample; never negative",
+   "ok": false,
+   "got": "Cannot read properties of undefined (reading '0')",
+   "want": "no exception"
+  },
+  {
+   "id": "c3_five_waves_win",
+   "desc": "fixed policy clears all 5 waves (won: true)",
+   "ok": false,
+   "got": "Cannot read properties of undefined (reading '0')",
+   "want": "no exception"
+  },
+  {
+   "id": "c4_no_tower_spam",
+   "desc": "towers grow by <=1 per 10-tick window and never off-grid",
+   "ok": false,
+   "got": "Cannot read properties of undefined (reading '0')",
+   "want": "no exception"
+  },
+  {
+   "id": "c5_determinism",
+   "desc": "same seed same outcome and hash",
+   "ok": false,
+   "got": "Cannot read properties of undefined (reading '0')",
+   "want": "no exception"
+  }
+ ],
+ "compliance": {
+  "score": 100,
+  "violations": [],
+  "notes": []
+ },
+ "console_errors": [
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')",
+  "pageerror: Cannot read properties of undefined (reading '0')"
+ ],
+ "passed": 0,
+ "total": 5
+}

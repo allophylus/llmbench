@@ -1,0 +1,53 @@
+{
+ "slug": "byteshape-qwen3-8-27b-iq4xs-3090",
+ "model_requested": "C:\\llama3090\\models\\Qwen3.8-27B-IQ4_XS-3.84bpw.gguf",
+ "base_url": "http://127.0.0.1:18189/v1",
+ "prompt_file": "WEBGAME_PHYSICS.md",
+ "prompt_sha256": "56bd1a7eefbf79542c7cd9f27e658b0645e150568a3cc620101097ff0dfa2c47",
+ "max_attempts": 3,
+ "temperature": 0.0,
+ "max_tokens": 8000,
+ "started_at": "2026-11-08T07:27:23+0800",
+ "per_attempt": [
+  {
+   "n": 1,
+   "outcome": "accepted",
+   "reasons": [],
+   "wall_s": 51.7,
+   "prompt_tokens": 533,
+   "completion_tokens": 4310,
+   "decode_tps": 84.56,
+   "html_lines": 228,
+   "validation_summary": {
+    "http_load_ok": true,
+    "file_load_ok": true,
+    "canvas_ok": true,
+    "webgl_ok": true,
+    "uses_three": true,
+    "animation_ok": true,
+    "input_ok": true,
+    "console_error_count": 0,
+    "contract_ok": true,
+    "contract_reasons": [],
+    "cdn_reachable": false,
+    "overlays_cover_geometry": true,
+    "player_centre_onscreen": null,
+    "player_visible": null,
+    "player_fully_onscreen": null,
+    "player_bbox_px": null,
+    "pass": true,
+    "accept": true
+   }
+  }
+ ],
+ "server_fingerprint": "b12189-80d2c0c2c",
+ "attempts": 1,
+ "accepted_attempt": 1,
+ "accepted_source": "attempts/attempt-1",
+ "total_wall_s": 66.31,
+ "total_prompt_tokens": 533,
+ "total_completion_tokens": 4310,
+ "total_decode_tps_avg": 84.56,
+ "finished_at": "2026-11-08T07:28:29+0800",
+ "published_from": "attempts/attempt-1"
+}

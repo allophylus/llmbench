@@ -1,0 +1,22 @@
+{
+ "note": "Run record for this cell: the three generation attempts and the three repair turns, kept together because the repair loop overwrites build.json. Numbers come from the harness logs (gta-build.log / gta-repair3.log) for the same run.",
+ "model": "Qwen3.8-27B-IQ4_XS-3.84bpw.gguf",
+ "gpu": "RTX 3090 · CUDA",
+ "prompt_file": "WEBGAME_GTA.md",
+ "generation": {
+  "attempts_used": 3,
+  "accepted_attempt": null,
+  "completion_tokens": 16728,
+  "wall_s": 759.9,
+  "gate": "every attempt: canvas ok, animation ok, but window.__game never ready and keys do not move the player"
+ },
+ "repair": {
+  "turns_allowed": 3,
+  "turns_used": 3,
+  "status": "still-broken",
+  "completion_tokens": 16778,
+  "wall_s": 204.7
+ },
+ "verdict": "stalled",
+ "verdict_detail": "canvas renders a scene, the HUD shows SCORE/WAVE/SHIPS and a RESTART button, but the game is in a game-over state on load and input changes nothing; a dispatched click/pointerdown on the visible button and on the canvas centre (games/click_probe.py) does not fix it."
+}

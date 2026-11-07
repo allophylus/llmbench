@@ -1125,7 +1125,7 @@ table.rx td.num { font-variant-numeric: tabular-nums; color: var(--fg); }
   .about#ablation .scroll td.num { text-align: right !important; }
   .about#ablation #mob { display: block; margin: .35rem 0 0; color: var(--fg-faint); font-size: 12px; }
 }
-</style></head><body><header class="site-head"><div class="wrap"><h1>llmbench</h1><p class="sub">Raw, repeatable benchmark numbers for local models served by <strong>llama.cpp</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB (Vulkan) and an NVIDIA GeForce RTX 3090 24&nbsp;GiB (CUDA).</p></div></header><div class="topbar"><div class="wrap"><nav class="site-nav" aria-label="Sections"><a href="../">Overview</a><a href="../games/" aria-current="page">Games</a><a href="../chat/">Chat</a><a href="../thinking/">Thinking</a></nav></div></div><div class=wrap><h1>games — model-written browser games</h1><p class=sub>Each model writes a single-file three.js game from a frozen prompt. The model draws everything with geometry — no images, textures or audio files. Repeats = extra generation turns allowed to fix a failing build (max 10).</p><p class=sub><b><a href='sidebyside/'>New: four games, side by side →</a></b> each model's ball sandbox, tower stacker, tower defence and match-3 next to the others, with executed rule checks and a spec-compliance score per attempt.</p><div class=table-wrap><table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th><th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th><th>Robot</th><th>Screenshot</th><th>Play</th></tr></thead><tbody><tr><td><a href='#gemma-4-26b-a4b-galaga'>Gemma 4 26B-A4B</a><br><span class=meta>gemma-4-26B-A4B-it-UD-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>2212</td><td class=num>50.7</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page)</td><td>—</td><td><img class=thumb src='gemma-4-26b-a4b-galaga/shot.png' alt=''></td><td><a href='gemma-4-26b-a4b-galaga/index.html'>play</a></td></tr><tr><td><a href='#nanbeige-4-3-33b-galaga'>Nanbeige 4.3-33B</a><br><span class=meta>Nanbeige4.3-33B-Q4_K.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>3470</td><td class=num>294.5</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page)</td><td>—</td><td><img class=thumb src='nanbeige-4-3-33b-galaga/shot.png' alt=''></td><td><a href='nanbeige-4-3-33b-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>2324</td><td class=num>22.0</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it; animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-galaga'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>4132</td><td class=num>38.2</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-gta'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num>9564</td><td class=num>90.1</td><td>renders</td><td class=meta>animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-physics'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>3</td><td class=num>2</td><td class=num>11154</td><td class=num>105.5</td><td>renders</td><td class=meta>animation not advancing; 706 console errors</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-physics/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>3508</td><td class=num>79.5</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green</td><td>0</td><td><img class=thumb src='qwen3-8-27b-q4km/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-b12110-galaga'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>b12110-galaga</td><td>off</td><td class=num>3</td><td class=num>2</td><td class=num>10146</td><td class=num>377.7</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page)</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-b12110-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-b12110-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-galaga'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-gta'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-physics'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-physics/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-solar'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>solar system mission</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td>—</td><td>—</td><td><a href='qwen3-8-27b-q4km-solar/index.html'>play</a></td></tr><tr><td><a href='#byteshape-qwen3-8-27b-iq4xs-galaga'>Qwen3.8-27B (ByteShape IQ4_XS) <span class='pill gpu'>RTX 3090 · CUDA</span></a><br><span class=meta>Qwen3.8-27B-IQ4_XS-3.84bpw.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>5377</td><td class=num>94.5</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page); 0 in the published copy, which carries that script beside it</td><td>—</td><td><img class=thumb src='../benchmarks/rtx3090/galaga-3090/shot.png' alt=''></td><td><a href='../benchmarks/rtx3090/galaga-3090/index.html'>play</a></td></tr></tbody></table></div><h2 class=sec>Details</h2><section class=detail id='gemma-4-26b-a4b-galaga'><h2>Gemma 4 26B-A4B — arcade shooter (TUI-derived)</h2><p class=meta>gemma-4-26B-A4B-it-UD-Q4_K_M.gguf</p><p class=meta>pass · thinking off · 1 attempt(s),  repeat(s) · 2212 tokens · 50.7s</p><p class=notes>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page)</p><details><summary>prompt used</summary><pre class=promptbox>&lt;!--
+</style></head><body><header class="site-head"><div class="wrap"><h1>llmbench</h1><p class="sub">Raw, repeatable benchmark numbers for local models served by <strong>llama.cpp</strong> on an AMD Radeon AI PRO R9700 32&nbsp;GiB (Vulkan) and an NVIDIA GeForce RTX 3090 24&nbsp;GiB (CUDA).</p></div></header><div class="topbar"><div class="wrap"><nav class="site-nav" aria-label="Sections"><a href="../">Overview</a><a href="../games/" aria-current="page">Games</a><a href="../chat/">Chat</a><a href="../thinking/">Thinking</a></nav></div></div><div class=wrap><h1>games — model-written browser games</h1><p class=sub>Each model writes a single-file three.js game from a frozen prompt. The model draws everything with geometry — no images, textures or audio files. Repeats = extra generation turns allowed to fix a failing build (max 10).</p><p class=sub><b><a href='sidebyside/'>New: four games, side by side →</a></b> each model's ball sandbox, tower stacker, tower defence and match-3 next to the others, with executed rule checks and a spec-compliance score per attempt.</p><div class=table-wrap><table><thead><tr><th>Model</th><th>Game</th><th>Thinking</th><th>Attempts</th><th>Repeats</th><th>Tokens</th><th>Build s</th><th>Status</th><th>What's wrong / notes</th><th>Robot</th><th>Screenshot</th><th>Play</th></tr></thead><tbody><tr><td><a href='#gemma-4-26b-a4b-galaga'>Gemma 4 26B-A4B</a><br><span class=meta>gemma-4-26B-A4B-it-UD-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>2212</td><td class=num>50.7</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page)</td><td>—</td><td><img class=thumb src='gemma-4-26b-a4b-galaga/shot.png' alt=''></td><td><a href='gemma-4-26b-a4b-galaga/index.html'>play</a></td></tr><tr><td><a href='#nanbeige-4-3-33b-galaga'>Nanbeige 4.3-33B</a><br><span class=meta>Nanbeige4.3-33B-Q4_K.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>3470</td><td class=num>294.5</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page)</td><td>—</td><td><img class=thumb src='nanbeige-4-3-33b-galaga/shot.png' alt=''></td><td><a href='nanbeige-4-3-33b-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>2324</td><td class=num>22.0</td><td>renders</td><td class=meta>no window.__game contract → robot cannot score it; animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-galaga'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>4132</td><td class=num>38.2</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-gta'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num>9564</td><td class=num>90.1</td><td>renders</td><td class=meta>animation not advancing</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-6-35b-a3b-ud-q4km-physics'>Qwen3.6-35B-A3B</a><br><span class=meta>Qwen3.6-35B-A3B-UD-Q4_K_M.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>3</td><td class=num>2</td><td class=num>11154</td><td class=num>105.5</td><td>renders</td><td class=meta>animation not advancing; 706 console errors</td><td>—</td><td><img class=thumb src='qwen3-6-35b-a3b-ud-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-6-35b-a3b-ud-q4km-physics/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>space shooter (v1 prompt)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>3508</td><td class=num>79.5</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green</td><td>0</td><td><img class=thumb src='qwen3-8-27b-q4km/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-b12110-galaga'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>b12110-galaga</td><td>off</td><td class=num>3</td><td class=num>2</td><td class=num>10146</td><td class=num>377.7</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page)</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-b12110-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-b12110-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-galaga'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-galaga/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-galaga/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-gta'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-gta/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-gta/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-physics'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>2</td><td class=num>1</td><td class=num></td><td class=num></td><td>renders</td><td class=meta>playable in browser</td><td>—</td><td><img class=thumb src='qwen3-8-27b-q4km-physics/shot.png' alt=''></td><td><a href='qwen3-8-27b-q4km-physics/index.html'>play</a></td></tr><tr><td><a href='#qwen3-8-27b-q4km-solar'>Qwen3.8-27B</a><br><span class=meta>Qwen3.8-27B-Q4_K_M.gguf</span></td><td>solar system mission</td><td>off</td><td class=num>1</td><td class=num></td><td class=num></td><td class=num></td><td>unverified</td><td class=meta>—</td><td>—</td><td>—</td><td><a href='qwen3-8-27b-q4km-solar/index.html'>play</a></td></tr><tr><td><a href='#byteshape-qwen3-8-27b-iq4xs-3090-gta'>Qwen3.8-27B (ByteShape IQ4_XS) <span class='pill gpu'>RTX 3090 · CUDA</span></a><br><span class=meta>Qwen3.8-27B-IQ4_XS-3.84bpw.gguf</span></td><td>top-down driving (TUI-derived)</td><td>off</td><td class=num>6</td><td class=num>5</td><td class=num>33506</td><td class=num>964.6</td><td>stalled</td><td class=meta>generation: 3 attempt(s), 16,728 tokens; then 3 repair turn(s), 16,778 tokens; canvas renders a scene, the HUD shows SCORE/WAVE/SHIPS and a RESTART button, but the game is in a game-over state on load and input changes nothing; a dispatched click/pointerdown on the visible button and on the canvas centre (games/click_probe.py) does not fix it.</td><td>—</td><td>—</td><td><a href='../benchmarks/rtx3090/games/gta-3d/index.html'>play</a></td></tr><tr><td><a href='#byteshape-qwen3-8-27b-iq4xs-3090-physics'>Qwen3.8-27B (ByteShape IQ4_XS) <span class='pill gpu'>RTX 3090 · CUDA</span></a><br><span class=meta>Qwen3.8-27B-IQ4_XS-3.84bpw.gguf</span></td><td>3D physics sandbox (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>4310</td><td class=num>80.3</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page)</td><td>—</td><td><img class=thumb src='../benchmarks/rtx3090/games/physics-3d/shot.png' alt=''></td><td><a href='../benchmarks/rtx3090/games/physics-3d/index.html'>play</a></td></tr><tr><td><a href='#byteshape-qwen3-8-27b-iq4xs-galaga'>Qwen3.8-27B (ByteShape IQ4_XS) <span class='pill gpu'>RTX 3090 · CUDA</span></a><br><span class=meta>Qwen3.8-27B-IQ4_XS-3.84bpw.gguf</span></td><td>arcade shooter (TUI-derived)</td><td>off</td><td class=num>1</td><td class=num></td><td class=num>5377</td><td class=num>94.5</td><td>pass</td><td class=meta>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page); 0 in the published copy, which carries that script beside it</td><td>—</td><td><img class=thumb src='../benchmarks/rtx3090/galaga-3090/shot.png' alt=''></td><td><a href='../benchmarks/rtx3090/galaga-3090/index.html'>play</a></td></tr></tbody></table></div><h2 class=sec>Details</h2><section class=detail id='gemma-4-26b-a4b-galaga'><h2>Gemma 4 26B-A4B — arcade shooter (TUI-derived)</h2><p class=meta>gemma-4-26B-A4B-it-UD-Q4_K_M.gguf</p><p class=meta>pass · thinking off · 1 attempt(s),  repeat(s) · 2212 tokens · 50.7s</p><p class=notes>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page)</p><details><summary>prompt used</summary><pre class=promptbox>&lt;!--
 WEBGAME_PROMPT — FROZEN (llmbench browser-game cell v1, game cell &quot;webgame-3js&quot;)
 
 Sent verbatim as the single user message to every model. Never edit; the sha256 of
@@ -2512,7 +2512,329 @@ Show a HUD with: current phase, distance remaining to the target (in arbitrary u
 progress bar. The rocket must visibly travel between the planets (not teleport), with a particle
 exhaust trail. Completing the round trip earns the score.
 Visual quality bar (graded by a human): deliberate palette, glowing Sun, planet colours,
-starfield, eased motion, readable HUD, subtle camera shake on launch.</pre></details><p><a href='qwen3-8-27b-q4km-solar/index.html'>play the game →</a></p></section><section class=detail id='byteshape-qwen3-8-27b-iq4xs-galaga'><h2>Qwen3.8-27B (ByteShape IQ4_XS) — arcade shooter (TUI-derived)</h2><p class=meta>Qwen3.8-27B-IQ4_XS-3.84bpw.gguf</p><p class=meta>pass · thinking off · 1 attempt(s),  repeat(s) · 5377 tokens · 94.5s</p><p class=notes>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page); 0 in the published copy, which carries that script beside it</p><details><summary>prompt used</summary><pre class=promptbox>IMPORTANT: keep the whole file under about 350 lines. A truncated file is a failed submission.
+starfield, eased motion, readable HUD, subtle camera shake on launch.</pre></details><p><a href='qwen3-8-27b-q4km-solar/index.html'>play the game →</a></p></section><section class=detail id='byteshape-qwen3-8-27b-iq4xs-3090-gta'><h2>Qwen3.8-27B (ByteShape IQ4_XS) — top-down driving (TUI-derived)</h2><p class=meta>Qwen3.8-27B-IQ4_XS-3.84bpw.gguf</p><p class=meta>stalled · thinking off · 6 attempt(s), 5 repeat(s) · 33506 tokens · 964.6s</p><p class=notes>generation: 3 attempt(s), 16,728 tokens; then 3 repair turn(s), 16,778 tokens; canvas renders a scene, the HUD shows SCORE/WAVE/SHIPS and a RESTART button, but the game is in a game-over state on load and input changes nothing; a dispatched click/pointerdown on the visible button and on the canvas centre (games/click_probe.py) does not fix it.</p><details><summary>prompt used</summary><pre class=promptbox>You wrote this single-file three.js browser game. It FAILS in a real browser.
+
+Observed failure:
+console: Failed to load resource: net::ERR_FILE_NOT_FOUND
+
+Requirements it must satisfy: one self-contained HTML file, three.js from the pinned CDN import map, everything drawn with geometry (no external assets), a working window.__game = {ready:true, score, lives, over, player:{x,y}, enemies:[{x,y}], bullets:[{x,y}]} updated every frame plus window.__game.reset(), keyboard and touch controls, and it must run without console errors. Keep it under 350 lines.
+
+Fix the actual defect and reply with the complete corrected file in one ```html block.
+
+Current code:
+```html
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no&quot;&gt;
+&lt;title&gt;NEON COURIER&lt;/title&gt;
+&lt;style&gt;
+  html,body{margin:0;height:100%;overflow:hidden;background:#05060f;font-family:&#x27;Segoe UI&#x27;,system-ui,sans-serif;touch-action:none;-webkit-user-select:none;user-select:none}
+  #c{position:fixed;inset:0;display:block}
+  .hud{position:fixed;top:14px;left:16px;color:#eaf6ff;text-shadow:0 2px 10px rgba(0,0,0,.7);pointer-events:none;z-index:5}
+  .hud .t{font-size:12px;letter-spacing:4px;color:#7fe9ff;opacity:.85}
+  .hud .s{font-size:40px;font-weight:800;line-height:1;margin-top:2px}
+  .hud .s span{color:#ffcf5c}
+  .hud .l{font-size:13px;letter-spacing:2px;margin-top:6px;color:#ff5c7a}
+  .hud .l b{color:#eaf6ff}
+  #msg{position:fixed;top:16px;left:50%;transform:translateX(-50%);color:#ffcf5c;font-size:15px;letter-spacing:3px;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,.8);opacity:0;transition:opacity .3s;pointer-events:none;z-index:6}
+  .ctl{position:fixed;bottom:0;left:0;right:0;height:150px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 18px 18px;pointer-events:none;z-index:7}
+  .pad{display:flex;gap:12px;pointer-events:auto}
+  .btn{width:66px;height:66px;border-radius:16px;background:rgba(120,220,255,.10);border:2px solid rgba(120,220,255,.55);color:#cfeeff;font-size:26px;display:flex;align-items:center;justify-content:center;touch-action:none;backdrop-filter:blur(3px)}
+  .btn:active{background:rgba(120,220,255,.32)}
+  .btn.fire{width:82px;height:82px;border-radius:50%;background:rgba(255,92,122,.14);border-color:rgba(255,92,122,.6);color:#ffd0dc;font-size:13px;letter-spacing:1px;font-weight:800}
+  .btn.fire:active{background:rgba(255,92,122,.4)}
+  #ov{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,6,15,.72);backdrop-filter:blur(4px);z-index:9;color:#eaf6ff;text-align:center}
+  #ov h1{font-size:44px;margin:0;letter-spacing:3px}
+  #ov p{font-size:16px;letter-spacing:2px;opacity:.85}
+  #ov button{margin-top:22px;padding:14px 34px;font-size:16px;letter-spacing:2px;font-weight:800;color:#05060f;background:#ffcf5c;border:none;border-radius:12px;cursor:pointer}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;canvas id=&quot;c&quot;&gt;&lt;/canvas&gt;
+&lt;div class=&quot;hud&quot;&gt;
+  &lt;div class=&quot;t&quot;&gt;NEON COURIER&lt;/div&gt;
+  &lt;div class=&quot;s&quot;&gt;&lt;span id=&quot;score&quot;&gt;0&lt;/span&gt; / 5&lt;/div&gt;
+  &lt;div class=&quot;l&quot;&gt;TIME &lt;b id=&quot;time&quot;&gt;60&lt;/b&gt;s &amp;nbsp;·&amp;nbsp; &lt;span id=&quot;lives&quot;&gt;●●●&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;msg&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;ctl&quot;&gt;
+  &lt;div class=&quot;pad&quot;&gt;
+    &lt;div class=&quot;btn&quot; id=&quot;bL&quot;&gt;◀&lt;/div&gt;
+    &lt;div class=&quot;btn&quot; id=&quot;bR&quot;&gt;▶&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;pad&quot;&gt;
+    &lt;div class=&quot;btn&quot; id=&quot;bD&quot;&gt;▼&lt;/div&gt;
+    &lt;div class=&quot;btn fire&quot; id=&quot;bF&quot;&gt;BOOST&lt;/div&gt;
+    &lt;div class=&quot;btn&quot; id=&quot;bU&quot;&gt;▲&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&quot;ov&quot;&gt;&lt;h1 id=&quot;ovT&quot;&gt;MISSION COMPLETE&lt;/h1&gt;&lt;p id=&quot;ovP&quot;&gt;&lt;/p&gt;&lt;button id=&quot;ovB&quot;&gt;RESTART&lt;/button&gt;&lt;/div&gt;
+
+&lt;script type=&quot;importmap&quot;&gt;{&quot;imports&quot;:{&quot;three&quot;:&quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}&lt;/script&gt;
+&lt;script type=&quot;module&quot;&gt;
+import * as THREE from &#x27;three&#x27;;
+
+const W=120, H=120, ROAD=14, BLD=10, GAP=16, N=5, TIME=60;
+const PAL={road:0x141826, line:0x2b3350, bld:0x2a3350, bldTop:0x3a4568, car:0xffcf5c, carDark:0x2a2f45, wp:0x7fe9ff, wpCore:0xffffff, hit:0xff5c7a, boost:0x7fe9ff};
+
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById(&#x27;c&#x27;),antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+const scene=new THREE.Scene();
+scene.fog=new THREE.Fog(0x0a0c1a,40,120);
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,400);
+scene.add(new THREE.HemisphereLight(0x8fb0ff,0x0a0c1a,0.9));
+const sun=new THREE.DirectionalLight(0xfff0d0,0.7); sun.position.set(30,60,20); scene.add(sun);
+
+// ---- world ----
+const roadX=[-48,-16,16,48], roadY=[-48,-16,16,48];
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(W,H),new THREE.MeshStandardMaterial({color:0x0c0f1c,roughness:1}));
+ground.rotation.x=-Math.PI/2; ground.position.y=-0.05; scene.add(ground);
+const roadMat=new THREE.MeshStandardMaterial({color:PAL.road,roughness:0.9});
+const lineMat=new THREE.MeshStandardMaterial({color:PAL.line,roughness:0.8});
+for(const x of roadX){const m=new THREE.Mesh(new THREE.PlaneGeometry(ROAD,H),roadMat);m.rotation.x=-Math.PI/2;m.position.set(x,0,0);scene.add(m);}
+for(const y of roadY){const m=new THREE.Mesh(new THREE.PlaneGeometry(W,ROAD),roadMat);m.rotation.x=-Math.PI/2;m.position.set(0,0,y);scene.add(m);}
+for(const x of roadX){const m=new THREE.Mesh(new THREE.PlaneGeometry(0.4,H),lineMat);m.rotation.x=-Math.PI/2;m.position.set(x,0.02,0);scene.add(m);}
+for(const y of roadY){const m=new THREE.Mesh(new THREE.PlaneGeometry(W,0.4),lineMat);m.rotation.x=-Math.PI/2;m.position.set(0,0.02,y);scene.add(m);}
+
+const buildings=[];
+const bldGeo=new THREE.BoxGeometry(BLD,1,BLD);
+for(let i=0;i&lt;roadX.length-1;i++)for(let j=0;j&lt;roadY.length-1;j++){
+  const cx=(roadX[i]+roadX[i+1])/2, cz=(roadY[j]+roadY[j+1])/2;
+  const h=6+Math.random()*10;
+  const b=new THREE.Mesh(bldGeo,new THREE.MeshStandardMaterial({color:PAL.bld,roughness:0.7,emissive:0x0a1020,emissiveIntensity:0.4}));
+  b.position.set(cx,h/2,cz); b.scale.y=h; scene.add(b);
+  const top=new THREE.Mesh(new THREE.BoxGeometry(BLD*0.9,0.3,BLD*0.9),new THREE.MeshStandardMaterial({color:PAL.bldTop,emissive:0x1a2440,emissiveIntensity:0.6}));
+  top.position.set(cx,h+0.15,cz); scene.add(top);
+  buildings.push({x:cx,z:cz,h});
+}
+
+// ---- car ----
+const car=new THREE.Group();
+const body=new THREE.Mesh(new THREE.BoxGeometry(2.2,0.7,4),new THREE.MeshStandardMaterial({color:PAL.car,roughness:0.4,emissive:0x3a2a00,emissiveIntensity:0.3}));
+body.position.y=0.5; car.add(body);
+const cabin=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.6,2),new THREE.MeshStandardMaterial({color:PAL.carDark,roughness:0.3}));
+cabin.position.set(0,1.05,-0.2); car.add(cabin);
+const wheelGeo=new THREE.CylinderGeometry(0.45,0.45,0.4,12); wheelGeo.rotateZ(Math.PI/2);
+const wheelMat=new THREE.MeshStandardMaterial({color:0x11131f,roughness:0.6});
+for(const [wx,wz] of [[-1.1,1.3],[1.1,1.3],[-1.1,-1.3],[1.1,-1.3]]){const w=new THREE.Mesh(wheelGeo,wheelMat);w.position.set(wx,0.45,wz);car.add(w);}
+const head=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.3,0.2),new THREE.MeshStandardMaterial({color:0xfff2c0,emissive:0xfff2c0,emissiveIntensity:1.2}));
+head.position.set(0,0.6,2.05); car.add(head);
+const tail=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.3,0.2),new THREE.MeshStandardMaterial({color:PAL.hit,emissive:PAL.hit,emissiveIntensity:1.2}));
+tail.position.set(0,0.6,-2.05); car.add(tail);
+scene.add(car);
+
+// ---- waypoints ----
+const waypoints=[];
+const wpGeo=new THREE.CylinderGeometry(3,3,0.3,24);
+const wpRing=new THREE.TorusGeometry(3.4,0.25,8,32);
+for(let i=0;i&lt;N;i++){
+  const x=roadX[i%4], z=roadY[Math.floor(i/4)%4];
+  const g=new THREE.Group();
+  const base=new THREE.Mesh(wpGeo,new THREE.MeshStandardMaterial({color:PAL.wp,emissive:PAL.wp,emissiveIntensity:0.8,transparent:true,opacity:0.5}));
+  base.position.y=0.15; g.add(base);
+  const ring=new THREE.Mesh(wpRing,new THREE.MeshStandardMaterial({color:PAL.wp,emissive:PAL.wp,emissiveIntensity:1.4}));
+  ring.rotation.x=-Math.PI/2; ring.position.y=0.4; g.add(ring);
+  const core=new THREE.Mesh(new THREE.SphereGeometry(0.7,16,16),new THREE.MeshStandardMaterial({color:PAL.wpCore,emissive:PAL.wpCore,emissiveIntensity:2}));
+  core.position.y=2; g.add(core);
+  g.position.set(x,0,z); scene.add(g);
+  waypoints.push({x,z,active:true,group:g,ring,core});
+}
+
+// ---- particles ----
+const MAXP=400;
+const pPos=new Float32Array(MAXP*3), pCol=new Float32Array(MAXP*3), pSize=new Float32Array(MAXP);
+const pVel=new Float32Array(MAXP*3), pLife=new Float32Array(MAXP), pMax=new Float32Array(MAXP);
+const pGeo=new THREE.BufferGeometry();
+pGeo.setAttribute(&#x27;position&#x27;,new THREE.BufferAttribute(pPos,3));
+pGeo.setAttribute(&#x27;color&#x27;,new THREE.BufferAttribute(pCol,3));
+pGeo.setAttribute(&#x27;size&#x27;,new THREE.BufferAttribute(pSize,1));
+const pMat=new THREE.ShaderMaterial({
+  transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
+  vertexShader:`attribute float size; varying vec3 vC; void main(){vC=color; vec4 mv=modelViewMatrix*vec4(position,1.0); gl_PointSize=size*(220.0/-mv.z); gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying vec3 vC; void main(){float d=length(gl_PointCoord-0.5); if(d&gt;0.5)discard; float a=smoothstep(0.5,0.0,d); gl_FragColor=vec4(vC,a);}`
+});
+pMat.vertexColors=true;
+const points=new THREE.Points(pGeo,pMat); points.frustumCulled=false; scene.add(points);
+let pHead=0;
+function burst(x,y,z,color,count,speed,life){
+  const c=new THREE.Color(color);
+  for(let i=0;i&lt;count;i++){
+    const k=pHead; pHead=(pHead+1)%MAXP;
+    pPos[k*3]=x; pPos[k*3+1]=y; pPos[k*3+2]=z;
+    const a=Math.random()*Math.PI*2, sp=speed*(0.4+Math.random()*0.8);
+    pVel[k*3]=Math.cos(a)*sp; pVel[k*3+1]=(Math.random()*0.6+0.3)*speed; pVel[k*3+2]=Math.sin(a)*sp;
+    pCol[k*3]=c.r; pCol[k*3+1]=c.g; pCol[k*3+2]=c.b;
+    pLife[k]=life; pMax[k]=life; pSize[k]=0.6+Math.random()*0.6;
+  }
+}
+
+// ---- state ----
+let score=0, lives=3, over=false, ready=false, timeLeft=TIME, invuln=0, shake=0, flash=0, msgT=0;
+let px=0, pz=0, heading=0, speed=0, boost=0;
+const keys={};
+const $=id=&gt;document.getElementById(id);
+function setMsg(t){const m=$(&#x27;msg&#x27;);m.textContent=t;m.style.opacity=1;msgT=1.4;}
+function updateHUD(){
+  $(&#x27;score&#x27;).textContent=score;
+  $(&#x27;time&#x27;).textContent=Math.max(0,Math.ceil(timeLeft));
+  $(&#x27;lives&#x27;).textContent=&#x27;●&#x27;.repeat(Math.max(0,lives))+&#x27;○&#x27;.repeat(Math.max(0,3-lives));
+}
+function endGame(win){
+  over=true; ready=false;
+  $(&#x27;ovT&#x27;).textContent=win?&#x27;MISSION COMPLETE&#x27;:&#x27;MISSION FAILED&#x27;;
+  $(&#x27;ovT&#x27;).style.color=win?&#x27;#7fe9ff&#x27;:&#x27;#ff5c7a&#x27;;
+  $(&#x27;ovP&#x27;).textContent=win?(&#x27;All 5 waypoints in &#x27;+Math.ceil(timeLeft)+&#x27;s left&#x27;):(score+&#x27; / 5 waypoints reached&#x27;);
+  $(&#x27;ov&#x27;).style.display=&#x27;flex&#x27;;
+}
+window.__game={ready:false,score:0,lives:3,over:false,player:{x:0,y:0},enemies:[],bullets:[],reset:reset};
+function reset(){
+  score=0; lives=3; over=false; timeLeft=TIME; invuln=0; shake=0; flash=0;
+  px=0; pz=0; heading=0; speed=0; boost=0;
+  for(const w of waypoints){w.active=true; w.group.visible=true;}
+  $(&#x27;ov&#x27;).style.display=&#x27;none&#x27;;
+  ready=true; updateHUD();
+}
+reset();
+
+// ---- input ----
+addEventListener(&#x27;keydown&#x27;,e=&gt;{keys[e.key.toLowerCase()]=true; if([&#x27; &#x27;,&#x27;arrowup&#x27;,&#x27;arrowdown&#x27;,&#x27;arrowleft&#x27;,&#x27;arrowright&#x27;].includes(e.key.toLowerCase()))e.preventDefault();});
+addEventListener(&#x27;keyup&#x27;,e=&gt;{keys[e.key.toLowerCase()]=false;});
+function bind(id,down,up){const el=$(id);el.addEventListener(&#x27;pointerdown&#x27;,e=&gt;{e.preventDefault();down();});el.addEventListener(&#x27;pointerup&#x27;,up);el.addEventListener(&#x27;pointerleave&#x27;,up);el.addEventListener(&#x27;pointercancel&#x27;,up);}
+bind(&#x27;bL&#x27;,()=&gt;keys[&#x27;arrowleft&#x27;]=true,()=&gt;keys[&#x27;arrowleft&#x27;]=false);
+bind(&#x27;bR&#x27;,()=&gt;keys[&#x27;arrowright&#x27;]=true,()=&gt;keys[&#x27;arrowright&#x27;]=false);
+bind(&#x27;bU&#x27;,()=&gt;keys[&#x27;arrowup&#x27;]=true,()=&gt;keys[&#x27;arrowup&#x27;]=false);
+bind(&#x27;bD&#x27;,()=&gt;keys[&#x27;arrowdown&#x27;]=true,()=&gt;keys[&#x27;arrowdown&#x27;]=false);
+bind(&#x27;bF&#x27;,()=&gt;keys[&#x27; &#x27;]=true,()=&gt;keys[&#x27; &#x27;]=false);
+$(&#x27;ovB&#x27;).addEventListener(&#x27;click&#x27;,reset);
+
+// ---- collision ----
+function collide(){
+  const r=1.4;
+  for(const b of buildings){
+    const dx=px-b.x, dz=pz-b.z;
+    const cx=Math.max(b.x-BLD/2-r,Math.min(px,b.x+BLD/2+r));
+    const cz=Math.max(b.z-BLD/2-r,Math.min(pz,b.z+BLD/2+r));
+    const ddx=px-cx, ddz=pz-cz;
+    if(ddx*ddx+ddz*ddz&lt;r*r){
+      if(invuln&lt;=0){
+        lives--; invuln=1.2; shake=1; flash=1; timeLeft=Math.max(0,timeLeft-3);
+        burst(px,1,pz,PAL.hit,26,7,0.9);
+        setMsg(&#x27;CRASH! -3s&#x27;);
+        if(lives&lt;=0){endGame(false);return;}
+      }
+      speed*=-0.3;
+      const nx=px-cx, nz=pz-cz, len=Math.hypot(nx,nz)||1;
+      px+=nx/len*(r-Math.hypot(ddx,ddz)); pz+=nz/len*(r-Math.hypot(ddx,ddz));
+    }
+  }
+}
+
+// ---- loop ----
+let last=performance.now();
+function tick(now){
+  requestAnimationFrame(tick);
+  let dt=(now-last)/1000; last=now; dt=Math.min(dt,0.05);
+  if(ready&amp;&amp;!over){
+    const up=keys[&#x27;arrowup&#x27;]||keys[&#x27;w&#x27;], down=keys[&#x27;arrowdown&#x27;]||keys[&#x27;s&#x27;];
+    const left=keys[&#x27;arrowleft&#x27;]||keys[&#x27;a&#x27;], right=keys[&#x27;arrowright&#x27;]||keys[&#x27;d&#x27;];
+    const boosting=keys[&#x27; &#x27;]&amp;&amp;up;
+    const maxS=boosting?34:20;
+    if(up) speed+=28*dt; else if(down) speed-=34*dt; else speed-=speed*1.6*dt;
+    speed=Math.max(-8,Math.min(maxS,speed));
+    const steer=(left?-1:0)+(right?1:0);
+    heading+=steer*2.4*dt*Math.min(1,Math.abs(speed)/6)*(speed&lt;0?-1:1);
+    px+=Math.sin(heading)*speed*dt;
+    pz+=Math.cos(heading)*speed*dt;
+    px=Math.max(-W/2+2,Math.min(W/2-2,px)); pz=Math.max(-H/2+2,Math.min(H/2-2,pz));
+    collide();
+    if(invuln&gt;0) invuln-=dt;
+    if(boosting&amp;&amp;Math.random()&lt;0.6) burst(px-Math.sin(heading)*2,0.6,pz-Math.cos(heading)*2,PAL.boost,2,3,0.5);
+    for(const w of waypoints){
+      if(w.active&amp;&amp;Math.hypot(px-w.x,pz-w.z)&lt;3.2){
+        w.active=false; w.group.visible=false; score++;
+        burst(w.x,1,w.z,PAL.wp,40,9,1.1); shake=Math.max(shake,0.5);
+        setMsg(score&gt;=N?&#x27;ALL PICKUPS!&#x27;:&#x27;PICKUP &#x27;+score+&#x27;/5&#x27;);
+        if(score&gt;=N) endGame(true);
+      }
+    }
+    timeLeft-=dt; if(timeLeft&lt;=0){timeLeft=0; endGame(false);}
+    updateHUD();
+  }
+  // car visual
+  car.position.set(px,0,pz);
+  car.rotation.y=heading;
+  car.position.y=Math.sin(now*0.02)*0.03;
+  car.visible=invuln&lt;=0||Math.floor(now*0.02)%2===0;
+  // waypoints animate
+  for(const w of waypoints){
+    if(!w.active)continue;
+    const s=1+Math.sin(now*0.005)*0.15;
+    w.ring.scale.set(s,s,s); w.core.position.y=2+Math.sin(now*0.004)*0.4;
+  }
+  // particles
+  for(let i=0;i&lt;MAXP;i++){
+    if(pLife[i]&gt;0){
+      pLife[i]-=dt;
+      pPos[i*3]+=pVel[i*3]*dt; pPos[i*3+1]+=pVel[i*3+1]*dt; pPos[i*3+2]+=pVel[i*3+2]*dt;
+      pVel[i*3+1]-=14*dt;
+      const f=Math.max(0,pLife[i]/pMax[i]);
+      pSize[i]=0.6*f+0.1;
+      pCol[i*3]*=0.98; pCol[i*3+1]*=0.98; pCol[i*3+2]*=0.98;
+    } else pSize[i]=0;
+  }
+  pGeo.attributes.position.needsUpdate=true; pGeo.attributes.color.needsUpdate=true; pGeo.attributes.size.needsUpdate=true;
+  // camera
+  shake=Math.max(0,shake-dt*2.2); flash=Math.max(0,flash-dt*2.5);
+  const sh=shake*shake*0.9;
+  const cx=px+Math.sin(heading)*-14+(Math.random()-0.5)*sh;
+  const cz=pz+Math.cos(heading)*-14+(Math.random()-0.5)*sh;
+  camera.position.set(cx,26,cz);
+  camera.lookAt(px,0,pz);
+  if(flash&gt;0){renderer.setClearColor(new THREE.Color(PAL.hit).multiplyScalar(flash*0.5));}
+  else renderer.setClearColor(0x05060f);
+  // machine state
+  window.__game.ready=ready&amp;&amp;!over; window.__game.score=score; window.__game.lives=Math.max(0,lives);
+  window.__game.over=over; window.__game.player={x:px,y:pz};
+  window.__game.enemies=buildings.map(b=&gt;({x:b.x,y:b.z}));
+  window.__game.bullets=waypoints.filter(w=&gt;w.active).map(w=&gt;({x:w.x,y:w.z}));
+  renderer.render(scene,camera);
+}
+requestAnimationFrame(tick);
+addEventListener(&#x27;resize&#x27;,()=&gt;{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+&lt;/script&gt;
+&lt;script src=&quot;../../../../../../games/touch.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+```</pre></details><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=bad>failed</td><td class=meta>console: Failed to load resource: net::ERR_FILE_NOT_FOUND</td><td class=num>5556</td><td class=num>63.0</td></tr><tr><td class=num>2</td><td class=bad>failed</td><td class=meta>—</td><td class=num>5559</td><td class=num>64.5</td></tr><tr><td class=num>3</td><td class=bad>failed</td><td class=meta>—</td><td class=num>5663</td><td class=num>66.9</td></tr></tbody></table><p><a href='../benchmarks/rtx3090/games/gta-3d/index.html'>play the game →</a></p></section><section class=detail id='byteshape-qwen3-8-27b-iq4xs-3090-physics'><h2>Qwen3.8-27B (ByteShape IQ4_XS) — 3D physics sandbox (TUI-derived)</h2><p class=meta>Qwen3.8-27B-IQ4_XS-3.84bpw.gguf</p><p class=meta>pass · thinking off · 1 attempt(s),  repeat(s) · 4310 tokens · 80.3s</p><p class=notes>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page)</p><details><summary>prompt used</summary><pre class=promptbox>IMPORTANT: keep the whole file under 250 lines. No large &lt;style&gt; block — at most 30 lines of CSS, inline styles elsewhere. A truncated file is a failed submission.
+Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
+Reply with the full file inside one ```html fenced block and nothing else.
+
+Hard requirements (an automated browser grader checks them):
+1. ONE FILE, NO BUILD STEP, runs from file:// — load three.js from a pinned CDN import map:
+   &lt;script type=&quot;importmap&quot;&gt;{&quot;imports&quot;:{&quot;three&quot;:&quot;https://unpkg.com/three@0.160.0/build/three.module.js&quot;}}&lt;/script&gt;
+   &lt;script type=&quot;module&quot;&gt;import * as THREE from &#x27;three&#x27;; ...&lt;/script&gt;
+2. You must DRAW everything yourself with three.js geometry, materials, lights and particles.
+   NO external images, textures, models, fonts or audio files. No base64 art. Code-drawn only.
+3. You must expose a machine-readable state, updated every frame:
+   window.__game = { ready:true, score:0, lives:3, over:false, player:{x,y}, enemies:[{x,y}], bullets:[{x,y}] };
+   window.__game.reset = function(){...};
+4. Input: listen on window for keydown/keyup (Arrows/WASD + Space). Also support touch:
+   on-screen buttons using pointerdown/pointerup with touch-action:none, usable at 390x844.
+5. Visual quality bar (this is graded by a human): deliberate 4-5 colour palette, gradient or
+   nebula background instead of flat black, additive particle bursts on hits, hit-flash and
+   screen shake, eased movement (no linear jumps), readable typographic HUD.
+6. Keep it under ~450 lines. No commentary outside the code block.
+
+GAME BRIEF:
+3D PHYSICS SANDBOX. A translucent box. Balls spawn and fall under gravity, bounce off the
+floor and walls with restitution, and collide with each other (simple sphere-sphere). The player launches a ball
+with Space from a random position; a HUD shows ball count. Score = number of simultaneous balls still bouncing after
+they settle is a failure; the game ends when 25 balls have been launched. Determinism matters: same seed/timing must
+bounce the same way.</pre></details><table class=subtbl><thead><tr><th>Turn</th><th>Result</th><th>Issue</th><th>Tokens</th><th>s</th></tr></thead><tbody><tr><td class=num>1</td><td class=ok>ok</td><td class=meta>renders</td><td class=num></td><td class=num></td></tr></tbody></table><img class=bigshot src='../benchmarks/rtx3090/games/physics-3d/shot.png' alt=''><p><a href='../benchmarks/rtx3090/games/physics-3d/index.html'>play the game →</a></p></section><section class=detail id='byteshape-qwen3-8-27b-iq4xs-galaga'><h2>Qwen3.8-27B (ByteShape IQ4_XS) — arcade shooter (TUI-derived)</h2><p class=meta>Qwen3.8-27B-IQ4_XS-3.84bpw.gguf</p><p class=meta>pass · thinking off · 1 attempt(s),  repeat(s) · 5377 tokens · 94.5s</p><p class=notes>accepted on attempt 1; gate: canvas, WebGL, three.js, animation, input and window.__game all green; 2 console 404s during the http gate (a shared script fetched relative to the served page); 0 in the published copy, which carries that script beside it</p><details><summary>prompt used</summary><pre class=promptbox>IMPORTANT: keep the whole file under about 350 lines. A truncated file is a failed submission.
 Write a complete, playable browser game as a SINGLE self-contained HTML file using three.js.
 Reply with the full file inside one ```html fenced block and nothing else.
 

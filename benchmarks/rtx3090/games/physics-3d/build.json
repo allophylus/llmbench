@@ -1,0 +1,20 @@
+{
+ "slug": "byteshape-qwen3-8-27b-iq4xs-3090",
+ "generated_at": "2026-11-08T07:28:43+0800",
+ "prompt_file": "WEBGAME_PHYSICS.md",
+ "max_attempts": 3,
+ "attempts_used": 1,
+ "retries": 0,
+ "accepted_attempt": 1,
+ "status": "accepted",
+ "per_attempt": [
+  {
+   "attempt": 1,
+   "ok": true,
+   "reasons": []
+  }
+ ],
+ "total_wall_s": 80.3,
+ "total_prompt_tokens": 533,
+ "total_completion_tokens": 4310
+}

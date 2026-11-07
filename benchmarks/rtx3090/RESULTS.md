@@ -50,3 +50,58 @@ errors (verified in headless Chrome). The frames are the model's own geometry.
 expected `ZQ-731`, got `ZQ-731
 The user wants the alphanumeric code inside the red rectangle. Looking at the image, there's a red-bordered square on the left containing the text "ZQ-731". The blue circle on the right is irrelevant. The instruction is to reply with only the code, no extra text. So the response should be exactly "ZQ-731".` → pass (1.34 s).
 
+
+## Browser games — the other two TUI-derived cells (gta-3d, physics-3d)
+
+Same frozen prompts and the same gate as the R9700 game rows
+(`games/WEBGAME_GTA.md`, `games/WEBGAME_PHYSICS.md`, `games/build_run.py` with three
+generation attempts then up to ten gate-driven repair turns). Server:
+`llama-server.exe` b12189, `-c 32768 -ngl 99 -fa on -b 16384 -ub 2048 -ctk q8_0 -ctv
+q4_0 --cache-reuse 256 --metrics --jinja -np 1 --reasoning off --spec-type draft-mtp
+--spec-draft-n-max 3 --temp 0`, reached over an SSH tunnel to the gateway.
+
+| cell | outcome | generation | repair turns | total tokens | total wall |
+|---|---|---|---|---|---|
+| gta-3d | **stalled** | 3 attempts, none passed the gate | 3 (cap 3 for this run) | 33,506 | 964.6 s |
+| physics-3d | **pass**, attempt 1 | 1 attempt, all 7 gate checks green | 0 | 4,310 | 80.3 s |
+
+`gta-3d`: every attempt renders (canvas, WebGL, three.js, animation advancing) but the
+`window.__game` contract never reaches `ready` and arrow keys change nothing — the scene
+sits in its game-over state with a RESTART button. A dispatched `pointerdown`+`click` on
+that button and on the canvas centre (the known webvalidate limitation: it never clicks)
+still leaves `ready:false` and input dead, so this is the model's defect, not the gate's.
+Recorded as `stalled` after three repair turns rather than looping to ten, matching how
+the A3B gta/physics cells are recorded. Artifacts: `games/gta-3d/` (attempts, repaired
+candidate, `run.json` with both halves of the run).
+
+`physics-3d`: accepted on attempt 1 with `load_ok`, `canvas`, `webgl`, `three_js`,
+`animation`, `input` and `contract` all true (`games/physics-3d/attempts/attempt-1/validation.json`),
+4,310 completion tokens over 80.3 s, prompt 533 tokens.
+
+Note on the gate: `build_run.py` returns exit 2 from `webgen` whenever the gate rejects,
+so `build.json` records `generator exit 2` per attempt rather than the individual failing
+checks; the per-attempt `validation.json` files carry the check-level detail.
+
+## Four-game spec suite (ball-drop-sandbox, tower-stacker, tower-defence, match3-cascades)
+
+`games/suite_run.py` against the same server, same frozen specs, three attempts per cell
+(the run is capped at 3 rather than the usual 11 because from attempt 2 the model
+re-emits a byte-identical file — `sha256 ff37a709…` on every ball-drop attempt — i.e.
+the same no-progress stall, and further turns cannot change the number).
+
+| spec | gate | assertions (best) | compliance (best) | attempts | tokens | wall |
+|---|---|---|---|---|---|---|
+| ball-drop-sandbox | pass on all 3 | 2/5 | 100 | 3 (identical after 1) | 11,874 | 158.3 s |
+| tower-stacker | fail, then **pass** | 5/5 | 100 | 2 (accepted 2) | 12,172 | 146.3 s |
+| tower-defence | pass on all 3 | 0/5 | 100 | 3 | 19,778 | 251.0 s |
+| match3-cascades | pass on all 3 | 1/5 | 75 → 100 | 3 | 12,009 | 157.3 s |
+
+What the assertions say: the games load and run, but the behaviour the spec asks for is
+mostly absent — the ball sandbox never reaches the required ball count/settling state and
+the tower defence never places towers (0/5), so those two cells play but do not do the
+task. tower-stacker is the one clean cell: 20 blocks, stable tower, no drift,
+deterministic, 5/5. match3 starts with `Math.random` (compliance 75) and then scores 100
+while still failing 4 of 5 rules.
+
+Artifacts: `../../games/suite/out/byteshape-qwen3-8-27b-iq4xs-3090/<spec>/` (every
+attempt, `build.json` with each assertion's observed value, screenshots).

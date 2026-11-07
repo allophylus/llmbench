@@ -1,0 +1,401 @@
+{
+ "slug": "attempt-1",
+ "probed_at": "2026-11-08T07:28:29+0800",
+ "chrome": "google-chrome (headless, playwright)",
+ "viewport": {
+  "width": 1280,
+  "height": 800
+ },
+ "http": {
+  "url": "http://127.0.0.1:55955/index.html",
+  "scheme": "http",
+  "load_ok": true,
+  "canvas_present": true,
+  "canvas_count": 1,
+  "webgl_ok": true,
+  "mentions_three": true,
+  "uses_three_global": true,
+  "overlay_regions": {
+   "viewport": [
+    1280,
+    800
+   ],
+   "overlays": [
+    {
+     "x": 18,
+     "y": 14,
+     "w": 244,
+     "h": 18,
+     "tag": "h1",
+     "id": null,
+     "cls": ""
+    },
+    {
+     "x": 18,
+     "y": 35,
+     "w": 244,
+     "h": 13,
+     "tag": "div",
+     "id": null,
+     "cls": "sub"
+    },
+    {
+     "x": 1216,
+     "y": 18,
+     "w": 10,
+     "h": 19,
+     "tag": "b",
+     "id": "s-launched",
+     "cls": ""
+    },
+    {
+     "x": 1252,
+     "y": 45,
+     "w": 10,
+     "h": 19,
+     "tag": "b",
+     "id": "s-active",
+     "cls": ""
+    },
+    {
+     "x": 1255,
+     "y": 71,
+     "w": 7,
+     "h": 14,
+     "tag": "span",
+     "id": "s-settled",
+     "cls": ""
+    },
+    {
+     "x": 14,
+     "y": 742,
+     "w": 74,
+     "h": 44,
+     "tag": "button",
+     "id": "reset",
+     "cls": ""
+    },
+    {
+     "x": 1146,
+     "y": 666,
+     "w": 120,
+     "h": 120,
+     "tag": "button",
+     "id": "launch",
+     "cls": ""
+    }
+   ]
+  },
+  "overlays": [
+   {
+    "x": 18,
+    "y": 14,
+    "w": 244,
+    "h": 18,
+    "tag": "h1",
+    "id": null,
+    "cls": "",
+    "pixels_differ_when_hidden": 3029
+   },
+   {
+    "x": 18,
+    "y": 35,
+    "w": 244,
+    "h": 13,
+    "tag": "div",
+    "id": null,
+    "cls": "sub",
+    "pixels_differ_when_hidden": 645
+   },
+   {
+    "x": 1216,
+    "y": 18,
+    "w": 10,
+    "h": 19,
+    "tag": "b",
+    "id": "s-launched",
+    "cls": "",
+    "pixels_differ_when_hidden": 79
+   },
+   {
+    "x": 1252,
+    "y": 45,
+    "w": 10,
+    "h": 19,
+    "tag": "b",
+    "id": "s-active",
+    "cls": "",
+    "pixels_differ_when_hidden": 79
+   },
+   {
+    "x": 1255,
+    "y": 71,
+    "w": 7,
+    "h": 14,
+    "tag": "span",
+    "id": "s-settled",
+    "cls": "",
+    "pixels_differ_when_hidden": 44
+   },
+   {
+    "x": 14,
+    "y": 742,
+    "w": 74,
+    "h": 44,
+    "tag": "button",
+    "id": "reset",
+    "cls": "",
+    "pixels_differ_when_hidden": 3120
+   },
+   {
+    "x": 1146,
+    "y": 666,
+    "w": 120,
+    "h": 120,
+    "tag": "button",
+    "id": "launch",
+    "cls": "",
+    "pixels_differ_when_hidden": 14264
+   }
+  ],
+  "hidden_geometry_under_overlays": true,
+  "animation_advancing": true,
+  "frame_hashes": [
+   "af27d3dc423428bf",
+   "135c6d15152c5145"
+  ],
+  "input_changes_pixels": true,
+  "input_left_changes_pixels": true,
+  "input_ok": true,
+  "control_vs_input_hashes": [
+   "fe3576fe374c29d7",
+   "2ee9a78ff2028dff",
+   "f7e1cf7c8be219b8"
+  ],
+  "screenshot": "shot.png",
+  "hud_markers": {
+   "SCORE": false,
+   "LIVES": false,
+   "GAME OVER": false
+  },
+  "console_errors": [
+   "error: Failed to load resource: the server responded with a status of 404 (File not found)",
+   "error: Failed to load resource: the server responded with a status of 404 (File not found)"
+  ],
+  "console_error_count": 2,
+  "failed_resources": [
+   "404 http://127.0.0.1:55955/games/touch.js"
+  ],
+  "ignored_favicon_404s": [],
+  "contract": {
+   "present": true,
+   "ready": true,
+   "reasons": [],
+   "ok": true
+  }
+ },
+ "file": {
+  "url": "file:///home/fen/repos/llmbench/benchmarks/rtx3090/games/physics-3d/attempts/attempt-1/index.html",
+  "scheme": "file",
+  "load_ok": true,
+  "canvas_present": true,
+  "canvas_count": 1,
+  "webgl_ok": true,
+  "mentions_three": true,
+  "uses_three_global": true,
+  "overlay_regions": {
+   "viewport": [
+    1280,
+    800
+   ],
+   "overlays": [
+    {
+     "x": 18,
+     "y": 14,
+     "w": 244,
+     "h": 18,
+     "tag": "h1",
+     "id": null,
+     "cls": ""
+    },
+    {
+     "x": 18,
+     "y": 35,
+     "w": 244,
+     "h": 13,
+     "tag": "div",
+     "id": null,
+     "cls": "sub"
+    },
+    {
+     "x": 1216,
+     "y": 18,
+     "w": 10,
+     "h": 19,
+     "tag": "b",
+     "id": "s-launched",
+     "cls": ""
+    },
+    {
+     "x": 1252,
+     "y": 45,
+     "w": 10,
+     "h": 19,
+     "tag": "b",
+     "id": "s-active",
+     "cls": ""
+    },
+    {
+     "x": 1255,
+     "y": 71,
+     "w": 7,
+     "h": 14,
+     "tag": "span",
+     "id": "s-settled",
+     "cls": ""
+    },
+    {
+     "x": 14,
+     "y": 742,
+     "w": 74,
+     "h": 44,
+     "tag": "button",
+     "id": "reset",
+     "cls": ""
+    },
+    {
+     "x": 1146,
+     "y": 666,
+     "w": 120,
+     "h": 120,
+     "tag": "button",
+     "id": "launch",
+     "cls": ""
+    }
+   ]
+  },
+  "overlays": [
+   {
+    "x": 18,
+    "y": 14,
+    "w": 244,
+    "h": 18,
+    "tag": "h1",
+    "id": null,
+    "cls": "",
+    "pixels_differ_when_hidden": 3029
+   },
+   {
+    "x": 18,
+    "y": 35,
+    "w": 244,
+    "h": 13,
+    "tag": "div",
+    "id": null,
+    "cls": "sub",
+    "pixels_differ_when_hidden": 645
+   },
+   {
+    "x": 1216,
+    "y": 18,
+    "w": 10,
+    "h": 19,
+    "tag": "b",
+    "id": "s-launched",
+    "cls": "",
+    "pixels_differ_when_hidden": 79
+   },
+   {
+    "x": 1252,
+    "y": 45,
+    "w": 10,
+    "h": 19,
+    "tag": "b",
+    "id": "s-active",
+    "cls": "",
+    "pixels_differ_when_hidden": 79
+   },
+   {
+    "x": 1255,
+    "y": 71,
+    "w": 7,
+    "h": 14,
+    "tag": "span",
+    "id": "s-settled",
+    "cls": "",
+    "pixels_differ_when_hidden": 44
+   },
+   {
+    "x": 14,
+    "y": 742,
+    "w": 74,
+    "h": 44,
+    "tag": "button",
+    "id": "reset",
+    "cls": "",
+    "pixels_differ_when_hidden": 3120
+   },
+   {
+    "x": 1146,
+    "y": 666,
+    "w": 120,
+    "h": 120,
+    "tag": "button",
+    "id": "launch",
+    "cls": "",
+    "pixels_differ_when_hidden": 14264
+   }
+  ],
+  "hidden_geometry_under_overlays": true,
+  "animation_advancing": true,
+  "frame_hashes": [
+   "50d0f2ba9026b8fb",
+   "66b743e1291d8b6a"
+  ],
+  "input_changes_pixels": true,
+  "input_left_changes_pixels": true,
+  "input_ok": true,
+  "control_vs_input_hashes": [
+   "e0bfe332a153d7a5",
+   "925413080374562b",
+   "183d1dfb0b90541e"
+  ],
+  "screenshot": "shot-file.png",
+  "hud_markers": {
+   "SCORE": false,
+   "LIVES": false,
+   "GAME OVER": false
+  },
+  "console_errors": [],
+  "console_error_count": 0,
+  "failed_resources": [],
+  "ignored_favicon_404s": [],
+  "contract": {
+   "present": true,
+   "ready": true,
+   "reasons": [],
+   "ok": true
+  }
+ },
+ "cdn_reachable": false,
+ "summary": {
+  "http_load_ok": true,
+  "file_load_ok": true,
+  "canvas_ok": true,
+  "webgl_ok": true,
+  "uses_three": true,
+  "animation_ok": true,
+  "input_ok": true,
+  "console_error_count": 2,
+  "contract_ok": true,
+  "contract_reasons": [],
+  "cdn_reachable": false,
+  "overlays_cover_geometry": true,
+  "player_centre_onscreen": null,
+  "player_visible": null,
+  "player_fully_onscreen": null,
+  "player_bbox_px": null,
+  "pass": true,
+  "accept": false
+ }
+}

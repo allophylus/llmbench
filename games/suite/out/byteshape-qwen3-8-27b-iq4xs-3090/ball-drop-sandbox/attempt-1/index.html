@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ball Drop Sandbox</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0b1016; }
+  #c { position: fixed; inset: 0; display: block; }
+  #hud {
+    position: fixed; top: 16px; left: 16px; z-index: 10;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color: #eaf2f8; background: rgba(12,18,26,0.62);
+    border: 1px solid rgba(120,160,190,0.28); border-radius: 12px;
+    padding: 12px 16px; min-width: 210px; backdrop-filter: blur(6px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  }
+  #hud .t { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #7fd0c0; margin-bottom: 8px; }
+  #hud .row { display: flex; justify-content: space-between; gap: 18px; font-size: 13px; line-height: 1.7; }
+  #hud .row b { font-weight: 700; color: #ffd166; }
+  #hud .hint { margin-top: 10px; font-size: 10px; color: #6b7c8c; letter-spacing: 0.5px; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">
+  <div class="t">Ball Drop Sandbox</div>
+  <div class="row"><span>dropped</span><b id="h-dropped">0 / 25</b></div>
+  <div class="row"><span>awake</span><b id="h-awake">0</b></div>
+  <div class="row"><span>score</span><b id="h-score">0</b></div>
+  <div class="hint">SPACE pause &nbsp;·&nbsp; R restart</div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+
+// ---- constants -------------------------------------------------------------
+const R = 0.5, GRAV = -9.8, REST = 0.6, TANG = 0.985;
+const SLEEP_V = 0.05, SLEEP_TICKS = 30, TOTAL = 25, DROP_EVERY = 30;
+const HW = 4, HD = 4, FLOOR = 0, CEIL = 8;
+const XMIN = -HW + R, XMAX = HW - R, ZMIN = -HD + R, ZMAX = HD - R, YMIN = FLOOR + R;
+
+// ---- seeded RNG (mulberry32) ----------------------------------------------
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// ---- three.js scene -------------------------------------------------------
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0b1016);
+scene.fog = new THREE.Fog(0x0b1016, 26, 60);
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.set(0, 11, 15);
+camera.lookAt(0, 2.2, 0);
+
+// lights
+scene.add(new THREE.HemisphereLight(0xbfd8ff, 0x1a2230, 0.55));
+const key = new THREE.DirectionalLight(0xfff2df, 1.15);
+key.position.set(7, 14, 9);
+key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+key.shadow.camera.near = 1; key.shadow.camera.far = 40;
+key.shadow.camera.left = -8; key.shadow.camera.right = 8;
+key.shadow.camera.top = 8; key.shadow.camera.bottom = -8;
+key.shadow.bias = -0.0004;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x8fd0ff, 0.35);
+fill.position.set(-8, 6, -6);
+scene.add(fill);
+
+// table
+const table = new THREE.Mesh(
+  new THREE.BoxGeometry(16, 1.2, 16),
+  new THREE.MeshStandardMaterial({ color: 0x2a2f38, roughness: 0.85, metalness: 0.1 })
+);
+table.position.set(0, -0.6, 0);
+table.receiveShadow = true;
+scene.add(table);
+
+// glass box (open top)
+const glassMat = new THREE.MeshPhysicalMaterial({
+  color: 0x9fd8ff, metalness: 0, roughness: 0.08,
+  transmission: 0.92, thickness: 0.6, ior: 1.4,
+  transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false
+});
+function wall(w, h, d, x, y, z) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), glassMat);
+  m.position.set(x, y, z);
+  scene.add(m);
+}
+wall(8.4, 0.2, 8.4, 0, -0.1, 0);   // floor
+wall(8.4, 4.2, 0.2, 0, 2.0, -4.1); // back (taller)
+wall(8.4, 3.2, 0.2, 0, 1.5, 4.1);  // front
+wall(0.2, 3.2, 8.4, -4.1, 1.5, 0); // left
+wall(0.2, 3.2, 8.4, 4.1, 1.5, 0);  // right
+
+// ball meshes
+const ballGeo = new THREE.SphereGeometry(R, 28, 20);
+const ballMat = new THREE.MeshStandardMaterial({ color: 0xffd166, roughness: 0.35, metalness: 0.15 });
+const ballMeshes = [];
+for (let i = 0; i < TOTAL; i++) {
+  const m = new THREE.Mesh(ballGeo, ballMat);
+  m.castShadow = true; m.receiveShadow = true; m.visible = false;
+  scene.add(m); ballMeshes.push(m);
+}
+
+// ---- simulation state -----------------------------------------------------
+let balls = [], rng = null, tick = 0, score = 0, over = false, paused = false;
+
+function spawnBall() {
+  const x = (rng() * 2 - 1) * (HW - 1.2);
+  const z = (rng() * 2 - 1) * (HD - 1.2);
+  const y = 6.5 + rng() * 1.2;
+  balls.push({
+    x, y, z,
+    vx: (rng() * 2 - 1) * 0.4, vy: 0, vz: (rng() * 2 - 1) * 0.4,
+    r: R, settled: false, rest: 0
+  });
+}
+
+function reset(seed) {
+  rng = mulberry32(seed | 0);
+  balls = []; tick = 0; score = 0; over = false;
+  for (let i = 0; i < TOTAL; i++) ballMeshes[i].visible = false;
+  window.__game.seed = seed | 0;
+  window.__game.ready = true;
+}
+
+function step(dt) {
+  if (over) return;
+  tick++;
+  if (balls.length < TOTAL && tick % DROP_EVERY === 0) spawnBall();
+
+  // integrate
+  for (const b of balls) {
+    if (b.settled) continue;
+    b.vy += GRAV * dt;
+    b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+  }
+
+  // ball vs ball (positional correction + equal-mass exchange + tangential friction)
+  for (let i = 0; i < balls.length; i++) {
+    const a = balls[i];
+    for (let j = i + 1; j < balls.length; j++) {
+      const b = balls[j];
+      let dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
+      let d2 = dx * dx + dy * dy + dz * dz;
+      const min = a.r + b.r;
+      if (d2 >= min * min || d2 === 0) continue;
+      const d = Math.sqrt(d2);
+      const nx = dx / d, ny = dy / d, nz = dz / d;
+      const overlap = min - d;
+      if (!a.settled && !b.settled) {
+        const h = overlap * 0.5;
+        a.x -= nx * h; a.y -= ny * h; a.z -= nz * h;
+        b.x += nx * h; b.y += ny * h; b.z += nz * h;
+      } else if (!a.settled) {
+        a.x -= nx * overlap; a.y -= ny * overlap; a.z -= nz * overlap;
+      } else if (!b.settled) {
+        b.x += nx * overlap; b.y += ny * overlap; b.z += nz * overlap;
+      }
+      const rvx = b.vx - a.vx, rvy = b.vy - a.vy, rvz = b.vz - a.vz;
+      const vn = rvx * nx + rvy * ny + rvz * nz;
+      if (vn < 0) {
+        const jn = -vn;
+        if (!a.settled) { a.vx -= jn * nx; a.vy -= jn * ny; a.vz -= jn * nz; }
+        if (!b.settled) { b.vx += jn * nx; b.vy += jn * ny; b.vz += jn * nz; }
+        const tvx = rvx - vn * nx, tvy = rvy - vn * ny, tvz = rvz - vn * nz;
+        const f = (1 - TANG) * 0.5;
+        if (!a.settled) { a.vx += tvx * f; a.vy += tvy * f; a.vz += tvz * f; }
+        if (!b.settled) { b.vx -= tvx * f; b.vy -= tvy * f; b.vz -= tvz * f; }
+      }
+    }
+  }
+
+  // walls + floor
+  for (const b of balls) {
+    if (b.settled) continue;
+    if (b.x < XMIN) { b.x = XMIN; b.vx = -b.vx * REST; }
+    else if (b.x > XMAX) { b.x = XMAX; b.vx = -b.vx * REST; }
+    if (b.z < ZMIN) { b.z = ZMIN; b.vz = -b.vz * REST; }
+    else if (b.z > ZMAX) { b.z = ZMAX; b.vz = -b.vz * REST; }
+    if (b.y < YMIN) { b.y = YMIN; b.vy = -b.vy * REST; }
+    if (b.y > CEIL) { b.y = CEIL; b.vy = -b.vy * REST; }
+  }
+
+  // settle detection
+  let settledCount = 0;
+  for (const b of balls) {
+    if (b.settled) { settledCount++; continue; }
+    const sp = Math.hypot(b.vx, b.vy, b.vz);
+    const onFloor = b.y <= YMIN + 0.02;
+    let onSettled = false;
+    if (!onFloor) {
+      for (const o of balls) {
+        if (o === b || !o.settled) continue;
+        const dx = o.x - b.x, dy = o.y - b.y, dz = o.z - b.z;
+        if (dx * dx + dy * dy + dz * dz < (b.r + o.r) * (b.r + o.r)) { onSettled = true; break; }
+      }
+    }
+    if (sp < SLEEP_V && (onFloor || onSettled)) {
+      b.rest++;
+      if (b.rest >= SLEEP_TICKS) { b.settled = true; b.vx = 0; b.vy = 0; b.vz = 0; settledCount++; }
+    } else b.rest = 0;
+  }
+
+  score = settledCount * 10 + (settledCount === TOTAL ? 50 : 0);
+  if (settledCount === TOTAL) over = true;
+}
+
+function hash() {
+  const r4 = (v) => Math.round(v * 1e4) / 1e4;
+  let s = '';
+  for (const b of balls) {
+    s += r4(b.x) + ',' + r4(b.y) + ',' + r4(b.z) + ',' +
+         r4(b.vx) + ',' + r4(b.vy) + ',' + r4(b.vz) + ',' +
+         (b.settled ? 1 : 0) + ';';
+  }
+  return s + '|' + score;
+}
+
+// ---- HUD ------------------------------------------------------------------
+const hD = document.getElementById('h-dropped');
+const hA = document.getElementById('h-awake');
+const hS = document.getElementById('h-score');
+function updateHUD() {
+  let awake = 0;
+  for (const b of balls) if (!b.settled) awake++;
+  hD.textContent = balls.length + ' / ' + TOTAL;
+  hA.textContent = awake;
+  hS.textContent = score;
+}
+
+// ---- render loop ----------------------------------------------------------
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  if (!paused) step(dt);
+  for (let i = 0; i < balls.length; i++) {
+    const b = balls[i], m = ballMeshes[i];
+    m.visible = true;
+    m.position.set(b.x, b.y, b.z);
+  }
+  updateHUD();
+  renderer.render(scene, camera);
+}
+
+// ---- input ----------------------------------------------------------------
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); paused = !paused; }
+  else if (e.code === 'KeyR') { reset(window.__game.seed); }
+});
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ---- contract -------------------------------------------------------------
+window.__game = {
+  ready: false,
+  seed: 1234,
+  balls: [],
+  score: 0,
+  over: false,
+  step,
+  reset,
+  hash
+};
+
+reset(1234);
+animate();
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+{
+ "slug": "byteshape-qwen3-8-27b-iq4xs-3090",
+ "spec": "tower-stacker",
+ "model_id": "C:\\llama3090\\models\\Qwen3.8-27B-IQ4_XS-3.84bpw.gguf",
+ "base_url": "http://127.0.0.1:18189",
+ "prompt_file": "GAME_SPEC_tower-stacker.md",
+ "prompt_sha256": "4d0652ec3a3eaa6cacf4868209da51132ef0fb445e344da06fce6c54d4032285",
+ "max_repairs": 10,
+ "turns_allowed": 3,
+ "turns_used": 2,
+ "accepted_attempt": 2,
+ "best_attempt": 2,
+ "status": "all-accepted",
+ "per_attempt": [
+  {
+   "attempt": 1,
+   "wall_s": 101.27,
+   "prompt_tokens": 1594,
+   "completion_tokens": 9000,
+   "decode_tps": 90.18,
+   "html_bytes": 0,
+   "gate_pass": false,
+   "passed": 0,
+   "total": 5,
+   "compliance": 0,
+   "note": "reply contained no usable HTML"
+  },
+  {
+   "attempt": 2,
+   "wall_s": 40.17,
+   "prompt_tokens": 1621,
+   "completion_tokens": 3172,
+   "decode_tps": 81.94,
+   "html_bytes": 8771,
+   "gate_pass": true,
+   "passed": 5,
+   "total": 5,
+   "compliance": 100,
+   "violations": [],
+   "assertions": [
+    {
+     "id": "b1_twenty_blocks",
+     "desc": "20 blocks dropped, all within x in [-3,3]",
+     "ok": true,
+     "got": {
+      "n": 20,
+      "off": 0
+     },
+     "want": {
+      "n": 20,
+      "off": 0
+     }
+    },
+    {
+     "id": "b2_stack_height",
+     "desc": "height == 20 and not toppled after 800 ticks",
+     "ok": true,
+     "got": {
+      "height": 20,
+      "over": true,
+      "toppled": false
+     },
+     "want": {
+      "height": 20,
+      "over": true,
+      "toppled": false
+     }
+    },
+    {
+     "id": "b3_no_interpenetration",
+     "desc": "no two blocks overlap vertically at any 200-tick sample",
+     "ok": true,
+     "got": "0 overlaps over 4 samples",
+     "want": "0"
+    },
+    {
+     "id": "b4_no_drift",
+     "desc": "top block near its seeded offset; stack centre of mass |x| <= 0.15",
+     "ok": true,
+     "got": {
+      "top_x": 0.5487,
+      "com_x": -0.0345
+     },
+     "want": {
+      "com_x": "<=0.15"
+     }
+    },
+    {
+     "id": "b5_determinism",
+     "desc": "same seed same tower, other seed differs",
+     "ok": true,
+     "got": {
+      "same": true,
+      "differs": true
+     },
+     "want": {
+      "same": true,
+      "differs": true
+     }
+    }
+   ]
+  }
+ ],
+ "total_wall_s": 146.3,
+ "total_prompt_tokens": 3215,
+ "total_completion_tokens": 12172,
+ "recorded_at": "2026-11-08T07:44:21+0800"
+}

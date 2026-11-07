@@ -1,0 +1,101 @@
+Your reply did not contain a complete HTML file in one ```html block. Reply with the full document only.
+
+=== SPEC ===
+<!--
+GAME SPEC — llmbench browser cell "tower-stacker"
+
+FROZEN. Sent verbatim as the single user message. Do not edit: the sha256 of this file is
+recorded per run (gen.json:prompt_sha256).
+
+Contract note: this task has its OWN minimal window.__game contract — {ready, over, score}
+plus the block list and step/reset/hash. It is NOT the old shared game contract: there are
+no enemies, no bullets, no player ship and no shooting. The auto-drop is the only action.
+
+The grader (games/playprobe.py) runs headless Chrome with a virtual clock and calls
+window.__game.step(1/60) exactly N times. "tick" = one step(1/60).
+-->
+
+Write a complete, self-contained browser simulation as ONE HTML file using three.js.
+Reply with the file inside one ```html fenced block and nothing else.
+
+## SCENE
+A stack of boxes in an empty room, seen from a 3/4 camera that is fixed (no user camera
+control needed). A ground plane, a soft key light and a fill light, and a vertical height
+meter on the left side of the screen (HTML DOM, not canvas-drawn) showing the current
+tower height in blocks and the score. Everything is drawn with three.js geometry and
+materials — NO external images, textures, models, fonts or audio. A deliberate 3-5 colour
+palette; each block gets a slightly different but related hue so the tower is readable.
+The canvas fills the window and adapts on resize.
+
+## RULES
+- 20 identical blocks, size 2 x 1 x 2 (width, height, depth), unit mass.
+- They are dropped one by one, every 40 ticks. Block i drops from y = 8 above the ground
+  with a seeded horizontal offset: x = offset(i) where offset comes from a seeded
+  generator in the range -0.6 .. +0.6 (offset 0 for block 0 so the base is centred).
+  Each block falls straight down (no rotation) onto whatever is below it.
+- Contact: a falling block rests on the highest surface under it (the ground or the top of
+  the block beneath); gravity is -9.8 units/s². A block settles when it has been in contact
+  for 20 ticks with |vy| < 0.05.
+- STABILITY: a resting block is stable only if its centre of mass is over its support
+  (the block below, or the ground). If the seeded offset pushes a block's centre outside
+  the support area of the block beneath, the tower part above loses stability and the run
+  ends with `over: true` ("toppled"). No jitter may topple a block whose centre is inside
+  the support: no random impulses, no restitution bouncing, no torque noise.
+- Do NOT add a player-controlled drop, aiming, nudging or trimming: blocks drop
+  automatically at the fixed seed offsets. Mouse/touch only orbit or zoom the camera.
+- Score = 100 × settled blocks; +500 bonus if all 20 settle without toppling.
+
+## THE MACHINE-READABLE CONTRACT (mandatory)
+The grader drives the simulation through `window.__game` ONLY:
+
+```js
+window.__game = {
+  ready: false,        // boolean, true once the scene is built and step() works
+  seed: 1234,          // integer, the seed currently running
+  blocks: [],          // array of {x, y, z, w, h, dropped, settled} — plain numbers /
+                       // booleans for EVERY block that has been dropped so far (0..20);
+                       // y is the centre height, x/z the centre position
+  height: 0,           // number: number of settled blocks (integer)
+  score: 0,            // number, same as HUD
+  over: false,         // boolean: true when all 20 settled OR the tower toppled
+  toppled: false,      // boolean
+  step: function (dt) {},      // advance exactly dt seconds, once
+  reset: function (seed) {},   // restart with this integer seed
+  hash: function () {}         // string over rounded numbers + score, see below
+};
+```
+
+All randomness (offsets, decoration) must come from a seeded generator inside a closure
+(mulberry32/xorshift/LCG — your choice); never Math.random or Date for anything that
+affects the run, so `reset(1234)` twice gives the same tower. `step(dt)` simulates exactly
+one step of dt; the render loop may also call it when the grader is not driving.
+
+`hash()` is a string built from all block positions rounded to 1e-4 and the score, in
+index order — it must differ if any block moves or the score changes.
+
+The animation loop uses requestAnimationFrame with THREE.Clock and never throws; 0 console
+errors; key listeners on `window` (R = restart with the same seed; SPACE = pause).
+
+## BEHAVIOURAL ASSERTIONS (the grader runs exactly these)
+S = window.__game, after `S.reset(1234)`.
+1. after 800 steps: S.blocks.length is 20 (±0) and every block's x is within [-3, 3].
+2. after 800 steps: S.height is 20 and S.over is true and S.toppled is false — with the
+   1234 seed offsets, all 20 blocks stack without toppling.
+3. at every 200-step sample up to 800: no two blocks interpenetrate — for any pair, the
+   vertical gap between them is >= -(height - 0.01) when their x/z footprints overlap.
+4. no drift: the top block's x is within ±0.7 of its seeded offset and the stack's
+   centre of mass in x is within ±0.15 (offsets cancel out, the tower must not walk).
+5. determinism: reset(1234) + 800 steps → h1; reset(1234) + 800 steps → h2; h1 == h2, and
+   reset(4321) gives a different block-x pattern.
+
+## WHAT COUNTS AS A SPEC VIOLATION
+- a player-controlled drop, aiming marker, click-to-drop, or trimming mechanic;
+- any enemy/bullet/weapon/lives code path (this is not a shooter);
+- jitter: a settled block whose position changes over later ticks, or a topple caused by
+  noise rather than by the seeded offset;
+- offsets taken from Math.random (non-deterministic across reset with the same seed);
+- a physics engine library (cannon/ammo/rapier/oimo) instead of your own integration.
+
+## SIZE AND OUTPUT
+Under about 450 lines. Output ONE ```html block with a complete document (pinned import
+map `https://unpkg.com/three@0.160.0/build/three.module.js`), then stop.

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>NEON COURIER</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#05060f;font-family:'Segoe UI',system-ui,sans-serif;touch-action:none;-webkit-user-select:none;user-select:none}
+  #c{position:fixed;inset:0;display:block}
+  .hud{position:fixed;top:14px;left:16px;color:#eaf6ff;text-shadow:0 2px 10px rgba(0,0,0,.7);pointer-events:none;z-index:5}
+  .hud .t{font-size:12px;letter-spacing:4px;color:#7fe9ff;opacity:.85}
+  .hud .s{font-size:40px;font-weight:800;line-height:1;margin-top:2px}
+  .hud .s span{color:#ffcf5c}
+  .hud .l{font-size:13px;letter-spacing:2px;margin-top:6px;color:#ff5c7a}
+  .hud .l b{color:#eaf6ff}
+  #msg{position:fixed;top:16px;left:50%;transform:translateX(-50%);color:#ffcf5c;font-size:15px;letter-spacing:3px;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,.8);opacity:0;transition:opacity .3s;pointer-events:none;z-index:6}
+  .ctl{position:fixed;bottom:0;left:0;right:0;height:150px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 18px 18px;pointer-events:none;z-index:7}
+  .pad{display:flex;gap:12px;pointer-events:auto}
+  .btn{width:66px;height:66px;border-radius:16px;background:rgba(120,220,255,.10);border:2px solid rgba(120,220,255,.55);color:#cfeeff;font-size:26px;display:flex;align-items:center;justify-content:center;touch-action:none;backdrop-filter:blur(3px)}
+  .btn:active{background:rgba(120,220,255,.32)}
+  .btn.fire{width:82px;height:82px;border-radius:50%;background:rgba(255,92,122,.14);border-color:rgba(255,92,122,.6);color:#ffd0dc;font-size:13px;letter-spacing:1px;font-weight:800}
+  .btn.fire:active{background:rgba(255,92,122,.4)}
+  #ov{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,6,15,.72);backdrop-filter:blur(4px);z-index:9;color:#eaf6ff;text-align:center}
+  #ov h1{font-size:44px;margin:0;letter-spacing:3px}
+  #ov p{font-size:16px;letter-spacing:2px;opacity:.85}
+  #ov button{margin-top:22px;padding:14px 34px;font-size:16px;letter-spacing:2px;font-weight:800;color:#05060f;background:#ffcf5c;border:none;border-radius:12px;cursor:pointer}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud">
+  <div class="t">NEON COURIER</div>
+  <div class="s"><span id="score">0</span> / 5</div>
+  <div class="l">TIME <b id="time">60</b>s &nbsp;·&nbsp; <span id="lives">●●●</span></div>
+</div>
+<div id="msg"></div>
+<div class="ctl">
+  <div class="pad">
+    <div class="btn" id="bL">◀</div>
+    <div class="btn" id="bR">▶</div>
+  </div>
+  <div class="pad">
+    <div class="btn" id="bD">▼</div>
+    <div class="btn fire" id="bF">BOOST</div>
+    <div class="btn" id="bU">▲</div>
+  </div>
+</div>
+<div id="ov"><h1 id="ovT">MISSION COMPLETE</h1><p id="ovP"></p><button id="ovB">RESTART</button></div>
+
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+
+const W=120, H=120, ROAD=14, BLD=10, N=5, TIME=60;
+const PAL={road:0x141826, line:0x2b3350, bld:0x2a3350, bldTop:0x3a4568, car:0xffcf5c, carDark:0x2a2f45, wp:0x7fe9ff, wpCore:0xffffff, hit:0xff5c7a, boost:0x7fe9ff};
+
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+const scene=new THREE.Scene();
+scene.fog=new THREE.Fog(0x0a0c1a,40,120);
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,400);
+scene.add(new THREE.HemisphereLight(0x8fb0ff,0x0a0c1a,0.9));
+const sun=new THREE.DirectionalLight(0xfff0d0,0.7); sun.position.set(30,60,20); scene.add(sun);
+
+// ---- world ----
+const roadX=[-48,-16,16,48], roadY=[-48,-16,16,48];
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(W,H),new THREE.MeshStandardMaterial({color:0x0c0f1c,roughness:1}));
+ground.rotation.x=-Math.PI/2; ground.position.y=-0.05; scene.add(ground);
+const roadMat=new THREE.MeshStandardMaterial({color:PAL.road,roughness:0.9});
+const lineMat=new THREE.MeshStandardMaterial({color:PAL.line,roughness:0.8});
+for(const x of roadX){const m=new THREE.Mesh(new THREE.PlaneGeometry(ROAD,H),roadMat);m.rotation.x=-Math.PI/2;m.position.set(x,0,0);scene.add(m);}
+for(const y of roadY){const m=new THREE.Mesh(new THREE.PlaneGeometry(W,ROAD),roadMat);m.rotation.x=-Math.PI/2;m.position.set(0,0,y);scene.add(m);}
+for(const x of roadX){const m=new THREE.Mesh(new THREE.PlaneGeometry(0.4,H),lineMat);m.rotation.x=-Math.PI/2;m.position.set(x,0.02,0);scene.add(m);}
+for(const y of roadY){const m=new THREE.Mesh(new THREE.PlaneGeometry(W,0.4),lineMat);m.rotation.x=-Math.PI/2;m.position.set(0,0.02,y);scene.add(m);}
+
+const buildings=[];
+const bldGeo=new THREE.BoxGeometry(BLD,1,BLD);
+for(let i=0;i<roadX.length-1;i++)for(let j=0;j<roadY.length-1;j++){
+  const cx=(roadX[i]+roadX[i+1])/2, cz=(roadY[j]+roadY[j+1])/2;
+  const h=6+Math.random()*10;
+  const b=new THREE.Mesh(bldGeo,new THREE.MeshStandardMaterial({color:PAL.bld,roughness:0.7,emissive:0x0a1020,emissiveIntensity:0.4}));
+  b.position.set(cx,h/2,cz); b.scale.y=h; scene.add(b);
+  const top=new THREE.Mesh(new THREE.BoxGeometry(BLD*0.9,0.3,BLD*0.9),new THREE.MeshStandardMaterial({color:PAL.bldTop,emissive:0x1a2440,emissiveIntensity:0.6}));
+  top.position.set(cx,h+0.15,cz); scene.add(top);
+  buildings.push({x:cx,z:cz,h});
+}
+
+// ---- car ----
+const car=new THREE.Group();
+const body=new THREE.Mesh(new THREE.BoxGeometry(2.2,0.7,4),new THREE.MeshStandardMaterial({color:PAL.car,roughness:0.4,emissive:0x3a2a00,emissiveIntensity:0.3}));
+body.position.y=0.5; car.add(body);
+const cabin=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.6,2),new THREE.MeshStandardMaterial({color:PAL.carDark,roughness:0.3}));
+cabin.position.set(0,1.05,-0.2); car.add(cabin);
+const wheelGeo=new THREE.CylinderGeometry(0.45,0.45,0.4,12); wheelGeo.rotateZ(Math.PI/2);
+const wheelMat=new THREE.MeshStandardMaterial({color:0x11131f,roughness:0.6});
+for(const [wx,wz] of [[-1.1,1.3],[1.1,1.3],[-1.1,-1.3],[1.1,-1.3]]){const w=new THREE.Mesh(wheelGeo,wheelMat);w.position.set(wx,0.45,wz);car.add(w);}
+const head=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.3,0.2),new THREE.MeshStandardMaterial({color:0xfff2c0,emissive:0xfff2c0,emissiveIntensity:1.2}));
+head.position.set(0,0.6,2.05); car.add(head);
+const tail=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.3,0.2),new THREE.MeshStandardMaterial({color:PAL.hit,emissive:PAL.hit,emissiveIntensity:1.2}));
+tail.position.set(0,0.6,-2.05); car.add(tail);
+scene.add(car);
+
+// ---- waypoints ----
+const waypoints=[];
+const wpGeo=new THREE.CylinderGeometry(3,3,0.3,24);
+const wpRing=new THREE.TorusGeometry(3.4,0.25,8,32);
+for(let i=0;i<N;i++){
+  const x=roadX[i%4], z=roadY[Math.floor(i/4)%4];
+  const g=new THREE.Group();
+  const base=new THREE.Mesh(wpGeo,new THREE.MeshStandardMaterial({color:PAL.wp,emissive:PAL.wp,emissiveIntensity:0.8,transparent:true,opacity:0.5}));
+  base.position.y=0.15; g.add(base);
+  const ring=new THREE.Mesh(wpRing,new THREE.MeshStandardMaterial({color:PAL.wp,emissive:PAL.wp,emissiveIntensity:1.4}));
+  ring.rotation.x=-Math.PI/2; ring.position.y=0.4; g.add(ring);
+  const core=new THREE.Mesh(new THREE.SphereGeometry(0.7,16,16),new THREE.MeshStandardMaterial({color:PAL.wpCore,emissive:PAL.wpCore,emissiveIntensity:2}));
+  core.position.y=2; g.add(core);
+  g.position.set(x,0,z); scene.add(g);
+  waypoints.push({x,z,active:true,group:g,ring,core});
+}
+
+// ---- particles ----
+const MAXP=400;
+const pPos=new Float32Array(MAXP*3), pCol=new Float32Array(MAXP*3), pSize=new Float32Array(MAXP);
+const pVel=new Float32Array(MAXP*3), pLife=new Float32Array(MAXP), pMax=new Float32Array(MAXP);
+const pGeo=new THREE.BufferGeometry();
+pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+pGeo.setAttribute('color',new THREE.BufferAttribute(pCol,3));
+pGeo.setAttribute('size',new THREE.BufferAttribute(pSize,1));
+const pMat=new THREE.ShaderMaterial({
+  transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
+  vertexShader:`attribute float size; varying vec3 vC; void main(){vC=color; vec4 mv=modelViewMatrix*vec4(position,1.0); gl_PointSize=size*(220.0/-mv.z); gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying vec3 vC; void main(){float d=length(gl_PointCoord-0.5); if(d>0.5)discard; float a=smoothstep(0.5,0.0,d); gl_FragColor=vec4(vC,a);}`
+});
+pMat.vertexColors=true;
+const points=new THREE.Points(pGeo,pMat); points.frustumCulled=false; scene.add(points);
+let pHead=0;
+function burst(x,y,z,color,count,speed,life){
+  const c=new THREE.Color(color);
+  for(let i=0;i<count;i++){
+    const k=pHead; pHead=(pHead+1)%MAXP;
+    pPos[k*3]=x; pPos[k*3+1]=y; pPos[k*3+2]=z;
+    const a=Math.random()*Math.PI*2, sp=speed*(0.4+Math.random()*0.8);
+    pVel[k*3]=Math.cos(a)*sp; pVel[k*3+1]=(Math.random()*0.6+0.3)*speed; pVel[k*3+2]=Math.sin(a)*sp;
+    pCol[k*3]=c.r; pCol[k*3+1]=c.g; pCol[k*3+2]=c.b;
+    pLife[k]=life; pMax[k]=life; pSize[k]=0.6+Math.random()*0.6;
+  }
+}
+
+// ---- state ----
+let score=0, lives=3, over=false, ready=false, timeLeft=TIME, invuln=0, shake=0, flash=0, msgT=0;
+let px=0, pz=0, heading=0, speed=0, boost=0;
+const keys={};
+const $=id=>document.getElementById(id);
+function setMsg(t){const m=$('msg');m.textContent=t;m.style.opacity=1;msgT=1.4;}
+function updateHUD(){
+  $('score').textContent=score;
+  $('time').textContent=Math.max(0,Math.ceil(timeLeft));
+  $('lives').textContent='●'.repeat(Math.max(0,lives))+'○'.repeat(Math.max(0,3-lives));
+}
+function endGame(win){
+  over=true; ready=false;
+  $('ovT').textContent=win?'MISSION COMPLETE':'MISSION FAILED';
+  $('ovT').style.color=win?'#7fe9ff':'#ff5c7a';
+  $('ovP').textContent=win?('All 5 waypoints in '+Math.ceil(timeLeft)+'s left'):(score+' / 5 waypoints reached');
+  $('ov').style.display='flex';
+}
+window.__game={ready:false,score:0,lives:3,over:false,player:{x:0,y:0},enemies:[],bullets:[],reset:reset};
+function reset(){
+  score=0; lives=3; over=false; timeLeft=TIME; invuln=0; shake=0; flash=0;
+  px=0; pz=0; heading=0; speed=0; boost=0;
+  for(const w of waypoints){w.active=true; w.group.visible=true;}
+  $('ov').style.display='none';
+  ready=true; updateHUD();
+}
+reset();
+
+// ---- input ----
+addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true; if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(e.key.toLowerCase()))e.preventDefault();});
+addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
+function bind(id,down,up){const el=$(id);el.addEventListener('pointerdown',e=>{e.preventDefault();down();});el.addEventListener('pointerup',up);el.addEventListener('pointerleave',up);el.addEventListener('pointercancel',up);}
+bind('bL',()=>keys['arrowleft']=true,()=>keys['arrowleft']=false);
+bind('bR',()=>keys['arrowright']=true,()=>keys['arrowright']=false);
+bind('bU',()=>keys['arrowup']=true,()=>keys['arrowup']=false);
+bind('bD',()=>keys['arrowdown']=true,()=>keys['arrowdown']=false);
+bind('bF',()=>keys[' ']=true,()=>keys[' ']=false);
+$('ovB').addEventListener('click',reset);
+
+// ---- collision ----
+function collide(){
+  const r=1.4;
+  for(const b of buildings){
+    const cx=Math.max(b.x-BLD/2-r,Math.min(px,b.x+BLD/2+r));
+    const cz=Math.max(b.z-BLD/2-r,Math.min(pz,b.z+BLD/2+r));
+    const ddx=px-cx, ddz=pz-cz;
+    if(ddx*ddx+ddz*ddz<r*r){
+      if(invuln<=0){
+        lives--; invuln=1.2; shake=1; flash=1; timeLeft=Math.max(0,timeLeft-3);
+        burst(px,1,pz,PAL.hit,26,7,0.9);
+        setMsg('CRASH! -3s');
+        if(lives<=0){endGame(false);return;}
+      }
+      speed*=-0.3;
+      const nx=px-cx, nz=pz-cz, len=Math.hypot(nx,nz)||1;
+      px+=nx/len*(r-Math.hypot(ddx,ddz)); pz+=nz/len*(r-Math.hypot(ddx,ddz));
+    }
+  }
+}
+
+// ---- loop ----
+let last=performance.now();
+function tick(now){
+  requestAnimationFrame(tick);
+  let dt=(now-last)/1000; last=now; dt=Math.min(dt,0.05);
+  if(ready&&!over){
+    const up=keys['arrowup']||keys['w'], down=keys['arrowdown']||keys['s'];
+    const left=keys['arrowleft']||keys['a'], right=keys['arrowright']||keys['d'];
+    const boosting=keys[' ']&&up;
+    const maxS=boosting?34:20;
+    if(up) speed+=28*dt; else if(down) speed-=34*dt; else speed-=speed*1.6*dt;
+    speed=Math.max(-8,Math.min(maxS,speed));
+    const steer=(left?-1:0)+(right?1:0);
+    heading+=steer*2.4*dt*Math.min(1,Math.abs(speed)/6)*(speed<0?-1:1);
+    px+=Math.sin(heading)*speed*dt;
+    pz+=Math.cos(heading)*speed*dt;
+    px=Math.max(-W/2+2,Math.min(W/2-2,px)); pz=Math.max(-H/2+2,Math.min(H/2-2,pz));
+    collide();
+    if(invuln>0) invuln-=dt;
+    if(boosting&&Math.random()<0.6) burst(px-Math.sin(heading)*2,0.6,pz-Math.cos(heading)*2,PAL.boost,2,3,0.5);
+    for(const w of waypoints){
+      if(w.active&&Math.hypot(px-w.x,pz-w.z)<3.2){
+        w.active=false; w.group.visible=false; score++;
+        burst(w.x,1,w.z,PAL.wp,40,9,1.1); shake=Math.max(shake,0.5);
+        setMsg(score>=N?'ALL PICKUPS!':'PICKUP '+score+'/5');
+        if(score>=N) endGame(true);
+      }
+    }
+    timeLeft-=dt; if(timeLeft<=0){timeLeft=0; endGame(false);}
+    updateHUD();
+  }
+  // car visual
+  car.position.set(px,0,pz);
+  car.rotation.y=heading;
+  car.position.y=Math.sin(now*0.02)*0.03;
+  car.visible=invuln<=0||Math.floor(now*0.02)%2===0;
+  // waypoints animate
+  for(const w of waypoints){
+    if(!w.active)continue;
+    const s=1+Math.sin(now*0.005)*0.15;
+    w.ring.scale.set(s,s,s); w.core.position.y=2+Math.sin(now*0.004)*0.4;
+  }
+  // particles
+  for(let i=0;i<MAXP;i++){
+    if(pLife[i]>0){
+      pLife[i]-=dt;
+      pPos[i*3]+=pVel[i*3]*dt; pPos[i*3+1]+=pVel[i*3+1]*dt; pPos[i*3+2]+=pVel[i*3+2]*dt;
+      pVel[i*3+1]-=14*dt;
+      const f=Math.max(0,pLife[i]/pMax[i]);
+      pSize[i]=0.6*f+0.1;
+      pCol[i*3]*=0.98; pCol[i*3+1]*=0.98; pCol[i*3+2]*=0.98;
+    } else pSize[i]=0;
+  }
+  pGeo.attributes.position.needsUpdate=true; pGeo.attributes.color.needsUpdate=true; pGeo.attributes.size.needsUpdate=true;
+  // camera
+  shake=Math.max(0,shake-dt*2.2); flash=Math.max(0,flash-dt*2.5);
+  const sh=shake*shake*0.9;
+  const cx=px+Math.sin(heading)*-14+(Math.random()-0.5)*sh;
+  const cz=pz+Math.cos(heading)*-14+(Math.random()-0.5)*sh;
+  camera.position.set(cx,26,cz);
+  camera.lookAt(px,0,pz);
+  if(flash>0){renderer.setClearColor(new THREE.Color(PAL.hit).multiplyScalar(flash*0.5));}
+  else renderer.setClearColor(0x05060f);
+  // machine state
+  window.__game.ready=ready&&!over; window.__game.score=score; window.__game.lives=Math.max(0,lives);
+  window.__game.over=over; window.__game.player={x:px,y:pz};
+  window.__game.enemies=buildings.map(b=>({x:b.x,y:b.z}));
+  window.__game.bullets=waypoints.filter(w=>w.active).map(w=>({x:w.x,y:w.z}));
+  renderer.render(scene,camera);
+}
+requestAnimationFrame(tick);
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+</script>
+</body>
+</html>

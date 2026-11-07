@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>match3-cascades</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#0b0f1a;font-family:ui-monospace,Menlo,Consolas,monospace;color:#e8ecf7;-webkit-user-select:none;user-select:none}
+  #c{position:fixed;inset:0;display:block;touch-action:none}
+  #hud{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;padding:14px 18px;pointer-events:none;z-index:5}
+  .stat{display:flex;flex-direction:column;gap:2px}
+  .stat .k{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#7f8aa8}
+  .stat .v{font-size:26px;font-weight:700;line-height:1}
+  #score{color:#ffd76a}
+  #moves{color:#7fd4ff}
+  #best{color:#ff8fd0}
+  #hint{position:fixed;bottom:14px;left:0;right:0;text-align:center;font-size:13px;color:#9aa6c6;pointer-events:none;z-index:5}
+  #hint b{color:#cdd6f0}
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">
+  <div class="stat"><span class="k">Score</span><span class="v" id="score">0</span></div>
+  <div class="stat"><span class="k">Moves</span><span class="v" id="moves">0 / 30</span></div>
+  <div class="stat"><span class="k">Best Cascade</span><span class="v" id="best">0</span></div>
+</div>
+<div id="hint">swap two <b>adjacent</b> jewels &middot; press <b>R</b> to restart</div>
+
+<script type="module">
+import * as THREE from 'three';
+
+/* ---------- seeded RNG (mulberry32) ---------- */
+function mulberry32(a){
+  return function(){
+    a|=0; a=a+0x6D2B79F5|0;
+    let t=Math.imul(a^a>>>15,1|a);
+    t=t+Math.imul(t^t>>>7,61|t)^t;
+    return ((t^t>>>14)>>>0)/4294967296;
+  };
+}
+
+/* ---------- board state ---------- */
+const N=8, TYPES=5, MAXMOVES=30;
+let grid=[], score=0, moves=0, over=false, cascade=0, bestCascade=0, seed=1234;
+let rng=mulberry32(1234);
+
+function randType(){ return (rng()*TYPES)|0; }
+
+function makeBoard(){
+  grid=[];
+  for(let r=0;r<N;r++){
+    const row=[];
+    for(let c=0;c<N;c++){
+      let t;
+      do{ t=randType(); }
+      while((c>=2 && row[c-1]===t && row[c-2]===t) ||
+            (r>=2 && grid[r-1][c]===t && grid[r-2][c]===t));
+      row.push(t);
+    }
+    grid.push(row);
+  }
+  if(!hasMove()) makeBoard();
+}
+
+function hasRun(r,c){
+  const t=grid[r][c];
+  let h=1;
+  for(let i=c-1;i>=0&&grid[r][i]===t;i--)h++;
+  for(let i=c+1;i<N&&grid[r][i]===t;i++)h++;
+  if(h>=3)return true;
+  let v=1;
+  for(let i=r-1;i>=0&&grid[i][c]===t;i--)v++;
+  for(let i=r+1;i<N&&grid[i][c]===t;i++)v++;
+  return v>=3;
+}
+function hasMove(){
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    if(c+1<N){
+      const a=grid[r][c],b=grid[r][c+1];
+      grid[r][c]=b;grid[r][c+1]=a;
+      if(hasRun(r,c)||hasRun(r,c+1)){grid[r][c]=a;grid[r][c+1]=b;return true;}
+      grid[r][c]=a;grid[r][c+1]=b;
+    }
+    if(r+1<N){
+      const a=grid[r][c],b=grid[r+1][c];
+      grid[r][c]=b;grid[r+1][c]=a;
+      if(hasRun(r,c)||hasRun(r+1,c)){grid[r][c]=a;grid[r+1][c]=b;return true;}
+      grid[r][c]=a;grid[r+1][c]=b;
+    }
+  }
+  return false;
+}
+
+/* ---------- match resolution (synchronous) ---------- */
+function findRuns(){
+  const runs=[];
+  for(let r=0;r<N;r++){
+    let c=0;
+    while(c<N){
+      let e=c+1; while(e<N&&grid[r][e]===grid[r][c])e++;
+      if(e-c>=3)runs.push({cells:[],len:e-c,horiz:true});
+      for(let i=c;i<e;i++)runs[runs.length-1].cells.push([r,i]);
+      c=e;
+    }
+  }
+  for(let c=0;c<N;c++){
+    let r=0;
+    while(r<N){
+      let e=r+1; while(e<N&&grid[e][c]===grid[r][c])e++;
+      if(e-r>=3)runs.push({cells:[],len:e-r,horiz:false});
+      for(let i=r;i<e;i++)runs[runs.length-1].cells.push([i,c]);
+      r=e;
+    }
+  }
+  return runs;
+}
+
+function resolve(){
+  let depth=0;
+  while(true){
+    const runs=findRuns();
+    if(runs.length===0)break;
+    depth++;
+    const removed=new Set();
+    for(const run of runs){
+      for(const [r,c] of run.cells){
+        const k=r*N+c;
+        if(removed.has(k))continue;
+        removed.add(k);
+        score+=run.len*run.len*10*depth;
+      }
+    }
+    for(const k of removed)grid[(k/N)|0][k%N]=-1;
+    for(let c=0;c<N;c++){
+      let write=N-1;
+      for(let r=N-1;r>=0;r--){
+        if(grid[r][c]!==-1){
+          grid[write][c]=grid[r][c];
+          if(write!==r)grid[r][c]=-1;
+          write--;
+        }
+      }
+      for(let r=write;r>=0;r--)grid[r][c]=randType();
+    }
+  }
+  cascade=depth;
+  if(depth>bestCascade)bestCascade=depth;
+  return depth;
+}
+
+/* ---------- three.js scene ---------- */
+const canvas=document.getElementById('c');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.setSize(window.innerWidth,window.innerHeight,false);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x0b0f1a);
+scene.fog=new THREE.Fog(0x0b0f1a,16,30);
+
+const camera=new THREE.PerspectiveCamera(42,window.innerWidth/window.innerHeight,0.1,100);
+camera.position.set(0,0,13.5);
+camera.lookAt(0,0,0);
+
+scene.add(new THREE.AmbientLight(0x404a66,0.9));
+const key=new THREE.DirectionalLight(0xffffff,1.15); key.position.set(4,7,9); scene.add(key);
+const fill=new THREE.DirectionalLight(0x6688ff,0.5); fill.position.set(-6,-3,6); scene.add(fill);
+const rim=new THREE.DirectionalLight(0xff9a5a,0.35); rim.position.set(0,-6,-4); scene.add(rim);
+
+const COLORS=[0xff5a5a,0x46c0ff,0x57e08a,0xffc94a,0xc07bff];
+const GEOM=[
+  new THREE.SphereGeometry(0.34,26,20),
+  new THREE.OctahedronGeometry(0.42,0),
+  new THREE.BoxGeometry(0.5,0.5,0.5),
+  new THREE.TorusGeometry(0.26,0.11,16,26),
+  new THREE.IcosahedronGeometry(0.4,0)
+];
+const MATS=COLORS.map(c=>new THREE.MeshStandardMaterial({color:c,metalness:0.35,roughness:0.28,emissive:c,emissiveIntensity:0.12}));
+
+const CELL=1.0, ORIGIN=-(N-1)/2;
+function pos(r,c){ return new THREE.Vector3(ORIGIN+c*CELL, ORIGIN+r*CELL, 0); }
+
+const boardGroup=new THREE.Group(); scene.add(boardGroup);
+const jewelGroup=new THREE.Group(); scene.add(jewelGroup);
+
+/* board frame */
+(function(){
+  const pad=0.55, w=N*CELL+pad*2;
+  const frame=new THREE.Mesh(new THREE.BoxGeometry(w,w,0.5),
+    new THREE.MeshStandardMaterial({color:0x141a2b,metalness:0.4,roughness:0.6}));
+  frame.position.z=-0.35; boardGroup.add(frame);
+  const edge=new THREE.Mesh(new THREE.BoxGeometry(w+0.12,w+0.12,0.12),
+    new THREE.MeshStandardMaterial({color:0x2a3550,metalness:0.6,roughness:0.4}));
+  edge.position.z=-0.42; boardGroup.add(edge);
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    const cell=new THREE.Mesh(new THREE.BoxGeometry(CELL*0.92,CELL*0.92,0.12),
+      new THREE.MeshStandardMaterial({color:0x1b2338,metalness:0.2,roughness:0.85}));
+    cell.position.copy(pos(r,c)); cell.position.z=-0.18; boardGroup.add(cell);
+  }
+})();
+
+/* jewels */
+const jewels=[];
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+  const m=new THREE.Mesh(GEOM[0],MATS[0]);
+  m.position.copy(pos(r,c));
+  m.userData={r,c,base:new THREE.Vector3(),phase:Math.random()*6.283,spin:0.4+Math.random()*0.5};
+  jewelGroup.add(m); jewels.push(m);
+}
+function jewelAt(r,c){ return jewels[r*N+c]; }
+function setJewel(r,c,t){
+  const m=jewelAt(r,c);
+  m.geometry=GEOM[t]; m.material=MATS[t];
+  m.userData.base.copy(pos(r,c));
+}
+
+/* ---------- HUD ---------- */
+const elScore=document.getElementById('score');
+const elMoves=document.getElementById('moves');
+const elBest=document.getElementById('best');
+function updateHUD(){
+  elScore.textContent=score;
+  elMoves.textContent=moves+' / '+MAXMOVES;
+  elBest.textContent=bestCascade;
+}
+
+/* ---------- contract ---------- */
+function hash(){
+  let s='';
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++)s+=grid[r][c];
+  return s+'|'+score+'|'+moves;
+}
+
+window.__game={
+  get ready(){ return true; },
+  get seed(){ return seed; },
+  get grid(){ return grid; },
+  get score(){ return score; },
+  get moves(){ return moves; },
+  get over(){ return over; },
+  get cascade(){ return cascade; },
+  step:function(dt){},
+  reset:function(s){
+    seed=(s|0);
+    rng=mulberry32(seed);
+    score=0; moves=0; over=false; cascade=0; bestCascade=0;
+    makeBoard();
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++)setJewel(r,c,grid[r][c]);
+    updateHUD();
+  },
+  swap:function(r1,c1,r2,c2){
+    if(over)return false;
+    if(r1<0||r1>=N||c1<0||c1>=N||r2<0||r2>=N||c2<0||c2>=N)return false;
+    if(Math.abs(r1-r2)+Math.abs(c1-c2)!==1)return false;
+    const a=grid[r1][c1], b=grid[r2][c2];
+    grid[r1][c1]=b; grid[r2][c2]=a;
+    if(!hasRun(r1,c1)&&!hasRun(r2,c2)){
+      grid[r1][c1]=a; grid[r2][c2]=b;
+      return false;
+    }
+    moves++;
+    resolve();
+    if(moves>=MAXMOVES||!hasMove())over=true;
+    updateHUD();
+    return true;
+  },
+  settle:function(){
+    const before=hash();
+    resolve();
+    if(hash()!==before)updateHUD();
+  },
+  hash:function(){ return hash(); }
+};
+
+/* ---------- input: pointer drag ---------- */
+let drag=null;
+function cellFromEvent(e){
+  const rect=canvas.getBoundingClientRect();
+  const x=(e.clientX-rect.left)/rect.width*2-1;
+  const y=-((e.clientY-rect.top)/rect.height*2-1);
+  const v=new THREE.Vector3(x,y,0).unproject(camera);
+  const dir=v.sub(camera.position).normalize();
+  const t=-camera.position.z/dir.z;
+  const p=camera.position.clone().add(dir.multiplyScalar(t));
+  const c=Math.round(p.x-ORIGIN)/CELL;
+  const r=Math.round(p.y-ORIGIN)/CELL;
+  if(r<0||r>=N||c<0||c>=N)return null;
+  return {r,c};
+}
+canvas.addEventListener('pointerdown',e=>{
+  if(over)return;
+  const cell=cellFromEvent(e);
+  if(!cell)return;
+  drag={r:cell.r,c:cell.c};
+  canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  const cell=cellFromEvent(e);
+  if(!cell)return;
+  const dr=cell.r-drag.r, dc=cell.c-drag.c;
+  if(Math.abs(dr)+Math.abs(dc)===1){
+    window.__game.swap(drag.r,drag.c,cell.r,cell.c);
+    drag=null;
+  }
+});
+canvas.addEventListener('pointerup',()=>{ drag=null; });
+canvas.addEventListener('pointercancel',()=>{ drag=null; });
+
+window.addEventListener('keydown',e=>{
+  if(e.key==='r'||e.key==='R')window.__game.reset(seed);
+});
+
+window.addEventListener('resize',()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight,false);
+});
+
+/* ---------- animation loop ---------- */
+const clock=new THREE.Clock();
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=clock.getDelta();
+  const t=clock.elapsedTime;
+  for(const m of jewels){
+    const u=m.userData;
+    m.position.copy(u.base);
+    m.position.z=Math.sin(t*1.6+u.phase)*0.05;
+    m.rotation.x+=dt*u.spin*0.6;
+    m.rotation.y+=dt*u.spin;
+  }
+  renderer.render(scene,camera);
+}
+
+/* ---------- boot ---------- */
+window.__game.reset(1234);
+animate();
+</script>
+</body>
+</html>
