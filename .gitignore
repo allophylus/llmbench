@@ -15,3 +15,7 @@ node_modules/
 __pycache__/
 *.pyc
 .venv/
+
+# editor / manual backups
+*.bak
+*.bak-*

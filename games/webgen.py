@@ -215,7 +215,10 @@ if src:
     _hp = os.path.join(outdir, "index.html")
     _html = open(_hp).read()
     if "touch.js" not in _html:
-        _tag = '<script src="../touch.js"></script>'
+        # path relative to this page, so copies nested deeper (attempt pages) still resolve
+        _rel = os.path.relpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "touch.js"),
+                               os.path.abspath(outdir))
+        _tag = '<script src="%s"></script>' % _rel
         _html = (_html.replace("</body>", _tag + "\n</body>", 1)
                  if "</body>" in _html else _html + _tag)
         open(_hp, "w").write(_html)

@@ -129,3 +129,7 @@ Caching is short; a hard refresh picks up new data immediately.
   number can be traced to its source file.
 - The `Arch` dropdown lists the free-text arch strings exactly as recorded; they are
   descriptive, not a controlled vocabulary.
+
+## Licence
+
+Code is MIT licensed (see `LICENSE`). Model outputs, generated games and benchmark data are published for reference; the models themselves keep their own licences.
