@@ -34,6 +34,8 @@ MODEL_LABEL = {
     "nanbeige-4-3-33b": "Nanbeige 4.3-33B",
     "byteshape-qwen3-8-27b-iq4xs": "Qwen3.8-27B (ByteShape IQ4_XS)",
     "byteshape-qwen3-8-27b-iq4xs-3090": "Qwen3.8-27B (ByteShape IQ4_XS)",
+    # the 3090 chat record is keyed by its file slug, so that slug needs the same label
+    "qwen3-8-27b-iq4xs-3090": "Qwen3.8-27B (ByteShape IQ4_XS)",
 }
 MODEL_FILE = {
     "qwen3-8-27b-q4km": "Qwen3.8-27B-Q4_K_M.gguf",
@@ -305,6 +307,15 @@ def build_games():
     open(os.path.join(GAMES, "index.html"), "w").write(page("games — model-written browser games", body))
     print("games rows:", len(rows))
 
+# one rule for the "measured on the other card" marker, used by the campaign table and
+# the per-question detail headings; appended to the chat page only if its committed
+# stylesheet does not carry it yet (the page's own CSS is otherwise kept verbatim)
+GPU_PILL_CSS = (
+    ".pill.gpu{margin-left:.35rem;padding:1px 7px;border-radius:999px;"
+    "border:1px solid #6b5424;font-size:11px;color:#f5c542;background:#1d1a10;"
+    "white-space:nowrap}\n")
+
+
 def build_chat():
     files = sorted(glob.glob(os.path.join(CHAT, "*.json")))
     OV = overview_names()
@@ -313,6 +324,11 @@ def build_chat():
         d = json.load(open(f))
         base = d.get("model", "model")
         think = bool(d.get("thinking"))
+        # a run recorded on the other card is a different measurement: key it by its file
+        # slug, from MODEL_GPU (the same marker the migration table and overview use), so it
+        # can never share or overwrite the R9700 row of the same model name
+        if d.get("gpu") or MODEL_GPU.get(d.get("model", "")):
+            base = os.path.splitext(os.path.basename(f))[0]
         groups.setdefault(base, {})[think] = d
 
     summary_rows, details = [], []
@@ -355,7 +371,9 @@ def build_chat():
                           f"<td class=num>{'' if q.get('ms') is None else round(q['ms']/1000.0,2)}</td></tr>")
             details.append(
                 f"<section class=detail id='{esc(anchor)}'>"
-                f"<h2>{esc(label)} — thinking {mode} <span class=pill>{'' if acc is None else acc}%</span></h2>"
+                f"<h2>{esc(label)} — thinking {mode} <span class=pill>{'' if acc is None else acc}%</span>"
+                + (f" <span class='pill gpu'>{esc(MODEL_GPU[d.get('model', '')])}</span>"
+                   if MODEL_GPU.get(d.get("model", "")) else "") + "</h2>"
                 f"<p class=meta>{corr} correct · {part} partial · {wrong} wrong · {toks} tokens · "
                 f"avg {'' if avg_ms is None else avg_ms} ms/question</p>"
                 "<div class=table-wrap><table><thead><tr><th>#</th><th>Topic</th><th>Question</th><th>Answer</th>"
@@ -375,8 +393,9 @@ def build_chat():
         tps = [q.get("decode_tps") for q in qs if isinstance(q.get("decode_tps"), (int, float))]
         camp.append((OV.get(base) or MODEL_LABEL.get(base, base), c, p, len(qs) - c - p,
                      round(100.0 * c / len(qs), 1) if qs else None,
-                     round(sum(tps) / len(tps), 1) if tps else None))
-    camp.sort(key=lambda x: -(x[5] or 0))
+                     round(sum(tps) / len(tps), 1) if tps else None,
+                     MODEL_GPU.get(d.get("model", ""), "")))
+    camp.sort(key=lambda x: (-(x[5] or 0), x[0]))   # decode t/s desc: the only ordering a saturated suite allows
     saturated = len(camp) >= 3 and len({(x[1], x[2]) for x in camp}) == 1
 
 
@@ -389,9 +408,11 @@ def build_chat():
                if saturated else "")
             + "<div class=table-wrap><table><thead><tr><th>Model</th><th>Correct</th><th>Partial</th>"
             "<th>Wrong</th><th>Accuracy</th><th>Decode t/s</th></tr></thead><tbody>"
-            + "".join(f"<tr><td>{esc(n)}</td><td class=num>{c}</td><td class=num>{p}</td>"
+            + "".join(f"<tr><td>{esc(n)}"
+                      + (f" <span class='pill gpu'>{esc(g)}</span>" if g else "")
+                      + f"</td><td class=num>{c}</td><td class=num>{p}</td>"
                       f"<td class=num>{w}</td><td class=num>{a}%</td><td class=num>{t}</td></tr>"
-                      for (n, c, p, w, a, t) in camp)
+                      for (n, c, p, w, a, t, g) in camp)
             + '</tbody></table></div>'
             '<p class=meta>Decode t/s is the mean of the server rate for each short answer '
             '(includes the first, warm-up question), so it sits slightly below the steady-state '
@@ -401,18 +422,37 @@ def build_chat():
             "<h2 class=sec>Per-question detail</h2>" + "".join(details))
     os.makedirs(os.path.join(ROOT, "chat"), exist_ok=True)
     dst = os.path.join(ROOT, "chat", "index.html")
-    # The committed chat page carries a hand-built header (two-row column band) that this
-    # builder does not emit, so regenerating it silently strips that design. Only overwrite
-    # on an explicit request.
-    if os.path.exists(dst) and os.environ.get("LLMBENCH_REBUILD_CHAT") != "1":
-        print("chat groups:", len(groups),
-              "| chat/index.html kept as committed (design is hand-built; "
-              "set LLMBENCH_REBUILD_CHAT=1 to regenerate)")
-    else:
-        open(dst, "w").write(
-            page("chat — knowledge accuracy", body).replace(
-                TOPBAR, render_topbar("../", "chat"), 1))
-        print("chat groups:", len(groups))
+    # The committed chat page carries a hand-built stylesheet (two-row header band, view
+    # switcher, card layout) that this builder does not emit. Regenerating the whole file
+    # stripped it, which is how chat/index.html once got overwritten. So the builder now
+    # splices: the committed stylesheet is kept verbatim and only the generated body
+    # (sub-paragraph, saturation note, summary table, per-question details) is replaced.
+    # The anchors below are the page's own structural markers, not a re-design.
+    TOP, SUB = "<h2 class=sec>Per-question detail</h2>", "<p class=sub>"
+    if os.path.exists(dst):
+        prior = open(dst, encoding="utf-8").read()
+        tbl = prior.find("<th>Model</th><th>Correct</th>")
+        cut = prior.rfind(SUB, 0, tbl) if tbl >= 0 else -1
+        if cut >= 0 and TOP in prior and TOP in body:
+            # keep the page's own stylesheet and document skeleton byte-for-byte; replace only
+            # the generated body. The skeleton is everything before the body's first SUB and the
+            # closing tags after it, so repeated runs converge instead of nesting.
+            cl = prior.rfind("</div></body></html>")
+            si = prior.find("<style>") + 7
+            se = prior.find("</style>")
+            if cl > 0 and se > 0:
+                kept = prior[si:se]
+                fix = "" if ".pill.gpu{" in kept.replace(" ", "") else "\n" + GPU_PILL_CSS
+                open(dst, "w", encoding="utf-8").write(
+                    prior[:se] + fix + prior[se:cut]
+                    + body[:body.find(TOP)] + body[body.find(TOP):]
+                    + prior[cl:])
+                print("chat groups:", len(groups), "| body spliced, committed stylesheet kept")
+                return
+    open(dst, "w").write(
+        page("chat — knowledge accuracy", body).replace(
+            TOPBAR, render_topbar("../", "chat"), 1))
+    print("chat groups:", len(groups), "| full page written (no prior page to splice into)")
 
 def build_sidebyside():
     """The 4-spec suite page is generated by its own script (one source of truth)."""

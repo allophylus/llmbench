@@ -51,6 +51,8 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
 .callout{border-left:3px solid var(--gold);background:#1a1f27;padding:10px 14px;border-radius:6px;margin:14px 0}
 .callout b{color:var(--gold)}
 .meta{color:var(--faint);font-size:12px}
+.pill{display:inline-block;padding:1px 6px;border-radius:999px;border:1px solid var(--line);font-size:10.5px;color:var(--dim);white-space:nowrap}
+.pill.gpu{border-color:#6b5424;color:#f5c542;background:#1d1a10}
 .q{color:var(--dim);font-size:12px;max-width:40ch}
 .legend{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 12px;font-size:12px;color:var(--dim)}
 .legend span b{font-weight:600}
@@ -65,9 +67,10 @@ td.num{font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;text
  table.probe th:nth-child(2){width:7%}
  table.probe th:nth-child(3){width:11%}
  table.probe th:nth-child(4){width:11%}
- table.probe th:nth-child(5){width:12%}
- table.probe th:nth-child(6){width:12%}
- table.probe th:nth-child(7){width:23%}
+ table.probe th:nth-child(5){width:11%}
+ table.probe th:nth-child(6){width:11%}
+ table.probe th:nth-child(7){width:12%}
+ table.probe th:nth-child(8){width:21%}
  table.probe td{overflow-wrap:anywhere}
 }
 details{margin:10px 0}
@@ -125,6 +128,12 @@ PAIR_LABELS = {
     "ornith": "Ornith-1.5-35B-A3B",
     "qwen36": "Qwen3.6-35B-A3B",
 }
+# pairs measured on the other card; same file schema, different tree, labelled so the
+# row can never be read as an R9700 number
+EXTRA_PAIRS = [
+    (os.path.join("benchmarks", "rtx3090", "gpqa-pair-3090.json"),
+     "Qwen3.8-27B IQ4_XS (ByteShape)", "RTX 3090 · CUDA"),
+]
 
 
 def _arm_valid(x):
@@ -136,7 +145,7 @@ def _arm_valid(x):
 
 
 def pair_rows():
-    """The re-measured pairs in benchmarks/thinking2/ (both arms genuinely ran)."""
+    """The re-measured pairs in benchmarks/thinking2/ plus the other-card pairs."""
     rows = []
     for f in sorted(glob.glob(os.path.join(ROOT, "benchmarks", "thinking2", "*pair*.json"))):
         key = os.path.basename(f).replace("-pair.json", "")
@@ -146,7 +155,16 @@ def pair_rows():
         d = json.load(open(f, encoding="utf-8"))
         off = d.get("off") or {}
         on = d.get("on") or {}
-        rows.append((label, d.get("max_tokens"), off, on, _arm_valid(off), _arm_valid(on)))
+        rows.append((label, d.get("max_tokens"), off, on, _arm_valid(off), _arm_valid(on), ""))
+    for rel, label, gpu in EXTRA_PAIRS:
+        p = os.path.join(ROOT, rel)
+        if not os.path.exists(p):
+            continue
+        d = json.load(open(p, encoding="utf-8"))
+        off = d.get("off") or {}
+        on = d.get("on") or {}
+        cap = (d.get("settings") or {}).get("max_tokens_off") or d.get("max_tokens")
+        rows.append((label, cap, off, on, _arm_valid(off), _arm_valid(on), gpu))
     return rows
 
 
@@ -157,11 +175,19 @@ def corrected_pairs_html():
     invalid_seen = False
     out = ["<div class=table-wrap><table class=probe><thead><tr>"
            "<th>model</th><th>cap</th><th>thinking off</th><th>thinking on</th>"
-           "<th>tokens off</th><th>tokens on</th><th>verdict</th></tr></thead><tbody>"]
-    for label, cap, off, on, ov, nv in rows:
+           "<th>tokens off</th><th>tokens on</th><th>seconds off / on</th>"
+           "<th>verdict</th></tr></thead><tbody>"]
+    for label, cap, off, on, ov, nv, gpu in rows:
         if ov and nv:
-            verdict = "on loses %d, costs +%d tokens" % (
-                off["correct"] - on["correct"], on["tokens"] - off["tokens"])
+            d_correct = off["correct"] - on["correct"]
+            if d_correct > 0:
+                verdict = "on loses %d, costs +%d tokens" % (d_correct, on["tokens"] - off["tokens"])
+            elif d_correct < 0:
+                verdict = "on gains %d, costs +%d tokens" % (-d_correct, on["tokens"] - off["tokens"])
+            else:
+                verdict = "level, costs +%d tokens" % (on["tokens"] - off["tokens"])
+            if nv and (on.get("length_stops") or 0) >= (on.get("n") or 0) * 0.5:
+                verdict += "; %d/%d on-arm runs hit the cap" % (on["length_stops"], on["n"])
             oc, nc = "%d/%d" % (off["correct"], off["n"]), "%d/%d" % (on["correct"], on["n"])
         elif ov and not nv:
             verdict, oc, nc = "on arm invalid — not measured", "%d/%d" % (off["correct"], off["n"]), "—"
@@ -169,12 +195,16 @@ def corrected_pairs_html():
         else:
             verdict, oc, nc = "invalid — not measured", "—", "—"
             invalid_seen = True
+        label_html = html.escape(label) + (
+            " <span class='pill gpu'>%s</span>" % html.escape(gpu) if gpu else "")
         out.append("<tr><td>%s</td><td>%s</td><td class=num>%s</td><td class=num>%s</td>"
-                   "<td class=num>%s</td><td class=num>%s</td><td>%s</td></tr>" % (
-                       html.escape(label), cap or "—", oc, nc,
+                   "<td class=num>%s</td><td class=num>%s</td><td class=num>%s</td>"
+                   "<td>%s</td></tr>" % (
+                       label_html, cap or "—", oc, nc,
                        "{:,}".format(off.get("tokens") or 0) if ov else "—",
                        "{:,}".format(on.get("tokens") or 0) if nv else "—",
-                       html.escape(verdict)))
+                      "%.0f s / %.0f s" % (off.get("wall_s") or 0, on.get("wall_s") or 0) if (ov and nv) else "—",
+                      html.escape(verdict)))
     out.append("</tbody></table></div>")
     note = ('Both arms share the same max-token cap; the only variable is the thinking switch.')
     if invalid_seen:
@@ -186,23 +216,42 @@ def corrected_pairs_html():
 
 def corrected_findings():
     """Findings computed from the finished pairs themselves — no hand-typed numbers."""
-    rows = [(l, cap, o, n) for l, cap, o, n, ov, nv in pair_rows() if ov and nv]
+    rows = [(l, cap, o, n, gpu) for l, cap, o, n, ov, nv, gpu in pair_rows() if ov and nv]
     if not rows:
         return ""
-    losses = [o["correct"] - n["correct"] for _, _, o, n in rows]
-    ratios = [n["tokens"] / float(o["tokens"]) for _, _, o, n in rows]
+    losses = [o["correct"] - n["correct"] for _, _, o, n, _ in rows]
+    ratios = [n["tokens"] / float(o["tokens"]) for _, _, o, n, _ in rows]
     out = []
-    out.append("<li><b>Switching reasoning on never gained a question</b> on this set: it lost "
-               "between %d and %d of 25 across the %d models measured.</li>"
-               % (min(losses), max(losses), len(rows)))
-    small = [(x, r) for x, r in zip(losses, ratios) if x <= 3 and r < 2.0]
+    gains = [(i, x) for i, x in enumerate(losses) if x < 0]
+    if gains and len(gains) < len(rows):
+        out.append("<li><b>Switching reasoning on loses questions on every card but one.</b> "
+                   "On the %d other pairs it cost between %d and %d of 25.</li>"
+                   % (len(rows) - len(gains),
+                      min(x for x in losses if x > 0), max(losses)))
+        for i, x in gains:
+            label, cap, o, n, gpu = rows[i]
+            out.append("<li><b>%s%s is the exception: %d → %d (+%d)</b> — and its on-arm hit the "
+                       "%s-token cap on %d of %d runs, so read it as the cap interacting with the "
+                       "switch, not as headroom.</li>"
+                       % (html.escape(label),
+                          (" on the <span class='pill gpu'>%s</span>" % html.escape(gpu)) if gpu else "",
+                          o["correct"], n["correct"], -x, gb(cap),
+                          n.get("length_stops") or 0, n["n"]))
+        out.append("<li class=meta>The overall verdict stands: on the R9700 set thinking loses "
+                   "questions at this cap while costing more. One quantified exception on a "
+                   "different card and quantisation does not reverse it.</li>")
+    else:
+        out.append("<li><b>Switching reasoning on never gained a question</b> on this set: it lost "
+                   "between %d and %d of 25 across the %d models measured.</li>"
+                   % (min(losses), max(losses), len(rows)))
+    small = [(x, r) for x, r in zip(losses, ratios) if 0 <= x <= 3 and r < 2.0]
     if small:
         out.append("<li>For %d of the %d models the cost is modest: %d–%d fewer correct and "
                    "%.2f–%.2f× the generated tokens.</li>"
                    % (len(small), len(rows), min(x for x, _ in small), max(x for x, _ in small),
                       min(r for _, r in small), max(r for _, r in small)))
     worst = max(range(len(rows)), key=lambda i: (losses[i], ratios[i]))
-    wl, wcap, wo, wn = rows[worst]
+    wl, wcap, wo, wn, _wg = rows[worst]
     stops = wn.get("length_stops") or 0
     if stops:
         out.append("<li><b>%s</b> is the outlier: %d of its 25 reasoning runs hit the %s-token cap "
@@ -210,7 +259,7 @@ def corrected_findings():
                    % (html.escape(wl), stops, gb(wcap), wo["correct"], wn["correct"], ratios[worst]))
     big = max(range(len(rows)), key=lambda i: ratios[i])
     if big != worst:
-        bl, bcap, bo, bn = rows[big]
+        bl, bcap, bo, bn, _bg = rows[big]
         out.append("<li><b>%s</b> is the most expensive per token: %.2f× the generated tokens "
                    "for %d fewer correct (%.0f → %.0f tokens per question).</li>"
                    % (html.escape(bl), ratios[big], bo["correct"] - bn["correct"],
@@ -223,9 +272,12 @@ def corrected_findings():
 def _style_findings(lines):
     import re as _re
     # callers already pass <li>…</li> items; re-wrapping nested them (<li><li>…)
-    clean = [_re.sub(r"^\s*<li>|</li>\s*$", "", str(x)).strip() for x in lines]
+    clean = [_re.sub(r"^\s*<li(?:\s+class=[^>]*)?>|</li>\s*$", "", str(x)).strip() for x in lines]
+    # keep an item's own class= (e.g. class=meta) instead of dropping it with the wrapper
+    attrs = [(" class=%s" % m.group(1)) if (m := _re.match(r"^\s*<li\s+class=([^>\s]+)>", str(x))) else ""
+             for x in lines]
     return ("<h2 class=sec>Findings</h2><ul class=findings>"
-            + "".join("<li>%s</li>" % x for x in clean) + "</ul>")
+            + "".join("<li%s>%s</li>" % (a, x) for a, x in zip(attrs, clean)) + "</ul>")
 
 
 def thinking_p1_findings():
